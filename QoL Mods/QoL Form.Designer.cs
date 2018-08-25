@@ -1,4 +1,6 @@
-﻿namespace QoL_Mods
+﻿using System;
+
+namespace QoL_Mods
 {
     partial class QoL_Form
     {
@@ -46,10 +48,40 @@
             this.we_searchBox = new System.Windows.Forms.TextBox();
             this.we_unsubscribe = new System.Windows.Forms.CheckBox();
             this.ql_RefereeEdit = new System.Windows.Forms.TabPage();
-            this.re_refresh = new System.Windows.Forms.Button();
-            this.refEdit = new System.Windows.Forms.Button();
+            this.panel6 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
+            this.refEdit = new System.Windows.Forms.Button();
+            this.re_refresh = new System.Windows.Forms.Button();
             this.we_refList = new System.Windows.Forms.ComboBox();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.em_injuries = new System.Windows.Forms.CheckBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.ij_matches = new System.Windows.Forms.TextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.ij_recoveryRate = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.cb_injuryModData = new System.Windows.Forms.CheckBox();
+            this.ij_load = new System.Windows.Forms.Button();
+            this.ij_save = new System.Windows.Forms.Button();
+            this.ij_bodyHP = new System.Windows.Forms.ComboBox();
+            this.ij_armHP = new System.Windows.Forms.ComboBox();
+            this.ij_legHP = new System.Windows.Forms.ComboBox();
+            this.ij_neckHP = new System.Windows.Forms.ComboBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.ij_removeAll = new System.Windows.Forms.Button();
+            this.ij_add = new System.Windows.Forms.Button();
+            this.ij_removeOne = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.ij_wrestlerList = new System.Windows.Forms.ListBox();
+            this.ij_result = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ij_wrestlerSearch = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.overrideTabs = new System.Windows.Forms.TabControl();
@@ -61,6 +93,8 @@
             this.or_venueList = new System.Windows.Forms.ComboBox();
             this.or_venue = new System.Windows.Forms.CheckBox();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.ma_forceTag = new System.Windows.Forms.CheckBox();
             this.ma_aiCall = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.refBum_minLogic = new System.Windows.Forms.DomainUpDown();
@@ -69,51 +103,25 @@
             this.ma_convertSeconds = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.ma_forceTag = new System.Windows.Forms.CheckBox();
-            this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.ij_wrestlerSearch = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.ij_result = new System.Windows.Forms.ComboBox();
-            this.ij_wrestlerList = new System.Windows.Forms.ListBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.ij_removeOne = new System.Windows.Forms.Button();
-            this.ij_add = new System.Windows.Forms.Button();
-            this.ij_removeAll = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.ij_neckHP = new System.Windows.Forms.ComboBox();
-            this.ij_legHP = new System.Windows.Forms.ComboBox();
-            this.ij_armHP = new System.Windows.Forms.ComboBox();
-            this.ij_bodyHP = new System.Windows.Forms.ComboBox();
-            this.ij_load = new System.Windows.Forms.Button();
-            this.ij_save = new System.Windows.Forms.Button();
-            this.cb_injuryModData = new System.Windows.Forms.CheckBox();
-            this.em_injuries = new System.Windows.Forms.CheckBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.ij_recoveryRate = new System.Windows.Forms.TextBox();
-            this.label17 = new System.Windows.Forms.Label();
-            this.ij_matches = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.ij_recoveryDate = new System.Windows.Forms.TextBox();
             this.ego_MainTabs.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.ql_Controls.SuspendLayout();
             this.ql_WrestlerEdit.SuspendLayout();
             this.panel1.SuspendLayout();
             this.ql_RefereeEdit.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.overrideTabs.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.panel3.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.panel7.SuspendLayout();
             this.panel2.SuspendLayout();
-            this.tabPage6.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // cb_comment
@@ -161,6 +169,7 @@
             // 
             // ql_WrestlerEdit
             // 
+            this.ql_WrestlerEdit.BackColor = System.Drawing.Color.Transparent;
             this.ql_WrestlerEdit.Controls.Add(this.panel1);
             this.ql_WrestlerEdit.Controls.Add(this.we_unsubscribe);
             this.ql_WrestlerEdit.Location = new System.Drawing.Point(4, 22);
@@ -169,10 +178,11 @@
             this.ql_WrestlerEdit.Size = new System.Drawing.Size(824, 285);
             this.ql_WrestlerEdit.TabIndex = 0;
             this.ql_WrestlerEdit.Text = "Wrestlers";
-            this.ql_WrestlerEdit.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.White;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.we_refresh);
@@ -183,7 +193,7 @@
             this.panel1.Controls.Add(this.we_promotionBox);
             this.panel1.Controls.Add(this.we_edit);
             this.panel1.Controls.Add(this.we_searchBox);
-            this.panel1.Location = new System.Drawing.Point(103, 46);
+            this.panel1.Location = new System.Drawing.Point(126, 46);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(543, 214);
             this.panel1.TabIndex = 16;
@@ -297,30 +307,40 @@
             // 
             // ql_RefereeEdit
             // 
-            this.ql_RefereeEdit.Controls.Add(this.re_refresh);
-            this.ql_RefereeEdit.Controls.Add(this.refEdit);
-            this.ql_RefereeEdit.Controls.Add(this.label4);
-            this.ql_RefereeEdit.Controls.Add(this.we_refList);
+            this.ql_RefereeEdit.BackColor = System.Drawing.Color.Transparent;
+            this.ql_RefereeEdit.Controls.Add(this.panel6);
             this.ql_RefereeEdit.Location = new System.Drawing.Point(4, 22);
             this.ql_RefereeEdit.Name = "ql_RefereeEdit";
             this.ql_RefereeEdit.Size = new System.Drawing.Size(824, 285);
             this.ql_RefereeEdit.TabIndex = 2;
             this.ql_RefereeEdit.Text = "Referees";
-            this.ql_RefereeEdit.UseVisualStyleBackColor = true;
             // 
-            // re_refresh
+            // panel6
             // 
-            this.re_refresh.Location = new System.Drawing.Point(344, 136);
-            this.re_refresh.Name = "re_refresh";
-            this.re_refresh.Size = new System.Drawing.Size(75, 29);
-            this.re_refresh.TabIndex = 4;
-            this.re_refresh.Text = "Refresh List";
-            this.re_refresh.UseVisualStyleBackColor = true;
-            this.re_refresh.Click += new System.EventHandler(this.re_refresh_Click);
+            this.panel6.BackColor = System.Drawing.Color.White;
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Controls.Add(this.label4);
+            this.panel6.Controls.Add(this.refEdit);
+            this.panel6.Controls.Add(this.re_refresh);
+            this.panel6.Controls.Add(this.we_refList);
+            this.panel6.Location = new System.Drawing.Point(246, 43);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(353, 164);
+            this.panel6.TabIndex = 5;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft YaHei UI", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(99, 19);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(148, 31);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Referee List";
             // 
             // refEdit
             // 
-            this.refEdit.Location = new System.Drawing.Point(240, 136);
+            this.refEdit.Location = new System.Drawing.Point(36, 113);
             this.refEdit.Name = "refEdit";
             this.refEdit.Size = new System.Drawing.Size(75, 29);
             this.refEdit.TabIndex = 3;
@@ -328,23 +348,329 @@
             this.refEdit.UseVisualStyleBackColor = true;
             this.refEdit.Click += new System.EventHandler(this.refEdit_Click);
             // 
-            // label4
+            // re_refresh
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(319, 61);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(64, 13);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "Referee List";
+            this.re_refresh.Location = new System.Drawing.Point(230, 113);
+            this.re_refresh.Name = "re_refresh";
+            this.re_refresh.Size = new System.Drawing.Size(75, 29);
+            this.re_refresh.TabIndex = 4;
+            this.re_refresh.Text = "Refresh List";
+            this.re_refresh.UseVisualStyleBackColor = true;
+            this.re_refresh.Click += new System.EventHandler(this.re_refresh_Click);
             // 
             // we_refList
             // 
             this.we_refList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.we_refList.FormattingEnabled = true;
-            this.we_refList.Location = new System.Drawing.Point(176, 79);
+            this.we_refList.Location = new System.Drawing.Point(36, 65);
             this.we_refList.Name = "we_refList";
-            this.we_refList.Size = new System.Drawing.Size(371, 21);
+            this.we_refList.Size = new System.Drawing.Size(269, 21);
             this.we_refList.TabIndex = 1;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage6.Controls.Add(this.em_injuries);
+            this.tabPage6.Controls.Add(this.panel5);
+            this.tabPage6.Controls.Add(this.panel4);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Size = new System.Drawing.Size(824, 285);
+            this.tabPage6.TabIndex = 3;
+            this.tabPage6.Text = "Injuries";
+            // 
+            // em_injuries
+            // 
+            this.em_injuries.AutoSize = true;
+            this.em_injuries.Location = new System.Drawing.Point(16, 7);
+            this.em_injuries.Name = "em_injuries";
+            this.em_injuries.Size = new System.Drawing.Size(95, 17);
+            this.em_injuries.TabIndex = 2;
+            this.em_injuries.Text = "Enable Injuries";
+            this.em_injuries.UseVisualStyleBackColor = true;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.White;
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel5.Controls.Add(this.ij_recoveryDate);
+            this.panel5.Controls.Add(this.label18);
+            this.panel5.Controls.Add(this.ij_matches);
+            this.panel5.Controls.Add(this.label17);
+            this.panel5.Controls.Add(this.ij_recoveryRate);
+            this.panel5.Controls.Add(this.label16);
+            this.panel5.Controls.Add(this.cb_injuryModData);
+            this.panel5.Controls.Add(this.ij_load);
+            this.panel5.Controls.Add(this.ij_save);
+            this.panel5.Controls.Add(this.ij_bodyHP);
+            this.panel5.Controls.Add(this.ij_armHP);
+            this.panel5.Controls.Add(this.ij_legHP);
+            this.panel5.Controls.Add(this.ij_neckHP);
+            this.panel5.Controls.Add(this.label15);
+            this.panel5.Controls.Add(this.label14);
+            this.panel5.Controls.Add(this.label13);
+            this.panel5.Controls.Add(this.label12);
+            this.panel5.Controls.Add(this.label11);
+            this.panel5.Location = new System.Drawing.Point(376, 30);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(427, 247);
+            this.panel5.TabIndex = 1;
+            // 
+            // ij_matches
+            // 
+            this.ij_matches.Enabled = false;
+            this.ij_matches.Location = new System.Drawing.Point(158, 192);
+            this.ij_matches.Name = "ij_matches";
+            this.ij_matches.Size = new System.Drawing.Size(126, 20);
+            this.ij_matches.TabIndex = 21;
+            this.ij_matches.Visible = false;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(158, 176);
+            this.label17.Name = "label17";
+            this.label17.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label17.Size = new System.Drawing.Size(122, 13);
+            this.label17.TabIndex = 20;
+            this.label17.Text = "Matches since last injury";
+            this.label17.Visible = false;
+            // 
+            // ij_recoveryRate
+            // 
+            this.ij_recoveryRate.Location = new System.Drawing.Point(158, 70);
+            this.ij_recoveryRate.Name = "ij_recoveryRate";
+            this.ij_recoveryRate.Size = new System.Drawing.Size(126, 20);
+            this.ij_recoveryRate.TabIndex = 19;
+            this.ij_recoveryRate.LostFocus += new System.EventHandler(this.ij_recoveryRate_LostFocus);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(177, 54);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(79, 13);
+            this.label16.TabIndex = 18;
+            this.label16.Text = "Recovery Rate";
+            // 
+            // cb_injuryModData
+            // 
+            this.cb_injuryModData.AutoSize = true;
+            this.cb_injuryModData.Location = new System.Drawing.Point(133, 31);
+            this.cb_injuryModData.Name = "cb_injuryModData";
+            this.cb_injuryModData.Size = new System.Drawing.Size(162, 17);
+            this.cb_injuryModData.TabIndex = 17;
+            this.cb_injuryModData.Text = "Injuries Can Modify Edit Data";
+            this.cb_injuryModData.UseVisualStyleBackColor = true;
+            // 
+            // ij_load
+            // 
+            this.ij_load.Location = new System.Drawing.Point(300, 221);
+            this.ij_load.Name = "ij_load";
+            this.ij_load.Size = new System.Drawing.Size(94, 23);
+            this.ij_load.TabIndex = 9;
+            this.ij_load.Text = "Load Data";
+            this.ij_load.UseVisualStyleBackColor = true;
+            this.ij_load.Click += new System.EventHandler(this.ij_load_Click);
+            // 
+            // ij_save
+            // 
+            this.ij_save.Location = new System.Drawing.Point(40, 221);
+            this.ij_save.Name = "ij_save";
+            this.ij_save.Size = new System.Drawing.Size(94, 23);
+            this.ij_save.TabIndex = 10;
+            this.ij_save.Text = "Save Data";
+            this.ij_save.UseVisualStyleBackColor = true;
+            this.ij_save.Click += new System.EventHandler(this.ij_save_Click);
+            // 
+            // ij_bodyHP
+            // 
+            this.ij_bodyHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ij_bodyHP.FormattingEnabled = true;
+            this.ij_bodyHP.Location = new System.Drawing.Point(300, 70);
+            this.ij_bodyHP.Name = "ij_bodyHP";
+            this.ij_bodyHP.Size = new System.Drawing.Size(88, 21);
+            this.ij_bodyHP.TabIndex = 16;
+            this.ij_bodyHP.SelectedIndexChanged += new System.EventHandler(this.ij_bodyHP_SelectedIndexChanged);
+            // 
+            // ij_armHP
+            // 
+            this.ij_armHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ij_armHP.FormattingEnabled = true;
+            this.ij_armHP.Location = new System.Drawing.Point(46, 138);
+            this.ij_armHP.Name = "ij_armHP";
+            this.ij_armHP.Size = new System.Drawing.Size(88, 21);
+            this.ij_armHP.TabIndex = 15;
+            this.ij_armHP.SelectedIndexChanged += new System.EventHandler(this.ij_armHP_SelectedIndexChanged);
+            // 
+            // ij_legHP
+            // 
+            this.ij_legHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ij_legHP.FormattingEnabled = true;
+            this.ij_legHP.Location = new System.Drawing.Point(300, 138);
+            this.ij_legHP.Name = "ij_legHP";
+            this.ij_legHP.Size = new System.Drawing.Size(88, 21);
+            this.ij_legHP.TabIndex = 14;
+            this.ij_legHP.SelectedIndexChanged += new System.EventHandler(this.ij_legHP_SelectedIndexChanged);
+            // 
+            // ij_neckHP
+            // 
+            this.ij_neckHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ij_neckHP.FormattingEnabled = true;
+            this.ij_neckHP.Location = new System.Drawing.Point(46, 70);
+            this.ij_neckHP.Name = "ij_neckHP";
+            this.ij_neckHP.Size = new System.Drawing.Size(88, 21);
+            this.ij_neckHP.TabIndex = 13;
+            this.ij_neckHP.SelectedIndexChanged += new System.EventHandler(this.ij_neckHP_SelectedIndexChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(312, 54);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(65, 13);
+            this.label15.TabIndex = 12;
+            this.label15.Text = "Body Health";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(56, 122);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(59, 13);
+            this.label14.TabIndex = 11;
+            this.label14.Text = "Arm Health";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(312, 122);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(59, 13);
+            this.label13.TabIndex = 10;
+            this.label13.Text = "Leg Health";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(56, 54);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(67, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Neck Health";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft YaHei UI", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(175, 3);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(79, 25);
+            this.label11.TabIndex = 9;
+            this.label11.Text = "Injuries";
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.White;
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel4.Controls.Add(this.ij_removeAll);
+            this.panel4.Controls.Add(this.ij_add);
+            this.panel4.Controls.Add(this.ij_removeOne);
+            this.panel4.Controls.Add(this.label10);
+            this.panel4.Controls.Add(this.ij_wrestlerList);
+            this.panel4.Controls.Add(this.ij_result);
+            this.panel4.Controls.Add(this.label6);
+            this.panel4.Controls.Add(this.ij_wrestlerSearch);
+            this.panel4.Controls.Add(this.label5);
+            this.panel4.Location = new System.Drawing.Point(12, 30);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(342, 247);
+            this.panel4.TabIndex = 0;
+            // 
+            // ij_removeAll
+            // 
+            this.ij_removeAll.Location = new System.Drawing.Point(234, 221);
+            this.ij_removeAll.Name = "ij_removeAll";
+            this.ij_removeAll.Size = new System.Drawing.Size(85, 23);
+            this.ij_removeAll.TabIndex = 8;
+            this.ij_removeAll.Text = "Remove All";
+            this.ij_removeAll.UseVisualStyleBackColor = true;
+            this.ij_removeAll.Click += new System.EventHandler(this.ij_removeAll_Click);
+            // 
+            // ij_add
+            // 
+            this.ij_add.Location = new System.Drawing.Point(26, 221);
+            this.ij_add.Name = "ij_add";
+            this.ij_add.Size = new System.Drawing.Size(94, 23);
+            this.ij_add.TabIndex = 7;
+            this.ij_add.Text = "Add Wrestler";
+            this.ij_add.UseVisualStyleBackColor = true;
+            this.ij_add.Click += new System.EventHandler(this.ij_add_Click);
+            // 
+            // ij_removeOne
+            // 
+            this.ij_removeOne.Location = new System.Drawing.Point(131, 221);
+            this.ij_removeOne.Name = "ij_removeOne";
+            this.ij_removeOne.Size = new System.Drawing.Size(85, 23);
+            this.ij_removeOne.TabIndex = 6;
+            this.ij_removeOne.Text = "Remove One";
+            this.ij_removeOne.UseVisualStyleBackColor = true;
+            this.ij_removeOne.Click += new System.EventHandler(this.ij_removeOne_Click);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(128, 99);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(65, 13);
+            this.label10.TabIndex = 5;
+            this.label10.Text = "Wrestler List";
+            // 
+            // ij_wrestlerList
+            // 
+            this.ij_wrestlerList.FormattingEnabled = true;
+            this.ij_wrestlerList.Location = new System.Drawing.Point(26, 117);
+            this.ij_wrestlerList.Name = "ij_wrestlerList";
+            this.ij_wrestlerList.ScrollAlwaysVisible = true;
+            this.ij_wrestlerList.Size = new System.Drawing.Size(293, 95);
+            this.ij_wrestlerList.TabIndex = 4;
+            this.ij_wrestlerList.SelectedIndexChanged += new System.EventHandler(this.ij_wrestlerList_SelectedIndexChanged);
+            // 
+            // ij_result
+            // 
+            this.ij_result.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ij_result.FormattingEnabled = true;
+            this.ij_result.Location = new System.Drawing.Point(26, 73);
+            this.ij_result.Name = "ij_result";
+            this.ij_result.Size = new System.Drawing.Size(293, 21);
+            this.ij_result.Sorted = true;
+            this.ij_result.TabIndex = 3;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(124, 54);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(79, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Search Results";
+            // 
+            // ij_wrestlerSearch
+            // 
+            this.ij_wrestlerSearch.Location = new System.Drawing.Point(26, 27);
+            this.ij_wrestlerSearch.Name = "ij_wrestlerSearch";
+            this.ij_wrestlerSearch.Size = new System.Drawing.Size(293, 20);
+            this.ij_wrestlerSearch.TabIndex = 1;
+            this.ij_wrestlerSearch.LostFocus += new System.EventHandler(this.ij_wrestlerSearch_LostFocus);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(124, 8);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(83, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Wrestler Search";
             // 
             // tabPage3
             // 
@@ -391,7 +717,7 @@
             // or_default
             // 
             this.or_default.AutoSize = true;
-            this.or_default.Location = new System.Drawing.Point(159, 6);
+            this.or_default.Location = new System.Drawing.Point(169, 29);
             this.or_default.Name = "or_default";
             this.or_default.Size = new System.Drawing.Size(129, 17);
             this.or_default.TabIndex = 7;
@@ -404,9 +730,9 @@
             this.panel3.Controls.Add(this.or_ringList);
             this.panel3.Controls.Add(this.or_venueList);
             this.panel3.Controls.Add(this.or_venue);
-            this.panel3.Location = new System.Drawing.Point(3, 3);
+            this.panel3.Location = new System.Drawing.Point(3, 26);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(140, 243);
+            this.panel3.Size = new System.Drawing.Size(140, 220);
             this.panel3.TabIndex = 6;
             // 
             // or_ring
@@ -449,23 +775,45 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.ma_aiCall);
+            this.tabPage5.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage5.Controls.Add(this.panel7);
             this.tabPage5.Controls.Add(this.panel2);
             this.tabPage5.Controls.Add(this.label8);
             this.tabPage5.Controls.Add(this.label7);
-            this.tabPage5.Controls.Add(this.ma_forceTag);
             this.tabPage5.Location = new System.Drawing.Point(4, 22);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(833, 289);
             this.tabPage5.TabIndex = 1;
             this.tabPage5.Text = "Match Actions";
-            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.White;
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel7.Controls.Add(this.ma_forceTag);
+            this.panel7.Controls.Add(this.ma_aiCall);
+            this.panel7.Location = new System.Drawing.Point(6, 33);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(221, 106);
+            this.panel7.TabIndex = 7;
+            // 
+            // ma_forceTag
+            // 
+            this.ma_forceTag.AutoSize = true;
+            this.ma_forceTag.Checked = true;
+            this.ma_forceTag.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ma_forceTag.Location = new System.Drawing.Point(17, 12);
+            this.ma_forceTag.Name = "ma_forceTag";
+            this.ma_forceTag.Size = new System.Drawing.Size(158, 17);
+            this.ma_forceTag.TabIndex = 0;
+            this.ma_forceTag.Text = "Force partner to tag if called";
+            this.ma_forceTag.UseVisualStyleBackColor = true;
             // 
             // ma_aiCall
             // 
             this.ma_aiCall.AutoSize = true;
-            this.ma_aiCall.Location = new System.Drawing.Point(6, 53);
+            this.ma_aiCall.Location = new System.Drawing.Point(17, 32);
             this.ma_aiCall.Name = "ma_aiCall";
             this.ma_aiCall.Size = new System.Drawing.Size(98, 17);
             this.ma_aiCall.TabIndex = 6;
@@ -475,18 +823,20 @@
             // 
             // panel2
             // 
+            this.panel2.BackColor = System.Drawing.Color.White;
+            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.refBum_minLogic);
             this.panel2.Controls.Add(this.label9);
             this.panel2.Controls.Add(this.btn_bumpRef);
             this.panel2.Controls.Add(this.ma_convertSeconds);
-            this.panel2.Location = new System.Drawing.Point(251, 25);
+            this.panel2.Location = new System.Drawing.Point(260, 33);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(258, 106);
             this.panel2.TabIndex = 5;
             // 
             // refBum_minLogic
             // 
-            this.refBum_minLogic.Location = new System.Drawing.Point(13, 65);
+            this.refBum_minLogic.Location = new System.Drawing.Point(99, 48);
             this.refBum_minLogic.Name = "refBum_minLogic";
             this.refBum_minLogic.Size = new System.Drawing.Size(50, 20);
             this.refBum_minLogic.TabIndex = 1;
@@ -494,7 +844,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 47);
+            this.label9.Location = new System.Drawing.Point(96, 32);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(65, 13);
             this.label9.TabIndex = 0;
@@ -517,7 +867,7 @@
             this.ma_convertSeconds.AutoSize = true;
             this.ma_convertSeconds.Checked = true;
             this.ma_convertSeconds.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ma_convertSeconds.Location = new System.Drawing.Point(13, 21);
+            this.ma_convertSeconds.Location = new System.Drawing.Point(13, 12);
             this.ma_convertSeconds.Name = "ma_convertSeconds";
             this.ma_convertSeconds.Size = new System.Drawing.Size(239, 17);
             this.ma_convertSeconds.TabIndex = 1;
@@ -527,320 +877,39 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 9);
+            this.label8.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(54, 9);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 13);
+            this.label8.Size = new System.Drawing.Size(80, 21);
             this.label8.TabIndex = 3;
             this.label8.Text = "Wrestlers";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(280, 9);
+            this.label7.Font = new System.Drawing.Font("Microsoft YaHei UI", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(347, 9);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 13);
+            this.label7.Size = new System.Drawing.Size(73, 21);
             this.label7.TabIndex = 2;
             this.label7.Text = "Seconds";
             // 
-            // ma_forceTag
+            // label18
             // 
-            this.ma_forceTag.AutoSize = true;
-            this.ma_forceTag.Checked = true;
-            this.ma_forceTag.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ma_forceTag.Location = new System.Drawing.Point(6, 30);
-            this.ma_forceTag.Name = "ma_forceTag";
-            this.ma_forceTag.Size = new System.Drawing.Size(158, 17);
-            this.ma_forceTag.TabIndex = 0;
-            this.ma_forceTag.Text = "Force partner to tag if called";
-            this.ma_forceTag.UseVisualStyleBackColor = true;
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(173, 122);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(103, 13);
+            this.label18.TabIndex = 22;
+            this.label18.Text = "Fully Recovery Date";
             // 
-            // tabPage6
+            // ij_recoveryDate
             // 
-            this.tabPage6.Controls.Add(this.em_injuries);
-            this.tabPage6.Controls.Add(this.panel5);
-            this.tabPage6.Controls.Add(this.panel4);
-            this.tabPage6.Location = new System.Drawing.Point(4, 22);
-            this.tabPage6.Name = "tabPage6";
-            this.tabPage6.Size = new System.Drawing.Size(824, 285);
-            this.tabPage6.TabIndex = 3;
-            this.tabPage6.Text = "Injuries";
-            this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.ij_removeAll);
-            this.panel4.Controls.Add(this.ij_add);
-            this.panel4.Controls.Add(this.ij_removeOne);
-            this.panel4.Controls.Add(this.label10);
-            this.panel4.Controls.Add(this.ij_wrestlerList);
-            this.panel4.Controls.Add(this.ij_result);
-            this.panel4.Controls.Add(this.label6);
-            this.panel4.Controls.Add(this.ij_wrestlerSearch);
-            this.panel4.Controls.Add(this.label5);
-            this.panel4.Location = new System.Drawing.Point(12, 30);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(342, 247);
-            this.panel4.TabIndex = 0;
-            this.panel4.Paint += new System.Windows.Forms.PaintEventHandler(this.panel4_Paint);
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.ij_matches);
-            this.panel5.Controls.Add(this.label17);
-            this.panel5.Controls.Add(this.ij_recoveryRate);
-            this.panel5.Controls.Add(this.label16);
-            this.panel5.Controls.Add(this.cb_injuryModData);
-            this.panel5.Controls.Add(this.ij_load);
-            this.panel5.Controls.Add(this.ij_save);
-            this.panel5.Controls.Add(this.ij_bodyHP);
-            this.panel5.Controls.Add(this.ij_armHP);
-            this.panel5.Controls.Add(this.ij_legHP);
-            this.panel5.Controls.Add(this.ij_neckHP);
-            this.panel5.Controls.Add(this.label15);
-            this.panel5.Controls.Add(this.label14);
-            this.panel5.Controls.Add(this.label13);
-            this.panel5.Controls.Add(this.label12);
-            this.panel5.Controls.Add(this.label11);
-            this.panel5.Location = new System.Drawing.Point(376, 20);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(427, 257);
-            this.panel5.TabIndex = 1;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(124, 7);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(83, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Wrestler Search";
-            // 
-            // ij_wrestlerSearch
-            // 
-            this.ij_wrestlerSearch.Location = new System.Drawing.Point(26, 24);
-            this.ij_wrestlerSearch.Name = "ij_wrestlerSearch";
-            this.ij_wrestlerSearch.Size = new System.Drawing.Size(293, 20);
-            this.ij_wrestlerSearch.TabIndex = 1;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(124, 54);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(79, 13);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Search Results";
-            // 
-            // ij_result
-            // 
-            this.ij_result.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ij_result.FormattingEnabled = true;
-            this.ij_result.Location = new System.Drawing.Point(26, 74);
-            this.ij_result.Name = "ij_result";
-            this.ij_result.Size = new System.Drawing.Size(293, 21);
-            this.ij_result.TabIndex = 3;
-            // 
-            // ij_wrestlerList
-            // 
-            this.ij_wrestlerList.FormattingEnabled = true;
-            this.ij_wrestlerList.Location = new System.Drawing.Point(26, 119);
-            this.ij_wrestlerList.Name = "ij_wrestlerList";
-            this.ij_wrestlerList.ScrollAlwaysVisible = true;
-            this.ij_wrestlerList.Size = new System.Drawing.Size(293, 95);
-            this.ij_wrestlerList.Sorted = true;
-            this.ij_wrestlerList.TabIndex = 4;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(128, 103);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(65, 13);
-            this.label10.TabIndex = 5;
-            this.label10.Text = "Wrestler List";
-            // 
-            // ij_removeOne
-            // 
-            this.ij_removeOne.Location = new System.Drawing.Point(131, 221);
-            this.ij_removeOne.Name = "ij_removeOne";
-            this.ij_removeOne.Size = new System.Drawing.Size(85, 23);
-            this.ij_removeOne.TabIndex = 6;
-            this.ij_removeOne.Text = "Remove One";
-            this.ij_removeOne.UseVisualStyleBackColor = true;
-            this.ij_removeOne.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // ij_add
-            // 
-            this.ij_add.Location = new System.Drawing.Point(26, 221);
-            this.ij_add.Name = "ij_add";
-            this.ij_add.Size = new System.Drawing.Size(94, 23);
-            this.ij_add.TabIndex = 7;
-            this.ij_add.Text = "Add Wrestler";
-            this.ij_add.UseVisualStyleBackColor = true;
-            this.ij_add.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // ij_removeAll
-            // 
-            this.ij_removeAll.Location = new System.Drawing.Point(234, 221);
-            this.ij_removeAll.Name = "ij_removeAll";
-            this.ij_removeAll.Size = new System.Drawing.Size(85, 23);
-            this.ij_removeAll.TabIndex = 8;
-            this.ij_removeAll.Text = "Remove All";
-            this.ij_removeAll.UseVisualStyleBackColor = true;
-            this.ij_removeAll.Click += new System.EventHandler(this.button3_Click);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft YaHei UI", 14.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(175, 3);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(79, 25);
-            this.label11.TabIndex = 9;
-            this.label11.Text = "Injuries";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(56, 54);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(67, 13);
-            this.label12.TabIndex = 9;
-            this.label12.Text = "Neck Health";
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(312, 122);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(59, 13);
-            this.label13.TabIndex = 10;
-            this.label13.Text = "Leg Health";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(56, 122);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(59, 13);
-            this.label14.TabIndex = 11;
-            this.label14.Text = "Arm Health";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(312, 54);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(65, 13);
-            this.label15.TabIndex = 12;
-            this.label15.Text = "Body Health";
-            // 
-            // ij_neckHP
-            // 
-            this.ij_neckHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ij_neckHP.FormattingEnabled = true;
-            this.ij_neckHP.Location = new System.Drawing.Point(46, 70);
-            this.ij_neckHP.Name = "ij_neckHP";
-            this.ij_neckHP.Size = new System.Drawing.Size(88, 21);
-            this.ij_neckHP.TabIndex = 13;
-            // 
-            // ij_legHP
-            // 
-            this.ij_legHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ij_legHP.FormattingEnabled = true;
-            this.ij_legHP.Location = new System.Drawing.Point(300, 138);
-            this.ij_legHP.Name = "ij_legHP";
-            this.ij_legHP.Size = new System.Drawing.Size(88, 21);
-            this.ij_legHP.TabIndex = 14;
-            // 
-            // ij_armHP
-            // 
-            this.ij_armHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ij_armHP.FormattingEnabled = true;
-            this.ij_armHP.Location = new System.Drawing.Point(46, 138);
-            this.ij_armHP.Name = "ij_armHP";
-            this.ij_armHP.Size = new System.Drawing.Size(88, 21);
-            this.ij_armHP.TabIndex = 15;
-            // 
-            // ij_bodyHP
-            // 
-            this.ij_bodyHP.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ij_bodyHP.FormattingEnabled = true;
-            this.ij_bodyHP.Location = new System.Drawing.Point(300, 70);
-            this.ij_bodyHP.Name = "ij_bodyHP";
-            this.ij_bodyHP.Size = new System.Drawing.Size(88, 21);
-            this.ij_bodyHP.TabIndex = 16;
-            // 
-            // ij_load
-            // 
-            this.ij_load.Location = new System.Drawing.Point(300, 231);
-            this.ij_load.Name = "ij_load";
-            this.ij_load.Size = new System.Drawing.Size(94, 23);
-            this.ij_load.TabIndex = 9;
-            this.ij_load.Text = "Load Data";
-            this.ij_load.UseVisualStyleBackColor = true;
-            // 
-            // ij_save
-            // 
-            this.ij_save.Location = new System.Drawing.Point(40, 231);
-            this.ij_save.Name = "ij_save";
-            this.ij_save.Size = new System.Drawing.Size(94, 23);
-            this.ij_save.TabIndex = 10;
-            this.ij_save.Text = "Save Data";
-            this.ij_save.UseVisualStyleBackColor = true;
-            // 
-            // cb_injuryModData
-            // 
-            this.cb_injuryModData.AutoSize = true;
-            this.cb_injuryModData.Location = new System.Drawing.Point(133, 31);
-            this.cb_injuryModData.Name = "cb_injuryModData";
-            this.cb_injuryModData.Size = new System.Drawing.Size(162, 17);
-            this.cb_injuryModData.TabIndex = 17;
-            this.cb_injuryModData.Text = "Injuries Can Modify Edit Data";
-            this.cb_injuryModData.UseVisualStyleBackColor = true;
-            // 
-            // em_injuries
-            // 
-            this.em_injuries.AutoSize = true;
-            this.em_injuries.Location = new System.Drawing.Point(16, 7);
-            this.em_injuries.Name = "em_injuries";
-            this.em_injuries.Size = new System.Drawing.Size(95, 17);
-            this.em_injuries.TabIndex = 2;
-            this.em_injuries.Text = "Enable Injuries";
-            this.em_injuries.UseVisualStyleBackColor = true;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(177, 54);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(79, 13);
-            this.label16.TabIndex = 18;
-            this.label16.Text = "Recovery Rate";
-            // 
-            // ij_recoveryRate
-            // 
-            this.ij_recoveryRate.Location = new System.Drawing.Point(158, 70);
-            this.ij_recoveryRate.Name = "ij_recoveryRate";
-            this.ij_recoveryRate.Size = new System.Drawing.Size(126, 20);
-            this.ij_recoveryRate.TabIndex = 19;
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(155, 122);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(129, 13);
-            this.label17.TabIndex = 20;
-            this.label17.Text = "Matches Since Last Injury";
-            // 
-            // ij_matches
-            // 
-            this.ij_matches.Enabled = false;
-            this.ij_matches.Location = new System.Drawing.Point(158, 139);
-            this.ij_matches.Name = "ij_matches";
-            this.ij_matches.Size = new System.Drawing.Size(126, 20);
-            this.ij_matches.TabIndex = 21;
+            this.ij_recoveryDate.Enabled = false;
+            this.ij_recoveryDate.Location = new System.Drawing.Point(158, 139);
+            this.ij_recoveryDate.Name = "ij_recoveryDate";
+            this.ij_recoveryDate.Size = new System.Drawing.Size(126, 20);
+            this.ij_recoveryDate.TabIndex = 23;
             // 
             // QoL_Form
             // 
@@ -860,7 +929,14 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ql_RefereeEdit.ResumeLayout(false);
-            this.ql_RefereeEdit.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.overrideTabs.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -869,19 +945,15 @@
             this.panel3.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
-            this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
-            this.panel5.ResumeLayout(false);
-            this.panel5.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-
+        
         #endregion
         public System.Windows.Forms.CheckBox cb_comment;
         private System.Windows.Forms.TabControl ego_MainTabs;
@@ -954,5 +1026,9 @@
         public System.Windows.Forms.CheckBox cb_injuryModData;
         public System.Windows.Forms.TextBox ij_recoveryRate;
         public System.Windows.Forms.TextBox ij_matches;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox ij_recoveryDate;
     }
 }

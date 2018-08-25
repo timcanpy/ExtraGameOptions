@@ -63,9 +63,18 @@ namespace QoL_Mods.Data_Classes
             get { return matchCount; }
             set { matchCount = value; }
         }
+
+        private DateTime returnDate;
+
+        public DateTime ReturnDate
+        {
+            get { return returnDate; }
+            set { returnDate = value; }
+        }
+
         #endregion
 
-        public WrestlerHealth(String wrestlerName, String neckHP, String bodyHP, String armHP, String legHP, float recovery, int matches)
+        public WrestlerHealth(String wrestlerName, String neckHP, String bodyHP, String armHP, String legHP, float recovery, int matches, DateTime recoveryDate = new DateTime())
         {
             name = wrestlerName;
             neckHealth = neckHP;
@@ -74,9 +83,13 @@ namespace QoL_Mods.Data_Classes
             legHealth = legHP;
             RecoveryRate = recovery;
             matchCount = matches;
+            returnDate = recoveryDate;
         }
 
-
+        public override string ToString()
+        {
+            return this.Name;
+        }
 
 
     }
