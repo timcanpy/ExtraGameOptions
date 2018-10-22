@@ -57,14 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommentaryOptions.cs" />
-    <Compile Include="Data Classes\CustomRing.cs" />
-    <Compile Include="Data Classes\EnumLibrary.cs" />
-    <Compile Include="Data Classes\WrestlerHealth.cs" />
-    <Compile Include="EditManagement.cs" />
     <Compile Include="Helper Classes\IDObject.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
-    <Compile Include="Helper Classes\MatchEndFunctions.cs" />
     <Compile Include="Helper Classes\WresIDGroup.cs" />
     <Compile Include="Overrides.cs" />
     <Compile Include="QoL Form.cs">
