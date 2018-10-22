@@ -11,15 +11,40 @@ namespace QoL_Mods
     [FieldAccess(Class = "Player", Field = "ProcessCritical", Group = "ExtraFeatures")]
     [FieldAccess(Class = "MatchMain", Field = "EndMatch", Group = "ExtraFeatures")]
     class EditManagement
-    {/*Existing Bugs
-        Remove One Option crashes game
-        */
+    {
         #region Variables
         public static String[] injuryTypes = new String[] { "Healthy", "Bruised", "Sprained", "Hurt", "Injured", "Broken" };
         public static bool isInjury = false;
         public static int injuryCeiling = 5;
         public static int injuryFloor = 3;
+        public static bool canSelfCrit = false;
+        public static bool[] selfCritCheck;
+        public static SkillData[] selfCritSkills;
+        public static bool[] injuredBeforeMatch;
         #endregion
+
+        //[Hook(TargetClass = "Menu_Title", TargetMethod = "Awake", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None)]
+        //public static void FuckYouPirates()
+        //{
+        //    string[] commandLineArgs = Environment.GetCommandLineArgs();
+        //    for (int i = 0; i < commandLineArgs.Length; i++)
+        //    {
+        //        if (commandLineArgs[i].Equals("-ImALandLubber"))
+        //        {
+        //            return;
+        //        }
+        //    }
+
+        //    if (File.Exists("./steam_emu.ini") || File.Exists("./steam_api.cdx"))
+        //    {
+        //        for (int i = 0; i < 500; i++)
+        //        {
+        //            MessageBox.Show("PIRACY IS FOR ASSHOLES, ASSHOLE.", "YOU'RE AN ASSHOLE", MessageBoxButtons.OK);
+        //        }
+
+        //        UnityEngine.Application.Quit();
+        //    }
+        //}
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "CreatePlayers", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ExtraFeatures")]
         public static void SetMatchRules()
@@ -27,7 +52,7 @@ namespace QoL_Mods
             if (QoL_Form.form.em_injuries.Checked)
             {
                 isInjury = true;
-
+                injuredBeforeMatch = new bool[8];
                 //Determine if existing players are on the injury list
                 for (int i = 0; i < 8; i++)
                 {
@@ -40,12 +65,26 @@ namespace QoL_Mods
                     String wrestlerName = DataBase.GetWrestlerFullName(plObj.WresParam);
                     if (IsWrestlerInjured(wrestlerName))
                     {
-                        L.D(wrestlerName + " is on the injury list");
-
                         //Update Wrestler Part Health
                         SetPartHealth(i, QoL_Form.form.GetWrestlerHealthInfo(wrestlerName));
+                        injuredBeforeMatch[i] = true;
                     }
                 }
+            }
+            else
+            {
+                isInjury = false;
+            }
+
+            if (QoL_Form.form.ij_highRisk.Checked)
+            {
+                canSelfCrit = true;
+                selfCritCheck = new bool[8];
+                selfCritSkills = new SkillData[8];
+            }
+            else
+            {
+                canSelfCrit = false;
             }
         }
 
@@ -59,32 +98,185 @@ namespace QoL_Mods
             //Get targetting player
             Player targetPlObj = PlayerMan.inst.GetPlObj(plObj.TargetPlIdx);
             global::SkillData currentSkill = targetPlObj.animator.CurrentSkill;
+            //Determine if wrestler currently exists in the injury list
+            String wrestlerName = DataBase.GetWrestlerFullName(plObj.WresParam);
+            WrestlerHealth healthInfo = QoL_Form.form.GetWrestlerHealthInfo(wrestlerName);
+
+            //Determine if this is a self imposed injury
+            bool isSelfCrit = false;
+            if(selfCritSkills[plObj.PlIdx] != null)
+            {
+                isSelfCrit = true;
+                currentSkill = selfCritSkills[plObj.PlIdx];
+                selfCritSkills[plObj.PlIdx] = null;
+            }
+
+            //Determine which areas have been injured & whether is is a self-imposed critical from a high risk move
+            if (!isSelfCrit)
+            {
+                if (currentSkill.atkPow_Neck != 0)
+                {
+                    healthInfo = CalculateNewInjury("Neck", healthInfo, plObj);
+                }
+                if (currentSkill.atkPow_Waist != 0)
+                {
+                    healthInfo = CalculateNewInjury("Body", healthInfo, plObj);
+                }
+                if (currentSkill.atkPow_Arm != 0)
+                {
+                    healthInfo = CalculateNewInjury("Arm", healthInfo, plObj);
+                }
+                if (currentSkill.atkPow_Leg != 0)
+                {
+                    healthInfo = CalculateNewInjury("Leg", healthInfo, plObj);
+                }
+
+                //Clause for miscellaneous injuries, caused by weapons/explosions/etc
+                if (currentSkill.atkPow_Arm == 0 && currentSkill.atkPow_Neck == 0 && currentSkill.atkPow_Waist == 0 && currentSkill.atkPow_Leg == 0)
+                {
+                    L.D("Randomizing parts for crit injury");
+                    //Randomize the injury
+                    int rngValue = UnityEngine.Random.Range(1, 4);
+                    String injuredPart = "";
+                    switch (rngValue)
+                    {
+                        case 1:
+                            injuredPart = "Neck";
+                            break;
+                        case 2:
+                            injuredPart = "Body";
+                            break;
+                        case 3:
+                            injuredPart = "Arm";
+                            break;
+                        case 4:
+                            injuredPart = "Leg";
+                            break;
+                    }
+                    healthInfo = CalculateNewInjury(injuredPart, healthInfo, plObj);
+                }
+            }
+            else
+            {
+                String injuredPart = "";
+
+                //Check the suicide damage of the move
+                if (currentSkill.suicideDamage_Neck != 0)
+                {
+                    injuredPart = "Neck";
+                }
+                else if (currentSkill.suicideDamage_Waist != 0)
+                {
+                    injuredPart = "Body";
+                }
+                else if (currentSkill.suicideDamage_Leg != 0)
+                {
+                    injuredPart = "Leg";
+                }
+                else if (currentSkill.suicideDamage_Arm != 0)
+                {
+                    injuredPart = "Arm";
+                }
+                else
+                {
+                    L.D("Randomizing parts for dive injury");
+                    //Randomize the injury
+                    int rngValue = UnityEngine.Random.Range(1, 4);
+                    switch (rngValue)
+                    {
+                        case 1:
+                            injuredPart = "Neck";
+                            break;
+                        case 2:
+                            injuredPart = "Body";
+                            break;
+                        case 3:
+                            injuredPart = "Arm";
+                            break;
+                        case 4:
+                            injuredPart = "Leg";
+                            break;
+                    }
+                }
+                healthInfo = CalculateNewInjury(injuredPart, healthInfo, plObj);
+            }
+
+            //Add details to the injury form
+            QoL_Form.form.UpdateWrestlerHealthInfo(healthInfo);
+        }
+
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessCritical", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "ExtraFeatures")]
+        public static void CheckForCriticalInjury(Player plObj)
+        {
+            if (!isInjury)
+            {
+                return;
+            }
 
             //Determine if wrestler currently exists in the injury list
             String wrestlerName = DataBase.GetWrestlerFullName(plObj.WresParam);
             WrestlerHealth healthInfo = QoL_Form.form.GetWrestlerHealthInfo(wrestlerName);
 
-            L.D("Processing critical for " + wrestlerName);
-            //Determine which areas have been injured
-            if (currentSkill.atkPow_Neck != 0)
+            if (healthInfo == null)
             {
-                healthInfo = CalculateNewInjury("Neck", healthInfo, plObj);
-            }
-            if (currentSkill.atkPow_Waist != 0)
-            {
-                healthInfo = CalculateNewInjury("Body", healthInfo, plObj);
-            }
-            if (currentSkill.atkPow_Arm != 0)
-            {
-                healthInfo = CalculateNewInjury("Arm", healthInfo, plObj);
-            }
-            if (currentSkill.atkPow_Leg != 0)
-            {
-                healthInfo = CalculateNewInjury("Leg", healthInfo, plObj);
+                return;
             }
 
-            //Add details to the injury form
-            QoL_Form.form.UpdateWrestlerHealthInfo(healthInfo);
+            //Determine if the injury is match ending
+            String[] criticalInjuries = new String[] { "Hurt", "Injured", "Broken" };
+            bool isCriticalInjury = false;
+
+            if (criticalInjuries.Contains(healthInfo.ArmHealth) || criticalInjuries.Contains(healthInfo.LegHealth) || criticalInjuries.Contains(healthInfo.NeckHealth) || criticalInjuries.Contains(healthInfo.BodyHealth))
+            {
+                isCriticalInjury = true;
+                //Referee mRef = RefereeMan.inst.GetRefereeObj();
+                //mRef.ReqRefereeAnm(BasicSkillEnum.);
+            }
+
+            if (!isCriticalInjury)
+            {
+                //Minor injury, wrestler can keep fighting
+                plObj.isKO = false;
+            }
+            else
+            { 
+                //Determine if wrestler can fight through the pain
+                int valueToBeat = 80;
+
+                if(healthInfo.ArmHealth.Equals("Hurt")|| healthInfo.LegHealth.Equals("Hurt")|| healthInfo.NeckHealth.Equals("Hurt") || healthInfo.BodyHealth.Equals("Hurt"))
+                {
+                    valueToBeat = 65;
+                }
+                if (healthInfo.ArmHealth.Equals("Injured") || healthInfo.LegHealth.Equals("Injured") || healthInfo.NeckHealth.Equals("Injured") || healthInfo.BodyHealth.Equals("Injured"))
+                {
+                    valueToBeat = 80;
+                }
+                if (healthInfo.ArmHealth.Equals("Broken") || healthInfo.LegHealth.Equals("Broken") || healthInfo.NeckHealth.Equals("Broken") || healthInfo.BodyHealth.Equals("Broken"))
+                {
+                    valueToBeat = 95;
+                }
+
+                //Determine if wrestler's discretion affects their ability to fight through the pain.
+                int discretion = plObj.WresParam.aiParam.discreation;
+                if(discretion <= 25)
+                {
+                    valueToBeat -= 10;
+                }
+                else if (discretion >25 && discretion <= 50)
+                {
+                    valueToBeat -= 5;
+                }
+                else if (discretion >75)
+                {
+                    valueToBeat += 5;
+                }
+
+                int rngValue = UnityEngine.Random.Range(1, valueToBeat);
+                if(rngValue >= valueToBeat)
+                {
+                    plObj.isKO = false;
+                }
+            }
         }
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ExtraFeatures")]
@@ -106,8 +298,13 @@ namespace QoL_Mods
                         continue;
                     }
 
+                    //Since injuries may result in removing the KO state, this now needs to be reworked
+                    //if (plObj.isKO)
+                    //{
+                    //    continue;
+                    //}
                     //Avoid calculating the recovery time twice for criticals
-                    if (plObj.isKO)
+                    if (!injuredBeforeMatch[i])
                     {
                         continue;
                     }
@@ -153,17 +350,42 @@ namespace QoL_Mods
 
                         if (partReinjured)
                         {
-                            L.D("Updating Recovery Time Due to Reinjury");
                             QoL_Form.form.UpdateWrestlerHealthInfo(healthInfo);
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     L.D("Error Updating Injured Players: " + ex.Message);
                 }
             }
         }
+
+        #region Dive Injury Logic
+        [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "ExtraFeatures")]
+        public static void CheckDiveInjury(Player plObj)
+        {
+            if (!canSelfCrit)
+            {
+                return;
+            }
+            if (plObj.animator.SkillSlotID == SkillSlotEnum.CornerDive_A || plObj.animator.SkillSlotID == SkillSlotEnum.CornerDive_B || plObj.animator.SkillSlotID == SkillSlotEnum.CornerDive_XA || plObj.animator.SkillSlotID == SkillSlotEnum.CornerDive_X ||
+                plObj.animator.SkillSlotID == SkillSlotEnum.DiveFromTopOfCage || plObj.animator.SkillSlotID == SkillSlotEnum.RunAndDiveToOutOfRing || plObj.animator.SkillSlotID == SkillSlotEnum.DiveFromNearRopeToOutOfRing ||
+                plObj.animator.SkillSlotID == SkillSlotEnum.DiveFromApronToInsideRing || plObj.animator.SkillSlotID == SkillSlotEnum.RunFlyDown || plObj.animator.SkillSlotID == SkillSlotEnum.RunFlyStand)
+            {
+                if (!selfCritCheck[plObj.PlIdx])
+                {
+                    CalculateInjuryChance(plObj);
+                    selfCritCheck[plObj.PlIdx] = true;
+                }
+            }
+            else
+            {
+                selfCritCheck[plObj.PlIdx] = false;
+            }
+
+        }
+        #endregion
 
         #region Helper Classes
         public static void SetPartHealth(int slot, WrestlerHealth injuryData)
@@ -195,7 +417,6 @@ namespace QoL_Mods
         }
         public static float GetHealthModifier(String state)
         {
-            L.D("Body part is currently " + state);
             float modifier = 1;
 
             switch (state)
@@ -240,7 +461,6 @@ namespace QoL_Mods
             if (currentInjury != injuryTypes[0])
             {
                 int newFloor = Array.FindIndex(injuryTypes, row => row.Contains(currentInjury));
-                L.D("Index of " + currentInjury + ": " + newFloor);
 
                 //Determine what the new injury floor will be.
                 newFloor = newFloor + injuryFloor - partEndurance;
@@ -302,13 +522,82 @@ namespace QoL_Mods
         {
             if (healthInfo == null)
             {
-                healthInfo = new WrestlerHealth(name, injuryTypes[0], injuryTypes[0], injuryTypes[0], injuryTypes[0], recovery, 0);
+                healthInfo = new WrestlerHealth(name, injuryTypes[0], injuryTypes[0], injuryTypes[0], injuryTypes[0], recovery, 0, DateTime.Now);
             }
             return healthInfo;
         }
         public static void AnnounceInjury(String wrestler, String part, String health)
         {
-            DispNotification.inst.Show(wrestler + "'s " + part + " is " + health + "!");
+            if (QoL_Form.form.ij_notifications.Checked)
+            {
+                DispNotification.inst.Show(wrestler + "'s " + part + " is " + health + "!");
+            }
+        }
+        public static void CalculateInjuryChance(Player plObj)
+        {
+            FightStyleEnum style = plObj.WresParam.fightStyle;
+            int agilitySkill = agilitySkill = plObj.WresParam.atkParam[6];
+            CriticalRateEnum criticalRate = GlobalWork.GetInst().MatchSetting.CriticalRate;
+
+            if (criticalRate == CriticalRateEnum.Off)
+            {
+                return;
+            }
+
+            //Determine the style modifier for injury calculation
+            int styleModifier = 1;
+            switch (style)
+            {
+                case FightStyleEnum.Junior:
+                case FightStyleEnum.Luchador:
+                case FightStyleEnum.Mysterious:
+                case FightStyleEnum.Panther:
+                    styleModifier = 10;
+                    break;
+                case FightStyleEnum.Orthodox:
+                case FightStyleEnum.American:
+                case FightStyleEnum.Power:
+                case FightStyleEnum.Technician:
+                    styleModifier = 5;
+                    break;
+                case FightStyleEnum.Shooter:
+                case FightStyleEnum.Wrestling:
+                case FightStyleEnum.Devilism:
+                case FightStyleEnum.Fighter:
+                case FightStyleEnum.Grappler:
+                case FightStyleEnum.Ground:
+                case FightStyleEnum.Heel:
+                    styleModifier = 2;
+                    break;
+                case FightStyleEnum.Giant:
+                    styleModifier = 1;
+                    break;
+            }
+
+            //Determine the rate modifier for injury calculation
+            int rateModifier = 1;
+            switch (criticalRate)
+            {
+                case CriticalRateEnum.Double:
+                    rateModifier = 10;
+                    break;
+                case CriticalRateEnum.Normal:
+                    rateModifier = 5;
+                    break;
+                case CriticalRateEnum.Half:
+                    rateModifier = 2;
+                    break;
+            }
+
+            //Calculate chance of injury
+            int rngCeiling = (agilitySkill * styleModifier) + rateModifier;
+            int rngValue = UnityEngine.Random.Range(0, rngCeiling);
+            if (rngValue > agilitySkill * styleModifier)
+            {
+                plObj.isKO = true;
+                selfCritSkills[plObj.PlIdx] = plObj.animator.CurrentSkill;
+                plObj.ProcessCritical(plObj.animator.CurrentSkill);
+            }
         }
         #endregion
     }

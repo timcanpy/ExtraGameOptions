@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentaryOptions.cs" />
+    <Compile Include="Data Classes\CustomRing.cs" />
     <Compile Include="Data Classes\EnumLibrary.cs" />
     <Compile Include="Data Classes\WrestlerHealth.cs" />
     <Compile Include="EditManagement.cs" />
