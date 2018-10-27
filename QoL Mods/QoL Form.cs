@@ -161,7 +161,7 @@ namespace QoL_Mods
                     global::CreateMenu_SceneManager.edit_data.ThemeMusic_Filename = string.Empty;
                 }
                 global::CreateMenu_SceneManager.edit_data.appearanceData.Set(global::DataBase.GetAppearanceData(wID));
-                global::CreateMenu_SceneManager.data_num = wID;
+                global::CreateMenu_SceneManager.editWrestlerID = wID;
                 global::CreateMenu_SceneManager.edit_data = global::SaveData.GetInst().GetEditWrestlerData(wID).Clone();
                 global::CreateMenu_SceneManager.flg_Overwrite = true;
                 global::CreateMenu_SceneManager.user_edit_point = 380;

@@ -5,32 +5,32 @@ using DLC;
 
 namespace QoL_Mods
 {
-    [FieldAccess(Class = "DLCChecker", Field = "IsValidDLCID", Group = "WrestlerSearch")]
-    [FieldAccess(Class = "DLCChecker", Field = "IsOwner", Group = "WrestlerSearch")]
-    [FieldAccess(Class = "DLCChecker", Field = "IsDownloaded", Group = "WrestlerSearch")]
-    [FieldAccess(Class = "DLCChecker", Field = "IsInstalled", Group = "WrestlerSearch")]
+    [FieldAccess(Class = "DLC.DLCChecker", Field = "IsValidDLCID", Group = "WrestlerSearch")]
+    [FieldAccess(Class = "DLC.DLCChecker", Field = "IsOwner", Group = "WrestlerSearch")]
+    [FieldAccess(Class = "DLC.DLCChecker", Field = "IsDownloaded", Group = "WrestlerSearch")]
+    [FieldAccess(Class = "DLC.DLCChecker", Field = "IsInstalled", Group = "WrestlerSearch")]
     
     class Overrides
     {
-        [Hook(TargetClass = "DLCChecker", TargetMethod = "IsValidDLCID", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
+        [Hook(TargetClass = "DLC.DLCChecker", TargetMethod = "IsValidDLCID", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
         public static bool ValidDLCID(out bool result)
         {
             result = true;
             return result;
         }
-        [Hook(TargetClass = "DLCChecker", TargetMethod = "IsOwner", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
+        [Hook(TargetClass = "DLC.DLCChecker", TargetMethod = "IsOwner", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
         public static bool ValidOwner(out bool result)
         {
             result = true;
             return result;
         }
-        [Hook(TargetClass = "DLCChecker", TargetMethod = "IsDownloaded", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
+        [Hook(TargetClass = "DLC.DLCChecker", TargetMethod = "IsDownloaded", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
         public static bool ValidDownload(out bool result)
         {
             result = true;
             return result;
         }
-        [Hook(TargetClass = "DLCChecker", TargetMethod = "IsInstalled", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
+        [Hook(TargetClass = "DLC.DLCChecker", TargetMethod = "IsInstalled", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]
         public static bool ValidInstall(out bool result)
         {
             result = true;
