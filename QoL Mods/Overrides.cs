@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using DG;
 using UnityEngine;
+using DLC;
 
 namespace QoL_Mods
 {
@@ -8,6 +9,7 @@ namespace QoL_Mods
     [FieldAccess(Class = "DLCChecker", Field = "IsOwner", Group = "WrestlerSearch")]
     [FieldAccess(Class = "DLCChecker", Field = "IsDownloaded", Group = "WrestlerSearch")]
     [FieldAccess(Class = "DLCChecker", Field = "IsInstalled", Group = "WrestlerSearch")]
+    
     class Overrides
     {
         [Hook(TargetClass = "DLCChecker", TargetMethod = "IsValidDLCID", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "WrestlerSearch")]

@@ -131,7 +131,7 @@ namespace QoL_Mods
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(83, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "WrestlerSearch";
+            this.label1.Text = "Wrestler Search";
             // 
             // label3
             // 
@@ -239,7 +239,7 @@ namespace QoL_Mods
             this.Controls.Add(this.ego_MainTabs);
             this.Controls.Add(this.cb_comment);
             this.Name = "QoL_Form";
-            this.Text = "WrestlerSearch";
+            this.Text = "Wrestler Search";
             this.Load += new System.EventHandler(this.QoL_Form_Load);
             this.ego_MainTabs.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

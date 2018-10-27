@@ -20,7 +20,6 @@ namespace QoL_Mods
         #region Init Methods
         public void QoL_Form_Load(object sender, EventArgs e)
         {
-            ego_MainTabs.TabPages.RemoveAt(1);
         }
         public QoL_Form()
         {
