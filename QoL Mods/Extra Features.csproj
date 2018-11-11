@@ -55,6 +55,7 @@
     <Compile Include="Helper Classes\IDObject.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
     <Compile Include="Helper Classes\WresIDGroup.cs" />
+    <Compile Include="Helper Classes\WrestlerHealth.cs" />
     <Compile Include="InjuryForm.cs">
       <SubType>Form</SubType>
     </Compile>

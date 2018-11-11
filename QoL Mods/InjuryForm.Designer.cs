@@ -106,7 +106,6 @@
             this.ij_add.TabIndex = 7;
             this.ij_add.Text = "Add Wrestler";
             this.ij_add.UseVisualStyleBackColor = true;
-            this.ij_add.Click += new System.EventHandler(this.ij_add_Click);
             // 
             // ij_removeOne
             // 
