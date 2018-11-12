@@ -8,6 +8,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Wrestler Search", Name = "Wrestler Search Tool", Description = "Provides a UI for loading edits within Edit Mode.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
+    [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
 
     #region Pinfall Field Access
     [FieldAccess(Class = "MatchEvaluation", Field = "EvaluateSkill", Group = "Ref Positions For Pinfall")]
@@ -17,13 +18,14 @@ namespace QoL_Mods
 
     class Overrides
     {
-        [ControlPanel(Group = "WrestlerSearch")]
+        [ControlPanel(Group = "Wrestler Search")]
         public static Form MSForm()
         {
             if (QoL_Form.form == null)
             {
                 return new QoL_Form();
             }
+            else
             {
                 return null;
             }
