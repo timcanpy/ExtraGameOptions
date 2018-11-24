@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E8F3C43F-1C09-4D7C-9E57-40FE8727A72D}</ProjectGuid>
+    <ProjectGuid>{38BF8A78-1EA6-41EC-A914-72CDEEF7FECB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QoL_Mods</RootNamespace>
-    <AssemblyName>ExtraFeatures</AssemblyName>
+    <RootNamespace>FireProWar</RootNamespace>
+    <AssemblyName>FireProWar</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,9 +34,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="PWGR Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL Files\PWGR Framework.dll</HintPath>
+    <Reference Include="PWGR Framework">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\PWGR Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -47,39 +45,30 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\DLL Files\UnityEngine.dll</HintPath>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\NewMatchTypes\DLL Files\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helper Classes\IDObject.cs" />
+    <Compile Include="Data Classes\Employee.cs" />
+    <Compile Include="Helper Classes\MatchEndFunctions.cs" />
+    <Compile Include="Data Classes\Promotion.cs" />
+    <Compile Include="Data Classes\WresIDGroup.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
-    <Compile Include="Helper Classes\WresIDGroup.cs" />
-    <Compile Include="Helper Classes\WrestlerHealth.cs" />
-    <Compile Include="InjuryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="InjuryForm.Designer.cs">
-      <DependentUpon>InjuryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Overrides.cs" />
-    <Compile Include="SearchForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SearchForm.Designer.cs">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Management.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="War_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="War_Form.Designer.cs">
+      <DependentUpon>War_Form.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="InjuryForm.resx">
-      <DependentUpon>InjuryForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SearchForm.resx">
-      <DependentUpon>SearchForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="War_Form.resx">
+      <DependentUpon>War_Form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
