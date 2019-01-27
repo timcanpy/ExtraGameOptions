@@ -6,6 +6,7 @@ using DLC;
 namespace QoL_Mods
 {
     [GroupDescription(Group = "Wrestler Search", Name = "Wrestler Search Tool", Description = "Provides a UI for loading edits within Edit Mode.")]
+    [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
@@ -30,6 +31,30 @@ namespace QoL_Mods
                 return null;
             }
         }
+
+        #region Increase Down time
+        [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Forced Sell")]
+        public static void IncreaseDownTime(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
+        {
+            Player attacker = PlayerMan.inst.GetPlObj(plIDx);
+            Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+
+            if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
+            {
+                defender.DownTime += 300;
+                CheckForFall(defender.PlIdx);
+                //if (attacker.WresParam.fightStyle == FightStyleEnum.Heel)
+                //{
+                //    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.BOOING, 4);
+                //}
+                //else
+                //{
+                //    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ODOROKI_L, 4);
+                //}
+            }
+        }
+
+        #endregion
 
         #region Force Preemptive Pinfall Count
 
