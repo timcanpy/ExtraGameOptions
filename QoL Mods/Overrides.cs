@@ -6,6 +6,8 @@ using System;
 
 namespace QoL_Mods
 {
+
+    [GroupDescription(Group = "Variable Front Neck Lock Moves", Name = "Variable Front Neck Lock Moves", Description = "Changes the Front Neck Lock finishing move based on edit's fighting style.")]
     [GroupDescription(Group = "Wrestler Search", Name = "Wrestler Search Tool", Description = "Provides a UI for loading edits within Edit Mode.")]
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
@@ -143,9 +145,9 @@ namespace QoL_Mods
             }
             catch (Exception e)
             {
-                L.D("Tag Recovery Error:"  + e.Message);
+                L.D("Tag Recovery Error:" + e.Message);
             }
-           
+
         }
 
         public static bool isTagMatch()
@@ -195,6 +197,93 @@ namespace QoL_Mods
                 plObj.WresParam.hpRecovery_Bleeding = 0;
                 plObj.WresParam.spRecovery_Bleeding = 0;
             }
+        }
+        #endregion
+
+        #region Variable Front Necklock Moves
+        [Hook(TargetClass = "Player", TargetMethod = "StandardKeyInput", InjectionLocation = 185, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Variable Front Neck Lock Moves")]
+        public static bool UpdateNeckLockMove(Player attacker)
+        {
+            try
+            {
+                attacker.ChangeState(global::PlStateEnum.NormalAnm);
+
+                //Get Player's fight style
+                FightStyleEnum style = attacker.WresParam.fightStyle;
+
+                //Determine edit's current damage threshold
+
+                //Determine if a custom  move should be used for this edit
+                bool useCustomMove = false;
+
+                if (useCustomMove)
+                {
+
+                }
+                else
+                {
+                    switch (style)
+                    {
+                        case FightStyleEnum.Orthodox:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_ElbowBat, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Technician:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_LegScissors, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Wrestling:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Ground:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_Oosotogari, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Power:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_HeadBat, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.American:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Junior:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Luchador:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Heel:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Mysterious:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Shooter:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Fighter:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_BodyKneeLift, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Grappler:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_Oosotogari, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Panther:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_BodyKneeLift, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Giant:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_HammerBlow, true, attacker.TargetPlIdx);
+                            break;
+                        case FightStyleEnum.Devilism:
+                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
+                            break;
+                    }
+                }
+
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                L.D(e.Message);
+                return false;
+            }
+
         }
         #endregion
     }
