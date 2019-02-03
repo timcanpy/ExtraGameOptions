@@ -2,10 +2,12 @@
 using DG;
 using UnityEngine;
 using DLC;
+using System;
 
 namespace QoL_Mods
 {
     [GroupDescription(Group = "Wrestler Search", Name = "Wrestler Search Tool", Description = "Provides a UI for loading edits within Edit Mode.")]
+    [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
@@ -123,6 +125,76 @@ namespace QoL_Mods
             mRef.GoToPlayer(defender, 0f);
             mRef.RefeCount = 0;
             mRef.NextState = RefeStateEnum.CheckSubmission;
+        }
+        #endregion
+
+        #region Override Tag Team Recovery
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Low Tag Recovery")]
+        public static void SetTagRecovery()
+        {
+            try
+            {
+                if (isTagMatch())
+                {
+                    SetLowRecovery();
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("Tag Recovery Error:"  + e.Message);
+            }
+           
+        }
+
+        public static bool isTagMatch()
+        {
+            bool isTag = false;
+            int memberCount = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+
+                if (!plObj)
+                {
+                    continue;
+                }
+
+                if (plObj.isSecond)
+                {
+                    continue;
+                }
+
+                memberCount++;
+
+            }
+
+            if (memberCount > 2)
+            {
+                if (!GlobalWork.GetInst().MatchSetting.isTornadoBattle)
+                {
+                    isTag = true;
+                }
+            }
+
+            return isTag;
+        }
+
+        public static void SetLowRecovery()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (!plObj)
+                {
+                    continue;
+                }
+                plObj.WresParam.hpRecovery = 0;
+                plObj.WresParam.spRecovery = 0;
+                plObj.WresParam.hpRecovery_Bleeding = 0;
+                plObj.WresParam.spRecovery_Bleeding = 0;
+            }
         }
         #endregion
     }
