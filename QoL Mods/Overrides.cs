@@ -43,18 +43,18 @@ namespace QoL_Mods
             Player attacker = PlayerMan.inst.GetPlObj(plIDx);
             Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
 
+            //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
+            if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
+                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
+            {
+                return;
+            }
+
             if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
             {
                 defender.DownTime += 300;
                 CheckForFall(defender.PlIdx);
-                //if (attacker.WresParam.fightStyle == FightStyleEnum.Heel)
-                //{
-                //    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.BOOING, 4);
-                //}
-                //else
-                //{
-                //    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ODOROKI_L, 4);
-                //}
+               
             }
         }
 
