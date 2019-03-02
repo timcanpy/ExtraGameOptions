@@ -271,7 +271,8 @@ namespace QoL_Mods
 
         private void we_resultList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            WresIDGroup edit = (WresIDGroup)we_resultList.SelectedItem;
+            ws_promotionLbl.Text = promotionList[edit.Group];
         }
     }
 }

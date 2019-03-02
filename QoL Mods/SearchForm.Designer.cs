@@ -37,7 +37,7 @@ namespace QoL_Mods
             this.ql_WrestlerEdit = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.ws_promotionLbl = new System.Windows.Forms.Label();
             this.we_refresh = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.btn_mainMenu = new System.Windows.Forms.Button();
@@ -110,7 +110,7 @@ namespace QoL_Mods
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.ws_promotionLbl);
             this.panel1.Controls.Add(this.we_refresh);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.btn_mainMenu);
@@ -127,20 +127,23 @@ namespace QoL_Mods
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(231, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 13);
+            this.label1.Size = new System.Drawing.Size(98, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Wrestler Search";
             // 
-            // label3
+            // ws_promotionLbl
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(234, 115);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(79, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Search Results";
+            this.ws_promotionLbl.AutoSize = true;
+            this.ws_promotionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ws_promotionLbl.ForeColor = System.Drawing.Color.DarkGreen;
+            this.ws_promotionLbl.Location = new System.Drawing.Point(122, 112);
+            this.ws_promotionLbl.Name = "ws_promotionLbl";
+            this.ws_promotionLbl.Size = new System.Drawing.Size(93, 13);
+            this.ws_promotionLbl.TabIndex = 7;
+            this.ws_promotionLbl.Text = "Search Results";
             // 
             // we_refresh
             // 
@@ -155,9 +158,10 @@ namespace QoL_Mods
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(236, 65);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(73, 13);
+            this.label2.Size = new System.Drawing.Size(87, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Promotion List";
             // 
@@ -263,7 +267,7 @@ namespace QoL_Mods
         public System.Windows.Forms.TabPage ql_WrestlerEdit;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label ws_promotionLbl;
         private System.Windows.Forms.Button we_refresh;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_mainMenu;
