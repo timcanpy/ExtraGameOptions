@@ -180,6 +180,7 @@ namespace QoL_Mods
             this.we_resultList.Size = new System.Drawing.Size(360, 21);
             this.we_resultList.Sorted = true;
             this.we_resultList.TabIndex = 9;
+            this.we_resultList.SelectedIndexChanged += new System.EventHandler(this.we_resultList_SelectedIndexChanged);
             // 
             // we_search
             // 
@@ -230,6 +231,7 @@ namespace QoL_Mods
             this.we_unsubscribe.TabIndex = 15;
             this.we_unsubscribe.Text = "Unsubscribe Wrestler From Workshop";
             this.we_unsubscribe.UseVisualStyleBackColor = true;
+            this.we_unsubscribe.Visible = false;
             // 
             // QoL_Form
             // 

@@ -42,6 +42,11 @@ namespace QoL_Mods
                 this.we_promotionBox.Items.Add(promotion);
                 promotionList.Add(promotion);
             }
+
+            if (this.we_promotionBox.Items.Count > 0)
+            {
+                this.we_promotionBox.SelectedIndex = 0;
+            }
         }
         private void LoadSubs()
         {
@@ -57,7 +62,8 @@ namespace QoL_Mods
                 {
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
-                    wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
+                    //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
+                    wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
                     index = SaveData.inst.editWrestlerData.IndexOf(current);
 
@@ -114,7 +120,7 @@ namespace QoL_Mods
                     return;
                 }
 
-                if (we_promotionBox.SelectedItem.ToString().Contains("???"))
+                if (we_promotionBox.SelectedItem.ToString().Contains("未登録"))
                 {
                     this.LoadSubs();
                     return;
@@ -132,6 +138,10 @@ namespace QoL_Mods
                 {
                     we_resultList.SelectedIndex = 0;
                 }
+                else
+                {
+                    this.LoadSubs();
+                }
             }
             catch (Exception ex)
             {
@@ -146,7 +156,7 @@ namespace QoL_Mods
                 CreateMenu_SceneManager manager = new CreateMenu_SceneManager();
                 WresIDGroup wrestler = (WresIDGroup)we_resultList.SelectedItem;
                 WrestlerID wID = (WrestlerID)wrestler.ID;
-
+                L.D("Loading " +wrestler.Name +" at " + wrestler.ID);
                 if (global::CreateMenu_SceneManager.edit_data == null)
                 {
                     global::CreateMenu_SceneManager.edit_data = new EditWrestlerData();
@@ -169,10 +179,10 @@ namespace QoL_Mods
                 MyMusic.Init();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Scene_WrestlerEditMenu");
 
-                if (this.we_unsubscribe.Checked)
-                {
-                    Unsubcribe(wID);
-                }
+                //if (this.we_unsubscribe.Checked)
+                //{
+                //    Unsubcribe(wID);
+                //}
             }
             catch (Exception ex)
             {
@@ -184,60 +194,60 @@ namespace QoL_Mods
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Scene_MainMenu");
         }
-        private void Unsubcribe(WrestlerID wrestlerID)
-        {
-            //Get current wrestler from list
-            WresIDGroup wrestler = null;
-            bool workshopAdded = false;
-            foreach (WresIDGroup edit in wrestlerList)
-            {
-                if (wrestlerID == (WrestlerID)edit.ID)
-                {
-                    wrestler = edit;
-                    break;
-                }
-            }
+        //private void Unsubcribe(WrestlerID wrestlerID)
+        //{
+        //    //Get current wrestler from list
+        //    WresIDGroup wrestler = null;
+        //    bool workshopAdded = false;
+        //    foreach (WresIDGroup edit in wrestlerList)
+        //    {
+        //        if (wrestlerID == (WrestlerID)edit.ID)
+        //        {
+        //            wrestler = edit;
+        //            break;
+        //        }
+        //    }
 
-            //Remove subscription if it exists
-            if (wrestler.Info == null)
-            {
-                return;
-            }
+        //    //Remove subscription if it exists
+        //    if (wrestler.Info == null)
+        //    {
+        //        return;
+        //    }
 
-            //Load the Steam Workshop item
-            GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-            if (array.Length != 0)
-            {
-                try
-                {
-                    workShop = array[0].GetComponent<SteamWorkshop_UGC>();
-                    if (workShop == null)
-                    {
-                        workShop = array[0].AddComponent<SteamWorkshop_UGC>();
-                        workshopAdded = true;
-                    }
+        //    //Load the Steam Workshop item
+        //    GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
+        //    if (array.Length != 0)
+        //    {
+        //        try
+        //        {
+        //            workShop = array[0].GetComponent<SteamWorkshop_UGC>();
+        //            if (workShop == null)
+        //            {
+        //                workShop = array[0].AddComponent<SteamWorkshop_UGC>();
+        //                workshopAdded = true;
+        //            }
 
-                    if (workShop != null)
-                    {
-                        workShop.UnsubscribeItem(wrestler.Info.GetPublishFileId());
-                        SaveData.inst.subscribeItemInfoData.Remove(wrestler.Info);
-                        wrestler.Info = null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    L.D("Unsubcribe Error: " + ex.Message);
-                }
-                finally
-                {
-                    if (workshopAdded)
-                    {
-                        UnityEngine.Object.Destroy(workShop);
-                        workShop = null;
-                    }
-                }
-            }
-        }
+        //            if (workShop != null)
+        //            {
+        //                workShop.UnsubscribeItem(wrestler.Info.GetPublishFileId());
+        //                SaveData.inst.subscribeItemInfoData.Remove(wrestler.Info);
+        //                wrestler.Info = null;
+        //            }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            L.D("Unsubcribe Error: " + ex.Message);
+        //        }
+        //        finally
+        //        {
+        //            if (workshopAdded)
+        //            {
+        //                UnityEngine.Object.Destroy(workShop);
+        //                workShop = null;
+        //            }
+        //        }
+        //    }
+        //}
         private void we_refresh_Click(object sender, EventArgs e)
         {
             LoadSubs();
@@ -257,6 +267,11 @@ namespace QoL_Mods
         private int FindGroup(String groupName)
         {
             return promotionList.IndexOf(groupName);
+        }
+
+        private void we_resultList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
