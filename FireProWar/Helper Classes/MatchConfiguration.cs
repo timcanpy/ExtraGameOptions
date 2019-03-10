@@ -92,10 +92,10 @@ namespace MatchConfig
             {
                 "Mr Judgement"
             };
-            foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
-            {
-                referees.Add(referee.Prm.name);
-            }
+            //foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
+            //{
+            //    referees.Add(referee.Prm.name);
+            //}
             return referees;
         }
 

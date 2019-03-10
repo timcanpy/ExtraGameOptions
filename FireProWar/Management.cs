@@ -144,9 +144,37 @@ namespace FireProWar
                 {
                     return;
                 }
+                MatchEvaluation evaluation = global::MatchEvaluation.inst;
+
+                //Variables for Match Details
+                String titleMatch = "";
+                String winners = "";
+                String losers = "";
+
+                #region Setting End Match Time
+                String time = "";
+                if (MatchMain.inst.matchTime.min < 10)
+                {
+                    time = "0" + MatchMain.inst.matchTime.min;
+                }
+                else
+                {
+                    time = MatchMain.inst.matchTime.min.ToString();
+                }
+
+                time += ":";
+
+                if (MatchMain.inst.matchTime.sec < 10)
+                {
+                    time += "0" + MatchMain.inst.matchTime.sec;
+                }
+                else
+                {
+                    time += MatchMain.inst.matchTime.sec;
+                }
+                #endregion
 
                 //Get Loser
-                MatchEvaluation evaluation = global::MatchEvaluation.inst;
                 int rating = evaluation.EvaluateMatch();
                 bool isDraw = false;
                 //Update Morale Points
@@ -170,6 +198,14 @@ namespace FireProWar
                     {
                         if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser)
                         {
+                            if (String.IsNullOrEmpty(losers))
+                            {
+                                losers = DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                            else
+                            {
+                                losers += " & " + DataBase.GetWrestlerFullName(player.WresParam);
+                            }
                             moralePoints -= 1;
 
                             //Determine Skill rank of the winner
@@ -177,9 +213,25 @@ namespace FireProWar
                             int rankPoints = CompareRank(winner, player, ResultPosition.Loser);
                             moralePoints += rankPoints;
                             isWinner = false;
+
+                            //Record if this was an upset victory
+                            if (rankPoints != 0)
+                            {
+                                promotion.AddHistory(DataBase.GetWrestlerFullName(winner.WresParam) +
+                                                     " has scored an upset victory against " +
+                                                     DataBase.GetWrestlerFullName(player.WresParam) + ".");
+                            }
                         }
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner)
                         {
+                            if (String.IsNullOrEmpty(winners))
+                            {
+                                winners = DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                            else
+                            {
+                                winners += " & " + DataBase.GetWrestlerFullName(player.WresParam);
+                            }
                             moralePoints += 1;
 
                             //Determine Skill rank of loser
@@ -205,6 +257,8 @@ namespace FireProWar
                     //Check For Title Match
                     if (GlobalParam.TitleMatch_BeltData != null)
                     {
+                        titleMatch = GlobalParam.TitleMatch_BeltData.titleName + ": ";
+
                         String champion = GlobalParam.TitleMatch_BeltData.GetCurrentTitleHolderName();
                         if (evaluation.ResultType == MatchResultEnum.RingOutDraw ||
                             evaluation.ResultType == MatchResultEnum.TimeOutDraw)
@@ -213,28 +267,27 @@ namespace FireProWar
                         }
                         //Removing belt from previous champion
                         else if ((evaluation.PlResult[i].resultPosition == ResultPosition.Loser ||
-                                  evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner) &&
-                                 champion.Contains(employee.Name))
+                                  evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner)
+                                  && i >= 4)
                         {
                             L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                 " has lost the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
-                           promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                                 " has lost the "+ GlobalParam.TitleMatch_BeltData.titleName+".");
+                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
+                                                  " has lost the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             moralePoints -= 3;
                         }
                         //Awarding a new champion
                         else if ((evaluation.PlResult[i].resultPosition == ResultPosition.Winner ||
-                                  evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner) &&
-                                 !champion.Contains(employee.Name))
+                                  evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner)
+                                  && i < 4)
                         {
                             L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
-                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the "+ GlobalParam.TitleMatch_BeltData.titleName+ ".");
+                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             moralePoints += (6 - employee.MoraleRank);
                         }
                         //Logging record for a successful defense
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner ||
-                                 evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner &&
-                                 champion.Contains(employee.Name))
+                                 evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner && i >= 4)
                         {
                             L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                 " successfully defends the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
@@ -246,7 +299,7 @@ namespace FireProWar
                     if (player.isKO)
                     {
                         moralePoints -= 1;
-                        promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") +"-"+employee.Name + " has been knocked out.");
+                        promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has been knocked out.");
                     }
 
                     if (player.HP_Arm <= 0)
@@ -316,6 +369,32 @@ namespace FireProWar
                         promotion.AverageRating = (promotion.AverageRating + rating) / 2;
                     }
 
+                    //Ensure that we store match results, even if the winner/loser isn't a member of the promotion
+                    Player resultPlayer;
+                    if (String.IsNullOrEmpty(winners) && !isDraw)
+                    {
+                        resultPlayer = PlayerMan.inst.GetPlObj(evaluation.GetWinnerPlayer());
+                        if (resultPlayer)
+                        {
+                            winners = DataBase.GetWrestlerFullName(resultPlayer.WresParam);
+                        }
+                    }
+
+                    if (String.IsNullOrEmpty(losers) && !isDraw)
+                    {
+                        resultPlayer = PlayerMan.inst.GetPlObj(evaluation.GetLoserPlayer());
+                        if (resultPlayer)
+                        {
+                            losers = DataBase.GetWrestlerFullName(resultPlayer.WresParam);
+                        }
+                    }
+
+                    String matchDetails = promotion.MatchDetails.Count + 1 + ") " + DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + titleMatch + winners + " defeat(s) " + losers + " (" + rating + "%).";
+
+                    if (!String.IsNullOrEmpty(winners) && !String.IsNullOrEmpty(losers))
+                    {
+                        promotion.AddMatchDetails(matchDetails);
+                    }
                     War_Form.form.UpdatePromotionData(promotion);
                 }
             }
