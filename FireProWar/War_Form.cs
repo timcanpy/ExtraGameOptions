@@ -31,7 +31,6 @@ namespace FireProWar
         {
             form = this;
             InitializeComponent();
-            FormClosing += WarForm_FormClosing;
             LoadOrgs();
             LoadSubs();
             LoadRegions();
@@ -40,6 +39,7 @@ namespace FireProWar
             LoadMoraleRank();
             LoadGroupFightingStyles();
             LoadWarData();
+            FormClosing += WarForm_FormClosing;
         }
 
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -72,8 +72,7 @@ namespace FireProWar
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
-                    wresIDGroup.ID = (Int32)current.editWrestlerID;
-                    wresIDGroup.Group = current.wrestlerParam.groupID;
+                    wresIDGroup.ID = (Int32)current.editWrestlerID; wresIDGroup.Group = current.wrestlerParam.groupID;
 
                     wrestlerList.Add(wresIDGroup);
                     this.ms_searchResults.Items.Add(wresIDGroup);
@@ -166,7 +165,7 @@ namespace FireProWar
                         while (i < lines.Length)
                         {
                             /*Promotion Data
-                                Name, Ring, Type, Region, MatchCount, AverageRating, History, EmployeeData 
+                                Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
                             */
                             if (lines[i].Equals(promotionDivider))
                             {
@@ -178,9 +177,19 @@ namespace FireProWar
                                 promotion.MatchCount = int.Parse(lines[i + 5]);
                                 promotion.AverageRating = float.Parse(lines[i + 6]);
                                 promotion.History = lines[i + 7];
-                                promotion.AddEmployeeFromData(lines[i + 8]);
+
+                                if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
+                                {
+                                    promotion.AddEmployeeFromData(lines[i + 8]);
+                                    i += 9;
+                                }
+                                else
+                                {
+                                    promotion.AddMatchDetailsFromData(lines[i + 8]);
+                                    promotion.AddEmployeeFromData(lines[i + 9]);
+                                    i += 10;
+                                }
                                 fpw_promoList.Items.Add(promotion);
-                                i += 9;
 
                                 //Update Promotion and Employee Lists
                                 promotionsAdded.Add(promotion.Name);
@@ -205,6 +214,11 @@ namespace FireProWar
                 L.D("Load War Data Error: " + e.ToString());
             }
         }
+        private void btn_LoadData_Click(object sender, EventArgs e)
+        {
+            LoadWarData();
+        }
+
         #endregion
 
         #region Date Save
@@ -237,6 +251,15 @@ namespace FireProWar
                     sw.WriteLine(promotion.AverageRating);
                     sw.WriteLine(promotion.History);
 
+                    //Match Details
+                    String matchDetails = "";
+                    foreach (String result in promotion.MatchDetails)
+                    {
+                        matchDetails += result + "|";
+                    }
+
+                    sw.WriteLine(matchDetails);
+
                     //Roster
                     String employeeData = "";
                     foreach (Employee employee in promotion.EmployeeList)
@@ -249,6 +272,11 @@ namespace FireProWar
             }
 
         }
+        private void btn_SaveData_Click(object sender, EventArgs e)
+        {
+            SaveWarData();
+        }
+
         #endregion
 
         #region Wrestler Search
@@ -323,7 +351,7 @@ namespace FireProWar
         }
         #endregion
 
-        #region Promotion Creation
+        #region Promotion Management
         private void fpw_addPromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoName.Text.Trim().Equals(""))
@@ -375,6 +403,15 @@ namespace FireProWar
             fpw_promoMthCnt.Text = promotion.MatchCount.ToString();
             fpw_promoMthRating.Text = Math.Round(Decimal.Parse(promotion.AverageRating.ToString()), 2) + "%";
             fpw_promoHistory.Text = promotion.History.Replace("~", "\n");
+
+            #region Adding Details
+            String details = "";
+            foreach (String detail in promotion.MatchDetails)
+            {
+                details += "\n" + detail;
+            }
+            fpw_detailsView.Text = details;
+            #endregion
 
             ms_employeeList.Items.Clear();
             ms_rosterList.Items.Clear();
@@ -442,6 +479,7 @@ namespace FireProWar
             fpw_promoMthCnt.Text = "";
             fpw_promoMthRating.Text = "";
             fpw_promoHistory.Text = "";
+            fpw_detailsView.Text = "";
         }
 
         public void UpdatePromotionData(Promotion promotion)
@@ -453,11 +491,18 @@ namespace FireProWar
                     fpw_promoList.SelectedItem = promo;
                     promo.AverageRating = promotion.AverageRating;
                     promo.MatchCount = promotion.MatchCount;
+                    promo.MatchDetails = promotion.MatchDetails;
+                    promo.History = promotion.History;
                     break;
                 }
             }
             L.D("Updating information for " + promotion.Name);
             fpw_promoList_SelectedIndexChanged(null, null);
+        }
+
+        private void fpw_clearDetails_Click(object sender, EventArgs e)
+        {
+            fpw_detailsView.Clear();
         }
         #endregion
 
@@ -493,6 +538,8 @@ namespace FireProWar
             WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
             if (employeesAdded.Contains(wrestler.Name))
             {
+                //Find Wrestler's Promotion
+                MessageBox.Show(wrestler.Name + " is working for " + GetEmployeePromotion(wrestler.Name).Name + ".");
                 return;
             }
 
@@ -774,6 +821,7 @@ namespace FireProWar
         }
         private static String CorrectRegionName(String region)
         {
+            //
             switch (region.ToLower())
             {
                 case "uitedstates":
@@ -798,6 +846,40 @@ namespace FireProWar
                     return region;
             }
         }
+
+        //"Portugal";
+        //"New Mexico";
+        //"Austria";
+        //"Eritrea";
+        //"Fiji";
+        //"Hungary";
+        //"Iraq";
+        //"Israel";
+        //"Jamaica";
+        //"Kenya";
+        //"Madagascar";
+        //"Malawi";
+        //"Namibia";
+        //"Nigeria";
+        //"Pakistan";
+        //"Poland";
+        //"Samoa";
+        //"Scotland";
+        //"Somalia";
+        //"South Pacific";
+        //"Sri Lanka";
+        //"Turkey";
+        //"Uganda";
+        //"Vietnam";
+        //"Wales";
+        //"Zambia";
+        //"Africa";
+        //"Antarctica";
+        //"Asia";
+        //"Europe";
+        //"North America";
+        //"South America";
+        //"Babylon";
 
         public void UpdateEmployeeMorale(Employee employee, bool isWinner)
         {
@@ -941,15 +1023,5 @@ namespace FireProWar
             }
         }
         #endregion
-
-        private void btn_SaveData_Click(object sender, EventArgs e)
-        {
-            SaveWarData();
-        }
-
-        private void btn_LoadData_Click(object sender, EventArgs e)
-        {
-            LoadWarData();
-        }
     }
 }

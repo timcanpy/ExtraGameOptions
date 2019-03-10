@@ -56,6 +56,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.fpw_management = new System.Windows.Forms.TabPage();
+            this.btn_LoadData = new System.Windows.Forms.Button();
+            this.btn_SaveData = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.ms_fireAll = new System.Windows.Forms.Button();
             this.ms_fireOne = new System.Windows.Forms.Button();
@@ -89,14 +91,17 @@
             this.ms_employeeName = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.ms_rosterList = new System.Windows.Forms.ListBox();
-            this.btn_SaveData = new System.Windows.Forms.Button();
-            this.btn_LoadData = new System.Windows.Forms.Button();
+            this.fpw_matches = new System.Windows.Forms.TabPage();
+            this.fpw_clearDetails = new System.Windows.Forms.Button();
+            this.fpw_detailsView = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fpw_infoTabs.SuspendLayout();
             this.fpw_history.SuspendLayout();
             this.fpw_management.SuspendLayout();
             this.fpw_details.SuspendLayout();
+            this.fpw_matches.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -276,6 +281,8 @@
             // fpw_Enable
             // 
             this.fpw_Enable.AutoSize = true;
+            this.fpw_Enable.Checked = true;
+            this.fpw_Enable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.fpw_Enable.Location = new System.Drawing.Point(7, 9);
             this.fpw_Enable.Name = "fpw_Enable";
             this.fpw_Enable.Size = new System.Drawing.Size(86, 17);
@@ -296,6 +303,7 @@
             // fpw_infoTabs
             // 
             this.fpw_infoTabs.Controls.Add(this.fpw_history);
+            this.fpw_infoTabs.Controls.Add(this.fpw_matches);
             this.fpw_infoTabs.Controls.Add(this.fpw_management);
             this.fpw_infoTabs.Controls.Add(this.fpw_details);
             this.fpw_infoTabs.Location = new System.Drawing.Point(3, 3);
@@ -322,7 +330,7 @@
             // 
             // fpw_promoClearHistory
             // 
-            this.fpw_promoClearHistory.Location = new System.Drawing.Point(192, 362);
+            this.fpw_promoClearHistory.Location = new System.Drawing.Point(210, 362);
             this.fpw_promoClearHistory.Name = "fpw_promoClearHistory";
             this.fpw_promoClearHistory.Size = new System.Drawing.Size(109, 23);
             this.fpw_promoClearHistory.TabIndex = 42;
@@ -419,6 +427,26 @@
             this.fpw_management.Size = new System.Drawing.Size(526, 390);
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
+            // 
+            // btn_LoadData
+            // 
+            this.btn_LoadData.Location = new System.Drawing.Point(213, 345);
+            this.btn_LoadData.Name = "btn_LoadData";
+            this.btn_LoadData.Size = new System.Drawing.Size(75, 23);
+            this.btn_LoadData.TabIndex = 37;
+            this.btn_LoadData.Text = "Load Data";
+            this.btn_LoadData.UseVisualStyleBackColor = true;
+            this.btn_LoadData.Click += new System.EventHandler(this.btn_LoadData_Click);
+            // 
+            // btn_SaveData
+            // 
+            this.btn_SaveData.Location = new System.Drawing.Point(6, 345);
+            this.btn_SaveData.Name = "btn_SaveData";
+            this.btn_SaveData.Size = new System.Drawing.Size(75, 23);
+            this.btn_SaveData.TabIndex = 36;
+            this.btn_SaveData.Text = "Save Data";
+            this.btn_SaveData.UseVisualStyleBackColor = true;
+            this.btn_SaveData.Click += new System.EventHandler(this.btn_SaveData_Click);
             // 
             // label9
             // 
@@ -770,25 +798,51 @@
             this.ms_rosterList.TabIndex = 36;
             this.ms_rosterList.SelectedIndexChanged += new System.EventHandler(this.ms_rosterList_SelectedIndexChanged);
             // 
-            // btn_SaveData
+            // fpw_matches
             // 
-            this.btn_SaveData.Location = new System.Drawing.Point(6, 345);
-            this.btn_SaveData.Name = "btn_SaveData";
-            this.btn_SaveData.Size = new System.Drawing.Size(75, 23);
-            this.btn_SaveData.TabIndex = 36;
-            this.btn_SaveData.Text = "Save Data";
-            this.btn_SaveData.UseVisualStyleBackColor = true;
-            this.btn_SaveData.Click += new System.EventHandler(this.btn_SaveData_Click);
+            this.fpw_matches.Controls.Add(this.label19);
+            this.fpw_matches.Controls.Add(this.fpw_clearDetails);
+            this.fpw_matches.Controls.Add(this.fpw_detailsView);
+            this.fpw_matches.Location = new System.Drawing.Point(4, 22);
+            this.fpw_matches.Name = "fpw_matches";
+            this.fpw_matches.Size = new System.Drawing.Size(526, 390);
+            this.fpw_matches.TabIndex = 3;
+            this.fpw_matches.Text = "Recent Matches";
+            this.fpw_matches.UseVisualStyleBackColor = true;
             // 
-            // btn_LoadData
+            // fpw_clearDetails
             // 
-            this.btn_LoadData.Location = new System.Drawing.Point(213, 345);
-            this.btn_LoadData.Name = "btn_LoadData";
-            this.btn_LoadData.Size = new System.Drawing.Size(75, 23);
-            this.btn_LoadData.TabIndex = 37;
-            this.btn_LoadData.Text = "Load Data";
-            this.btn_LoadData.UseVisualStyleBackColor = true;
-            this.btn_LoadData.Click += new System.EventHandler(this.btn_LoadData_Click);
+            this.fpw_clearDetails.Location = new System.Drawing.Point(217, 349);
+            this.fpw_clearDetails.Name = "fpw_clearDetails";
+            this.fpw_clearDetails.Size = new System.Drawing.Size(109, 23);
+            this.fpw_clearDetails.TabIndex = 47;
+            this.fpw_clearDetails.Text = "Clear History";
+            this.fpw_clearDetails.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.fpw_clearDetails.UseVisualStyleBackColor = true;
+            this.fpw_clearDetails.Click += new System.EventHandler(this.fpw_clearDetails_Click);
+            // 
+            // fpw_detailsView
+            // 
+            this.fpw_detailsView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.fpw_detailsView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_detailsView.Location = new System.Drawing.Point(13, 45);
+            this.fpw_detailsView.Multiline = true;
+            this.fpw_detailsView.Name = "fpw_detailsView";
+            this.fpw_detailsView.ReadOnly = true;
+            this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.fpw_detailsView.Size = new System.Drawing.Size(498, 298);
+            this.fpw_detailsView.TabIndex = 46;
+            this.fpw_detailsView.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(192, 17);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(145, 16);
+            this.label19.TabIndex = 48;
+            this.label19.Text = "Match Results";
             // 
             // War_Form
             // 
@@ -810,6 +864,8 @@
             this.fpw_management.PerformLayout();
             this.fpw_details.ResumeLayout(false);
             this.fpw_details.PerformLayout();
+            this.fpw_matches.ResumeLayout(false);
+            this.fpw_matches.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -879,5 +935,9 @@
         private System.Windows.Forms.Button resetPoints;
         private System.Windows.Forms.Button btn_LoadData;
         private System.Windows.Forms.Button btn_SaveData;
+        private System.Windows.Forms.TabPage fpw_matches;
+        private System.Windows.Forms.Button fpw_clearDetails;
+        private System.Windows.Forms.TextBox fpw_detailsView;
+        private System.Windows.Forms.Label label19;
     }
 }

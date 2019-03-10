@@ -14,6 +14,7 @@ namespace Data_Classes
             matchCount = 0;
             averageRating = 0;
             history = "";
+            matchDetails = new List<String>();
 
         }
 
@@ -75,6 +76,15 @@ namespace Data_Classes
         }
 
         private float averageRating;
+
+        private List<String> matchDetails;
+
+        public List<String> MatchDetails
+        {
+            get { return matchDetails; }
+            set { matchDetails = value; }
+        }
+
         #endregion
 
         #region Methods
@@ -191,6 +201,28 @@ namespace Data_Classes
             catch (Exception e)
             {
                 L.D("AddEmployeeFromData Exception for  " + employeeData + " : " + e);
+            }
+        }
+
+        public void AddMatchDetails(String details)
+        {
+            matchDetails.Add(details);
+        }
+
+        public void AddMatchDetailsFromData(String details)
+        {
+            if (String.IsNullOrEmpty(details))
+            {
+                return;
+            }
+            String[] resultInfoArray = details.Split('|');
+            for (int i = 0; i < resultInfoArray.Length; i++)
+            {
+                if (String.IsNullOrEmpty(resultInfoArray[i].Trim()))
+                {
+                    continue;
+                }
+                matchDetails.Add(resultInfoArray[i]);
             }
         }
         #endregion
