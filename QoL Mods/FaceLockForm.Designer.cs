@@ -573,7 +573,7 @@
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.panel15);
             this.Name = "FaceLockForm";
-            this.Text = "FaceLockForm";
+            this.Text = "Face Lock Override";
             this.tabControl2.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.tabPage11.PerformLayout();
