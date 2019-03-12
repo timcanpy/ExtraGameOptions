@@ -587,6 +587,26 @@
             this.panel15.PerformLayout();
             this.ResumeLayout(false);
 
+            //Event Handlers
+
+            this.nl_styleBox.SelectedIndexChanged += new System.EventHandler(this.nl_styleBox_SelectedIndexChanged);
+            this.nl_wresterList.SelectedIndexChanged += new System.EventHandler(this.nl_wresterList_SelectedIndexChanged);
+            this.nl_removeWrestler.Click += new System.EventHandler(this.nl_removeWrestler_Click);
+            this.nl_wrestlerSearch.LostFocus += new System.EventHandler(this.nl_wrestlerSearch_LostFocus);
+            this.nl_addWrestler.Click += new System.EventHandler(this.nl_addWrestler_Click);
+            this.nl_Categories.SelectedIndexChanged += new System.EventHandler(this.nl_Categories_SelectedIndexChanged);
+            this.nl_refreshMoves.Click += new System.EventHandler(this.nl_refreshMoves_Click);
+            this.nl_moveResult.SelectedIndexChanged += new System.EventHandler(this.nl_moveResult_SelectedIndexChanged);
+            this.nl_moveSearch.LostFocus += new System.EventHandler(this.nl_moveSearch_LostFocus);
+            this.wrestler_addCritical.Click += new System.EventHandler(this.wrestler_addCritical_Click);
+            this.wrestler_addHeavy.Click += new System.EventHandler(this.wrestler_addHeavy_Click);
+            this.wrestler_addMedium.Click += new System.EventHandler(this.wrestler_addMedium_Click);
+            this.wrestler_addLight.Click += new System.EventHandler(this.wrestler_addLight_Click);
+            this.style_addCritical.Click += new System.EventHandler(this.style_addCritical_Click);
+            this.style_addHeavy.Click += new System.EventHandler(this.style_addHeavy_Click);
+            this.style_addMedium.Click += new System.EventHandler(this.style_addMedium_Click);
+            this.style_addLight.Click += new System.EventHandler(this.style_addLight_Click);
+
         }
 
         #endregion
@@ -638,5 +658,6 @@
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.TextBox nl_moveSearch;
+
+        }
     }
-}

@@ -244,9 +244,13 @@ namespace QoL_Mods
             faceLockMoves.Clear();
             try
             {
-                foreach (FaceLockMoves moves in FaceLockForm.form.nl_styleBox.Items)
+                L.D("Style Count - " + FaceLockForm.form.nl_styleBox.Items.Count);
+                if (FaceLockForm.form.nl_styleBox.Items.Count > 0)
                 {
-                    faceLockMoves.Add(moves.StyleItem.Name, moves);
+                    foreach (FaceLockMoves moves in FaceLockForm.form.nl_styleBox.Items)
+                    {
+                        faceLockMoves.Add(moves.StyleItem.Name, moves);
+                    }
                 }
             }
             catch (Exception e)
@@ -255,6 +259,7 @@ namespace QoL_Mods
             }
 
             //Wrestlers
+            L.D("Wrestler Count - " + FaceLockForm.form.nl_wresterList.Items.Count);
             if (FaceLockForm.form.nl_wresterList.Items.Count > 0)
             {
                 foreach (FaceLockMoves moves in FaceLockForm.form.nl_wresterList.Items)

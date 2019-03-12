@@ -19,12 +19,26 @@ namespace QoL_Mods
         {
             InitializeComponent();
             LoadFaceLocks();
+            FormClosing += FLForm_FormClosing;
         }
 
         public static FaceLockForm form = null;
         private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleFL.dat", "WrestlerFL.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
+
+        private void FLForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                SaveFaceLocks();
+            }
+            catch (Exception exception)
+            {
+                L.D("Save Face Lock Error:" + exception);
+            }
+
+        }
 
         private void LoadFaceLocks()
         {
