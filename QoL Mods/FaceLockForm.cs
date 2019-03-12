@@ -18,9 +18,12 @@ namespace QoL_Mods
         public FaceLockForm()
         {
             InitializeComponent();
+            LoadFaceLocks();
         }
 
-        private static String[] saveFileNames = new String[] { "InjuryData.dat", "Options.dat", "RatingsData.dat", "RingData.dat", "StyleFL.dat", "WrestlerFL.dat" };
+        public static FaceLockForm form = null;
+        private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        private static String[] saveFileNames = new String[] { "StyleFL.dat", "WrestlerFL.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
 
         private void LoadFaceLocks()
@@ -99,11 +102,6 @@ namespace QoL_Mods
             }
         }
 
-        private string CheckSaveFile(string v)
-        {
-            throw new NotImplementedException();
-        }
-
         private void SaveFaceLocks()
         {
             //Save Style Face Lock Moves
@@ -146,7 +144,6 @@ namespace QoL_Mods
         #region Variables
         public static List<FaceLockMoves> styleMoves = new List<FaceLockMoves>();
         public static List<FaceLockMoves> wrestlerMoves = new List<FaceLockMoves>();
-        private IEnumerable<WresIDGroup> wrestlerList;
         #endregion
 
         #region Setup
@@ -730,5 +727,44 @@ namespace QoL_Mods
             }
         }
         #endregion
+        private String CheckSaveFile(String dataType)
+        {
+            String path = CheckSaveFolder(dataType);
+
+            switch (dataType)
+            {
+
+                case "StyleFL":
+                    path = path + saveFileNames[0];
+                    break;
+                case "WrestlerFL":
+                    path = path + saveFileNames[1];
+                    break;
+                default:
+                    path = path + saveFileNames[0];
+                    break;
+            }
+
+            return path;
+
+        }
+        private String CheckSaveFolder(String dataType)
+        {
+            String folder = "";
+            switch (dataType)
+            {
+                default:
+                    folder = saveFolderNames[0];
+                    break;
+            }
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            return folder;
+
+        }
     }
 }

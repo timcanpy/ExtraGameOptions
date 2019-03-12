@@ -123,7 +123,8 @@ namespace QoL_Mods
             }
         }
         #endregion
-        
+
+        #region Injury Methods
         private string CheckSaveFile(string v)
         {
             throw new NotImplementedException();
@@ -423,7 +424,5 @@ namespace QoL_Mods
             }
         }
         #endregion
-
-
     }
 }

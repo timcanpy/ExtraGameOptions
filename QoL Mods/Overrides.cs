@@ -12,6 +12,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
+    [GroupDescription(Group = "Face Lock", Name = "Face Lock", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
@@ -30,6 +31,19 @@ namespace QoL_Mods
             if (QoL_Form.form == null)
             {
                 return new QoL_Form();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [ControlPanel(Group = "Face Lock")]
+        public static Form FLForm()
+        {
+            if (FaceLockForm.form == null)
+            {
+                return new FaceLockForm();
             }
             else
             {

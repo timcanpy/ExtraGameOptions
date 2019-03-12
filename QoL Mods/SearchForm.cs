@@ -14,7 +14,6 @@ namespace QoL_Mods
         private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static List<String> promotionList = new List<string>();
         public static QoL_Form form = null;
-        private static SteamWorkshop_UGC workShop = null;
         #endregion
 
         #region Init Methods
