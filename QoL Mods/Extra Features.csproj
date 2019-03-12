@@ -58,6 +58,12 @@
     <Compile Include="FaceLockForm.Designer.cs">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Facelock\FaceLockMoves.cs" />
+    <Compile Include="Facelock\MoveCategory.cs" />
+    <Compile Include="Facelock\Skill.cs" />
+    <Compile Include="Facelock\SkillType.cs" />
+    <Compile Include="Facelock\SlotStorage.cs" />
+    <Compile Include="Facelock\Style.cs" />
     <Compile Include="Helper Classes\IDObject.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
     <Compile Include="Helper Classes\WresIDGroup.cs" />
