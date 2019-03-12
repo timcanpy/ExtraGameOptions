@@ -125,6 +125,7 @@
             this.style_addCritical.TabIndex = 41;
             this.style_addCritical.Text = "Add";
             this.style_addCritical.UseVisualStyleBackColor = true;
+            this.style_addCritical.Click += new System.EventHandler(this.style_addCritical_Click);
             // 
             // style_addHeavy
             // 
@@ -134,6 +135,7 @@
             this.style_addHeavy.TabIndex = 39;
             this.style_addHeavy.Text = "Add";
             this.style_addHeavy.UseVisualStyleBackColor = true;
+            this.style_addHeavy.Click += new System.EventHandler(this.style_addHeavy_Click);
             // 
             // style_addMedium
             // 
@@ -143,6 +145,7 @@
             this.style_addMedium.TabIndex = 37;
             this.style_addMedium.Text = "Add";
             this.style_addMedium.UseVisualStyleBackColor = true;
+            this.style_addMedium.Click += new System.EventHandler(this.style_addMedium_Click);
             // 
             // panel17
             // 
@@ -163,6 +166,7 @@
             this.nl_styleBox.Size = new System.Drawing.Size(124, 21);
             this.nl_styleBox.Sorted = true;
             this.nl_styleBox.TabIndex = 35;
+            this.nl_styleBox.SelectedIndexChanged += new System.EventHandler(this.nl_styleBox_SelectedIndexChanged);
             // 
             // label100
             // 
@@ -182,6 +186,7 @@
             this.style_addLight.TabIndex = 29;
             this.style_addLight.Text = "Add";
             this.style_addLight.UseVisualStyleBackColor = true;
+            this.style_addLight.Click += new System.EventHandler(this.style_addLight_Click);
             // 
             // style_mediumDmg
             // 
@@ -292,6 +297,7 @@
             this.nl_wresterList.Name = "nl_wresterList";
             this.nl_wresterList.Size = new System.Drawing.Size(168, 21);
             this.nl_wresterList.TabIndex = 18;
+            this.nl_wresterList.SelectedIndexChanged += new System.EventHandler(this.nl_wresterList_SelectedIndexChanged);
             // 
             // label55
             // 
@@ -311,6 +317,7 @@
             this.wrestler_addCritical.TabIndex = 57;
             this.wrestler_addCritical.Text = "Add";
             this.wrestler_addCritical.UseVisualStyleBackColor = true;
+            this.wrestler_addCritical.Click += new System.EventHandler(this.wrestler_addCritical_Click);
             // 
             // wrestler_addHeavy
             // 
@@ -320,6 +327,7 @@
             this.wrestler_addHeavy.TabIndex = 55;
             this.wrestler_addHeavy.Text = "Add";
             this.wrestler_addHeavy.UseVisualStyleBackColor = true;
+            this.wrestler_addHeavy.Click += new System.EventHandler(this.wrestler_addHeavy_Click);
             // 
             // wrestler_addMedium
             // 
@@ -329,6 +337,7 @@
             this.wrestler_addMedium.TabIndex = 53;
             this.wrestler_addMedium.Text = "Add";
             this.wrestler_addMedium.UseVisualStyleBackColor = true;
+            this.wrestler_addMedium.Click += new System.EventHandler(this.wrestler_addMedium_Click);
             // 
             // wrestler_addLight
             // 
@@ -338,6 +347,7 @@
             this.wrestler_addLight.TabIndex = 51;
             this.wrestler_addLight.Text = "Add";
             this.wrestler_addLight.UseVisualStyleBackColor = true;
+            this.wrestler_addLight.Click += new System.EventHandler(this.wrestler_addLight_Click);
             // 
             // wrestler_mediumDmg
             // 
@@ -448,6 +458,7 @@
             this.nl_removeWrestler.TabIndex = 17;
             this.nl_removeWrestler.Text = "Remove";
             this.nl_removeWrestler.UseVisualStyleBackColor = true;
+            this.nl_removeWrestler.Click += new System.EventHandler(this.nl_removeWrestler_Click);
             // 
             // nl_wrestlerSearch
             // 
@@ -455,6 +466,7 @@
             this.nl_wrestlerSearch.Name = "nl_wrestlerSearch";
             this.nl_wrestlerSearch.Size = new System.Drawing.Size(168, 20);
             this.nl_wrestlerSearch.TabIndex = 13;
+            this.nl_wrestlerSearch.LostFocus += new System.EventHandler(this.nl_wrestlerSearch_LostFocus);
             // 
             // nl_addWrestler
             // 
@@ -464,6 +476,7 @@
             this.nl_addWrestler.TabIndex = 16;
             this.nl_addWrestler.Text = "Add";
             this.nl_addWrestler.UseVisualStyleBackColor = true;
+            this.nl_addWrestler.Click += new System.EventHandler(this.nl_addWrestler_Click);
             // 
             // label50
             // 
@@ -508,6 +521,7 @@
             this.nl_Categories.Name = "nl_Categories";
             this.nl_Categories.Size = new System.Drawing.Size(187, 21);
             this.nl_Categories.TabIndex = 17;
+            this.nl_Categories.SelectedIndexChanged += new System.EventHandler(this.nl_Categories_SelectedIndexChanged);
             // 
             // label44
             // 
@@ -527,6 +541,7 @@
             this.nl_refreshMoves.TabIndex = 15;
             this.nl_refreshMoves.Text = "Refresh";
             this.nl_refreshMoves.UseVisualStyleBackColor = true;
+            this.nl_refreshMoves.Click += new System.EventHandler(this.nl_refreshMoves_Click);
             // 
             // nl_moveResult
             // 
@@ -537,6 +552,7 @@
             this.nl_moveResult.Size = new System.Drawing.Size(187, 21);
             this.nl_moveResult.Sorted = true;
             this.nl_moveResult.TabIndex = 11;
+            this.nl_moveResult.SelectedIndexChanged += new System.EventHandler(this.nl_moveResult_SelectedIndexChanged);
             // 
             // label42
             // 
@@ -564,6 +580,7 @@
             this.nl_moveSearch.Name = "nl_moveSearch";
             this.nl_moveSearch.Size = new System.Drawing.Size(187, 20);
             this.nl_moveSearch.TabIndex = 1;
+            this.nl_moveSearch.LostFocus += new System.EventHandler(this.nl_moveSearch_LostFocus);
             // 
             // FaceLockForm
             // 
@@ -574,6 +591,7 @@
             this.Controls.Add(this.panel15);
             this.Name = "FaceLockForm";
             this.Text = "Face Lock Override";
+            this.Load += new System.EventHandler(this.FaceLockForm_Load);
             this.tabControl2.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);
             this.tabPage11.PerformLayout();
@@ -586,26 +604,6 @@
             this.panel15.ResumeLayout(false);
             this.panel15.PerformLayout();
             this.ResumeLayout(false);
-
-            //Event Handlers
-
-            this.nl_styleBox.SelectedIndexChanged += new System.EventHandler(this.nl_styleBox_SelectedIndexChanged);
-            this.nl_wresterList.SelectedIndexChanged += new System.EventHandler(this.nl_wresterList_SelectedIndexChanged);
-            this.nl_removeWrestler.Click += new System.EventHandler(this.nl_removeWrestler_Click);
-            this.nl_wrestlerSearch.LostFocus += new System.EventHandler(this.nl_wrestlerSearch_LostFocus);
-            this.nl_addWrestler.Click += new System.EventHandler(this.nl_addWrestler_Click);
-            this.nl_Categories.SelectedIndexChanged += new System.EventHandler(this.nl_Categories_SelectedIndexChanged);
-            this.nl_refreshMoves.Click += new System.EventHandler(this.nl_refreshMoves_Click);
-            this.nl_moveResult.SelectedIndexChanged += new System.EventHandler(this.nl_moveResult_SelectedIndexChanged);
-            this.nl_moveSearch.LostFocus += new System.EventHandler(this.nl_moveSearch_LostFocus);
-            this.wrestler_addCritical.Click += new System.EventHandler(this.wrestler_addCritical_Click);
-            this.wrestler_addHeavy.Click += new System.EventHandler(this.wrestler_addHeavy_Click);
-            this.wrestler_addMedium.Click += new System.EventHandler(this.wrestler_addMedium_Click);
-            this.wrestler_addLight.Click += new System.EventHandler(this.wrestler_addLight_Click);
-            this.style_addCritical.Click += new System.EventHandler(this.style_addCritical_Click);
-            this.style_addHeavy.Click += new System.EventHandler(this.style_addHeavy_Click);
-            this.style_addMedium.Click += new System.EventHandler(this.style_addMedium_Click);
-            this.style_addLight.Click += new System.EventHandler(this.style_addLight_Click);
 
         }
 

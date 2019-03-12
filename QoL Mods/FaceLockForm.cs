@@ -18,11 +18,12 @@ namespace QoL_Mods
         public FaceLockForm()
         {
             InitializeComponent();
+            SetMoveCategories();
             LoadFaceLocks();
             FormClosing += FLForm_FormClosing;
         }
 
-        public static FaceLockForm form = null;
+        public static FaceLockForm flForm = null;
         private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleFL.dat", "WrestlerFL.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
@@ -778,6 +779,11 @@ namespace QoL_Mods
             }
 
             return folder;
+
+        }
+
+        private void FaceLockForm_Load(object sender, EventArgs e)
+        {
 
         }
     }

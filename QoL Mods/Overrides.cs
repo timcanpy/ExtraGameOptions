@@ -15,7 +15,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
-    [GroupDescription(Group = "Face Lock", Name = "Face Lock", Description = "Allows players to override the default Face Lock attack with custom actions.")]
+    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
@@ -48,20 +48,20 @@ namespace QoL_Mods
             }
             else
             {
-                return null;
+                return QoL_Form.form;
             }
         }
 
         [ControlPanel(Group = "Face Lock")]
         public static Form FLForm()
         {
-            if (FaceLockForm.form == null)
+            if (FaceLockForm.flForm == null)
             {
                 return new FaceLockForm();
             }
             else
             {
-                return null;
+                return FaceLockForm.flForm;
             }
         }
 
@@ -235,109 +235,123 @@ namespace QoL_Mods
         public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
         public static String finishingMove = "";
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ExtraFeatures")]
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void SetFaceLockMoves()
         {
             //Add FaceLock Moves
             //Styles
             finishingMove = "";
             faceLockMoves.Clear();
+            if (FaceLockForm.flForm == null)
+            {
+                L.D("Form is null");
+            }
+            else
+            {
+                L.D("Form is not null");
+            }
+            //faceLockMoves = new Dictionary<String, FaceLockMoves>();
             try
             {
-                L.D("Style Count - " + FaceLockForm.form.nl_styleBox.Items.Count);
-                if (FaceLockForm.form.nl_styleBox.Items.Count > 0)
+                L.D("Checking form - " + FaceLockForm.flForm.Name);
+                L.D("Style Count - " + FaceLockForm.flForm.nl_styleBox.Items.Count);
+                if (FaceLockForm.flForm.nl_styleBox.Items.Count > 0)
                 {
-                    foreach (FaceLockMoves moves in FaceLockForm.form.nl_styleBox.Items)
+                    foreach (FaceLockMoves moves in FaceLockForm.flForm.nl_styleBox.Items)
                     {
                         faceLockMoves.Add(moves.StyleItem.Name, moves);
                     }
+                }
+                
+                //Wrestlers
+                L.D("Wrestler Count - " + FaceLockForm.flForm.nl_wresterList.Items.Count);
+                if (FaceLockForm.flForm.nl_wresterList.Items.Count > 0)
+                {
+                    foreach (FaceLockMoves moves in FaceLockForm.flForm.nl_wresterList.Items)
+                    {
+                        faceLockMoves.Add(moves.StyleItem.Name, moves);
+                    }
+                }
+
+                //Save Move Slots to Handle Over-writing
+                slotStorage = new SlotStorage[8];
+                safeCritSlot = new SkillSlotEnum[8];
+                for (int i = 0; i < 8; i++)
+                {
+                    slotStorage[i] = new SlotStorage();
+                    safeCritSlot[i] = SkillSlotEnum.Grapple_X;
+                }
+
+                for (int i = 0; i < 8; i++)
+                {
+                    bool[] bigSlotOptions = new Boolean[4];
+                    for (int j = 0; j < 4; j++)
+                    {
+                        bigSlotOptions[j] = true;
+                    }
+
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (!player)
+                    {
+                        continue;
+                    }
+
+                    slotStorage[i].weakSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_X];
+                    slotStorage[i].mediumSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_A];
+                    slotStorage[i].heavySlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_B];
+                    slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_XA];
+
+                    //Find a safe big slot
+                    foreach (AIPriorityAct priority in player.WresParam.aiParam.priorityAct)
+                    {
+                        if (priority.triggerAct == SkillSlotEnum.Grapple_B)
+                        {
+                            bigSlotOptions[0] = false;
+                        }
+
+                        if (priority.triggerAct == SkillSlotEnum.Grapple_B_U)
+                        {
+                            bigSlotOptions[1] = false;
+                        }
+
+                        if (priority.triggerAct == SkillSlotEnum.Grapple_B_LR)
+                        {
+                            bigSlotOptions[2] = false;
+                        }
+
+                        if (priority.triggerAct == SkillSlotEnum.Grapple_B_D)
+                        {
+                            bigSlotOptions[3] = false;
+                        }
+                    }
+
+                    if (bigSlotOptions[0])
+                    {
+                        safeCritSlot[i] = SkillSlotEnum.Grapple_B;
+                    }
+                    else if (bigSlotOptions[1])
+                    {
+                        safeCritSlot[i] = SkillSlotEnum.Grapple_B_U;
+                    }
+                    else if (bigSlotOptions[2])
+                    {
+                        safeCritSlot[i] = SkillSlotEnum.Grapple_B_LR;
+                    }
+                    else if (bigSlotOptions[3])
+                    {
+                        safeCritSlot[i] = SkillSlotEnum.Grapple_B_D;
+                    }
+
+                    L.D("Player " + i + " is using crit slot " + safeCritSlot[i] + ".");
                 }
             }
             catch (Exception e)
             {
                 L.D("FaceLock Setup Error: " + e.Message);
             }
-
-            //Wrestlers
-            L.D("Wrestler Count - " + FaceLockForm.form.nl_wresterList.Items.Count);
-            if (FaceLockForm.form.nl_wresterList.Items.Count > 0)
-            {
-                foreach (FaceLockMoves moves in FaceLockForm.form.nl_wresterList.Items)
-                {
-                    faceLockMoves.Add(moves.StyleItem.Name, moves);
-                }
-            }
-
-            //Save Move Slots to Handle Over-writing
-            slotStorage = new SlotStorage[8];
-            safeCritSlot = new SkillSlotEnum[8];
-            for (int i = 0; i < 8; i++)
-            {
-                slotStorage[i] = new SlotStorage();
-                safeCritSlot[i] = SkillSlotEnum.Grapple_X;
-            }
-
-            for (int i = 0; i < 8; i++)
-            {
-                bool[] bigSlotOptions = new Boolean[4];
-                for (int j = 0; j < 4; j++)
-                {
-                    bigSlotOptions[j] = true;
-                }
-                Player player = PlayerMan.inst.GetPlObj(i);
-                if (!player)
-                {
-                    continue;
-                }
-
-                slotStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
-                slotStorage[i].mediumSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A];
-                slotStorage[i].heavySlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B];
-                slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA];
-
-                //Find a safe big slot
-                foreach (AIPriorityAct priority in player.WresParam.aiParam.priorityAct)
-                {
-                    if (priority.triggerAct == SkillSlotEnum.Grapple_B)
-                    {
-                        bigSlotOptions[0] = false;
-                    }
-                    if (priority.triggerAct == SkillSlotEnum.Grapple_B_U)
-                    {
-                        bigSlotOptions[1] = false;
-                    }
-                    if (priority.triggerAct == SkillSlotEnum.Grapple_B_LR)
-                    {
-                        bigSlotOptions[2] = false;
-                    }
-                    if (priority.triggerAct == SkillSlotEnum.Grapple_B_D)
-                    {
-                        bigSlotOptions[3] = false;
-                    }
-                }
-
-                if (bigSlotOptions[0])
-                {
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_B;
-                }
-                else if (bigSlotOptions[1])
-                {
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_B_U;
-                }
-                else if (bigSlotOptions[2])
-                {
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_B_LR;
-                }
-                else if (bigSlotOptions[3])
-                {
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_B_D;
-                }
-
-                L.D("Player " + i + " is using crit slot " + safeCritSlot[i] + ".");
-            }
         }
 
-        [Hook(TargetClass = "Player", TargetMethod = "StandardKeyInput", InjectionLocation = 185, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "ExtraFeatures")]
+        [Hook(TargetClass = "Player", TargetMethod = "StandardKeyInput", InjectionLocation = 185, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Face Lock")]
         public static bool UpdateNeckLockMove(Player attacker)
         {
             try
@@ -482,7 +496,7 @@ namespace QoL_Mods
 
         }
 
-        [Hook(TargetClass = "Player", TargetMethod = "ProcessKeyInput_Grapple", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "ExtraFeatures")]
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessKeyInput_Grapple", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Face Lock")]
         public static void RefreshSlotMoves(Player player)
         {
             try
@@ -504,7 +518,7 @@ namespace QoL_Mods
 
         }
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ExtraFeatures")]
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void RefreshAllSlots()
         {
             finishingMove = global::MatchEvaluation.GetInst().GetWinningTechName(true);
@@ -542,7 +556,7 @@ namespace QoL_Mods
         [Hook(TargetClass = "Menu_Result", TargetMethod = "Set_FinishSkill", InjectionLocation = 8,
             InjectDirection = HookInjectDirection.After,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal |
-                          HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "ExtraFeatures")]
+                          HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "Face Lock")]
         public static void CorrectFinishingMove(Menu_Result result, ref UILabel finishText, string str)
         {
             if (String.IsNullOrEmpty(finishingMove))
@@ -555,7 +569,7 @@ namespace QoL_Mods
             }
         }
 
-        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 176, InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "ExtraFeatures")]
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 176, InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "Face Lock")]
         public static void SetLastSkillHit_FaceLock(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
         {
             if (atk_side)

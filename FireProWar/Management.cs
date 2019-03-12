@@ -26,7 +26,7 @@ namespace FireProWar
                 return new War_Form();
             }
             {
-                return null;
+                return War_Form.form;
             }
         }
 
