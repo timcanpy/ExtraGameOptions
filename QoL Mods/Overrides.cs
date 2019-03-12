@@ -3,6 +3,9 @@ using DG;
 using UnityEngine;
 using DLC;
 using System;
+using System.Collections.Generic;
+using QoL_Mods.Data_Classes;
+using QoL_Mods.Data_Classes.Facelock;
 
 namespace QoL_Mods
 {
@@ -16,6 +19,17 @@ namespace QoL_Mods
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
+
+    #region Face Lock Access
+    [FieldAccess(Class = "FormAnimator", Field = "plObj", Group = "Face Lock")]
+
+    [FieldAccess(Class = "Player", Field = "ProcessKeyInput_Grapple_Run", Group = "Face Lock")]
+    [FieldAccess(Class = "Player", Field = "skillInfo", Group = "Face Lock")]
+    [FieldAccess(Class = "Player", Field = "CompetitionWorkIdx", Group = "Face Lock")]
+
+    [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
+    [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
+    #endregion
 
     #region Pinfall Field Access
     [FieldAccess(Class = "MatchEvaluation", Field = "EvaluateSkill", Group = "Ref Positions For Pinfall")]
@@ -215,91 +229,255 @@ namespace QoL_Mods
         }
         #endregion
 
-        #region Variable Front Necklock Moves
-        [Hook(TargetClass = "Player", TargetMethod = "StandardKeyInput", InjectionLocation = 185, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Variable Front Neck Lock Moves")]
+        #region Face Lock override
+        public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
+        public static SlotStorage[] slotStorage = new SlotStorage[8];
+        public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
+        public static String finishingMove = "";
+
+        [Hook(TargetClass = "Player", TargetMethod = "StandardKeyInput", InjectionLocation = 185, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "ExtraFeatures")]
         public static bool UpdateNeckLockMove(Player attacker)
         {
             try
             {
-                attacker.ChangeState(global::PlStateEnum.NormalAnm);
-
                 //Get Player's fight style
                 FightStyleEnum style = attacker.WresParam.fightStyle;
 
-                //Determine edit's current damage threshold
-
-                //Determine if a custom  move should be used for this edit
-                bool useCustomMove = false;
-
-                if (useCustomMove)
+                //Determine current damage threshold
+                Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+                if (!defender)
                 {
+                    return false;
+                }
+
+                int damageLevel = 0;
+                if (defender.HP >= 49152f)
+                {
+                    damageLevel = 0;
+                }
+                else if (defender.HP >= 24576f)
+                {
+                    damageLevel = 1;
+                }
+                else if (defender.HP >= 12288f)
+                {
+                    damageLevel = 2;
+                }
+                else
+                {
+                    damageLevel = 3;
+                }
+
+                //Determine which move should be used
+                String wrestler = DataBase.GetWrestlerFullName(attacker.WresParam);
+                if (!faceLockMoves.TryGetValue(wrestler, out FaceLockMoves moveset))
+                {
+                    moveset = faceLockMoves[style.ToString()];
+                }
+
+                if (moveset == null)
+                {
+                    L.D("Moveset is null");
+                    return false;
+                }
+
+                attacker.ChangeState(global::PlStateEnum.NormalAnm);
+
+                if (moveset.Type[damageLevel] == SkillType.BasicMove && !moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
+                {
+                    L.D("Execute basic move");
+                    attacker.animator.ReqBasicAnm((BasicSkillEnum)moveset.BasicSkills[damageLevel].SkillID, true, attacker.TargetPlIdx);
+                }
+                else if (moveset.Type[damageLevel] == SkillType.IrishWhip || moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
+                {
+                    L.D("Execute irish whip : " + moveset.BasicSkills[damageLevel].SkillName);
+                    //Determine the direction to press
+                    if (attacker.plController.kind == PlayerControllerKind.AI)
+                    {
+                        int direction = UnityEngine.Random.Range(1, 2);
+                        if (moveset.BasicSkills[damageLevel].SkillName.Equals("Irish Whip (Horizontal)"))
+                        {
+                            if (direction == 1)
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_L;
+                            }
+                            else
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_R;
+                            }
+                        }
+                        else if (moveset.BasicSkills[damageLevel].SkillName.Equals("Irish Whip (Vertical)"))
+                        {
+                            if (direction == 1)
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_U;
+                            }
+                            else
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_D;
+                            }
+                        }
+                        else
+                        {
+                            if (direction == 1)
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_LD;
+                            }
+                            else
+                            {
+                                attacker.padOn = PadBtnEnum.Dir_RU;
+                            }
+                        }
+                    }
+
+                    attacker.ProcessKeyInput_Grapple_Run();
+
+                    if (attacker.plController.kind == PlayerControllerKind.AI)
+                    {
+                        attacker.plCont_AI.Process_OpponentStands_AfterHammerThrow();
+                    }
 
                 }
                 else
                 {
-                    switch (style)
-                    {
-                        case FightStyleEnum.Orthodox:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_ElbowBat, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Technician:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_LegScissors, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Wrestling:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Ground:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_Oosotogari, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Power:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_HeadBat, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.American:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Junior:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Luchador:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Heel:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Mysterious:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_CycloneWhip, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Shooter:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Fighter:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_BodyKneeLift, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Grappler:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_Oosotogari, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Panther:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_BodyKneeLift, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Giant:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_HammerBlow, true, attacker.TargetPlIdx);
-                            break;
-                        case FightStyleEnum.Devilism:
-                            attacker.animator.ReqBasicAnm(BasicSkillEnum.PowerCompetitionWin_KnackleArrow, true, attacker.TargetPlIdx);
-                            break;
-                    }
-                }
+                    L.D("Execute custom move");
 
+                    SkillSlotEnum slotEnum = SkillSlotEnum.Grapple_X;
+                    if (damageLevel == 0)
+                    {
+                        slotEnum = SkillSlotEnum.Grapple_X;
+                    }
+                    else if (damageLevel == 1)
+                    {
+                        slotEnum = SkillSlotEnum.Grapple_A;
+                    }
+                    else if (damageLevel == 2)
+                    {
+                        slotEnum = SkillSlotEnum.Grapple_B;
+                        defender.isStandingStunOK = true;
+                        defender.AddStunTime(240);
+                    }
+                    else
+                    {
+                        slotEnum = safeCritSlot[attacker.PlIdx];
+                        defender.isStandingStunOK = true;
+                        defender.AddStunTime(240);
+                    }
+
+                    SkillID currentSkill = attacker.WresParam.skillSlot[(int)slotEnum];
+                    attacker.WresParam.skillSlot[(int)slotEnum] = (SkillID)moveset.CustomSkills[damageLevel].SkillID;
+                    attacker.animator.ReqSlotAnm(slotEnum, false, -1, true);
+                    attacker.lastSkillHit = true;
+                }
 
                 return true;
             }
             catch (Exception e)
             {
-                L.D(e.Message);
+                L.D("Facelock Override Error:" + e.Message);
                 return false;
             }
 
         }
+
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessKeyInput_Grapple", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "ExtraFeatures")]
+        public static void RefreshSlotMoves(Player player)
+        {
+            try
+            {
+                if (!player)
+                {
+                    return;
+                }
+
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[player.PlIdx].weakSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[player.PlIdx].mediumSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[player.PlIdx].heavySlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA] = slotStorage[player.PlIdx].criticalSlot;
+            }
+            catch (Exception e)
+            {
+                L.D("RefreshSlotMoves Error: " + e.Message);
+            }
+
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ExtraFeatures")]
+        public static void RefreshAllSlots()
+        {
+            finishingMove = global::MatchEvaluation.GetInst().GetWinningTechName(true);
+
+            for (int i = 0; i < 8; i++)
+            {
+                Player player = PlayerMan.inst.GetPlObj(i);
+                if (!player)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[i].weakSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[i].mediumSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[i].heavySlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA] = slotStorage[i].criticalSlot;
+                }
+                catch (Exception e)
+                {
+                    L.D("RefreshAllSlots - Error on Player " + i + ": " + e.Message);
+                }
+
+            }
+
+            //Ensure that the finishing move is correct
+            if (finishingMove.Equals(global::MatchEvaluation.GetInst().GetWinningTechName(true)))
+            {
+                finishingMove = "";
+            }
+
+        }
+
+        [Hook(TargetClass = "Menu_Result", TargetMethod = "Set_FinishSkill", InjectionLocation = 8,
+            InjectDirection = HookInjectDirection.After,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal |
+                          HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "ExtraFeatures")]
+        public static void CorrectFinishingMove(Menu_Result result, ref UILabel finishText, string str)
+        {
+            if (String.IsNullOrEmpty(finishingMove))
+            {
+                return;
+            }
+            else
+            {
+                finishText.text.Replace(global::MatchEvaluation.GetInst().GetWinningTechName(true), finishingMove);
+            }
+        }
+
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 176, InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "ExtraFeatures")]
+        public static void SetLastSkillHit_FaceLock(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
+        {
+            if (atk_side)
+            {
+                string skillName = DataBase.GetSkillName(animator.plObj.WresParam.skillSlot[(int)skill_slot]);
+                for (int i = 26; i <= 38; i++)
+                {
+                    //Ensure we aren't checking against the same slot
+                    if (i == (int)skill_slot)
+                    {
+                        continue;
+                    }
+                    String skill = DataBase.GetSkillName(animator.plObj.WresParam.skillSlot[i]);
+                    if (skillName.Equals(skill))
+                    {
+                        animator.plObj.lastSkill = (SkillSlotEnum)i;
+                        break;
+                    }
+                }
+                animator.plObj.lastSkillHit = true;
+            }
+        }
+
         #endregion
+
     }
 }
