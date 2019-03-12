@@ -52,6 +52,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FaceLockForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FaceLockForm.Designer.cs">
+      <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helper Classes\IDObject.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
     <Compile Include="Helper Classes\WresIDGroup.cs" />
@@ -72,6 +78,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FaceLockForm.resx">
+      <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InjuryForm.resx">
       <DependentUpon>InjuryForm.cs</DependentUpon>
     </EmbeddedResource>
