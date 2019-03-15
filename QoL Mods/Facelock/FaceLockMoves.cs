@@ -37,11 +37,8 @@ namespace QoL_Mods.Data_Classes
 
         public String SaveFaceLockData()
         {
-            L.D("Saving FaceLock Data for " + StyleItem.Name);
             String data = "";
-            L.D("Saving style data");
             data += StyleItem.Name +";" + StyleItem.StyleType + "|";
-            L.D("Saving skill data");
             foreach (Skill skill in BasicSkills)
             {
                 data += skill.SkillName + ";" + skill.SkillID + "|";
@@ -68,7 +65,6 @@ namespace QoL_Mods.Data_Classes
             {
                 BasicSkills[i].SkillName = information[i + 1].Split(';')[0];
                 BasicSkills[i].SkillID = int.Parse(information[i + 1].Split(';')[1]);
-                L.D("Loading Type " + information[i + 5] +", next is " + information[i+6]);
                 Type[i] = (SkillType)Enum.Parse(typeof(SkillType), information[i + 5]);
                 CustomSkills[i].SkillName = information[i + 9].Split(';')[0];
                 CustomSkills[i].SkillID = int.Parse(information[i + 9].Split(';')[1]);

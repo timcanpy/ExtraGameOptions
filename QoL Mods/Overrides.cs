@@ -16,9 +16,11 @@ namespace QoL_Mods
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
+    [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
+    [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Forced Sell")]
 
     #region Face Lock Access
     [FieldAccess(Class = "FormAnimator", Field = "plObj", Group = "Face Lock")]
@@ -39,18 +41,10 @@ namespace QoL_Mods
 
     class Overrides
     {
-        [ControlPanel(Group = "Wrestler Search")]
-        public static Form MSForm()
-        {
-            if (QoL_Form.form == null)
-            {
-                return new QoL_Form();
-            }
-            else
-            {
-                return QoL_Form.form;
-            }
-        }
+        public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
+        public static SlotStorage[] slotStorage = new SlotStorage[8];
+        public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
+        public static String finishingMove = "";
 
         [ControlPanel(Group = "Face Lock")]
         public static Form FLForm()
@@ -62,6 +56,19 @@ namespace QoL_Mods
             else
             {
                 return FaceLockForm.flForm;
+            }
+        }
+
+        [ControlPanel(Group = "Wrestler Search")]
+        public static Form MSForm()
+        {
+            if (QoL_Form.form == null)
+            {
+                return new QoL_Form();
+            }
+            else
+            {
+                return QoL_Form.form;
             }
         }
 
@@ -83,7 +90,7 @@ namespace QoL_Mods
             {
                 defender.DownTime += 300;
                 CheckForFall(defender.PlIdx);
-               
+
             }
         }
 
@@ -230,11 +237,7 @@ namespace QoL_Mods
         #endregion
 
         #region Face Lock override
-        public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
-        public static SlotStorage[] slotStorage = new SlotStorage[8];
-        public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
-        public static String finishingMove = "";
-
+      
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void SetFaceLockMoves()
         {
@@ -242,19 +245,10 @@ namespace QoL_Mods
             //Styles
             finishingMove = "";
             faceLockMoves.Clear();
-            if (FaceLockForm.flForm == null)
-            {
-                L.D("Form is null");
-            }
-            else
-            {
-                L.D("Form is not null");
-            }
+           
             //faceLockMoves = new Dictionary<String, FaceLockMoves>();
             try
             {
-                L.D("Checking form - " + FaceLockForm.flForm.Name);
-                L.D("Style Count - " + FaceLockForm.flForm.nl_styleBox.Items.Count);
                 if (FaceLockForm.flForm.nl_styleBox.Items.Count > 0)
                 {
                     foreach (FaceLockMoves moves in FaceLockForm.flForm.nl_styleBox.Items)
@@ -262,9 +256,8 @@ namespace QoL_Mods
                         faceLockMoves.Add(moves.StyleItem.Name, moves);
                     }
                 }
-                
+
                 //Wrestlers
-                L.D("Wrestler Count - " + FaceLockForm.flForm.nl_wresterList.Items.Count);
                 if (FaceLockForm.flForm.nl_wresterList.Items.Count > 0)
                 {
                     foreach (FaceLockMoves moves in FaceLockForm.flForm.nl_wresterList.Items)
@@ -296,10 +289,10 @@ namespace QoL_Mods
                         continue;
                     }
 
-                    slotStorage[i].weakSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_X];
-                    slotStorage[i].mediumSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_A];
-                    slotStorage[i].heavySlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_B];
-                    slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_XA];
+                    slotStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
+                    slotStorage[i].mediumSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A];
+                    slotStorage[i].heavySlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B];
+                    slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA];
 
                     //Find a safe big slot
                     foreach (AIPriorityAct priority in player.WresParam.aiParam.priorityAct)
@@ -393,7 +386,6 @@ namespace QoL_Mods
 
                 if (moveset == null)
                 {
-                    L.D("Moveset is null");
                     return false;
                 }
 
@@ -401,19 +393,17 @@ namespace QoL_Mods
 
                 if (moveset.Type[damageLevel] == SkillType.BasicMove && !moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
                 {
-                    L.D("Execute basic move");
                     attacker.animator.ReqBasicAnm((BasicSkillEnum)moveset.BasicSkills[damageLevel].SkillID, true, attacker.TargetPlIdx);
                 }
                 else if (moveset.Type[damageLevel] == SkillType.IrishWhip || moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
                 {
-                    L.D("Execute irish whip : " + moveset.BasicSkills[damageLevel].SkillName);
                     //Determine the direction to press
                     if (attacker.plController.kind == PlayerControllerKind.AI)
                     {
                         int direction = UnityEngine.Random.Range(1, 2);
                         if (moveset.BasicSkills[damageLevel].SkillName.Equals("Irish Whip (Horizontal)"))
                         {
-                            if (direction == 1)
+                            if (attacker.PlDir == PlDirEnum.Right)
                             {
                                 attacker.padOn = PadBtnEnum.Dir_L;
                             }
@@ -424,7 +414,7 @@ namespace QoL_Mods
                         }
                         else if (moveset.BasicSkills[damageLevel].SkillName.Equals("Irish Whip (Vertical)"))
                         {
-                            if (direction == 1)
+                            if (attacker.PlDir == PlDirEnum.Right)
                             {
                                 attacker.padOn = PadBtnEnum.Dir_U;
                             }
@@ -435,7 +425,7 @@ namespace QoL_Mods
                         }
                         else
                         {
-                            if (direction == 1)
+                            if (attacker.PlDir == PlDirEnum.Right)
                             {
                                 attacker.padOn = PadBtnEnum.Dir_LD;
                             }
@@ -456,8 +446,7 @@ namespace QoL_Mods
                 }
                 else
                 {
-                    L.D("Execute custom move");
-
+               
                     SkillSlotEnum slotEnum = SkillSlotEnum.Grapple_X;
                     if (damageLevel == 0)
                     {
@@ -593,6 +582,104 @@ namespace QoL_Mods
             }
         }
 
+        #endregion
+
+        #region Resilient Criticals
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessCritical", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Resilient Critical")]
+        public static void SetInjury(Player plObj)
+        {
+            try
+            {
+                if (plObj == null)
+                {
+                    return;
+                }
+
+                //Get targetting player
+                Player targetPlObj = PlayerMan.inst.GetPlObj(plObj.TargetPlIdx);
+                String wrestlerName = DataBase.GetWrestlerFullName(plObj.WresParam);
+                int resilience = 0;
+
+                global::SkillData currentSkill = targetPlObj.animator.CurrentSkill;
+
+                if (currentSkill == null)
+                {
+                    currentSkill = new SkillData
+                    {
+                        atkPow_Arm = 0,
+                        atkPow_Waist = 0,
+                        atkPow_Leg = 0,
+                        atkPow_Neck = 0
+                    };
+                }
+                if (currentSkill.atkPow_Neck != 0)
+                {
+                    resilience = plObj.WresParam.defNeck;
+                }
+
+                if (currentSkill.atkPow_Waist != 0)
+                {
+                    if (resilience == 0 || plObj.WresParam.defWaist > resilience)
+                    {
+                        resilience = plObj.WresParam.defWaist;
+                    }
+                }
+
+                if (currentSkill.atkPow_Arm != 0)
+                {
+                    if (resilience == 0 || plObj.WresParam.defArm > resilience)
+                    {
+                        resilience = plObj.WresParam.defArm;
+                    }
+                }
+
+                if (currentSkill.atkPow_Leg != 0)
+                {
+                    if (resilience == 0 || plObj.WresParam.defLeg > resilience)
+                    {
+                        resilience = plObj.WresParam.defLeg;
+                    }
+                }
+
+                //Non-move criticals are ignored.
+                if (currentSkill.atkPow_Arm == 0 && currentSkill.atkPow_Neck == 0 &&
+                    currentSkill.atkPow_Waist == 0 && currentSkill.atkPow_Leg == 0)
+                {
+                    return;
+                }
+
+                //If the check fails, do nothing
+                if (UnityEngine.Random.Range(0, 10 + (resilience * 5)) < 10)
+                {
+                    return;
+                }
+
+                plObj.isKO = false;
+                if (resilience == 0)
+                {
+                    plObj.SetSP(10923);
+                    plObj.SetBP(10923);
+                }
+                else if (resilience == 1)
+                {
+                    plObj.SetSP(13107);
+                    plObj.SetBP(13107);
+                }
+                else
+                {
+                    plObj.SetSP(16383);
+                    plObj.SetBP(16383);
+                }
+
+            }
+            catch (Exception e)
+            {
+                L.D("Resilient Critical Error - " + e.Message);
+                plObj.isKO = true;
+                plObj.SetSP(0);
+                plObj.SetBP(0);
+            }
+        }
         #endregion
 
     }

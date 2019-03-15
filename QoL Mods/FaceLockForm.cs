@@ -15,18 +15,21 @@ namespace QoL_Mods
 {
     public partial class FaceLockForm : Form
     {
-        public FaceLockForm()
-        {
-            InitializeComponent();
-            SetMoveCategories();
-            LoadFaceLocks();
-            FormClosing += FLForm_FormClosing;
-        }
-
         public static FaceLockForm flForm = null;
         private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleFL.dat", "WrestlerFL.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
+
+
+        public FaceLockForm()
+        {
+            flForm = this;
+            InitializeComponent();
+            SetMoveCategories();
+            LoadFaceLocks();
+            LoadSubs();
+            FormClosing += FLForm_FormClosing;
+        }
 
         private void FLForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -130,7 +133,6 @@ namespace QoL_Mods
             {
                 foreach (FaceLockMoves move in styleMoves)
                 {
-                    L.D("Saving " + move.StyleItem.Name);
                     sw.WriteLine(move.SaveFaceLockData());
                 }
             }
@@ -331,7 +333,6 @@ namespace QoL_Mods
             {
                 if (nl_wresterList.SelectedIndex < 0)
                 {
-                    L.D("No Wrestler Selected");
                     return;
                 }
                 FaceLockMoves move = (FaceLockMoves)nl_wresterList.SelectedItem;
@@ -569,7 +570,6 @@ namespace QoL_Mods
         }
         private FaceLockMoves UpdateMove(FaceLockMoves move, Skill skill, MoveCategory category, int damageLevel)
         {
-            L.D("Adding Skill - " + skill.SkillName);
             //Ensure the correct category is selected
             for (int i = 0; i < nl_Categories.Items.Count; i++)
             {
@@ -592,19 +592,16 @@ namespace QoL_Mods
                     if (skill.SkillName.Contains("Irish Whip"))
                     {
                         move.Type[damageLevel] = SkillType.IrishWhip;
-                        L.D("Added Irish Whip");
                     }
                     else
                     {
                         move.Type[damageLevel] = SkillType.BasicMove;
-                        L.D("Added Basic Move");
                     }
                 }
                 else
                 {
                     move.Type[damageLevel] = SkillType.CustomMove;
                     move.CustomSkills[damageLevel] = skill;
-                    L.D("Added Custom Move");
                 }
 
             }
@@ -714,11 +711,9 @@ namespace QoL_Mods
             FaceLockMoves move = new FaceLockMoves(new QoL_Mods.Data_Classes.Style(wrestler, FightStyleEnum.American));
             nl_wresterList.Items.Add(move);
             wrestlerMoves.Add(move);
-            L.D("Added move for " + wrestler);
-
+           
             if (nl_wresterList.Items.Count == 0)
             {
-                L.D("Wrestler List has no items");
                 return;
             }
             nl_wresterList.SelectedIndex = 0;
@@ -742,6 +737,7 @@ namespace QoL_Mods
             }
         }
         #endregion
+
         private String CheckSaveFile(String dataType)
         {
             String path = CheckSaveFolder(dataType);
@@ -781,7 +777,48 @@ namespace QoL_Mods
             return folder;
 
         }
+        private void LoadSubs()
+        {
+            try
+            {
+                this.nl_wrestlerResults.Items.Clear();
+                wrestlerList.Clear();
+                int index = 0;
 
+                foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
+                {
+                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
+                    //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
+                    wresIDGroup.ID = (Int32)current.editWrestlerID;
+                    wresIDGroup.Group = current.wrestlerParam.groupID;
+                    index = SaveData.inst.editWrestlerData.IndexOf(current);
+
+                    //Set the subscription ID for the wrestler
+                    foreach (SubscribeItemInfo sub in SaveData.inst.subscribeItemInfoData)
+                    {
+                        if (sub.GetItemType() == Workshop_Item.Wrestler)
+                        {
+                            if (sub.GetItemId() == index)
+                            {
+                                wresIDGroup.Info = sub;
+                            }
+                        }
+                    }
+
+                    wrestlerList.Add(wresIDGroup);
+                    this.nl_wrestlerResults.Items.Add(wresIDGroup);
+                }
+
+                this.nl_wrestlerResults.SelectedIndex = 0;
+
+            }
+            catch
+            {
+
+            }
+
+        }
         private void FaceLockForm_Load(object sender, EventArgs e)
         {
 

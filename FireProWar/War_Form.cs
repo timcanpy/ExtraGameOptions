@@ -31,6 +31,7 @@ namespace FireProWar
         {
             form = this;
             InitializeComponent();
+            FormClosing += WarForm_FormClosing;
             LoadOrgs();
             LoadSubs();
             LoadRegions();
@@ -39,11 +40,11 @@ namespace FireProWar
             LoadMoraleRank();
             LoadGroupFightingStyles();
             LoadWarData();
-            FormClosing += WarForm_FormClosing;
         }
 
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            L.D("Saving data");
             SaveWarData();
         }
 
@@ -224,6 +225,7 @@ namespace FireProWar
         #region Date Save
         private void SaveWarData()
         {
+           
             String folder = saveFolderNames[0];
             if (!Directory.Exists(folder))
             {
@@ -688,7 +690,6 @@ namespace FireProWar
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
-                L.D("No Promotion Selected");
                 return;
             }
 
@@ -711,7 +712,6 @@ namespace FireProWar
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
-                L.D("No Promotion Selected");
                 return;
             }
 

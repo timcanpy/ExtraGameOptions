@@ -47,13 +47,14 @@ namespace FireProWar
             if (fpwEnable)
             {
                 L.D("Ring ID - " +settings.ringID);
-                if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
+
+                if ((int) settings.ringID < (int) RingID.EditRingIDTop)
                 {
-                    ringName = SaveData.inst.editRingData[(int)settings.ringID - (int)RingID.EditRingIDTop].name;
+                    ringName += settings.ringID;
                 }
-                else
+                else if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
                 {
-                    ringName = settings.ringID.ToString();
+                    ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
                 }
 
                 promotion = War_Form.form.GetRingPromotion(ringName);

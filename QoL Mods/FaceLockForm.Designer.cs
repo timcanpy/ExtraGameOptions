@@ -1,4 +1,6 @@
-﻿namespace QoL_Mods
+﻿using System;
+
+namespace QoL_Mods
 {
     partial class FaceLockForm
     {
