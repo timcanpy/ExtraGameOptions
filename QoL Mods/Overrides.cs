@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using QoL_Mods.Data_Classes;
 using QoL_Mods.Data_Classes.Facelock;
+using System.IO;
+using UnityEngine.UI;
 
 namespace QoL_Mods
 {
@@ -17,6 +19,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
+    [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
@@ -37,6 +40,12 @@ namespace QoL_Mods
     [FieldAccess(Class = "MatchEvaluation", Field = "EvaluateSkill", Group = "Ref Positions For Pinfall")]
     [FieldAccess(Class = "Player", Field = "UpdatePlayer", Group = "Ref Positions For Pinfall")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
+    #endregion
+
+    #region MatchUI Fields
+    [FieldAccess(Class = "MatchUI", Field = "gameObj_Fight", Group = "ChangeCritImage")]
+    [FieldAccess(Class = "MatchUI", Field = "gameObj_Critical", Group = "ChangeCritImage")]
+    [FieldAccess(Class = "MatchUI", Field = "animator_Fight", Group = "ChangeCritImage")]
     #endregion
 
     class Overrides
@@ -237,7 +246,7 @@ namespace QoL_Mods
         #endregion
 
         #region Face Lock override
-      
+
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void SetFaceLockMoves()
         {
@@ -245,7 +254,7 @@ namespace QoL_Mods
             //Styles
             finishingMove = "";
             faceLockMoves.Clear();
-           
+
             //faceLockMoves = new Dictionary<String, FaceLockMoves>();
             try
             {
@@ -446,7 +455,7 @@ namespace QoL_Mods
                 }
                 else
                 {
-               
+
                     SkillSlotEnum slotEnum = SkillSlotEnum.Grapple_X;
                     if (damageLevel == 0)
                     {
@@ -680,6 +689,189 @@ namespace QoL_Mods
                 plObj.SetBP(0);
             }
         }
+        #endregion
+
+        #region Modify Critical Graphic
+        public static String rootFolder = "EGOData\\";
+        public static String imageFolder = "Images";
+        public static String _noImageValue = "None";
+        public static Dictionary<int, String> critImages = new Dictionary<int, String>();
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
+        public static void SetCriticalImages()
+        {
+            //Ensure the folder is created
+            if (!Directory.Exists(rootFolder + imageFolder))
+            {
+                Directory.CreateDirectory(rootFolder + imageFolder);
+                return;
+            }
+
+            //Get files in the image folder
+            String currentPath = System.IO.Directory.GetCurrentDirectory();
+
+            String ringName = "";
+            MatchSetting settings = GlobalWork.GetInst().MatchSetting;
+            if ((int)settings.ringID < (int)RingID.EditRingIDTop)
+            {
+                ringName += settings.ringID;
+            }
+            else if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
+            {
+                ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+            }
+            //NOTE: File names are being returned with the full path. Appending the path in subsequent calls is unnecessary.
+            var images = Directory.GetFiles(currentPath + @"\" + rootFolder + imageFolder, "*.png");
+
+            //Ensure all files are the correct dimensions.
+            List<String> correctImages = new List<String>();
+            foreach (var image in images)
+            {
+                using (System.Drawing.Image img = System.Drawing.Image.FromFile(image))
+                {
+                    if (img.Width == 648 && img.Height == 328)
+                    {
+                        correctImages.Add(image);
+                    }
+                }
+            }
+            images = correctImages.ToArray();
+
+            //Determine which file to use for each player
+            critImages.Clear();
+            foreach (var id in GetPlayerList())
+            {
+                bool imageFound = false;
+                String editName = DataBase.GetWrestlerFullName(PlayerMan.GetInst().GetPlObj(id).WresParam);
+                foreach (var image in images)
+                {
+                    String imageName = System.IO.Path.GetFileName(image);
+
+                    //Remove the file type; handle instances where the name includes '.' characters.
+                    String[] splitImageName = imageName.Split('.');
+                    if (splitImageName.Length > 2)
+                    {
+                        for (int i = 0; i < splitImageName.Length; i++)
+                        {
+                            imageName += splitImageName[i];
+                        }
+                    }
+                    else
+                    {
+                        imageName = splitImageName[0];
+                    }
+                    
+                    //Look for ring images
+                    if (imageName.Equals(editName) || imageName.Equals(ringName))
+                    {
+                        critImages.Add(id, image);
+                        imageFound = true;
+                        break;
+                    }
+                }
+
+                if (!imageFound)
+                {
+                    //Use generic critical image if it exists
+                    if (File.Exists(currentPath + @"\" + rootFolder + imageFolder + @"\Critical.png"))
+                    {
+                        critImages.Add(id, currentPath + @"\" + rootFolder + imageFolder + @"\Critical.png");
+                        L.D("Default critical image for " + editName);
+                    }
+                    else
+                    {
+                        critImages.Add(id,_noImageValue);
+                        L.D("No image found for " + editName);
+                    }
+                }
+            }
+
+        }
+
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessCritical", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
+            Group = "ChangeCritImage")]
+        public static void ReplaceCriticalImage(Player p)
+        {
+            int attacker = p.TargetPlIdx;
+
+            //Handle instances where an attacker did not cause a critical
+            if (attacker < 0 || attacker > 7)
+            {
+                L.D("Attacker value out of range: " + attacker);
+                return;
+            }
+
+            //Get image to display
+            String image = critImages[attacker];
+
+            //Determine whether a custom image should be used
+            if (image.Equals(_noImageValue) || !File.Exists(image))
+            {
+                L.D("Image file does not exist: " + image);
+                global::MatchSEPlayer.inst.PlayMatchSE(global::MatchSEEnum.Critical, 1f, -1);
+                MatchUI.inst.gameObj_Critical.SetActive(true);
+            }
+            else
+            {
+                ShowCustomCritImage(image);
+            }
+        }
+
+        //Prevent default critical image from being displayed
+        [Hook(TargetClass = "MatchUI", TargetMethod = "Show_Critical", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
+            Group = "ChangeCritImage")]
+        public static bool DisableDefaultCritical(MatchUI ui)
+        {
+            return true;
+        }
+
+        public static void ShowCustomCritImage(String imageName)
+        {
+            try
+            {
+                Sprite sprite = null;
+                String imagePath = imageName;
+
+                byte[] data = File.ReadAllBytes(imageName);
+                Texture2D texture = new Texture2D(2, 2);
+                texture.LoadImage(data);
+                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), new Vector2(0f, 0f));
+                MatchUI.inst.animator_Fight.speed = .5f;
+
+                if (sprite != null)
+                {
+                    GameObject gameObject = MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject;
+                    Image component = gameObject.GetComponent<Image>();
+                    component.sprite = sprite;
+                    global::MatchSEPlayer.inst.PlayMatchSE(global::MatchSEEnum.Critical, 1f, -1);
+                    MatchUI.inst.gameObj_Fight.SetActive(true);
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("CustomCritError: " + e.Message);
+            }
+
+        }
+
+        public static int[] GetPlayerList()
+        {
+            List<int> players = new List<int>();
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (plObj)
+                {
+                    players.Add(plObj.PlIdx);
+                }
+            }
+
+            return players.ToArray();
+        }
+        
         #endregion
 
     }
