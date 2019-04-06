@@ -46,17 +46,26 @@ namespace FireProWar
             fpwEnable = War_Form.form.fpw_Enable.Checked;
             if (fpwEnable)
             {
-                L.D("Ring ID - " +settings.ringID);
-
-                if ((int) settings.ringID < (int) RingID.EditRingIDTop)
+                try
                 {
-                    ringName += settings.ringID;
+                    L.D("Ring ID - " + settings.ringID);
+
+                    if ((int)settings.ringID < (int)RingID.EditRingIDTop)
+                    {
+                        ringName += settings.ringID;
+                    }
+                    else if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
+                    {
+                        ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                    }
                 }
-                else if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
+                catch(ArgumentOutOfRangeException e)
                 {
-                    ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                    ringName = "none";
+                    L.D("Ring ID is out of range");
                 }
 
+                L.D("Ring Name - " + ringName);
                 promotion = War_Form.form.GetRingPromotion(ringName);
                 if (promotion != null)
                 {
