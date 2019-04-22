@@ -121,6 +121,11 @@ namespace Data_Classes
             history = "";
         }
 
+        public void ClearMatchDetails()
+        {
+            matchDetails.Clear();
+        }
+
         public void RemoveEmployee(String name)
         {
             foreach (Employee employee in EmployeeList)

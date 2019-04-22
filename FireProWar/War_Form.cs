@@ -504,7 +504,20 @@ namespace FireProWar
 
         private void fpw_clearDetails_Click(object sender, EventArgs e)
         {
-            fpw_detailsView.Clear();
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = ((Promotion)fpw_promoList.SelectedItem);
+            if (promotion.MatchDetails.Equals(""))
+            {
+                return;
+            }
+
+            promotion.ClearMatchDetails();
+            fpw_promoList.SelectedItem = promotion;
+            fpw_promoList_SelectedIndexChanged(sender, e);
         }
         #endregion
 

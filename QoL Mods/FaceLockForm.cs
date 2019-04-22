@@ -202,16 +202,16 @@ namespace QoL_Mods
             //Basic Moves
             nl_Categories.Items.Add(new MoveCategory("Basic Moves", new HashSet<Skill>
             {
-                new Skill("Knee Lift", (int)BasicSkillEnum.PowerCompetitionWin_BodyKneeLift),
-                new Skill("Elbow Butt", (int)BasicSkillEnum.PowerCompetitionWin_ElbowBat),
-                new Skill("Drop Toe Hold", (int)BasicSkillEnum.PowerCompetitionWin_LegScissors),
-                new Skill("Double Wrist Suplex", (int)BasicSkillEnum.PowerCompetitionWin_DoubleWristArmSault),
-                new Skill("Headbutt", (int)BasicSkillEnum.PowerCompetitionWin_HeadBat),
-                new Skill("Hammer Blow", (int)BasicSkillEnum.PowerCompetitionWin_HammerBlow),
-                new Skill("Arm Drag", (int)BasicSkillEnum.PowerCompetitionWin_CycloneWhip),
-                new Skill("Oosotogari", (int)BasicSkillEnum.PowerCompetitionWin_Oosotogari),
-                new Skill("Leg Tackle", (int)BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg),
-                new Skill("Knuckle Arrow", (int)BasicSkillEnum.PowerCompetitionWin_KnackleArrow),
+                //new Skill("Knee Lift", (int)BasicSkillEnum.PowerCompetitionWin_BodyKneeLift),
+                //new Skill("Elbow Butt", (int)BasicSkillEnum.PowerCompetitionWin_ElbowBat),
+                //new Skill("Drop Toe Hold", (int)BasicSkillEnum.PowerCompetitionWin_LegScissors),
+                //new Skill("Double Wrist Suplex", (int)BasicSkillEnum.PowerCompetitionWin_DoubleWristArmSault),
+                //new Skill("Headbutt", (int)BasicSkillEnum.PowerCompetitionWin_HeadBat),
+                //new Skill("Hammer Blow", (int)BasicSkillEnum.PowerCompetitionWin_HammerBlow),
+                //new Skill("Arm Drag", (int)BasicSkillEnum.PowerCompetitionWin_CycloneWhip),
+                //new Skill("Oosotogari", (int)BasicSkillEnum.PowerCompetitionWin_Oosotogari),
+                //new Skill("Leg Tackle", (int)BasicSkillEnum.PowerCompetitionWin_TuckleSingleLeg),
+                //new Skill("Knuckle Arrow", (int)BasicSkillEnum.PowerCompetitionWin_KnackleArrow),
                 new Skill ("Irish Whip (Horizontal)", (int)BasicSkillEnum.HammerThrough_U),
                 new Skill ("Irish Whip (Corner)", (int)BasicSkillEnum.HammerThrough_S),
                 new Skill ("Irish Whip (Vertical)", (int)BasicSkillEnum.HammerThrough_D)
