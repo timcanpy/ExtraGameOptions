@@ -2,7 +2,7 @@
 
 namespace QoL_Mods
 {
-    partial class QoL_Form
+    partial class SearchForm
     {
         /// <summary>
         /// Required designer variable.

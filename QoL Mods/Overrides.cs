@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace QoL_Mods
 {
-
+    #region Group Descriptions
     [GroupDescription(Group = "Variable Front Neck Lock Moves", Name = "Variable Front Neck Lock Moves", Description = "Changes the Front Neck Lock finishing move based on edit's fighting style.")]
     [GroupDescription(Group = "Wrestler Search", Name = "Wrestler Search Tool", Description = "Provides a UI for loading edits within Edit Mode.")]
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
@@ -20,10 +20,14 @@ namespace QoL_Mods
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
     [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
+    [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must begin on either form 100 or 101 to be applicable.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
+    #endregion
+    #region Field Access
+    #region Miscellaneous Fields
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
-    [FieldAccess(Class = "MatchMain", Field = "CreatePlayers", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Forced Sell")]
+    #endregion
 
     #region Face Lock Access
     [FieldAccess(Class = "FormAnimator", Field = "plObj", Group = "Face Lock")]
@@ -48,13 +52,14 @@ namespace QoL_Mods
     [FieldAccess(Class = "MatchUI", Field = "animator_Fight", Group = "ChangeCritImage")]
     #endregion
 
+    #region Recovery Taunt Fields
+    [FieldAccess(Class = "FormAnimator", Field = "plObj", Group = "Recovery Taunts")]
+    [FieldAccess(Class = "FormAnimator", Field = "InitAnimation", Group = "Recovery Taunts")]
+    #endregion
+    #endregion
+
     class Overrides
     {
-        public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
-        public static SlotStorage[] slotStorage = new SlotStorage[8];
-        public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
-        public static String finishingMove = "";
-
         [ControlPanel(Group = "Face Lock")]
         public static Form FLForm()
         {
@@ -71,13 +76,26 @@ namespace QoL_Mods
         [ControlPanel(Group = "Wrestler Search")]
         public static Form MSForm()
         {
-            if (QoL_Form.form == null)
+            if (SearchForm.form == null)
             {
-                return new QoL_Form();
+                return new SearchForm();
             }
             else
             {
-                return QoL_Form.form;
+                return SearchForm.form;
+            }
+        }
+
+        [ControlPanel(Group = "Recovery Taunts")]
+        public static Form RTForm()
+        {
+            if (RecoveryTauntForm.form == null)
+            {
+                return new RecoveryTauntForm();
+            }
+            else
+            {
+                return RecoveryTauntForm.form;
             }
         }
 
@@ -246,6 +264,10 @@ namespace QoL_Mods
         #endregion
 
         #region Face Lock override
+        public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
+        public static SlotStorage[] slotStorage = new SlotStorage[8];
+        public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
+        public static String finishingMove = "";
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void SetFaceLockMoves()
@@ -344,7 +366,6 @@ namespace QoL_Mods
                         safeCritSlot[i] = SkillSlotEnum.Grapple_B_D;
                     }
 
-                    L.D("Player " + i + " is using crit slot " + safeCritSlot[i] + ".");
                 }
             }
             catch (Exception e)
@@ -761,7 +782,7 @@ namespace QoL_Mods
                     {
                         imageName = splitImageName[0];
                     }
-                    
+
                     //Look for ring images
                     if (imageName.Equals(editName) || imageName.Equals(ringName))
                     {
@@ -777,12 +798,10 @@ namespace QoL_Mods
                     if (File.Exists(currentPath + @"\" + rootFolder + imageFolder + @"\Critical.png"))
                     {
                         critImages.Add(id, currentPath + @"\" + rootFolder + imageFolder + @"\Critical.png");
-                        L.D("Default critical image for " + editName);
                     }
                     else
                     {
-                        critImages.Add(id,_noImageValue);
-                        L.D("No image found for " + editName);
+                        critImages.Add(id, _noImageValue);
                     }
                 }
             }
@@ -871,7 +890,347 @@ namespace QoL_Mods
 
             return players.ToArray();
         }
-        
+
+        #endregion
+
+        #region Wake Up Taunts
+
+        #region Variables
+        public static SkillData[] tauntData;
+        public static int[] recoveryTauntCount;
+        public static TauntExecution[] tauntStatus;
+        public static Dictionary<String, WakeUpTaunt> styleTaunts = new Dictionary<String, WakeUpTaunt>();
+        public static Dictionary<String, WakeUpTaunt> wrestlerTaunts = new Dictionary<String, WakeUpTaunt>();
+        #endregion
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Recovery Taunts")]
+        public static void SetWakeUpTaunts()
+        {
+            tauntData = new SkillData[8];
+            tauntStatus = new TauntExecution[8];
+            recoveryTauntCount = new int[8];
+            styleTaunts.Clear();
+            wrestlerTaunts.Clear();
+
+            //Determine the maximum number of taunts per edit
+            for (int i = 0; i < 8; i++)
+            {
+                tauntStatus[i] = TauntExecution.Reset;
+                Player player = PlayerMan.inst.GetPlObj(i);
+                if (!player)
+                {
+                    continue;
+                }
+
+                recoveryTauntCount[i] = ((int)player.WresParam.charismaRank + (int)player.WresParam.wrestlerRank) / 2;
+                L.D("Total recovery taunts for " + DataBase.GetWrestlerFullName(player.WresParam) + ": " + recoveryTauntCount[i]);
+            }
+
+            foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_styles.Items)
+            {
+                styleTaunts.Add(taunt.StyleItem.Name, taunt);
+            }
+
+            foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_wrestlers.Items)
+            {
+                wrestlerTaunts.Add(taunt.StyleItem.Name, taunt);
+            }
+        }
+
+        [Hook(TargetClass = "Player", TargetMethod = "Process_Down", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Recovery Taunts")]
+        public static bool ProcessWakeUp(Player player)
+        {
+            try
+            {
+                if (!player)
+                {
+                    return false;
+                }
+
+                string wrestler = DataBase.GetWrestlerFullName(player.WresParam);
+                int damageLevel = GetDamageLevel(player);
+                bool executeTaunt = false;
+
+                //Ensure that the AI check is not executed multiple times
+                if (player.DownTime != 0 && tauntStatus[player.PlIdx] == TauntExecution.Skip && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
+                {
+                    return false;
+                }
+
+                //Ensure taunt data is reset once the player has risen.
+                if (player.DownTime == 0 && tauntStatus[player.PlIdx] != TauntExecution.Reset)
+                {
+                    tauntStatus[player.PlIdx] = TauntExecution.Reset;
+                    tauntData[player.PlIdx] = null;
+                    return false;
+                }
+
+                //Ensure recovery taunts remain before proceeding
+                if (recoveryTauntCount[player.PlIdx] <= 0)
+                {
+                    return false;
+                }
+
+                //Ensure the check is only processed when applicable
+                if (player.isKOCount || global::MatchMain.inst.isMatchEnd || (player.State != PlStateEnum.Down_FaceDown && player.State != PlStateEnum.Down_FaceUp))
+                {
+                    return false;
+                }
+
+                //Return WakeUp Taunt
+                if (!wrestlerTaunts.TryGetValue(wrestler, out WakeUpTaunt taunt))
+                {
+                    taunt = styleTaunts[player.WresParam.fightStyle.ToString()];
+                }
+
+                if (taunt == null)
+                {
+                    return false;
+                }
+                else if (taunt.WakeupMoves[damageLevel] == null)
+                {
+                    return false;
+                }
+
+                //Humans can taunt on demand
+                //TauntExecution.Force ensure that taunts always trigger after a roll.
+                if (player.plController.kind != PlayerControllerKind.AI)
+                {
+                    if (player.plController.padPush == PadBtnEnum.Performance1 || player.plController.padPush == PadBtnEnum.Performance2
+                        || player.plController.padPush == PadBtnEnum.Performance3 || player.plController.padPush == PadBtnEnum.Performance4 ||
+                        tauntStatus[player.PlIdx] == TauntExecution.Force)
+                    {
+                        executeTaunt = true;
+                    }
+                }
+                //AI must pass a check in order to taunt
+                else
+                {
+                    if (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp)
+                    {
+                        //AI Formula
+                        //Starting Value : Showmanship
+                        //Number to beat : 100 - (10 * damageLevel), where damageLevel starts at 0
+                        //Modifier : 4 * Number of Taunts remaining
+                        int showmanship = (player.WresParam.aiParam.personalTraits / 2) + (4 * recoveryTauntCount[player.PlIdx]);
+                        int tauntCeiling = 100 - (10 * damageLevel);
+                        int checkValue = UnityEngine.Random.Range(showmanship, 100);
+                        if (checkValue >= tauntCeiling || tauntStatus[player.PlIdx] == TauntExecution.Force)
+                        {
+                            L.D("Check passed for " + wrestler + ":" + checkValue + "/" + tauntCeiling);
+                            executeTaunt = true;
+                        }
+                        else
+                        {
+                            L.D("Check failed for " + wrestler + ":" + checkValue + "/" + tauntCeiling);
+                            tauntStatus[player.PlIdx] = TauntExecution.Skip;
+                        }
+                    }
+                }
+
+                if (executeTaunt)
+                {
+                    CheckWakeUpTauntConditions(player, taunt, damageLevel);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("WakeUpTauntError: " + e);
+                return false;
+            }
+        }
+
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 27,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Recovery Taunts")]
+        public static void ReplaceCurrentSkill(FormAnimator animator)
+        {
+            if (animator.plObj == null)
+            {
+                return;
+            }
+
+            //Ensure that the priority chain is not broken
+            if (tauntData[animator.plObj.PlIdx] != null)
+            {
+                animator.CurrentSkill = tauntData[animator.plObj.PlIdx];
+            }
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Recovery Taunts")]
+        public static void RefreshTauntSlots()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                tauntData[i] = null;
+                tauntStatus[i] = TauntExecution.Reset;
+                recoveryTauntCount[i] = 0;
+            }
+        }
+
+        #region Helper Methods
+        public static void CheckWakeUpTauntConditions(Player player, WakeUpTaunt taunt, int damageLevel)
+        {
+            //Determine whether the edit needs to be rolled before taunting.
+            //Ensure that the edit can never roll endlessly
+            if ((player.State == PlStateEnum.Down_FaceDown &&
+                 taunt.StartPositions[damageLevel] != TauntStartPosition.FaceDown) ||
+                (player.State == PlStateEnum.Down_FaceUp &&
+                 taunt.StartPositions[damageLevel] != TauntStartPosition.FaceUp) && tauntStatus[player.PlIdx] != TauntExecution.Force)
+            {
+                ExecuteRoll(player, taunt.StartPositions[damageLevel]);
+
+                return;
+            }
+
+            //Increase downtime to ensure the edit doesn't stand immediately after taunt's execution
+            if (taunt.EndPositions[damageLevel] == TauntEndPosition.Grounded)
+            {
+                SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)taunt.WakeupMoves[damageLevel].SkillID)[0];
+                int totalAnimationFrame = skillData.GetTotalAnimationFrame(0);
+                player.AddDownTime(totalAnimationFrame + 300);
+                L.D("Added downtime for move: " + totalAnimationFrame + 300);
+                player.isAddedDownTimeByPerformance = true;
+            }
+
+            ExecuteWakeUpTaunt(taunt.WakeupMoves[damageLevel].SkillID, player);
+            tauntStatus[player.PlIdx] = TauntExecution.Executed;
+        }
+        public static void ExecuteWakeUpTaunt(int skillID, Player player)
+        {
+            player.animator.AnmReqType = AnmReqTypeEnum.SkillID;
+            player.animator.anmType = SkillAnmTypeEnum.Single;
+            global::SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
+
+            tauntData[player.PlIdx] = skillData;
+            player.ChangeState(global::PlStateEnum.Performance);
+
+            //Ensure we're handling skill data correctly
+            if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
+            {
+                player.lastSkill = SkillSlotEnum.Performance_1;
+            }
+
+            //Resolve rare bug in some AI methods
+            Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
+            if (!defender)
+            {
+                player.TargetPlIdx = FindAnOpponent(player.PlIdx);
+            }
+
+            player.animator.InitAnimation();
+
+            //Ensure recovery taunts are subtracted
+            recoveryTauntCount[player.PlIdx] -= 1;
+
+            //Increase spirit for every taunt executed
+            player.AddSP(256 * GetDamageLevel(player));
+
+            L.D(DataBase.GetWrestlerFullName(player.WresParam) + " has " + recoveryTauntCount[player.PlIdx] + " taunts remaining.");
+        }
+        public static void ExecuteRoll(Player player, TauntStartPosition start)
+        {
+            //Determine player location and roll accordingly
+            global::AreaEnum colAreaInRhombus_AroundRing = global::Ring.inst.GetColAreaInRhombus_AroundRing(player.PlPos);
+
+            //Player is at the top of the ring
+            if ((colAreaInRhombus_AroundRing == global::AreaEnum.LU || (colAreaInRhombus_AroundRing == global::AreaEnum.RU)))
+            {
+                if (start == TauntStartPosition.FaceDown)
+                {
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnBack, false, -1);
+                }
+                else
+                {
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnFace, false, -1);
+                }
+            }
+            else
+            {
+                if (start == TauntStartPosition.FaceDown)
+                {
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnBack, false, -1);
+                }
+                else
+                {
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnFace, false, -1);
+                }
+            }
+        }
+        public static void RefereshTauntData()
+        {
+            tauntData = new SkillData[8];
+            for (int i = 0; i < 8; i++)
+            {
+                tauntData[i] = null;
+                tauntStatus[i] = TauntExecution.Reset;
+            }
+        }
+        public static int GetDamageLevel(Player player)
+        {
+            if (player.HP >= 49152f)
+            {
+                return 0;
+            }
+            else if (player.HP >= 24576f)
+            {
+                return 1;
+            }
+            else if (player.HP >= 12288f)
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        public static int FindAnOpponent(int playerIndex)
+        {
+            if (playerIndex < 4)
+            {
+                for (int i = 4; i < 8; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (player)
+                    {
+                        if (!player.isSleep)
+                        {
+                            return i;
+                        }
+                    }
+                }
+
+                //We should not reach this point
+                return 4;
+            }
+            else
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (player)
+                    {
+                        if (!player.isSleep)
+                        {
+                            return i;
+                        }
+                    }
+                }
+
+                //We should not reach this point
+                return 0;
+            }
+        }
+        #endregion
         #endregion
 
     }

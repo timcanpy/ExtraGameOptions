@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -14,16 +15,136 @@ namespace QoL_Mods
 {
     public partial class RecoveryTauntForm : Form
     {
-        public RecoveryTauntForm()
+        #region General Form Methods
+        public void QoL_Form_Load(object sender, EventArgs e)
         {
-            InitializeComponent();
+
         }
 
-        #region Wake Up Taunts
+        public RecoveryTauntForm()
+        {
+            form = this;
+            InitializeComponent();
+            LoadRecoveryTaunts();
+            LoadSubs();
+            FormClosing += RecoveryForm_FormClosing;
+        }
+
+        private void RecoveryForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveRecoveryTaunts();
+        }
+
+        #endregion
 
         #region Variables
+        public static RecoveryTauntForm form = null;
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
         public static List<WresIDGroup> wrestlerList;
+        private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
+        private static String[] saveFolderNames = new String[] { "./EGOData/" };
+        #endregion
+
+        #region Wake Up Taunts
+        private void LoadRecoveryTaunts()
+        {
+            String filePath = CheckSaveFile("StyleWT");
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    foreach (String style in lines)
+                    {
+                        WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
+                        try
+                        {
+                            taunt.LoadWakeUpData(style);
+                            wu_styles.Items.Add(taunt);
+                            L.D("Added " + taunt.StyleItem.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            L.D("WakeUpTaunt Load Error:" + ex);
+                        }
+                    }
+
+                    if (wu_styles.Items.Count > 0)
+                    {
+                        wu_styles.SelectedIndex = 0;
+                    }
+                }
+            }
+            else
+            {
+                LoadWakeUp();
+            }
+
+            filePath = CheckSaveFile("WrestlerWT");
+            if (File.Exists(filePath))
+            {
+                using (StreamReader sr = new StreamReader(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    foreach (String style in lines)
+                    {
+                        WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
+
+                        try
+                        {
+                            taunt.LoadWakeUpData(style);
+                            wu_wrestlers.Items.Add(taunt);
+                            L.D("Added " + taunt.StyleItem.Name);
+                        }
+                        catch (Exception ex)
+                        {
+                            L.D("WakeUpTaunt Load Error:" + ex);
+                        }
+                    }
+
+                    if (wu_wrestlers.Items.Count > 0)
+                    {
+                        wu_wrestlers.SelectedIndex = 0;
+                    }
+                }
+            }
+
+            SetValidMoves();
+        }
+
+        private void SaveRecoveryTaunts()
+        {
+            //Save Style WakeUpTaunts
+            String filePath = CheckSaveFile("StyleWT");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                foreach (WakeUpTaunt taunt in wu_styles.Items)
+                {
+                    sw.WriteLine(taunt.SaveWakeUpData());
+                }
+            }
+
+            //Save Wrestler WakeUpTaunts
+            filePath = CheckSaveFile("WrestlerWT");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                foreach (WakeUpTaunt taunt in wu_wrestlers.Items)
+                {
+                    sw.WriteLine(taunt.SaveWakeUpData());
+                }
+            }
+        }
+        #region Variables
         #endregion
 
         #region Setup
@@ -487,6 +608,77 @@ namespace QoL_Mods
 
         #endregion
 
+        #endregion
+
+        #region Helper Methods
+
+        private void LoadSubs()
+        {
+            try
+            {
+                this.wu_wrestlerResults.Items.Clear();
+                wrestlerList.Clear();
+
+                foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
+                {
+                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
+                    wresIDGroup.ID = (Int32)current.editWrestlerID;
+                    wresIDGroup.Group = current.wrestlerParam.groupID;
+
+                    wrestlerList.Add(wresIDGroup);
+                    this.wu_wrestlerResults.Items.Add(wresIDGroup);
+                }
+
+                this.wu_wrestlerResults.SelectedIndex = 0;
+
+            }
+            catch (Exception ex)
+            {
+                L.D("Load Subs Exception: " + ex);
+            }
+
+        }
+
+        private String CheckSaveFile(String dataType)
+        {
+            String path = CheckSaveFolder(dataType);
+
+            switch (dataType)
+            {
+
+                case "StyleWT":
+                    path = path + saveFileNames[0];
+                    break;
+                case "WrestlerWT":
+                    path = path + saveFileNames[1];
+                    break;
+                default:
+                    path = "";
+                    break;
+            }
+
+            return path;
+
+        }
+        private String CheckSaveFolder(String dataType)
+        {
+            String folder = "";
+            switch (dataType)
+            {
+                default:
+                    folder = saveFolderNames[0];
+                    break;
+            }
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            return folder;
+
+        }
         #endregion
     }
 }

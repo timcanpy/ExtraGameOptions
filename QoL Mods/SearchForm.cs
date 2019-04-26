@@ -8,19 +8,19 @@ using System.IO;
 
 namespace QoL_Mods
 {
-    public partial class QoL_Form : Form
+    public partial class SearchForm : Form
     {
         #region Variables
         private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static List<String> promotionList = new List<string>();
-        public static QoL_Form form = null;
+        public static SearchForm form = null;
         #endregion
 
         #region Init Methods
         public void QoL_Form_Load(object sender, EventArgs e)
         {
         }
-        public QoL_Form()
+        public SearchForm()
         {
             form = this;
             InitializeComponent();
