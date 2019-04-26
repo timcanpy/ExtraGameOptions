@@ -73,6 +73,12 @@
     <Compile Include="Helper Classes\WresIDGroup.cs" />
     <Compile Include="Helper Classes\WrestlerHealth.cs" />
     <Compile Include="Overrides.cs" />
+    <Compile Include="RecoveryTauntForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RecoveryTauntForm.Designer.cs">
+      <DependentUpon>RecoveryTauntForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +90,9 @@
   <ItemGroup>
     <EmbeddedResource Include="FaceLockForm.resx">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RecoveryTauntForm.resx">
+      <DependentUpon>RecoveryTauntForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>

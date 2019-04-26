@@ -676,7 +676,7 @@ namespace QoL_Mods
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
-                            nl_wrestlerResults.Items.Add(wrestler.Name);
+                            nl_wrestlerResults.Items.Add(wrestler);
                         }
                     }
                 }
@@ -690,7 +690,7 @@ namespace QoL_Mods
                 {
                     foreach (WresIDGroup wrestler in wrestlerList)
                     {
-                        nl_wrestlerResults.Items.Add(wrestler.Name);
+                        nl_wrestlerResults.Items.Add(wrestler);
                     }
                 }
             }
@@ -702,22 +702,31 @@ namespace QoL_Mods
 
         private void nl_addWrestler_Click(object sender, EventArgs e)
         {
-            if (nl_wrestlerResults.SelectedIndex < 0)
+            try
             {
-                return;
-            }
+                if (nl_wrestlerResults.SelectedIndex < 0)
+                {
+                    return;
+                }
 
-            String wrestler = (String)nl_wrestlerResults.SelectedItem;
-            FaceLockMoves move = new FaceLockMoves(new QoL_Mods.Data_Classes.Style(wrestler, FightStyleEnum.American));
-            nl_wresterList.Items.Add(move);
-            wrestlerMoves.Add(move);
-           
-            if (nl_wresterList.Items.Count == 0)
-            {
-                return;
+                string wrestler = ((WresIDGroup)nl_wrestlerResults.SelectedItem).Name;
+                FaceLockMoves move = new FaceLockMoves(new QoL_Mods.Data_Classes.Style(wrestler, FightStyleEnum.American));
+                nl_wresterList.Items.Add(move);
+                wrestlerMoves.Add(move);
+
+                if (nl_wresterList.Items.Count == 0)
+                {
+                    return;
+                }
+
+                nl_wresterList.SelectedIndex = nl_wresterList.Items.Count - 1;
+                nl_wresterList_SelectedIndexChanged(null, null);
             }
-            nl_wresterList.SelectedIndex = 0;
-            nl_wresterList_SelectedIndexChanged(null, null);
+            catch(Exception ex)
+            {
+                L.D("Add WrestlerFL Error:" + ex);
+            }
+         
         }
 
         private void nl_removeWrestler_Click(object sender, EventArgs e)
