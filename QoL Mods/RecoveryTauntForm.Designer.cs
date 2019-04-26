@@ -699,7 +699,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel20);
             this.Name = "RecoveryTauntForm";
-            this.Text = "RecoveryTauntForm";
+            this.Text = "Recovery Taunts";
             this.tabControl1.ResumeLayout(false);
             this.tabPage7.ResumeLayout(false);
             this.tabPage7.PerformLayout();

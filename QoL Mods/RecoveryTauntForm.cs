@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DG;
+using MatchConfig;
+using QoL_Mods.Data_Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +23,7 @@ namespace QoL_Mods
 
         #region Variables
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
+        public static List<WresIDGroup> wrestlerList;
         #endregion
 
         #region Setup
