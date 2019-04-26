@@ -93,10 +93,10 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage7);
             this.tabControl1.Controls.Add(this.tabPage13);
-            this.tabControl1.Location = new System.Drawing.Point(8, 15);
+            this.tabControl1.Location = new System.Drawing.Point(215, 15);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(594, 253);
+            this.tabControl1.Size = new System.Drawing.Size(671, 253);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage7
@@ -122,7 +122,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(586, 227);
+            this.tabPage7.Size = new System.Drawing.Size(663, 227);
             this.tabPage7.TabIndex = 0;
             this.tabPage7.Text = "Styles";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -695,7 +695,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 272);
+            this.ClientSize = new System.Drawing.Size(891, 272);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel20);
             this.Name = "RecoveryTauntForm";

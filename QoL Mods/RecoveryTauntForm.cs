@@ -28,6 +28,18 @@ namespace QoL_Mods
             LoadRecoveryTaunts();
             LoadSubs();
             FormClosing += RecoveryForm_FormClosing;
+            wu_wrestlerSearch.LostFocus += wu_wrestlerSearch_LostFocus();
+            wu_moveSearch.LostFocus += wu_moveSearch_LostFocus();
+        }
+
+        private EventHandler wu_moveSearch_LostFocus()
+        {
+            throw new NotImplementedException();
+        }
+
+        private EventHandler wu_wrestlerSearch_LostFocus()
+        {
+            throw new NotImplementedException();
         }
 
         private void RecoveryForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -40,7 +52,7 @@ namespace QoL_Mods
         #region Variables
         public static RecoveryTauntForm form = null;
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
-        public static List<WresIDGroup> wrestlerList;
+        public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
         #endregion
@@ -61,7 +73,6 @@ namespace QoL_Mods
                         {
                             taunt.LoadWakeUpData(style);
                             wu_styles.Items.Add(taunt);
-                            L.D("Added " + taunt.StyleItem.Name);
                         }
                         catch (Exception ex)
                         {
@@ -94,7 +105,6 @@ namespace QoL_Mods
                         {
                             taunt.LoadWakeUpData(style);
                             wu_wrestlers.Items.Add(taunt);
-                            L.D("Added " + taunt.StyleItem.Name);
                         }
                         catch (Exception ex)
                         {
@@ -624,13 +634,16 @@ namespace QoL_Mods
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
-                    wresIDGroup.Group = current.wrestlerParam.groupID;
 
                     wrestlerList.Add(wresIDGroup);
                     this.wu_wrestlerResults.Items.Add(wresIDGroup);
+                    L.D("WT Add:" + wresIDGroup.Name);
                 }
 
-                this.wu_wrestlerResults.SelectedIndex = 0;
+                if (wu_wrestlerResults.Items.Count > 0)
+                {
+                    this.wu_wrestlerResults.SelectedIndex = 0;
+                }
 
             }
             catch (Exception ex)

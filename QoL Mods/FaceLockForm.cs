@@ -792,7 +792,7 @@ namespace QoL_Mods
             {
                 this.nl_wrestlerResults.Items.Clear();
                 wrestlerList.Clear();
-                int index = 0;
+                //int index = 0;
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
@@ -801,19 +801,19 @@ namespace QoL_Mods
                     //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
-                    index = SaveData.inst.editWrestlerData.IndexOf(current);
+                    //index = SaveData.inst.editWrestlerData.IndexOf(current);
 
                     //Set the subscription ID for the wrestler
-                    foreach (SubscribeItemInfo sub in SaveData.inst.subscribeItemInfoData)
-                    {
-                        if (sub.GetItemType() == Workshop_Item.Wrestler)
-                        {
-                            if (sub.GetItemId() == index)
-                            {
-                                wresIDGroup.Info = sub;
-                            }
-                        }
-                    }
+                    //foreach (SubscribeItemInfo sub in SaveData.inst.subscribeItemInfoData)
+                    //{
+                    //    if (sub.GetItemType() == Workshop_Item.Wrestler)
+                    //    {
+                    //        if (sub.GetItemId() == index)
+                    //        {
+                    //            wresIDGroup.Info = sub;
+                    //        }
+                    //    }
+                    //}
 
                     wrestlerList.Add(wresIDGroup);
                     this.nl_wrestlerResults.Items.Add(wresIDGroup);
