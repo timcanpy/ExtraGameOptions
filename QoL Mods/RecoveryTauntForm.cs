@@ -28,20 +28,10 @@ namespace QoL_Mods
             LoadRecoveryTaunts();
             LoadSubs();
             FormClosing += RecoveryForm_FormClosing;
-            wu_wrestlerSearch.LostFocus += wu_wrestlerSearch_LostFocus();
-            wu_moveSearch.LostFocus += wu_moveSearch_LostFocus();
+            wu_wrestlerSearch.LostFocus += wu_wrestlerSearch_LostFocus;
+            wu_moveSearch.LostFocus += wu_wrestlerSearch_LostFocus;
         }
-
-        private EventHandler wu_moveSearch_LostFocus()
-        {
-            throw new NotImplementedException();
-        }
-
-        private EventHandler wu_wrestlerSearch_LostFocus()
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private void RecoveryForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveRecoveryTaunts();
@@ -627,7 +617,7 @@ namespace QoL_Mods
             try
             {
                 this.wu_wrestlerResults.Items.Clear();
-                wrestlerList.Clear();
+                wrestlerList = new List<WresIDGroup>();
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
@@ -637,7 +627,6 @@ namespace QoL_Mods
 
                     wrestlerList.Add(wresIDGroup);
                     this.wu_wrestlerResults.Items.Add(wresIDGroup);
-                    L.D("WT Add:" + wresIDGroup.Name);
                 }
 
                 if (wu_wrestlerResults.Items.Count > 0)
@@ -693,5 +682,10 @@ namespace QoL_Mods
 
         }
         #endregion
+
+        private void wu_moveRefresh_Click(object sender, EventArgs e)
+        {
+            SetValidMoves();
+        }
     }
 }

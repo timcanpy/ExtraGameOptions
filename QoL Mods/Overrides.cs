@@ -20,7 +20,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
     [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
-    [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must begin on either form 100 or 101 to be applicable.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
+    [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -924,7 +924,6 @@ namespace QoL_Mods
                 }
 
                 recoveryTauntCount[i] = ((int)player.WresParam.charismaRank + (int)player.WresParam.wrestlerRank) / 2;
-                L.D("Total recovery taunts for " + DataBase.GetWrestlerFullName(player.WresParam) + ": " + recoveryTauntCount[i]);
             }
 
             foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_styles.Items)
@@ -955,7 +954,7 @@ namespace QoL_Mods
                 bool executeTaunt = false;
 
                 //Ensure that the AI check is not executed multiple times
-                if (player.DownTime != 0 && tauntStatus[player.PlIdx] == TauntExecution.Skip && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
+                if (player.DownTime != 0 && (tauntStatus[player.PlIdx] == TauntExecution.Skip || tauntStatus[player.PlIdx] == TauntExecution.Executed) && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
                 {
                     return false;
                 }
@@ -1020,12 +1019,10 @@ namespace QoL_Mods
                         int checkValue = UnityEngine.Random.Range(showmanship, 100);
                         if (checkValue >= tauntCeiling || tauntStatus[player.PlIdx] == TauntExecution.Force)
                         {
-                            L.D("Check passed for " + wrestler + ":" + checkValue + "/" + tauntCeiling);
                             executeTaunt = true;
                         }
                         else
                         {
-                            L.D("Check failed for " + wrestler + ":" + checkValue + "/" + tauntCeiling);
                             tauntStatus[player.PlIdx] = TauntExecution.Skip;
                         }
                     }
@@ -1097,7 +1094,6 @@ namespace QoL_Mods
                 SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)taunt.WakeupMoves[damageLevel].SkillID)[0];
                 int totalAnimationFrame = skillData.GetTotalAnimationFrame(0);
                 player.AddDownTime(totalAnimationFrame + 300);
-                L.D("Added downtime for move: " + totalAnimationFrame + 300);
                 player.isAddedDownTimeByPerformance = true;
             }
 
@@ -1133,8 +1129,6 @@ namespace QoL_Mods
 
             //Increase spirit for every taunt executed
             player.AddSP(256 * GetDamageLevel(player));
-
-            L.D(DataBase.GetWrestlerFullName(player.WresParam) + " has " + recoveryTauntCount[player.PlIdx] + " taunts remaining.");
         }
         public static void ExecuteRoll(Player player, TauntStartPosition start)
         {
