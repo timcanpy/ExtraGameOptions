@@ -1038,9 +1038,8 @@ namespace QoL_Mods
                     return false;
                 }
             }
-            catch (Exception e)
+            catch
             {
-                L.D("WakeUpTauntError: " + e);
                 return false;
             }
         }
