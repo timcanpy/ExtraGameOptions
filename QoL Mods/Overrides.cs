@@ -1081,7 +1081,7 @@ namespace QoL_Mods
         {
             //Determine whether this edit is using the Roll Skill
             //public static Skill rollSkill = new Skill("Rolling", -619);
-            if (taunt.WakeupMoves[damageLevel].SkillID == -619)
+            if (taunt.WakeupMoves[damageLevel].SkillID == -100)
             {
                 ExecuteRoll(player, taunt.StartPositions[damageLevel]);
                 tauntStatus[player.PlIdx] = TauntExecution.Executed;

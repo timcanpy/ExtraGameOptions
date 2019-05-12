@@ -28,9 +28,9 @@ namespace QoL_Mods.Data_Classes
 
         public void AddWakeUpMove(Skill skill, int index)
         {
-            WakeupMoves[index] = skill;
-            StartPositions[index] = GetStartPosition((SkillID)skill.SkillID);
-            EndPositions[index] = GetEndPosition((SkillID)skill.SkillID);
+                WakeupMoves[index] = skill;
+                StartPositions[index] = GetStartPosition((SkillID)skill.SkillID);
+                EndPositions[index] = GetEndPosition((SkillID) skill.SkillID);
         }
 
         public void RemoveWakeUpMove(int index)
@@ -42,6 +42,10 @@ namespace QoL_Mods.Data_Classes
 
         private TauntStartPosition GetStartPosition(SkillID skillID)
         {
+            if (skillID < 0)
+            {
+                return TauntStartPosition.FaceDown;
+            }
             var anmData = SkillDataMan.inst.GetSkillData(skillID)[0].anmData[0];
             if (anmData.formDispList[0].formIdx == 101)
             {
@@ -55,6 +59,10 @@ namespace QoL_Mods.Data_Classes
 
         private TauntEndPosition GetEndPosition(SkillID skillID)
         {
+            if (skillID < 0)
+            {
+                return TauntEndPosition.Grounded;
+            }
             var anmData = SkillDataMan.inst.GetSkillData(skillID)[0].anmData[0];
             if (anmData.formDispList[anmData.formNum - 1].formIdx != 101 && anmData.formDispList[anmData.formNum - 1].formIdx != 100)
             {

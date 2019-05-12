@@ -41,7 +41,7 @@ namespace QoL_Mods
 
         #region Variables
         public static RecoveryTauntForm form = null;
-        public static Skill rollSkill = new Skill("Rolling", -619);
+        public static Skill rollSkill = new Skill("Rolling", -100);
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
         public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
@@ -308,7 +308,6 @@ namespace QoL_Mods
 
             Skill skill = (Skill)wu_moveResults.SelectedItem;
             WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-
             wu_styleLight.Text = skill.SkillName;
             styleTaunt.AddWakeUpMove(skill, 0);
             wu_styles.SelectedItem = styleTaunt;
