@@ -41,6 +41,7 @@ namespace QoL_Mods
 
         #region Variables
         public static RecoveryTauntForm form = null;
+        public static Skill rollSkill = new Skill("Rolling", -619);
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
         public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
@@ -173,6 +174,15 @@ namespace QoL_Mods
         {
             wakeUpSkills.Clear();
             wu_moveResults.Items.Clear();
+            try
+            {
+                wakeUpSkills.Add(rollSkill);
+                wu_moveResults.Items.Add(rollSkill);
+            }
+            catch (Exception e)
+            {
+                L.D("SetDefaultMoveException: " + e);
+            }
 
             foreach (KeyValuePair<SkillID, SkillInfo> current in SkillInfoManager.inst.skillInfoList)
             {
@@ -215,27 +225,35 @@ namespace QoL_Mods
 
         private void wu_styles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ClearStyleMoves();
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            if (IsValidTaunt(styleTaunt.WakeupMoves[0]))
+            try
             {
-                wu_styleLight.Text = styleTaunt.WakeupMoves[0].SkillName;
-            }
+                ClearStyleMoves();
+                WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
+                if (IsValidTaunt(styleTaunt.WakeupMoves[0]))
+                {
+                    wu_styleLight.Text = styleTaunt.WakeupMoves[0].SkillName;
+                }
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[1]))
-            {
-                wu_styleMiddle.Text = styleTaunt.WakeupMoves[1].SkillName;
-            }
+                if (IsValidTaunt(styleTaunt.WakeupMoves[1]))
+                {
+                    wu_styleMiddle.Text = styleTaunt.WakeupMoves[1].SkillName;
+                }
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[2]))
-            {
-                wu_styleHeavy.Text = styleTaunt.WakeupMoves[2].SkillName;
-            }
+                if (IsValidTaunt(styleTaunt.WakeupMoves[2]))
+                {
+                    wu_styleHeavy.Text = styleTaunt.WakeupMoves[2].SkillName;
+                }
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[3]))
-            {
-                wu_styleCritical.Text = styleTaunt.WakeupMoves[3].SkillName;
+                if (IsValidTaunt(styleTaunt.WakeupMoves[3]))
+                {
+                    wu_styleCritical.Text = styleTaunt.WakeupMoves[3].SkillName;
+                }
             }
+            catch (Exception ex)
+            {
+                L.D("TESTEXCEPTION:" + ex);
+            }
+          
         }
 
         private void wu_wrestlerResults_SelectedIndexChanged(object sender, EventArgs e)
@@ -273,6 +291,10 @@ namespace QoL_Mods
             }
         }
 
+        private void wu_moveRefresh_Click(object sender, EventArgs e)
+        {
+            SetValidMoves();
+        }
         #endregion
 
         #region Add Moves
@@ -290,7 +312,6 @@ namespace QoL_Mods
             wu_styleLight.Text = skill.SkillName;
             styleTaunt.AddWakeUpMove(skill, 0);
             wu_styles.SelectedItem = styleTaunt;
-
         }
 
         private void wu_heavyAdd_Click(object sender, EventArgs e)
@@ -610,7 +631,7 @@ namespace QoL_Mods
 
         #endregion
 
-        #region Helper Methods
+        #region Setup Methods
 
         private void LoadSubs()
         {
@@ -682,10 +703,5 @@ namespace QoL_Mods
 
         }
         #endregion
-
-        private void wu_moveRefresh_Click(object sender, EventArgs e)
-        {
-            SetValidMoves();
-        }
     }
 }

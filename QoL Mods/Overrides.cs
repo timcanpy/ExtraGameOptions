@@ -933,7 +933,11 @@ namespace QoL_Mods
 
             foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_wrestlers.Items)
             {
-                wrestlerTaunts.Add(taunt.StyleItem.Name, taunt);
+                //Ensure that we aren't adding duplicates.
+                if (!wrestlerTaunts.ContainsKey(taunt.StyleItem.Name))
+                {
+                    wrestlerTaunts.Add(taunt.StyleItem.Name, taunt);
+                }
             }
         }
 
@@ -1075,6 +1079,15 @@ namespace QoL_Mods
         #region Helper Methods
         public static void CheckWakeUpTauntConditions(Player player, WakeUpTaunt taunt, int damageLevel)
         {
+            //Determine whether this edit is using the Roll Skill
+            //public static Skill rollSkill = new Skill("Rolling", -619);
+            if (taunt.WakeupMoves[damageLevel].SkillID == -619)
+            {
+                ExecuteRoll(player, taunt.StartPositions[damageLevel]);
+                tauntStatus[player.PlIdx] = TauntExecution.Executed;
+                return;
+            }
+
             //Determine whether the edit needs to be rolled before taunting.
             //Ensure that the edit can never roll endlessly
             if ((player.State == PlStateEnum.Down_FaceDown &&
