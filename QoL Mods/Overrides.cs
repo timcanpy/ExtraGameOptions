@@ -953,6 +953,11 @@ namespace QoL_Mods
                     return false;
                 }
 
+                if (player.isKO)
+                {
+                    return false;
+                }
+
                 string wrestler = DataBase.GetWrestlerFullName(player.WresParam);
                 int damageLevel = GetDamageLevel(player);
                 bool executeTaunt = false;
