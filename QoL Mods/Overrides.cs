@@ -21,6 +21,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
     [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
     [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
+    [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -1242,6 +1243,82 @@ namespace QoL_Mods
             }
         }
         #endregion
+        #endregion
+
+        #region Variable Audience Cheers
+        [Hook(TargetClass = "Audience", TargetMethod = "PlayCheerVoice", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.ModifyReturn, Group = "Audience Sounds")]
+        public static bool PlayCheerVoice(CheerVoiceEnum vid, int nLevel)
+        {
+            MatchMain matchMain = MatchMain.GetInst();
+            if (vid == CheerVoiceEnum.ODOROKI_L)
+            {
+                int cheerNumber = nLevel * 2;
+                cheerNumber += UnityEngine.Random.Range(-2, 3);
+                if (cheerNumber < 0)
+                {
+                    cheerNumber = 0;
+                }
+                if (cheerNumber > 9)
+                {
+                    cheerNumber = 9;
+                }
+                switch (cheerNumber)
+                {
+                    case 0:
+                        vid = CheerVoiceEnum.Oooh;
+                        break;
+                    case 1:
+                        vid = CheerVoiceEnum.SOUZEN;
+                        break;
+                    case 2:
+                        vid = CheerVoiceEnum.ODOROKI_S;
+                        break;
+                    case 3:
+                        vid = CheerVoiceEnum.ODOROKI_M;
+                        break;
+                    case 4:
+                        vid = CheerVoiceEnum.Hoo;
+                        break;
+                    case 5:
+                        vid = CheerVoiceEnum.Despair;
+                        break;
+                    case 6:
+                        vid = CheerVoiceEnum.MORIAGA_S;
+                        break;
+                    case 7:
+                        vid = CheerVoiceEnum.MORIAGA_M;
+                        break;
+                    case 8:
+                        vid = CheerVoiceEnum.ODOROKI_L;
+                        break;
+                    case 9:
+                        vid = CheerVoiceEnum.MORIAGA_L;
+                        break;
+                }
+            }
+            if (matchMain.isFastForwardMatch && Fade.GetInst().IsFadeFinish() && matchMain.MchFrameCnt % 20u != 0u)
+            {
+                return true;
+            }
+
+            float num = 0.5f;
+            float num2 = 1f;
+            if (matchMain.AttendanceRate == 0f)
+            {
+                num = 0f;
+                num2 = 0f;
+            }
+            else
+            {
+                num -= (1f - matchMain.AttendanceRate) * 0.2f;
+                num2 -= (1f - matchMain.AttendanceRate) * 0.5f;
+            }
+            float num3 = num + (num2 - num) * ((float)nLevel / 4f);
+            num3 *= 1f;
+            Menu_SoundManager.Play_CheerVoice_OneShot(vid, num3);
+            return true;
+        }
+
         #endregion
 
     }
