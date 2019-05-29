@@ -1392,6 +1392,16 @@ namespace QoL_Mods
             }
         }
 
+        //Voice Lines Used:
+        //American/Japanese Male 1 - Psych Up 5, Psych Up 6, Groan 2
+        //American/Japanese Male 2 - Psych Up 5, Psych Up 6, Aaah
+        //American/Japanese Male 3 - Psych Up 5, Psych Up 6, Groan 1
+        //American/Japanese Male 4 - Psych Up 5, Psych Up 6, Groan 1
+        //American/Japanese Male 5/6 - Psych Up 5, Psych Up 6, Aaah
+        //American/Japanese Female 1 - Psych Up 5, Psych Up 6, Kyaa
+        //American/Japanese Female 2 - Psych Up 5, Psych Up 6, Kyaa
+        //DLC Voices - Psych Up 5, Psych Up 6, Groan 2
+
         public static void PlayGrunt(WrestlerVoiceTypeEnum voiceType, int damageLevel)
         {
             try
@@ -1481,12 +1491,21 @@ namespace QoL_Mods
                         "Sound/Voice/wrestler/WRAF1/WRAF1_059"
                         };
                         break;
+                    default:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRAM0/WRAM0_004",
+                            "Sound/Voice/wrestler/WRAM0/WRAM0_005",
+                            "Sound/Voice/wrestler/WRAM0/WRAM0_005",
+                            "Sound/Voice/wrestler/WRAM0/WRAM0_018"
+                        };
+                        break;
                 }
 
                 var clip = (AudioClip)Resources.Load(voices[damageLevel]);
                 var audioSrcInfo = global::Menu_SoundManager.audioSrcInfo[global::Menu_SoundManager.audio_source_index + 3];
                 var audioSource = audioSrcInfo.sRefAudio;
-                audioSource.volume = .5f;
+                audioSource.volume = 1f;
                 audioSource.PlayOneShot(clip);
             }
             catch (Exception e)
