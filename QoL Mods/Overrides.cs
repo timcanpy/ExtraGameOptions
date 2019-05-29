@@ -1336,7 +1336,8 @@ namespace QoL_Mods
         public static bool Play29Sound()
         {
             Referee refe = RefereeMan.inst.GetRefereeObj();
-            if (refe.CheckCount29() && GlobalWork.GetInst().MatchSetting.VictoryCondition != global::VictoryConditionEnum.Count2)
+            if (((BasicSkillEnum)refe.SkillID == BasicSkillEnum.BFALL4 || (BasicSkillEnum)refe.SkillID == BasicSkillEnum.FFALL4) 
+                && GlobalWork.GetInst().MatchSetting.VictoryCondition != global::VictoryConditionEnum.Count2)
             {
                 MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
                 return true;
