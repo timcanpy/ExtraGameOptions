@@ -31,6 +31,7 @@ namespace QoL_Mods
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Forced Sell")]
+    [FieldAccess(Class = "Referee", Field = "CheckCount29", Group = "2.9Call")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "audio_source_index", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "sRefAudio", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "audioSrcInfo", Group = "GruntForSubmission")]
@@ -1330,11 +1331,17 @@ namespace QoL_Mods
         #endregion
 
         #region 2.9 Calls
-        [Hook(TargetClass = "Referee", TargetMethod = "Process_FallCount", InjectionLocation = 98,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "2.9Call")]
-        public static void Play29Sound()
+        [Hook(TargetClass = "Audience", TargetMethod = "Play_Surprise", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "2.9Call")]
+        public static bool Play29Sound()
         {
-            MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
+            Referee refe = RefereeMan.inst.GetRefereeObj();
+            if (refe.CheckCount29() && GlobalWork.GetInst().MatchSetting.VictoryCondition != global::VictoryConditionEnum.Count2)
+            {
+                MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
+                return true;
+            }
+            return false;
         }
         #endregion
 
