@@ -22,6 +22,8 @@ namespace QoL_Mods
     [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
     [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
     [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
+    [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
+
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -1319,6 +1321,15 @@ namespace QoL_Mods
             return true;
         }
 
+        #endregion
+
+        #region 2.9 Calls
+        [Hook(TargetClass = "Referee", TargetMethod = "Process_FallCount", InjectionLocation = 98,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "2.9Call")]
+        public static void Play29Sound()
+        {
+            MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
+        }
         #endregion
 
     }
