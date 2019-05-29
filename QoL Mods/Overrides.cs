@@ -23,6 +23,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
     [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
     [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
+    [GroupDescription(Group = "GruntForSubmission", Name = "Edits Sell Holds", Description = "Makes edits play voice lines when under a submission hold.\nFrequency is determined by Showmanship and the current Damage Threshold.")]
 
     #endregion
     #region Field Access
@@ -30,6 +31,11 @@ namespace QoL_Mods
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Forced Sell")]
+    [FieldAccess(Class = "Menu_SoundManager", Field = "audio_source_index", Group = "GruntForSubmission")]
+    [FieldAccess(Class = "Menu_SoundManager", Field = "sRefAudio", Group = "GruntForSubmission")]
+    [FieldAccess(Class = "Menu_SoundManager", Field = "audioSrcInfo", Group = "GruntForSubmission")]
+    [FieldAccess(Class = "Menu_SoundManager", Field = "AudioSrcInfo", Group = "GruntForSubmission")]
+
     #endregion
 
     #region Face Lock Access
@@ -1329,6 +1335,165 @@ namespace QoL_Mods
         public static void Play29Sound()
         {
             MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
+        }
+        #endregion
+
+        #region Sell Submissions
+
+        public static WrestlerVoiceTypeEnum[] voiceType = new WrestlerVoiceTypeEnum[8];
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "GruntForSubmission")]
+        public static void GetVoiceTypes()
+        {
+            voiceType = new WrestlerVoiceTypeEnum[8];
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (plObj)
+                {
+                    //First Voice Slot determines voice type
+                    voiceType[i] = plObj.WresParam.voiceType[0];
+                }
+            }
+        }
+
+        [Hook(TargetClass = "Referee", TargetMethod = "Start_SubmissionCheck", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "GruntForSubmission")]
+        public static void PrepareGrunt(Referee refe)
+        {
+            if (!refe)
+            {
+                return;
+            }
+            global::Player player = global::PlayerMan.inst.GetPlObj(refe.TargetPlIdx);
+
+            if (!player)
+            {
+                return;
+            }
+
+            if (!player.isSubmissionDef)
+            {
+                return;
+            }
+
+            int showmanship = (player.WresParam.aiParam.personalTraits / 2);
+            int damageLevel = GetDamageLevel(player);
+
+            int tauntCeiling = 80 - (10 * damageLevel);
+
+            //Make grunts more likely if an edit is ready to tap.
+            if (player.isWannaGiveUp)
+            {
+                tauntCeiling -= 20;
+            }
+            int checkValue = UnityEngine.Random.Range(showmanship, 100);
+            if (checkValue >= tauntCeiling || player.SP == 0f)
+            {
+                PlayGrunt(voiceType[player.PlIdx], damageLevel);
+            }
+        }
+
+        public static void PlayGrunt(WrestlerVoiceTypeEnum voiceType, int damageLevel)
+        {
+            try
+            {
+                String[] voices = new String[4];
+                switch (voiceType)
+                {
+
+                    case WrestlerVoiceTypeEnum.American_M_0:
+                    case WrestlerVoiceTypeEnum.Japanease_M_0:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM0/WRAM0_004",
+                        "Sound/Voice/wrestler/WRAM0/WRAM0_005",
+                        "Sound/Voice/wrestler/WRAM0/WRAM0_005",
+                        "Sound/Voice/wrestler/WRAM0/WRAM0_018"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_M_1:
+                    case WrestlerVoiceTypeEnum.Japanease_M_1:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM1/WRAM1_004",
+                        "Sound/Voice/wrestler/WRAM1/WRAM1_005",
+                        "Sound/Voice/wrestler/WRAM1/WRAM1_005",
+                        "Sound/Voice/wrestler/WRAM1/WRAM1_036"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_M_2:
+                    case WrestlerVoiceTypeEnum.Japanease_M_2:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM2/WRAM2_004",
+                        "Sound/Voice/wrestler/WRAM2/WRAM2_005",
+                        "Sound/Voice/wrestler/WRAM2/WRAM2_005",
+                        "Sound/Voice/wrestler/WRAM2/WRAM2_017"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_M_3:
+                    case WrestlerVoiceTypeEnum.Japanease_M_3:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM3/WRAM3_004",
+                        "Sound/Voice/wrestler/WRAM3/WRAM3_005",
+                        "Sound/Voice/wrestler/WRAM3/WRAM3_005",
+                        "Sound/Voice/wrestler/WRAM3/WRAM3_017"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_M_4:
+                    case WrestlerVoiceTypeEnum.Japanease_M_4:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM4/WRAM4_004",
+                        "Sound/Voice/wrestler/WRAM4/WRAM4_005",
+                        "Sound/Voice/wrestler/WRAM4/WRAM4_005",
+                        "Sound/Voice/wrestler/WRAM4/WRAM4_036"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_M_5:
+                    case WrestlerVoiceTypeEnum.Japanease_M_5:
+                    case WrestlerVoiceTypeEnum.Japanease_M_6:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAM5/WRAM5_004",
+                        "Sound/Voice/wrestler/WRAM5/WRAM5_005",
+                        "Sound/Voice/wrestler/WRAM5/WRAM5_005",
+                        "Sound/Voice/wrestler/WRAM5/WRAM5_036"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_F_0:
+                    case WrestlerVoiceTypeEnum.Japanease_F_0:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAF0/WRAF0_004",
+                        "Sound/Voice/wrestler/WRAF0/WRAF0_005",
+                        "Sound/Voice/wrestler/WRAF0/WRAF0_005",
+                        "Sound/Voice/wrestler/WRAF0/WRAF0_059"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.American_F_1:
+                    case WrestlerVoiceTypeEnum.Japanease_F_1:
+                        voices = new String[]
+                        {
+                        "Sound/Voice/wrestler/WRAF1/WRAF1_004",
+                        "Sound/Voice/wrestler/WRAF1/WRAF1_005",
+                        "Sound/Voice/wrestler/WRAF1/WRAF1_005",
+                        "Sound/Voice/wrestler/WRAF1/WRAF1_059"
+                        };
+                        break;
+                }
+
+                var clip = (AudioClip)Resources.Load(voices[damageLevel]);
+                var audioSrcInfo = global::Menu_SoundManager.audioSrcInfo[global::Menu_SoundManager.audio_source_index + 3];
+                var audioSource = audioSrcInfo.sRefAudio;
+                audioSource.volume = .5f;
+                audioSource.PlayOneShot(clip);
+            }
+            catch (Exception e)
+            {
+                L.D("PlayGruntError: " + e);
+            }
+
         }
         #endregion
 
