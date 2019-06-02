@@ -111,6 +111,19 @@ namespace QoL_Mods
             }
         }
 
+        [ControlPanel(Group = "Low Tag Recovery")]
+        public static Form ReportForm()
+        {
+            if (Reports.form == null)
+            {
+                return new Reports();
+            }
+            else
+            {
+                return Reports.form;
+            }
+        }
+
         #region Increase Down time
         [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Forced Sell")]
         public static void IncreaseDownTime(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
