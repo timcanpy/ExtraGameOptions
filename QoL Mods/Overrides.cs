@@ -24,7 +24,8 @@ namespace QoL_Mods
     [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
     [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
     [GroupDescription(Group = "GruntForSubmission", Name = "Edits Sell Holds", Description = "Makes edits play voice lines when under a submission hold.\nFrequency is determined by Showmanship and the current Damage Threshold.")]
-
+    [GroupDescription(Group = "UkeNotification", Name = "Ukemi Trigger Notification", Description = "Plays specific crowd cheers (HolyShit, ThisIsWrestling, Stomping) when a wrestler triggers Ukemi.\nCheers may trigger when a match ends.")]
+    
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -36,7 +37,8 @@ namespace QoL_Mods
     [FieldAccess(Class = "Menu_SoundManager", Field = "sRefAudio", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "audioSrcInfo", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "AudioSrcInfo", Group = "GruntForSubmission")]
-
+    [FieldAccess(Class = "Audience", Field = "CheerLevel_Total", Group = "Audience Sounds")]
+   
     #endregion
 
     #region Face Lock Access
@@ -126,6 +128,7 @@ namespace QoL_Mods
             if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
             {
                 defender.DownTime += 300;
+                defender.isAddedDownTimeByPerformance = false;
                 CheckForFall(defender.PlIdx);
 
             }
@@ -205,10 +208,21 @@ namespace QoL_Mods
 
         #region Override Tag Team Recovery
 
+        public static int[,] recoveryParams = new Int32[8,4];
+
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Low Tag Recovery")]
         public static void SetTagRecovery()
         {
+            recoveryParams = new Int32[8, 4];
+            for (int i = 0; i < 8; i++)
+            {
+                recoveryParams[i, 0] = -1;
+                recoveryParams[i, 1] = -1;
+                recoveryParams[i, 2] = -1;
+                recoveryParams[i, 3] = -1;
+            }
+
             try
             {
                 if (isTagMatch())
@@ -221,6 +235,40 @@ namespace QoL_Mods
                 L.D("Tag Recovery Error:" + e.Message);
             }
 
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+            Group = "Low Tag Recovery")]
+        public static void ResetRecovery()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+
+                if (!plObj)
+                {
+                    continue;
+                }
+
+                if (plObj.isSecond || plObj.isIntruder)
+                {
+                    continue;
+                }
+
+                if (recoveryParams[i, 0] == -1)
+                {
+                    continue;
+                }
+                else
+                {
+                    plObj.WresParam.hpRecovery = recoveryParams[i, 0];
+                    plObj.WresParam.spRecovery = recoveryParams[i, 1];
+                    plObj.WresParam.hpRecovery_Bleeding = recoveryParams[i, 2];
+                    plObj.WresParam.spRecovery_Bleeding = recoveryParams[i, 3];
+                    L.D("Reset for " + DataBase.GetWrestlerFullName(plObj.WresParam));
+                }
+            }
         }
 
         public static bool isTagMatch()
@@ -242,12 +290,12 @@ namespace QoL_Mods
                 }
 
                 memberCount++;
-
             }
 
             if (memberCount > 2)
             {
-                if (!GlobalWork.GetInst().MatchSetting.isTornadoBattle)
+                if (!GlobalWork.GetInst().MatchSetting.isTornadoBattle && 
+                    GlobalWork.inst.MatchSetting.BattleRoyalKind == BattleRoyalKindEnum.Off)
                 {
                     isTag = true;
                 }
@@ -265,10 +313,21 @@ namespace QoL_Mods
                 {
                     continue;
                 }
+
+                if (plObj.isSecond || plObj.isIntruder)
+                {
+                    continue;
+                }
+
+                recoveryParams[i, 0] = plObj.WresParam.hpRecovery;
+                recoveryParams[i, 1] = plObj.WresParam.spRecovery;
+                recoveryParams[i, 2] = plObj.WresParam.hpRecovery_Bleeding;
+                recoveryParams[i, 3] = plObj.WresParam.spRecovery_Bleeding;
                 plObj.WresParam.hpRecovery = 0;
                 plObj.WresParam.spRecovery = 0;
                 plObj.WresParam.hpRecovery_Bleeding = 0;
                 plObj.WresParam.spRecovery_Bleeding = 0;
+                L.D("Updated recovery for " + DataBase.GetWrestlerFullName(plObj.WresParam));
             }
         }
         #endregion
@@ -1258,20 +1317,48 @@ namespace QoL_Mods
         [Hook(TargetClass = "Audience", TargetMethod = "PlayCheerVoice", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.ModifyReturn, Group = "Audience Sounds")]
         public static bool PlayCheerVoice(CheerVoiceEnum vid, int nLevel)
         {
-            MatchMain matchMain = MatchMain.GetInst();
+            if (RefereeMan.inst && vid == CheerVoiceEnum.ODOROKI_D && RefereeMan.inst.GetRefereeObj().SkillID != 1110)
+            //If a 2.9-count cheer has been requested but there is no 2.9 count, replace the cheer with a generic one.
+            {
+                vid = CheerVoiceEnum.ODOROKI_L;
+                int num = 0;
+                for (int i = 0; i < 8; i++)
+                {
+                    Player plObj = PlayerMan.GetInst().GetPlObj(i);
+                    if (plObj && !plObj.isSleep && plObj.WresParam.wrestlerRank >= (RankEnum)num)
+                    {
+                        num = (int)plObj.WresParam.wrestlerRank;
+                    }
+                }
+                nLevel = ((num == 0) ? 1 : (num - 1));
+            }
+            MatchMain inst = MatchMain.GetInst();
             if (vid == CheerVoiceEnum.ODOROKI_L)
             {
-                int cheerNumber = nLevel * 2;
-                cheerNumber += UnityEngine.Random.Range(-2, 3);
-                if (cheerNumber < 0)
+                for (int j = 0; j < 8; j++)
                 {
-                    cheerNumber = 0;
+                    Player plObj2 = PlayerMan.GetInst().GetPlObj(j);
+                    if (plObj2 && plObj2.State == PlStateEnum.Performance && nLevel >= 2)
+                    //If a wrestler is taunting, adjust the cheer volume so it matches the background audience level.
+                    {
+                        nLevel = Audience.inst.CheerLevel_Total;
+                        if (plObj2.WresParam.wrestlerRank >= RankEnum.A && nLevel <= 2)
+                        {
+                            nLevel++;
+                        }
+                    }
                 }
-                if (cheerNumber > 9)
+                int num2 = nLevel * 2;
+                num2 += UnityEngine.Random.Range(-2, 3);
+                if (num2 < 0)
                 {
-                    cheerNumber = 9;
+                    num2 = 0;
                 }
-                switch (cheerNumber)
+                if (num2 > 9)
+                {
+                    num2 = 9;
+                }
+                switch (num2)
                 {
                     case 0:
                         vid = CheerVoiceEnum.Oooh;
@@ -1305,27 +1392,31 @@ namespace QoL_Mods
                         break;
                 }
             }
-            if (matchMain.isFastForwardMatch && Fade.GetInst().IsFadeFinish() && matchMain.MchFrameCnt % 20u != 0u)
+            bool result;
+            if (inst.isFastForwardMatch && Fade.GetInst().IsFadeFinish() && inst.MchFrameCnt % 20u > 0u)
             {
-                return true;
-            }
-
-            float num = 0.5f;
-            float num2 = 1f;
-            if (matchMain.AttendanceRate == 0f)
-            {
-                num = 0f;
-                num2 = 0f;
+                result = true;
             }
             else
             {
-                num -= (1f - matchMain.AttendanceRate) * 0.2f;
-                num2 -= (1f - matchMain.AttendanceRate) * 0.5f;
+                float num3 = 0.5f;
+                float num4 = 1f;
+                if (inst.AttendanceRate == 0f)
+                {
+                    num3 = 0f;
+                    num4 = 0f;
+                }
+                else
+                {
+                    num3 -= (1f - inst.AttendanceRate) * 0.2f;
+                    num4 -= (1f - inst.AttendanceRate) * 0.5f;
+                }
+                float num5 = num3 + (num4 - num3) * ((float)nLevel / 4f);
+                num5 *= 1f;
+                Menu_SoundManager.Play_CheerVoice_OneShot(vid, num5);
+                result = true;
             }
-            float num3 = num + (num2 - num) * ((float)nLevel / 4f);
-            num3 *= 1f;
-            Menu_SoundManager.Play_CheerVoice_OneShot(vid, num3);
-            return true;
+            return result;
         }
 
         #endregion
@@ -1400,16 +1491,7 @@ namespace QoL_Mods
             }
         }
 
-        //Voice Lines Used:
-        //American/Japanese Male 1 - Psych Up 5, Psych Up 6, Groan 2
-        //American/Japanese Male 2 - Psych Up 5, Psych Up 6, Aaah
-        //American/Japanese Male 3 - Psych Up 5, Psych Up 6, Groan 1
-        //American/Japanese Male 4 - Psych Up 5, Psych Up 6, Groan 1
-        //American/Japanese Male 5/6 - Psych Up 5, Psych Up 6, Aaah
-        //American/Japanese Female 1 - Psych Up 5, Psych Up 6, Kyaa
-        //American/Japanese Female 2 - Psych Up 5, Psych Up 6, Kyaa
-        //DLC Voices - Psych Up 5, Psych Up 6, Groan 2
-
+      
         public static void PlayGrunt(WrestlerVoiceTypeEnum voiceType, int damageLevel)
         {
             try
@@ -1513,7 +1595,7 @@ namespace QoL_Mods
                 var clip = (AudioClip)Resources.Load(voices[damageLevel]);
                 var audioSrcInfo = global::Menu_SoundManager.audioSrcInfo[global::Menu_SoundManager.audio_source_index + 3];
                 var audioSource = audioSrcInfo.sRefAudio;
-                audioSource.volume = 1f;
+                audioSource.volume = .75f;
                 audioSource.PlayOneShot(clip);
             }
             catch (Exception e)
@@ -1523,6 +1605,43 @@ namespace QoL_Mods
 
         }
         #endregion
+
+        #region Ukemi Notification
+        [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "UkeNotification")]
+        public static void NotifyForUkemiTrigger()
+        {
+            if (MatchMain.inst.isMatchEnd)
+            {
+                return;
+            }
+            //Select cheer type based on venue
+            switch (GlobalWork.GetInst().MatchSetting.arena)
+            {
+                case VenueEnum.YurakuenHall:
+                case VenueEnum.SpikeDome:
+                    global::Audience.inst.Play_ClapHands();
+                    break;
+                case VenueEnum.SCSStadium:
+                case VenueEnum.ArenaDeUniverso:
+                    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ThisIsWrestling, 2);
+                    break;
+                case VenueEnum.Cage:
+                case VenueEnum.Dodecagon:
+                case VenueEnum.BigGardenArena:
+                case VenueEnum.BarbedWire:
+                case VenueEnum.LandMine_BarbedWire:
+                case VenueEnum.LandMine_FluorescentLamp:
+                    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.HolyShit, 2);
+                    break;
+                default:
+                    global::Audience.inst.Play_ClapHands();
+                    break;
+            }
+
+            L.D("Playing Notification Uke: " + GlobalWork.GetInst().MatchSetting.arena);
+        }
+        #endregion
+
 
     }
 }
