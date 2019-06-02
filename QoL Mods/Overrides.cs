@@ -297,7 +297,7 @@ namespace QoL_Mods
                     continue;
                 }
 
-                if (plObj.isSecond)
+                if (plObj.isSecond || plObj.isIntruder)
                 {
                     continue;
                 }
