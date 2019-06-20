@@ -142,7 +142,10 @@ namespace QoL_Mods
             {
                 defender.DownTime += 300;
                 defender.isAddedDownTimeByPerformance = false;
-                CheckForFall(defender.PlIdx);
+                if (defender.Zone == ZoneEnum.InRing)
+                {
+                    CheckForFall(defender.PlIdx);
+                }
 
             }
         }
@@ -385,7 +388,7 @@ namespace QoL_Mods
                 for (int i = 0; i < 8; i++)
                 {
                     slotStorage[i] = new SlotStorage();
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_X;
+                    safeCritSlot[i] = SkillSlotEnum.Grapple_XA;
                 }
 
                 for (int i = 0; i < 8; i++)
@@ -446,6 +449,11 @@ namespace QoL_Mods
                     else if (bigSlotOptions[3])
                     {
                         safeCritSlot[i] = SkillSlotEnum.Grapple_B_D;
+                    }
+
+                    if (safeCritSlot[i] != SkillSlotEnum.Grapple_XA)
+                    {
+                        slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)safeCritSlot[i]];
                     }
 
                 }
@@ -610,7 +618,7 @@ namespace QoL_Mods
                 player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[player.PlIdx].weakSlot;
                 player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[player.PlIdx].mediumSlot;
                 player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[player.PlIdx].heavySlot;
-                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA] = slotStorage[player.PlIdx].criticalSlot;
+                player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = slotStorage[player.PlIdx].criticalSlot;
             }
             catch (Exception e)
             {
@@ -637,7 +645,7 @@ namespace QoL_Mods
                     player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[i].weakSlot;
                     player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[i].mediumSlot;
                     player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[i].heavySlot;
-                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA] = slotStorage[i].criticalSlot;
+                    player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = slotStorage[player.PlIdx].criticalSlot;
                 }
                 catch (Exception e)
                 {
