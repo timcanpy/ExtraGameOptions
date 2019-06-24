@@ -508,14 +508,13 @@ namespace QoL_Mods
                 {
                     return false;
                 }
-
                 attacker.ChangeState(global::PlStateEnum.NormalAnm);
 
-                if (moveset.Type[damageLevel] == SkillType.BasicMove && !moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
+                if (moveset.Type[damageLevel] == SkillType.BasicMove)
                 {
                     attacker.animator.ReqBasicAnm((BasicSkillEnum)moveset.BasicSkills[damageLevel].SkillID, true, attacker.TargetPlIdx);
                 }
-                else if (moveset.Type[damageLevel] == SkillType.IrishWhip || moveset.BasicSkills[damageLevel].SkillName.Contains("HammerThrough"))
+                else if (moveset.Type[damageLevel] == SkillType.IrishWhip)
                 {
                     //Determine the direction to press
                     if (attacker.plController.kind == PlayerControllerKind.AI)
