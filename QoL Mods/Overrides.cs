@@ -25,7 +25,10 @@ namespace QoL_Mods
     [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
     [GroupDescription(Group = "GruntForSubmission", Name = "Edits Sell Holds", Description = "Makes edits play voice lines when under a submission hold.\nFrequency is determined by Showmanship and the current Damage Threshold.")]
     [GroupDescription(Group = "UkeNotification", Name = "Ukemi Trigger Notification", Description = "Plays specific crowd cheers (HolyShit, ThisIsWrestling, Stomping) when a wrestler triggers Ukemi.\nCheers may trigger when a match ends.")]
-    
+    [GroupDescription(Group = "Bleeding Headbutts", Name = "Dangerous Headbutts", Description = "Grapple Headbutts can cause self bleeding")]
+    [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
+    [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "Lower stamina increases the chance that a defender will reverse moves.")]
+
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -469,6 +472,11 @@ namespace QoL_Mods
         {
             try
             {
+                if ((attacker.padPush & PadBtnEnum.AllAtk) == 0)
+                {
+                    return false;
+                }
+
                 //Get Player's fight style
                 FightStyleEnum style = attacker.WresParam.fightStyle;
 
@@ -1662,6 +1670,73 @@ namespace QoL_Mods
         }
         #endregion
 
+        #region Stamina Affects Reversal Rate
 
+        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 93,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, LocalVarIds = new int[] { 6 },
+            Group = "Stamina Affects Reversals")]
+        public static void IncreaseReversalChance(ref int num, int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type, int def_pl_idx)
+        {
+            try
+            {
+                Player player = global::PlayerMan.inst.GetPlObj(atk_pl_idx);
+                int staminaModifier = (5 * GetStaminaLevel(player));
+                num += staminaModifier;
+            }
+            catch (Exception e)
+            {
+                L.D("IncreaseReversalError: " + e);
+            }
+        }
+
+        public static int GetStaminaLevel(Player player)
+        {
+            if (player.BP >= 49152f)
+            {
+                return 0;
+            }
+            else if (player.BP >= 24576f)
+            {
+                return 1;
+            }
+            else if (player.BP >= 12288f)
+            {
+                return 2;
+            }
+            else
+            {
+                return 3;
+            }
+        }
+        #endregion
+
+        #region Referee Calls for Breaks
+        [Hook(TargetClass = "Referee", TargetMethod = "CheckStartRefereeing", InjectionLocation = 310,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, ParamTypes = new Type[] { typeof(int) },
+            Group = "Referee Calls Downs")]
+        public static void CallForDownBreaks()
+        {
+            global::MatchSEPlayer.inst.PlayRefereeVoice(global::RefeVoiceEnum.Break);
+        }
+        #endregion
+
+        #region Headbutt Logic
+        [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Bleeding Headbutts")]
+        public static void CheckHeadbutt(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
+        {
+            if (sd.skillName[1].ToLower().Contains("headbutt") && sd.anmType != SkillAnmTypeEnum.HitBranch_Single && sd.anmType != SkillAnmTypeEnum.HitBranch_Pair)
+            {
+                if (sd.bleedingRate > 0)
+                {
+                    int rngValue = UnityEngine.Random.Range(0, 100);
+                    if (rngValue <= sd.bleedingRate)
+                    {
+                        PlayerMan.inst.GetPlObj(plIDx).Bleeding();
+                    }
+                }
+            }
+
+        }
+        #endregion
     }
 }
