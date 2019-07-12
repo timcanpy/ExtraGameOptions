@@ -637,8 +637,7 @@ namespace QoL_Mods
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void RefreshAllSlots()
         {
-            finishingMove = global::MatchEvaluation.GetInst().GetWinningTechName(true);
-
+           
             for (int i = 0; i < 8; i++)
             {
                 Player player = PlayerMan.inst.GetPlObj(i);
@@ -662,11 +661,14 @@ namespace QoL_Mods
             }
 
             //Ensure that the finishing move is correct
-            if (finishingMove.Equals(global::MatchEvaluation.GetInst().GetWinningTechName(true)))
+            try
+            {
+                finishingMove = global::MatchEvaluation.GetInst().GetWinningTechName(true);
+            }
+            catch
             {
                 finishingMove = "";
             }
-
         }
 
         [Hook(TargetClass = "Menu_Result", TargetMethod = "Set_FinishSkill", InjectionLocation = 8,
@@ -1711,7 +1713,7 @@ namespace QoL_Mods
         #endregion
 
         #region Referee Calls for Breaks
-        [Hook(TargetClass = "Referee", TargetMethod = "CheckStartRefereeing", InjectionLocation = 310,
+        [Hook(TargetClass = "Referee", TargetMethod = "CheckStartRefereeing", InjectionLocation = 325,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, ParamTypes = new Type[] { typeof(int) },
             Group = "Referee Calls Downs")]
         public static void CallForDownBreaks()
