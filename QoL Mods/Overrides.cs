@@ -41,7 +41,7 @@ namespace QoL_Mods
     [FieldAccess(Class = "Menu_SoundManager", Field = "audioSrcInfo", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "AudioSrcInfo", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Audience", Field = "CheerLevel_Total", Group = "Audience Sounds")]
-   
+
     #endregion
 
     #region Face Lock Access
@@ -204,12 +204,13 @@ namespace QoL_Mods
         [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Ref Positions For Pinfall")]
         public static void CheckForPinfall(Player player)
         {
-            if (MatchMain.inst.isMatchEnd)
+            if (MatchMain.inst.isMatchEnd || player.Zone != ZoneEnum.InRing ||
+                !RefereeIsFree(RefereeMan.inst.GetRefereeObj()))
             {
                 return;
             }
 
-            if (player.PlIdx == downedPlayer && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp) && player.Zone == ZoneEnum.InRing)
+            if (player.PlIdx == downedPlayer && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
             {
                 downedPlayer = -1;
                 CheckForFall(player.PlIdx);
@@ -223,11 +224,20 @@ namespace QoL_Mods
             mRef.RefeCount = 0;
             mRef.NextState = RefeStateEnum.CheckSubmission;
         }
+
+        private static bool RefereeIsFree(Referee referee)
+        {
+            var state = referee.State;
+            return (state != RefeStateEnum.OutOfRingCount && state != RefeStateEnum.CheckSubmission && state != RefeStateEnum.DownCount && state != RefeStateEnum.FallCount &&
+                    state != RefeStateEnum.Disturbed && state != RefeStateEnum.StartToDown &&
+                    state != RefeStateEnum.R_KOCHECK && state != RefeStateEnum.DeclareVictory && state != RefeStateEnum.R_TKOCHECK
+                    && state != RefeStateEnum.FoulCount_Normal && state != RefeStateEnum.FoulCount_CornerPost && state != RefeStateEnum.FoulCount_Weapon);
+        }
         #endregion
 
         #region Override Tag Team Recovery
 
-        public static int[,] recoveryParams = new Int32[8,4];
+        public static int[,] recoveryParams = new Int32[8, 4];
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Low Tag Recovery")]
@@ -313,7 +323,7 @@ namespace QoL_Mods
 
             if (memberCount > 2)
             {
-                if (!GlobalWork.GetInst().MatchSetting.isTornadoBattle && 
+                if (!GlobalWork.GetInst().MatchSetting.isTornadoBattle &&
                     GlobalWork.inst.MatchSetting.BattleRoyalKind == BattleRoyalKindEnum.Off)
                 {
                     isTag = true;
@@ -637,7 +647,7 @@ namespace QoL_Mods
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
         public static void RefreshAllSlots()
         {
-           
+
             for (int i = 0; i < 8; i++)
             {
                 Player player = PlayerMan.inst.GetPlObj(i);
@@ -1457,7 +1467,7 @@ namespace QoL_Mods
         public static bool Play29Sound()
         {
             Referee refe = RefereeMan.inst.GetRefereeObj();
-            if (((BasicSkillEnum)refe.SkillID == BasicSkillEnum.BFALL4 || (BasicSkillEnum)refe.SkillID == BasicSkillEnum.FFALL4) 
+            if (((BasicSkillEnum)refe.SkillID == BasicSkillEnum.BFALL4 || (BasicSkillEnum)refe.SkillID == BasicSkillEnum.FFALL4)
                 && GlobalWork.GetInst().MatchSetting.VictoryCondition != global::VictoryConditionEnum.Count2)
             {
                 MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
@@ -1521,7 +1531,7 @@ namespace QoL_Mods
             }
         }
 
-      
+
         public static void PlayGrunt(WrestlerVoiceTypeEnum voiceType, int damageLevel)
         {
             try
