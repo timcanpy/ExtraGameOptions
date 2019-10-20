@@ -28,6 +28,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Bleeding Headbutts", Name = "Dangerous Headbutts", Description = "Grapple Headbutts can cause self bleeding")]
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "Lower stamina increases the chance that a defender will reverse moves.")]
+    [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
 
     #endregion
     #region Field Access
@@ -41,7 +42,9 @@ namespace QoL_Mods
     [FieldAccess(Class = "Menu_SoundManager", Field = "audioSrcInfo", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "AudioSrcInfo", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Audience", Field = "CheerLevel_Total", Group = "Audience Sounds")]
-
+    [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_CornerDive_Stand", Group = "Allow Dives")]
+    [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_CornerDive_Down", Group = "Allow Dives")]
+    [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Allow Dives")]
     #endregion
 
     #region Face Lock Access
@@ -1779,6 +1782,79 @@ namespace QoL_Mods
             {
                 attacker.SetDownTime(0);
             }
+        }
+        #endregion
+        
+        #region Force Defender to Set-up for Dives
+
+        [Hook(TargetClass = "PlayerController_AI", TargetMethod = "AIActFunc_CornerDive_Down", InjectionLocation = 0,
+       InjectDirection = HookInjectDirection.Before,
+       InjectFlags = HookInjectFlags.PassInvokingInstance,
+       Group = "Allow Dives")]
+        public static void SetupPostGroundDives(PlayerController_AI ai)
+        {
+            try
+            {
+                Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
+                if (defender.State != PlStateEnum.Down_FaceDown && defender.State != PlStateEnum.Down_FaceUp)
+                {
+                    return;
+                }
+
+                //Determine whether action proceeds based on defender's current damage and showmanship
+                if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
+                    defender.WresParam.aiParam.personalTraits)
+                {
+                    //Ensure the dive triggers
+                    if (defender.DownTime <= 48)
+                    {
+                        //Allow instances for dives to miss early in the match.
+                        defender.DownTime = (51 + GetDamageLevel(defender)) * 3;
+                    }
+
+                    //Ensure that the defender takes dives face up, to allow pins
+                    if (defender.State == PlStateEnum.Down_FaceDown)
+                    {
+                        ExecuteRoll(defender, defender.State);
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("SetupPostGroundDivesError:" + e);
+            }
+
+        }
+
+        [Hook(TargetClass = "PlayerController_AI", TargetMethod = "AIActFunc_CornerDive_Stand", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance,
+            Group = "Allow Dives")]
+        public static void SetupPostStandDives(PlayerController_AI ai)
+        {
+            try
+            {
+                Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
+                if (ai.PlObj.DistanceToTarget > 3.54166651f)
+                {
+                    return;
+                }
+
+                //Determine whether action proceeds based on defender's current damage and showmanship
+                if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
+                    defender.WresParam.aiParam.personalTraits)
+                {
+                    defender.AddDownTime(4 * GetDamageLevel(defender));
+                    defender.isStandingStunOK = true;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("SetupPostStandDivesError:" + e);
+            }
+
+
         }
         #endregion
     }
