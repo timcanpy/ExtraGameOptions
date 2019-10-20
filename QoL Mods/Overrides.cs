@@ -1270,32 +1270,32 @@ namespace QoL_Mods
             //Increase spirit for every taunt executed
             player.AddSP(256 * GetDamageLevel(player));
         }
-        public static void ExecuteRoll(Player player, PlStateEnum state)
+        public static void ExecuteRoll(Player player, PlStateEnum position)
         {
             //Determine player location and roll accordingly
             global::AreaEnum colAreaInRhombus_AroundRing = global::Ring.inst.GetColAreaInRhombus_AroundRing(player.PlPos);
 
             //Player is at the top of the ring
-            if ((colAreaInRhombus_AroundRing == global::AreaEnum.LU || (colAreaInRhombus_AroundRing == global::AreaEnum.RU)))
+            if ((colAreaInRhombus_AroundRing == global::AreaEnum.LU || colAreaInRhombus_AroundRing == global::AreaEnum.LD))
             {
-                if (state == PlStateEnum.Down_FaceDown)
+                if (position == PlStateEnum.Down_FaceDown)
                 {
-                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnBack, false, -1);
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnFace, false, -1);
                 }
                 else
                 {
-                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnFace, false, -1);
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Down_OnBack, false, -1);
                 }
             }
             else
             {
-                if (state == PlStateEnum.Down_FaceDown)
+                if (position == PlStateEnum.Down_FaceDown)
                 {
-                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnBack, false, -1);
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnFace, false, -1);
                 }
                 else
                 {
-                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnFace, false, -1);
+                    player.animator.ReqBasicAnm(BasicSkillEnum.Rolling_To_Up_OnBack, false, -1);
                 }
             }
         }
