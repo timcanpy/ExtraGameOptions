@@ -29,6 +29,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
+    [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "Audience may cheer when a defender reverses a move.")]
 
     #endregion
     #region Field Access
@@ -1845,7 +1846,7 @@ namespace QoL_Mods
                 if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
                 {
-                    defender.AddDownTime(4 * GetDamageLevel(defender));
+                    defender.AddStunTime(4 * GetDamageLevel(defender));
                     defender.isStandingStunOK = true;
                 }
             }
@@ -1857,5 +1858,48 @@ namespace QoL_Mods
 
         }
         #endregion
+
+        #region Cheer on Reversal
+
+        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 115,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
+            Group = "Reversal Cheer")]
+        public static void CheerOnReversal(int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type,
+            int def_pl_idx)
+        {
+            try
+            {
+                global::Player plObj = global::PlayerMan.inst.GetPlObj(def_pl_idx);
+
+                //Determine whether we should play the cheer
+                int damageLevel = GetDamageLevel(plObj);
+                if (damageLevel < UnityEngine.Random.Range(0, 4) || (int)plObj.WresParam.wrestlerRank < 2)
+                {
+                    return;
+                }
+                PlayCheer(plObj.WresParam.fightStyle, ((int)plObj.WresParam.charismaRank + damageLevel) / 2);
+            }
+            catch (Exception e)
+            {
+                L.D("Error on Play Reversal Cheer:" + e);
+            }
+
+        }
+
+        private static void PlayCheer(FightStyleEnum style, int charisma)
+        {
+            if (style == FightStyleEnum.Heel)
+            {
+                global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.BOOING, charisma);
+            }
+            else
+            {
+                global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ODOROKI_L, charisma);
+            }
+        }
+        #endregion
+
+
+
     }
 }
