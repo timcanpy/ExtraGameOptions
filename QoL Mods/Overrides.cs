@@ -27,9 +27,10 @@ namespace QoL_Mods
     [GroupDescription(Group = "UkeNotification", Name = "Ukemi Trigger Notification", Description = "Plays specific crowd cheers (HolyShit, ThisIsWrestling, Stomping) when a wrestler triggers Ukemi.\nCheers may trigger when a match ends.")]
     [GroupDescription(Group = "Bleeding Headbutts", Name = "Dangerous Headbutts", Description = "Grapple Headbutts can cause self bleeding")]
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
-    [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "Lower stamina increases the chance that a defender will reverse moves.")]
+    //[GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
-    [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "Audience may cheer when a defender reverses a move.")]
+    //[GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "Audience may cheer when a defender reverses a move.")]
+    [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
 
     #endregion
     #region Field Access
@@ -46,6 +47,7 @@ namespace QoL_Mods
     [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_CornerDive_Stand", Group = "Allow Dives")]
     [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_CornerDive_Down", Group = "Allow Dives")]
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Allow Dives")]
+    [FieldAccess(Class = "Player", Field = "ProcessGrapple_Corner", Group = "Corner Daze")]
     #endregion
 
     #region Face Lock Access
@@ -1697,45 +1699,45 @@ namespace QoL_Mods
         }
         #endregion
 
-        #region Stamina Affects Reversal Rate
+        //#region Stamina Affects Reversal Rate
 
-        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 93,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, LocalVarIds = new int[] { 6 },
-            Group = "Stamina Affects Reversals")]
-        public static void IncreaseReversalChance(ref int num, int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type, int def_pl_idx)
-        {
-            try
-            {
-                Player player = global::PlayerMan.inst.GetPlObj(atk_pl_idx);
-                int staminaModifier = (5 * GetStaminaLevel(player));
-                num += staminaModifier;
-            }
-            catch (Exception e)
-            {
-                L.D("IncreaseReversalError: " + e);
-            }
-        }
+        //[Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 93,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, LocalVarIds = new int[] { 6 },
+        //    Group = "Stamina Affects Reversals")]
+        //public static void IncreaseReversalChance(ref int num, int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type, int def_pl_idx)
+        //{
+        //    try
+        //    {
+        //        Player player = global::PlayerMan.inst.GetPlObj(atk_pl_idx);
+        //        int staminaModifier = (5 * GetStaminaLevel(player));
+        //        num += staminaModifier;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("IncreaseReversalError: " + e);
+        //    }
+        //}
 
-        public static int GetStaminaLevel(Player player)
-        {
-            if (player.BP >= 49152f)
-            {
-                return 0;
-            }
-            else if (player.BP >= 24576f)
-            {
-                return 1;
-            }
-            else if (player.BP >= 12288f)
-            {
-                return 2;
-            }
-            else
-            {
-                return 3;
-            }
-        }
-        #endregion
+        //public static int GetStaminaLevel(Player player)
+        //{
+        //    if (player.BP >= 49152f)
+        //    {
+        //        return 0;
+        //    }
+        //    else if (player.BP >= 24576f)
+        //    {
+        //        return 1;
+        //    }
+        //    else if (player.BP >= 12288f)
+        //    {
+        //        return 2;
+        //    }
+        //    else
+        //    {
+        //        return 3;
+        //    }
+        //}
+        //#endregion
 
         #region Referee Calls for Breaks
         [Hook(TargetClass = "Referee", TargetMethod = "CheckStartRefereeing", InjectionLocation = 325,
@@ -1785,7 +1787,7 @@ namespace QoL_Mods
             }
         }
         #endregion
-        
+
         #region Force Defender to Set-up for Dives
 
         [Hook(TargetClass = "PlayerController_AI", TargetMethod = "AIActFunc_CornerDive_Down", InjectionLocation = 0,
@@ -1796,6 +1798,10 @@ namespace QoL_Mods
         {
             try
             {
+                if (ai.PlObj.State == PlStateEnum.Walk)
+                {
+                    return;
+                }
                 Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
                 if (defender.State != PlStateEnum.Down_FaceDown && defender.State != PlStateEnum.Down_FaceUp)
                 {
@@ -1836,6 +1842,10 @@ namespace QoL_Mods
         {
             try
             {
+                if (ai.PlObj.State == PlStateEnum.Walk)
+                {
+                    return;
+                }
                 Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
                 if (ai.PlObj.DistanceToTarget > 3.54166651f)
                 {
@@ -1859,47 +1869,112 @@ namespace QoL_Mods
         }
         #endregion
 
-        #region Cheer on Reversal
+        //#region Cheer on Reversal
 
-        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 115,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
-            Group = "Reversal Cheer")]
-        public static void CheerOnReversal(int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type,
-            int def_pl_idx)
+        //[Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 115,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
+        //    Group = "Reversal Cheer")]
+        //public static void CheerOnReversal(int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type,
+        //    int def_pl_idx)
+        //{
+        //    try
+        //    {
+        //        global::Player plObj = global::PlayerMan.inst.GetPlObj(def_pl_idx);
+
+        //        //Determine whether we should play the cheer
+        //        int damageLevel = GetDamageLevel(plObj);
+        //        if (damageLevel < UnityEngine.Random.Range(0, 4) || (int)plObj.WresParam.wrestlerRank < 2)
+        //        {
+        //            return;
+        //        }
+        //        PlayCheer(plObj.WresParam.fightStyle, ((int)plObj.WresParam.charismaRank + damageLevel) / 2);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("Error on Play Reversal Cheer:" + e);
+        //    }
+
+        //}
+
+        //private static void PlayCheer(FightStyleEnum style, int charisma)
+        //{
+        //    if (style == FightStyleEnum.Heel)
+        //    {
+        //        global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.BOOING, charisma);
+        //    }
+        //    else
+        //    {
+        //        global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ODOROKI_L, charisma);
+        //    }
+        //}
+        //#endregion
+
+        #region Force Standing Daze on Corner Moves
+
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessGrapple_Corner", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance,
+            Group = "Corner Daze")]
+        public static void CornerMovesDaze(Player player)
         {
             try
             {
-                global::Player plObj = global::PlayerMan.inst.GetPlObj(def_pl_idx);
+                //Determine whether finishing move is C2C, Apron to Ring or Dive to Standing Opponent
+                bool isValidFinisher = false;
 
-                //Determine whether we should play the cheer
-                int damageLevel = GetDamageLevel(plObj);
-                if (damageLevel < UnityEngine.Random.Range(0, 4) || (int)plObj.WresParam.wrestlerRank < 2)
+                //C2C Move, Apron to Ring, Run Up Turnbuckle
+                if (player.WresParam.skillAttr[13] == SkillSlotAttr.CriticalMove || player.WresParam.skillAttr[16] == SkillSlotAttr.CriticalMove || player.WresParam.skillAttr[17] == SkillSlotAttr.CriticalMove)
+                {
+                    isValidFinisher = true;
+                }
+
+                //Determine whether any of the diving moves are finishers
+                if (!isValidFinisher)
+                {
+                    int finisherSlot = 0;
+
+                    for (int i = 19; i < 23; i++)
+                    {
+                        if (player.WresParam.skillAttr[i] == SkillSlotAttr.CriticalMove)
+                        {
+                            finisherSlot = i;
+                            break;
+                        }
+                    }
+
+                    //If a diving move is a finisher, determine if it's against a standing opponent.
+                    if (finisherSlot > 0)
+                    {
+                        var skillData = global::SkillDataMan.inst.GetSkillData(player.WresParam.skillSlot[finisherSlot]);
+                        if (skillData[1].anmType == SkillAnmTypeEnum.Dive_Stand_Single ||
+                            skillData[1].anmType == SkillAnmTypeEnum.Dive_Stand_Pair)
+                        {
+                            isValidFinisher = true;
+                        }
+                    }
+                }
+
+                if (!isValidFinisher)
                 {
                     return;
                 }
-                PlayCheer(plObj.WresParam.fightStyle, ((int)plObj.WresParam.charismaRank + damageLevel) / 2);
+                //if (player.grappleType == GrappleTypeEnum.Corner)
+                //{
+                //This should only occur in large/critical damage
+                Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
+                if (GetDamageLevel(defender) > 1)
+                {
+                    defender.isStandingStunOK = true;
+                    defender.AddStunTime(180);
+                }
+                //}
             }
             catch (Exception e)
             {
-                L.D("Error on Play Reversal Cheer:" + e);
+                L.D("CornerMovesDazeException: " + e);
             }
 
-        }
-
-        private static void PlayCheer(FightStyleEnum style, int charisma)
-        {
-            if (style == FightStyleEnum.Heel)
-            {
-                global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.BOOING, charisma);
-            }
-            else
-            {
-                global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ODOROKI_L, charisma);
-            }
         }
         #endregion
-
-
-
     }
 }
