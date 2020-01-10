@@ -14,14 +14,17 @@ using UnityEngine.UI;
 
 namespace FireProWar
 {
+    #region Description and Field Access
     [GroupDescription(Description = "This adds a system for competitve booking among various promotions, as well as the management of roster morale.", Group = "FirePro War", Name = "Fire Promotion Tracker")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "FirePro War")]
     [FieldAccess(Class = "Player", Field = "InvokeUkeBonus", Group = "FirePro War")]
     [FieldAccess(Class = "MatchMain", Field = "EndMatch", Group = "FirePro War")]
     [FieldAccess(Class = "Menu_Result", Field = "Start", Group = "FirePro War")]
+
+    #endregion
     public class Management
     {
-
+        #region Form Intialization
         [ControlPanel(Group = "FirePro War")]
         public static Form MSForm()
         {
@@ -33,6 +36,7 @@ namespace FireProWar
                 return War_Form.form;
             }
         }
+        #endregion
 
         #region Variables
         public static bool fpwEnable = false;
@@ -66,7 +70,7 @@ namespace FireProWar
                         ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
                     }
                 }
-                catch(ArgumentOutOfRangeException e)
+                catch (ArgumentOutOfRangeException e)
                 {
                     ringName = "none";
                 }
@@ -89,7 +93,7 @@ namespace FireProWar
                 }
             }
         }
-        
+
         [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "FirePro War")]
         public static void ProcessUkemi(Player player)
         {
@@ -103,7 +107,7 @@ namespace FireProWar
             {
                 return;
             }
-            
+
             //Determine the type of bonus to be applied
             switch (employee.MoraleRank)
             {
@@ -411,10 +415,8 @@ namespace FireProWar
             catch
             { }
         }
-        [Hook(TargetClass = "EntranceScene", TargetMethod = "StartEntranceScene", InjectionLocation = 0,
-                   InjectDirection = HookInjectDirection.Before,
-                   InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
-                   Group = "FirePro War")]
+        [Hook(TargetClass = "EntranceScene", TargetMethod = "StartEntranceScene", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal, Group = "FirePro War")]
         public static void ShowRecord(EntranceScene es, EntranceSceneKind kind, int[] pl_idx, int pl_cnt)
         {
             try
@@ -459,7 +461,7 @@ namespace FireProWar
                 SetLogo(promotion);
             }
         }
-        
+
         #region Helper Methods
         public static void SetLogo(Promotion promotion)
         {

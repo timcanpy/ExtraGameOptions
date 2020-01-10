@@ -24,7 +24,9 @@ namespace FireProWar
         private static String promotionDivider = "|--Promotion--|";
         public static System.Random rnd = new System.Random();
         public static War_Form form = null;
-
+        public static int promotionFactor = 5;
+        public static int demotionFactor = -5;
+        public static String csvLocation = "./EGOData/Reports";
         #endregion
 
         #region Form Initialize
@@ -42,13 +44,11 @@ namespace FireProWar
             LoadWarData();
             FormClosing += WarForm_FormClosing;
         }
-
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             WriteToCSV();
             SaveWarData();
         }
-
         private void LoadOrgs()
         {
             this.ms_groupList.Items.Clear();
@@ -61,7 +61,6 @@ namespace FireProWar
 
             ms_groupList.SelectedIndex = 0;
         }
-
         private void LoadSubs()
         {
             try
@@ -89,7 +88,6 @@ namespace FireProWar
             }
 
         }
-
         private void LoadRegions()
         {
             fpw_promoRegionList.Items.Clear();
@@ -100,7 +98,6 @@ namespace FireProWar
 
             fpw_promoRegionList.SelectedIndex = 0;
         }
-
         private void LoadFightStyles()
         {
             fpw_promoStyleList.Items.Clear();
@@ -111,7 +108,6 @@ namespace FireProWar
 
             fpw_promoStyleList.SelectedIndex = 0;
         }
-
         private void LoadRings()
         {
             fpw_promoRingList.Items.Clear();
@@ -122,7 +118,6 @@ namespace FireProWar
 
             fpw_promoRingList.SelectedIndex = 0;
         }
-
         private void LoadMoraleRank()
         {
             ms_moraleRank.Items.Clear();
@@ -133,7 +128,6 @@ namespace FireProWar
 
             ms_moraleRank.SelectedIndex = 0;
         }
-
         private void LoadGroupFightingStyles()
         {
             groupFightingStyles = new Dictionary<string, FightStyleEnum[]>();
@@ -160,54 +154,51 @@ namespace FireProWar
                 String filePath = saveFolderNames[0] + saveFileNames[0];
                 if (File.Exists(filePath))
                 {
-                    using (StreamReader sr = new StreamReader(filePath))
+                    var lines = File.ReadAllLines(filePath);
+                    int i = 0;
+                    while (i < lines.Length)
                     {
-                        var lines = File.ReadAllLines(filePath);
-                        int i = 0;
-                        while (i < lines.Length)
+                        /*Promotion Data
+                            Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
+                        */
+                        if (lines[i].Equals(promotionDivider))
                         {
-                            /*Promotion Data
-                                Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
-                            */
-                            if (lines[i].Equals(promotionDivider))
+                            Promotion promotion = new Promotion();
+                            promotion.Name = lines[i + 1];
+                            promotion.Ring = lines[i + 2];
+                            promotion.Type = lines[i + 3];
+                            promotion.Region = lines[i + 4];
+                            promotion.MatchCount = int.Parse(lines[i + 5]);
+                            promotion.AverageRating = float.Parse(lines[i + 6]);
+                            promotion.History = lines[i + 7];
+
+                            if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
                             {
-                                Promotion promotion = new Promotion();
-                                promotion.Name = lines[i + 1];
-                                promotion.Ring = lines[i + 2];
-                                promotion.Type = lines[i + 3];
-                                promotion.Region = lines[i + 4];
-                                promotion.MatchCount = int.Parse(lines[i + 5]);
-                                promotion.AverageRating = float.Parse(lines[i + 6]);
-                                promotion.History = lines[i + 7];
-
-                                if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
-                                {
-                                    promotion.AddEmployeeFromData(lines[i + 8]);
-                                    i += 9;
-                                }
-                                else
-                                {
-                                    promotion.AddMatchDetailsFromData(lines[i + 8]);
-                                    promotion.AddEmployeeFromData(lines[i + 9]);
-                                    i += 10;
-                                }
-                                fpw_promoList.Items.Add(promotion);
-
-                                //Update Promotion and Employee Lists
-                                promotionsAdded.Add(promotion.Name);
-                                foreach (Employee employee in promotion.EmployeeList)
-                                {
-                                    employeesAdded.Add(employee.Name);
-                                }
+                                promotion.AddEmployeeFromData(lines[i + 8]);
+                                i += 9;
                             }
+                            else
+                            {
+                                promotion.AddMatchDetailsFromData(lines[i + 8]);
+                                promotion.AddEmployeeFromData(lines[i + 9]);
+                                i += 10;
+                            }
+                            fpw_promoList.Items.Add(promotion);
 
+                            //Update Promotion and Employee Lists
+                            promotionsAdded.Add(promotion.Name);
+                            foreach (Employee employee in promotion.EmployeeList)
+                            {
+                                employeesAdded.Add(employee.Name);
+                            }
                         }
 
-                        if (fpw_promoList.Items.Count > 0)
-                        {
-                            fpw_promoList.SelectedIndex = 0;
-                            fpw_promoList_SelectedIndexChanged(null, null);
-                        }
+                    }
+
+                    if (fpw_promoList.Items.Count > 0)
+                    {
+                        fpw_promoList.SelectedIndex = 0;
+                        fpw_promoList_SelectedIndexChanged(null, null);
                     }
                 }
             }
@@ -500,7 +491,6 @@ namespace FireProWar
             fpw_promoHistory.Text = "";
             fpw_detailsView.Text = "";
         }
-
         public void UpdatePromotionData(Promotion promotion)
         {
             foreach (Promotion promo in fpw_promoList.Items)
@@ -517,7 +507,6 @@ namespace FireProWar
             }
             fpw_promoList_SelectedIndexChanged(null, null);
         }
-
         private void fpw_clearDetails_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
@@ -799,17 +788,14 @@ namespace FireProWar
         {
             PopulatePromotionReport();
         }
-
         private void rpt_employees_Click(object sender, EventArgs e)
         {
             PopulateEmployeeReport();
         }
 
-
         #endregion
 
         #region Helper Methods
-
         private void SelectPromotionRoster(String name)
         {
             for (int i = 0; i < ms_groupList.Items.Count; i++)
@@ -931,41 +917,6 @@ namespace FireProWar
                     return region;
             }
         }
-
-        //"Portugal";
-        //"New Mexico";
-        //"Austria";
-        //"Eritrea";
-        //"Fiji";
-        //"Hungary";
-        //"Iraq";
-        //"Israel";
-        //"Jamaica";
-        //"Kenya";
-        //"Madagascar";
-        //"Malawi";
-        //"Namibia";
-        //"Nigeria";
-        //"Pakistan";
-        //"Poland";
-        //"Samoa";
-        //"Scotland";
-        //"Somalia";
-        //"South Pacific";
-        //"Sri Lanka";
-        //"Turkey";
-        //"Uganda";
-        //"Vietnam";
-        //"Wales";
-        //"Zambia";
-        //"Africa";
-        //"Antarctica";
-        //"Asia";
-        //"Europe";
-        //"North America";
-        //"South America";
-        //"Babylon";
-
         public void UpdateEmployeeMorale(Employee employee, bool isWinner)
         {
             Promotion promotion = GetEmployeePromotion(employee.Name);
@@ -1024,7 +975,6 @@ namespace FireProWar
             fpw_promoList.SelectedItem = promotion;
             fpw_promoList_SelectedIndexChanged(null, null);
         }
-
         private int ProcessEmployeeQuit(Employee employee)
         {
             if (employee.MoraleRank != 0)
@@ -1058,33 +1008,33 @@ namespace FireProWar
             {
                 return false;
             }
-            if (employee.MoralePoints >= (employee.MoraleRank * 5))
+            if (employee.MoralePoints >= (employee.MoraleRank * promotionFactor))
             {
                 L.D("Attempting Promotion For " + employee.Name);
                 int value = rnd.Next(1, employee.MoralePoints);
-                if (value >= (employee.MoraleRank) * 5)
+                if (value >= (employee.MoraleRank) * promotionFactor)
                 {
-                    L.D("Promotion success: " + value + " vs " + employee.MoraleRank * 5);
+                    L.D("Promotion success: " + value + " vs " + employee.MoraleRank * promotionFactor);
                     return true;
                 }
 
-                L.D("Promotion failure: " + value + " vs " + employee.MoraleRank * 5);
+                L.D("Promotion failure: " + value + " vs " + employee.MoraleRank * promotionFactor);
             }
             return false;
         }
         private bool ProcessEmployeeDemotion(Employee employee)
         {
-            if (employee.MoralePoints < (employee.MoraleRank * -5))
+            if (employee.MoralePoints < (employee.MoraleRank * demotionFactor))
             {
                 L.D("Attempting Demotion For " + employee.Name);
                 int value = rnd.Next(employee.MoralePoints, 1);
-                if (value < (employee.MoraleRank * -5))
+                if (value < (employee.MoraleRank * demotionFactor))
                 {
-                    L.D("Demotion success: " + value + " vs " + employee.MoraleRank * -5);
+                    L.D("Demotion success: " + value + " vs " + employee.MoraleRank * demotionFactor);
                     return true;
                 }
 
-                L.D("Demotion failure: " + value + " vs " + employee.MoraleRank * -5);
+                L.D("Demotion failure: " + value + " vs " + employee.MoraleRank * demotionFactor);
             }
             return false;
         }
@@ -1101,7 +1051,6 @@ namespace FireProWar
             }
             return promotion;
         }
-
         private bool DoesWrestlerExist(String wrestlerName)
         {
             bool isFound = false;
@@ -1116,7 +1065,6 @@ namespace FireProWar
 
             return isFound;
         }
-
         private bool ValidateRank(int rank, int maxValue)
         {
             if (rank >= 0 && rank < maxValue)
@@ -1128,7 +1076,6 @@ namespace FireProWar
                 return false;
             }
         }
-
         private void PopulatePromotionReport()
         {
 
@@ -1142,7 +1089,6 @@ namespace FireProWar
             }
 
         }
-
         private void PopulateEmployeeReport()
         {
             String savePath = "./EGOData/Reports/EmployeeList.csv";
@@ -1170,7 +1116,6 @@ namespace FireProWar
                 }
             }
         }
-
         private void PopulateRosterReport(Promotion promotion)
         {
             String savePath = "./EGOData/Reports/" + promotion.Name + ".csv";
@@ -1198,8 +1143,6 @@ namespace FireProWar
 
 
         }
-
-        public static String csvLocation = "./EGOData/Reports";
         private void WriteToCSV()
         {
             try
