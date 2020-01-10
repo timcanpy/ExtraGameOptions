@@ -81,7 +81,7 @@ namespace Data_Classes
             get { return draws; }
             set { draws = value; }
         }
-        
+
         private int moraleRank;
 
         public int MoraleRank
@@ -110,7 +110,7 @@ namespace Data_Classes
         #endregion
 
         #region  Methods
-        public int QuitRollCeiling 
+        public int QuitRollCeiling
         {
             get { return quitRollCeiling; }
             set { quitRollCeiling = value; }
@@ -118,7 +118,7 @@ namespace Data_Classes
 
         public String CompileEmployeeData()
         {
-            return name + ":" + type+":" + region+":"+matchCount+":"+averageRating+":"+wins+":"+losses+":"+draws+":"+moraleRank+":"+moralePoints+":"+failedQuitRolls+":"+quitRollCeiling+"|";
+            return name + ":" + type + ":" + region + ":" + matchCount + ":" + averageRating + ":" + wins + ":" + losses + ":" + draws + ":" + moraleRank + ":" + moralePoints + ":" + failedQuitRolls + ":" + quitRollCeiling + "|";
         }
 
         public override string ToString()
@@ -144,6 +144,11 @@ namespace Data_Classes
         public String GetMoraleInfo()
         {
             return "Morale Rank: " + moraleRank + " Morale Points: " + moralePoints;
+        }
+
+        public List<String> GetReportFormat()
+        {
+            return new List<String> { name, type, region, matchCount.ToString(), Math.Round(averageRating, 2).ToString(), wins.ToString(), losses.ToString(), draws.ToString() };
         }
         #endregion
 

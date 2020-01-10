@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.AccessControl;
 using System.Text;
 using System.Windows.Forms;
 using Data_Classes;
 using DG;
 using JetBrains.Annotations;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace FireProWar
 {
-    [GroupDescription(Description = "This adds a system for competitve booking among various promotions, as well as the management of roster morale.", Group = "FirePro War", Name = "Fire Promotion Wars")]
+    [GroupDescription(Description = "This adds a system for competitve booking among various promotions, as well as the management of roster morale.", Group = "FirePro War", Name = "Fire Promotion Tracker")]
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "FirePro War")]
     [FieldAccess(Class = "Player", Field = "InvokeUkeBonus", Group = "FirePro War")]
     [FieldAccess(Class = "MatchMain", Field = "EndMatch", Group = "FirePro War")]
@@ -35,6 +39,11 @@ namespace FireProWar
         public static Employee[] employeeData = new Employee[8];
         public static String ringName = "";
         public static Promotion promotion = null;
+        public static String storedLogoPath = "./EGOData/Watermarks/";
+        public static String logoAssetLocation = "./EGOData/tvlogo.obj";
+        public static String logoPositionFile = "./EGOData/LogoPosition.dat";
+        public static String defaultLogo = "Default.png";
+        public static AssetBundle tvLogo = null;
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "FirePro War")]
@@ -48,8 +57,6 @@ namespace FireProWar
             {
                 try
                 {
-                    L.D("Ring ID - " + settings.ringID);
-
                     if ((int)settings.ringID < (int)RingID.EditRingIDTop)
                     {
                         ringName += settings.ringID;
@@ -62,10 +69,8 @@ namespace FireProWar
                 catch(ArgumentOutOfRangeException e)
                 {
                     ringName = "none";
-                    L.D("Ring ID is out of range");
                 }
 
-                L.D("Ring Name - " + ringName);
                 promotion = War_Form.form.GetRingPromotion(ringName);
                 if (promotion != null)
                 {
@@ -84,7 +89,7 @@ namespace FireProWar
                 }
             }
         }
-
+        
         [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "FirePro War")]
         public static void ProcessUkemi(Player player)
         {
@@ -280,8 +285,6 @@ namespace FireProWar
                                   evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner)
                                   && i >= 4)
                         {
-                            L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                " has lost the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                                   " has lost the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             moralePoints -= 3;
@@ -291,7 +294,6 @@ namespace FireProWar
                                   evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner)
                                   && i < 4)
                         {
-                            L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             moralePoints += (6 - employee.MoraleRank);
                         }
@@ -299,8 +301,6 @@ namespace FireProWar
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner ||
                                  evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner && i >= 4)
                         {
-                            L.D(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                " successfully defends the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                             promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " successfully defends the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
                         }
                     }
@@ -411,9 +411,178 @@ namespace FireProWar
             catch
             { }
         }
+        [Hook(TargetClass = "EntranceScene", TargetMethod = "StartEntranceScene", InjectionLocation = 0,
+                   InjectDirection = HookInjectDirection.Before,
+                   InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
+                   Group = "FirePro War")]
+        public static void ShowRecord(EntranceScene es, EntranceSceneKind kind, int[] pl_idx, int pl_cnt)
+        {
+            try
+            {
+                String message = "";
+                //Get record for each edit
+                foreach (var index in pl_idx)
+                {
+                    Employee employee = employeeData[index];
+                    if (employee == null)
+                    {
+                        continue;
+                    }
+                    message += CleanUpName(employee.Name) + ": " + employee.Wins + "-" +
+                               employee.Draws + "-" + employee.Losses +
+                               " || Morale: " + CheckMorale(employee.MoraleRank) + "\n";
+                }
 
+                if (!message.Equals(String.Empty))
+                {
+                    DispNotification.inst.Show(message, 360);
+                }
+            }
+
+            //Expected crash on Null Reference exceptions.
+            catch (NullReferenceException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+                L.D("ShowRecordError:" + e);
+            }
+        }
+
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "Awake", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "FirePro War")]
+        public static void SetTVLogo()
+        {
+            if (fpwEnable)
+            {
+                //Set company logo
+                SetLogo(promotion);
+            }
+        }
+        
         #region Helper Methods
+        public static void SetLogo(Promotion promotion)
+        {
+            try
+            {
+                #region Load the Unity Asset
 
+                if (tvLogo == null)
+                {
+                    tvLogo = AssetBundle.LoadFromFile(logoAssetLocation);
+                }
+
+                if (GameObject.Find("TVLogo") == null)
+                {
+                    L.D("Could not find TVLogo");
+                    GameObject gameObject = (GameObject)tvLogo.LoadAsset("LogoCanvas");
+                    GameObject rootObj = (GameObject)GetField(Ring.inst, "rootObj", false);
+                    var logoObj = (GameObject)UnityEngine.Object.Instantiate(gameObject, rootObj.transform, false);
+                }
+                Image component;
+                if (GameObject.Find("TVLogo") == null)
+                {
+                    L.D("Can't find TVLogo GameObject", new object[0]);
+                    return;
+                }
+                GameObject logoObject = GameObject.Find("TVLogo");
+                component = logoObject.GetComponent<Image>();
+                if (component == null)
+                {
+                    L.D("Still unable to find uiComponent", new object[0]);
+                    return;
+                }
+                #endregion
+
+                #region Get the logo
+                string logo = "";
+                L.D("Checking logo location at " + storedLogoPath);
+                string[] logoCollection = Directory.GetFiles(storedLogoPath);
+                foreach (var file in logoCollection)
+                {
+                    string modifiedFileName = Path.GetFileName(file);
+                    modifiedFileName = modifiedFileName.Substring(0, (modifiedFileName.IndexOf('.')));
+                    if (promotion != null)
+                    {
+                        if (modifiedFileName.Equals(promotion.Name))
+                        {
+                            logo = promotion.Name + ".png";
+                            break;
+                        }
+                        else if (modifiedFileName.Equals(promotion.Ring))
+                        {
+                            logo = promotion.Ring + ".png";
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        logo = defaultLogo;
+                    }
+                }
+
+                if (logo.Equals(String.Empty))
+                {
+                    logo = "Default.png";
+                }
+                String logoPath = Path.Combine(storedLogoPath, logo);
+                #endregion
+
+                byte[] array = File.ReadAllBytes(logoPath);
+                Texture2D texture2D = new Texture2D(6, 6);
+                texture2D.LoadImage(array);
+                component.sprite = Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), Vector2.zero, 125f);
+
+                //Get transform lines from file
+                if (File.Exists(logoPositionFile))
+                {
+                    var lines = File.ReadAllLines(logoPositionFile);
+                    Single.TryParse(lines[0], out float x);
+                    Single.TryParse(lines[1], out float y);
+                    Single.TryParse(lines[2], out float z);
+                    component.rectTransform.Translate(x, y, z);
+                }
+                else
+                {
+                    component.rectTransform.Translate(0, 0, 0);
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("SetLogoException:" + e);
+            }
+
+        }
+        public static String CheckMorale(int moraleRank)
+        {
+            switch (moraleRank)
+            {
+                case 0:
+                case 1:
+                    return "Poor";
+                case 2:
+                    return "Average";
+                case 3:
+                case 4:
+                    return "Good";
+                case 5:
+                    return "Outstanding";
+                default:
+                    return "Average";
+            }
+        }
+        public static String CleanUpName(String name)
+        {
+            int length = name.IndexOf("(");
+            if (length < 0)
+            {
+                return name;
+            }
+            else
+            {
+                return name.Substring(0, length);
+            }
+        }
         public static bool CheckWinCondition(MatchEvaluation evaluation)
         {
             if (evaluation.ResultType == MatchResultEnum.Fall || evaluation.ResultType == MatchResultEnum.GiveUp ||
@@ -514,7 +683,27 @@ namespace FireProWar
                     return 0;
             }
         }
-        #endregion
+        public static object GetField(object obj, string field, bool isStatic)
+        {
+            try
+            {
+                Type myType = obj.GetType();
+                FieldInfo myInfo = myType.GetField(field, isStatic ? (BindingFlags.Static | BindingFlags.NonPublic) : (BindingFlags.Instance | BindingFlags.NonPublic));
+                return myInfo.GetValue(isStatic ? null : obj);
 
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static void SetField(object obj, string field, bool isStatic, object value)
+        {
+            Type myType = obj.GetType();
+            FieldInfo myInfo = myType.GetField(field, isStatic ? (BindingFlags.Static | BindingFlags.NonPublic) : (BindingFlags.Instance | BindingFlags.NonPublic));
+            myInfo.SetValue(isStatic ? null : obj, value);
+        }
+        #endregion
     }
 }
+

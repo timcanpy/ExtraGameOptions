@@ -5,6 +5,7 @@ using DG;
 using MatchConfig;
 using Data_Classes;
 using System.IO;
+using System.Linq;
 
 namespace FireProWar
 {
@@ -31,7 +32,6 @@ namespace FireProWar
         {
             form = this;
             InitializeComponent();
-            FormClosing += WarForm_FormClosing;
             LoadOrgs();
             LoadSubs();
             LoadRegions();
@@ -40,11 +40,12 @@ namespace FireProWar
             LoadMoraleRank();
             LoadGroupFightingStyles();
             LoadWarData();
+            FormClosing += WarForm_FormClosing;
         }
 
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            L.D("Saving data");
+            WriteToCSV();
             SaveWarData();
         }
 
@@ -72,8 +73,8 @@ namespace FireProWar
                 {
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
-                    //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
-                    wresIDGroup.ID = (Int32)current.editWrestlerID; wresIDGroup.Group = current.wrestlerParam.groupID;
+                    wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
+                    wresIDGroup.Group = current.wrestlerParam.groupID;
 
                     wrestlerList.Add(wresIDGroup);
                     this.ms_searchResults.Items.Add(wresIDGroup);
@@ -92,7 +93,7 @@ namespace FireProWar
         private void LoadRegions()
         {
             fpw_promoRegionList.Items.Clear();
-            foreach (CountryEnum region in MatchConfig.MatchConfiguration.GetRegionList())
+            foreach (var region in MatchConfig.MatchConfiguration.GetRegionList())
             {
                 fpw_promoRegionList.Items.Add(CorrectRegionName(region.ToString()));
             }
@@ -225,7 +226,6 @@ namespace FireProWar
         #region Date Save
         private void SaveWarData()
         {
-           
             String folder = saveFolderNames[0];
             if (!Directory.Exists(folder))
             {
@@ -354,6 +354,10 @@ namespace FireProWar
         #endregion
 
         #region Promotion Management
+        private void fpw_refreshRings_Click(object sender, EventArgs e)
+        {
+            LoadRings();
+        }
         private void fpw_addPromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoName.Text.Trim().Equals(""))
@@ -392,6 +396,8 @@ namespace FireProWar
         }
         private void fpw_promoList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            rosterCount.Text = "";
+
             if (fpw_promoList.SelectedIndex < 0)
             {
                 return;
@@ -429,6 +435,17 @@ namespace FireProWar
             {
                 ms_rosterList.SelectedIndex = ms_rosterList.Items.Count - 1;
                 ms_rosterList_SelectedIndexChanged(sender, e);
+                rosterCount.Text = ms_rosterList.Items.Count.ToString();
+            }
+
+            //Update selected roster to reference this promotion
+            try
+            {
+                SelectPromotionRoster(promotion.Name);
+            }
+            catch (Exception ex)
+            {
+                L.D("SelectPromotionRosterError: " + ex);
             }
 
         }
@@ -498,7 +515,6 @@ namespace FireProWar
                     break;
                 }
             }
-            L.D("Updating information for " + promotion.Name);
             fpw_promoList_SelectedIndexChanged(null, null);
         }
 
@@ -510,12 +526,12 @@ namespace FireProWar
             }
 
             Promotion promotion = ((Promotion)fpw_promoList.SelectedItem);
-            if (promotion.MatchDetails.Equals(""))
+            if (promotion.MatchDetails.Count == 0)
             {
                 return;
             }
 
-            promotion.ClearMatchDetails();
+            promotion.ClearEvents();
             fpw_promoList.SelectedItem = promotion;
             fpw_promoList_SelectedIndexChanged(sender, e);
         }
@@ -708,7 +724,6 @@ namespace FireProWar
 
             if (ms_rosterList.SelectedIndex < 0)
             {
-                L.D("No Employee Selected");
                 return;
             }
 
@@ -730,7 +745,6 @@ namespace FireProWar
 
             if (ms_rosterList.SelectedIndex < 0)
             {
-                L.D("No Employee Selected");
                 return;
             }
 
@@ -744,10 +758,70 @@ namespace FireProWar
             fpw_promoList.SelectedItem = promotion;
             ms_rosterList_SelectedIndexChanged(sender, e);
         }
+        private void fw_refreshRings_Click(object sender, EventArgs e)
+        {
+            LoadRings();
+        }
+        private void btn_clean_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                for (int i = 0; i < fpw_promoList.Items.Count; i++)
+                {
+                    Promotion promotion = (Promotion)fpw_promoList.Items[i];
+                    var employeeList = promotion.EmployeeList.ToList();
+
+                    foreach (Employee employee in employeeList)
+                    {
+                        if (!DoesWrestlerExist(employee.Name))
+                        {
+                            promotion.RemoveEmployee(employee.Name);
+                            L.D("Removing " + employee.Name + " from " + promotion.Name);
+                        }
+                    }
+
+                    fpw_promoList.Items[i] = promotion;
+                }
+
+                L.D("Complete");
+            }
+            catch (Exception exception)
+            {
+                L.D("Cleaning Error:" + exception);
+            }
+
+        }
+
+        #endregion
+
+        #region Reporting
+        private void rpt_promotions_Click(object sender, EventArgs e)
+        {
+            PopulatePromotionReport();
+        }
+
+        private void rpt_employees_Click(object sender, EventArgs e)
+        {
+            PopulateEmployeeReport();
+        }
+
 
         #endregion
 
         #region Helper Methods
+
+        private void SelectPromotionRoster(String name)
+        {
+            for (int i = 0; i < ms_groupList.Items.Count; i++)
+            {
+                if (ms_groupList.Items[i].ToString().Contains(name))
+                {
+                    ms_groupList.SelectedIndex = i;
+                    SearchWrestler();
+                    break;
+                }
+            }
+        }
         private void PrepareForLoad()
         {
             promotionsAdded = new HashSet<String>();
@@ -820,12 +894,10 @@ namespace FireProWar
         }
         public Promotion GetRingPromotion(String ringName)
         {
-            L.D("Checking promotion for ring " + ringName);
             foreach (Promotion promotion in fpw_promoList.Items)
             {
                 if (promotion.Ring.Equals(ringName))
                 {
-                    L.D("Returning promotion " + promotion.Name);
                     return promotion;
                 }
             }
@@ -896,11 +968,9 @@ namespace FireProWar
 
         public void UpdateEmployeeMorale(Employee employee, bool isWinner)
         {
-            L.D("Update morale for " + employee.Name + " by " + employee.MoralePoints + " points.");
             Promotion promotion = GetEmployeePromotion(employee.Name);
             if (promotion == null)
             {
-                L.D("Promotion is null");
                 return;
 
             }
@@ -988,25 +1058,33 @@ namespace FireProWar
             {
                 return false;
             }
-            if (employee.MoralePoints >= (employee.MoraleRank + 1) * 10)
+            if (employee.MoralePoints >= (employee.MoraleRank * 5))
             {
-                int value = rnd.Next(1, (employee.MoraleRank + 1) * 10);
-                if (value >= (employee.MoraleRank + 1) * 10)
+                L.D("Attempting Promotion For " + employee.Name);
+                int value = rnd.Next(1, employee.MoralePoints);
+                if (value >= (employee.MoraleRank) * 5)
                 {
+                    L.D("Promotion success: " + value + " vs " + employee.MoraleRank * 5);
                     return true;
                 }
+
+                L.D("Promotion failure: " + value + " vs " + employee.MoraleRank * 5);
             }
             return false;
         }
         private bool ProcessEmployeeDemotion(Employee employee)
         {
-            if (employee.MoralePoints < (employee.MoraleRank + 1) * -5)
+            if (employee.MoralePoints < (employee.MoraleRank * -5))
             {
+                L.D("Attempting Demotion For " + employee.Name);
                 int value = rnd.Next(employee.MoralePoints, 1);
-                if (value < (employee.MoraleRank + 1) * -5)
+                if (value < (employee.MoraleRank * -5))
                 {
+                    L.D("Demotion success: " + value + " vs " + employee.MoraleRank * -5);
                     return true;
                 }
+
+                L.D("Demotion failure: " + value + " vs " + employee.MoraleRank * -5);
             }
             return false;
         }
@@ -1024,6 +1102,21 @@ namespace FireProWar
             return promotion;
         }
 
+        private bool DoesWrestlerExist(String wrestlerName)
+        {
+            bool isFound = false;
+            foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
+            {
+                if (wrestlerName.Equals(DataBase.GetWrestlerFullName(current.wrestlerParam)))
+                {
+                    isFound = true;
+                    break;
+                }
+            }
+
+            return isFound;
+        }
+
         private bool ValidateRank(int rank, int maxValue)
         {
             if (rank >= 0 && rank < maxValue)
@@ -1035,6 +1128,92 @@ namespace FireProWar
                 return false;
             }
         }
+
+        private void PopulatePromotionReport()
+        {
+
+            String savePath = "./EGOData/Reports/PromotionList.csv";
+            using (StreamWriter sw = File.AppendText(savePath))
+            {
+                foreach (Promotion promotion in fpw_promoList.Items)
+                {
+                    sw.WriteLine(promotion.GetReportFormat());
+                }
+            }
+
+        }
+
+        private void PopulateEmployeeReport()
+        {
+            String savePath = "./EGOData/Reports/EmployeeList.csv";
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
+            using (StreamWriter sw = File.AppendText(savePath))
+            {
+                foreach (Promotion promotion in fpw_promoList.Items)
+                {
+                    foreach (Employee employee in promotion.EmployeeList)
+                    {
+                        string report = promotion.Name + ", ";
+                        var reportData = employee.GetReportFormat();
+                        reportData.Add(moraleRank[employee.MoraleRank]);
+                        reportData.Add(employee.MoralePoints.ToString());
+                        foreach (var data in reportData)
+                        {
+                            report += data + ",";
+                        }
+
+                        sw.WriteLine(report);
+                    }
+                }
+            }
+        }
+
+        private void PopulateRosterReport(Promotion promotion)
+        {
+            String savePath = "./EGOData/Reports/" + promotion.Name + ".csv";
+
+            if (File.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
+            using (StreamWriter sw = File.AppendText(savePath))
+            {
+                foreach (Employee employee in promotion.EmployeeList)
+                {
+                    var reportData = employee.GetReportFormat();
+                    reportData.Add(moraleRank[employee.MoraleRank]);
+                    reportData.Add(employee.MoralePoints.ToString());
+                    string report = "";
+                    foreach (var data in reportData)
+                    {
+                        report += data + ",";
+                    }
+
+                    sw.WriteLine(report);
+                }
+            }
+
+
+        }
+
+        public static String csvLocation = "./EGOData/Reports";
+        private void WriteToCSV()
+        {
+            try
+            {
+                PopulatePromotionReport();
+                PopulateEmployeeReport();
+            }
+            catch (Exception e)
+            {
+                L.D("WriteToCSVError: " + e);
+            }
+
+        }
+
         #endregion
     }
 }

@@ -121,7 +121,7 @@ namespace Data_Classes
             history = "";
         }
 
-        public void ClearMatchDetails()
+        public void ClearEvents()
         {
             matchDetails.Clear();
         }
@@ -229,6 +229,18 @@ namespace Data_Classes
                 }
                 matchDetails.Add(resultInfoArray[i]);
             }
+        }
+
+        public String GetReportFormat()
+        {
+            var reportInfo = new String[] { name, type, region, ring, matchCount.ToString(), Math.Round(averageRating, 2).ToString(), employeeList.Count.ToString() };
+            string report = "";
+            foreach (var info in reportInfo)
+            {
+                report += info + ",";
+            }
+
+            return report;
         }
         #endregion
 
