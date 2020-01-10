@@ -99,6 +99,7 @@
             this.fpw_reports = new System.Windows.Forms.TabPage();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
+            this.btn_clean = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fpw_infoTabs.SuspendLayout();
@@ -359,7 +360,7 @@
             // fpw_promoMthRating
             // 
             this.fpw_promoMthRating.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.fpw_promoMthRating.Location = new System.Drawing.Point(295, 106);
+            this.fpw_promoMthRating.Location = new System.Drawing.Point(290, 106);
             this.fpw_promoMthRating.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_promoMthRating.Name = "fpw_promoMthRating";
             this.fpw_promoMthRating.ReadOnly = true;
@@ -370,7 +371,7 @@
             // fpw_promoMthCnt
             // 
             this.fpw_promoMthCnt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.fpw_promoMthCnt.Location = new System.Drawing.Point(295, 42);
+            this.fpw_promoMthCnt.Location = new System.Drawing.Point(290, 42);
             this.fpw_promoMthCnt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_promoMthCnt.Name = "fpw_promoMthCnt";
             this.fpw_promoMthCnt.ReadOnly = true;
@@ -409,7 +410,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(248, 143);
+            this.label5.Location = new System.Drawing.Point(243, 143);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(139, 16);
@@ -420,7 +421,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(214, 75);
+            this.label4.Location = new System.Drawing.Point(209, 75);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(221, 16);
@@ -431,7 +432,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(243, 11);
+            this.label3.Location = new System.Drawing.Point(238, 11);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(159, 16);
@@ -464,6 +465,7 @@
             // 
             // fpw_clearDetails
             // 
+            this.fpw_clearDetails.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_clearDetails.Location = new System.Drawing.Point(253, 405);
             this.fpw_clearDetails.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_clearDetails.Name = "fpw_clearDetails";
@@ -491,6 +493,7 @@
             // fpw_management
             // 
             this.fpw_management.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_management.Controls.Add(this.btn_clean);
             this.fpw_management.Controls.Add(this.btn_LoadData);
             this.fpw_management.Controls.Add(this.btn_SaveData);
             this.fpw_management.Controls.Add(this.label9);
@@ -516,6 +519,7 @@
             // 
             // btn_LoadData
             // 
+            this.btn_LoadData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_LoadData.Location = new System.Drawing.Point(248, 398);
             this.btn_LoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_LoadData.Name = "btn_LoadData";
@@ -527,6 +531,7 @@
             // 
             // btn_SaveData
             // 
+            this.btn_SaveData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_SaveData.Location = new System.Drawing.Point(7, 398);
             this.btn_SaveData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_SaveData.Name = "btn_SaveData";
@@ -549,6 +554,7 @@
             // 
             // ms_fireAll
             // 
+            this.ms_fireAll.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_fireAll.Location = new System.Drawing.Point(511, 398);
             this.ms_fireAll.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireAll.Name = "ms_fireAll";
@@ -560,6 +566,7 @@
             // 
             // ms_fireOne
             // 
+            this.ms_fireOne.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_fireOne.Location = new System.Drawing.Point(358, 398);
             this.ms_fireOne.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireOne.Name = "ms_fireOne";
@@ -586,7 +593,7 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(126, 149);
+            this.label8.Location = new System.Drawing.Point(117, 149);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(122, 14);
@@ -597,7 +604,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(142, 83);
+            this.label7.Location = new System.Drawing.Point(133, 83);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(82, 14);
@@ -608,7 +615,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(122, 19);
+            this.label6.Location = new System.Drawing.Point(113, 19);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(134, 14);
@@ -617,6 +624,7 @@
             // 
             // ms_hireGroup
             // 
+            this.ms_hireGroup.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_hireGroup.Location = new System.Drawing.Point(125, 262);
             this.ms_hireGroup.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireGroup.Name = "ms_hireGroup";
@@ -642,6 +650,7 @@
             // 
             // ms_refreshList
             // 
+            this.ms_refreshList.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_refreshList.Location = new System.Drawing.Point(125, 301);
             this.ms_refreshList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_refreshList.Name = "ms_refreshList";
@@ -653,6 +662,7 @@
             // 
             // ms_hireWrestler
             // 
+            this.ms_hireWrestler.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_hireWrestler.Location = new System.Drawing.Point(125, 224);
             this.ms_hireWrestler.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireWrestler.Name = "ms_hireWrestler";
@@ -873,11 +883,12 @@
             // ms_moraleRank
             // 
             this.ms_moraleRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ms_moraleRank.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_moraleRank.FormattingEnabled = true;
             this.ms_moraleRank.Location = new System.Drawing.Point(368, 233);
             this.ms_moraleRank.Margin = new System.Windows.Forms.Padding(4);
             this.ms_moraleRank.Name = "ms_moraleRank";
-            this.ms_moraleRank.Size = new System.Drawing.Size(40, 21);
+            this.ms_moraleRank.Size = new System.Drawing.Size(40, 23);
             this.ms_moraleRank.TabIndex = 47;
             this.ms_moraleRank.SelectedIndexChanged += new System.EventHandler(this.ms_moraleRank_SelectedIndexChanged);
             // 
@@ -947,6 +958,7 @@
             // 
             // rpt_employees
             // 
+            this.rpt_employees.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rpt_employees.Location = new System.Drawing.Point(270, 158);
             this.rpt_employees.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_employees.Name = "rpt_employees";
@@ -958,6 +970,7 @@
             // 
             // rpt_promotions
             // 
+            this.rpt_promotions.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rpt_promotions.Location = new System.Drawing.Point(270, 71);
             this.rpt_promotions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_promotions.Name = "rpt_promotions";
@@ -966,6 +979,18 @@
             this.rpt_promotions.Text = "Promotions";
             this.rpt_promotions.UseVisualStyleBackColor = true;
             this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
+            // 
+            // btn_clean
+            // 
+            this.btn_clean.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_clean.Location = new System.Drawing.Point(129, 398);
+            this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_clean.Name = "btn_clean";
+            this.btn_clean.Size = new System.Drawing.Size(88, 26);
+            this.btn_clean.TabIndex = 38;
+            this.btn_clean.Text = "Clean Rosters";
+            this.btn_clean.UseVisualStyleBackColor = true;
+            this.btn_clean.Click += new System.EventHandler(this.btn_clean_Click);
             // 
             // War_Form
             // 
@@ -1069,5 +1094,6 @@
         private System.Windows.Forms.TextBox ms_empRating;
         private System.Windows.Forms.Button rpt_employees;
         private System.Windows.Forms.Button rpt_promotions;
+        private System.Windows.Forms.Button btn_clean;
     }
 }
