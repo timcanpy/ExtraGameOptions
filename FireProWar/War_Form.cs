@@ -841,7 +841,7 @@ namespace FireProWar
                     styleName = "Amateur Wrestling";
                     break;
                 case FightStyleEnum.Ground:
-                    styleName = "Jiu-Jitsu";
+                    styleName = "Ground Style";
                     break;
                 case FightStyleEnum.Panther:
                     styleName = "Lucha/Martial Arts";
