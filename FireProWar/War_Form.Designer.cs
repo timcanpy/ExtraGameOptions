@@ -60,6 +60,7 @@
             this.fpw_clearDetails = new System.Windows.Forms.Button();
             this.fpw_detailsView = new System.Windows.Forms.TextBox();
             this.fpw_management = new System.Windows.Forms.TabPage();
+            this.btn_clean = new System.Windows.Forms.Button();
             this.btn_LoadData = new System.Windows.Forms.Button();
             this.btn_SaveData = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
@@ -99,7 +100,6 @@
             this.fpw_reports = new System.Windows.Forms.TabPage();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
-            this.btn_clean = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fpw_infoTabs.SuspendLayout();
@@ -517,6 +517,18 @@
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
             // 
+            // btn_clean
+            // 
+            this.btn_clean.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_clean.Location = new System.Drawing.Point(129, 398);
+            this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
+            this.btn_clean.Name = "btn_clean";
+            this.btn_clean.Size = new System.Drawing.Size(88, 26);
+            this.btn_clean.TabIndex = 38;
+            this.btn_clean.Text = "Clean Rosters";
+            this.btn_clean.UseVisualStyleBackColor = true;
+            this.btn_clean.Click += new System.EventHandler(this.btn_clean_Click);
+            // 
             // btn_LoadData
             // 
             this.btn_LoadData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -772,7 +784,7 @@
             // 
             this.rosterCount.AutoSize = true;
             this.rosterCount.Font = new System.Drawing.Font("NEWSFLASH", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rosterCount.Location = new System.Drawing.Point(114, 29);
+            this.rosterCount.Location = new System.Drawing.Point(114, 27);
             this.rosterCount.Name = "rosterCount";
             this.rosterCount.Size = new System.Drawing.Size(44, 17);
             this.rosterCount.TabIndex = 71;
@@ -840,12 +852,12 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(367, 209);
+            this.label14.Location = new System.Drawing.Point(335, 209);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(46, 14);
+            this.label14.Size = new System.Drawing.Size(105, 14);
             this.label14.TabIndex = 61;
-            this.label14.Text = "Rank";
+            this.label14.Text = "Morale Rank";
             // 
             // label13
             // 
@@ -923,7 +935,7 @@
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("NEWSFLASH", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(86, 9);
+            this.label10.Location = new System.Drawing.Point(86, 6);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(106, 17);
@@ -979,18 +991,6 @@
             this.rpt_promotions.Text = "Promotions";
             this.rpt_promotions.UseVisualStyleBackColor = true;
             this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
-            // 
-            // btn_clean
-            // 
-            this.btn_clean.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_clean.Location = new System.Drawing.Point(129, 398);
-            this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
-            this.btn_clean.Name = "btn_clean";
-            this.btn_clean.Size = new System.Drawing.Size(88, 26);
-            this.btn_clean.TabIndex = 38;
-            this.btn_clean.Text = "Clean Rosters";
-            this.btn_clean.UseVisualStyleBackColor = true;
-            this.btn_clean.Click += new System.EventHandler(this.btn_clean_Click);
             // 
             // War_Form
             // 

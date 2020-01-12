@@ -773,6 +773,9 @@ namespace FireProWar
                 }
 
                 L.D("Complete");
+
+                //Reset Roster View
+                fpw_promoList_SelectedIndexChanged(null, null);
             }
             catch (Exception exception)
             {
