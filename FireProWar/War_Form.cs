@@ -6,6 +6,7 @@ using MatchConfig;
 using Data_Classes;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace FireProWar
 {
@@ -72,7 +73,7 @@ namespace FireProWar
                 {
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
-                    wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
+                    wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
 
                     wrestlerList.Add(wresIDGroup);
@@ -546,52 +547,68 @@ namespace FireProWar
         }
         private void ms_hireWrestler_Click(object sender, EventArgs e)
         {
-            if (fpw_promoList.SelectedIndex < 0)
+            try
             {
-                return;
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+                if (ms_searchResults.SelectedIndex < 0 || ms_searchResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
+                if (employeesAdded.Contains(wrestler.Name))
+                {
+                    //Find Wrestler's Promotion
+                    MessageBox.Show(wrestler.Name + " is working for " + GetEmployeePromotion(wrestler.Name).Name + ".");
+                    return;
+                }
+
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+                promotion = HireWrestler(wrestler, promotion);
+
+                fpw_promoList.SelectedItem = promotion;
+                fpw_promoList_SelectedIndexChanged(sender, e);
             }
-            if (ms_searchResults.SelectedIndex < 0 || ms_searchResults.Items.Count == 0)
+            catch (Exception ex)
             {
-                return;
+                L.D("HireWrestlerException: " + ex);
             }
 
-            WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
-            if (employeesAdded.Contains(wrestler.Name))
-            {
-                //Find Wrestler's Promotion
-                MessageBox.Show(wrestler.Name + " is working for " + GetEmployeePromotion(wrestler.Name).Name + ".");
-                return;
-            }
-
-            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-            promotion = HireWrestler(wrestler, promotion);
-
-            fpw_promoList.SelectedItem = promotion;
-            fpw_promoList_SelectedIndexChanged(sender, e);
         }
         private void ms_hireGroup_Click(object sender, EventArgs e)
         {
-            if (fpw_promoList.SelectedIndex < 0)
+            try
             {
-                return;
-            }
-
-            if (ms_groupList.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            ms_wrestlerSearch.Text = "";
-            SearchWrestler();
-            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-            foreach (WresIDGroup wrestler in ms_searchResults.Items)
-            {
-                if (!employeesAdded.Contains(wrestler.Name))
+                if (fpw_promoList.SelectedIndex < 0)
                 {
-                    promotion = HireWrestler(wrestler, promotion);
+                    return;
                 }
+
+                if (ms_groupList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                ms_wrestlerSearch.Text = "";
+                SearchWrestler();
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+                foreach (WresIDGroup wrestler in ms_searchResults.Items)
+                {
+                    if (!employeesAdded.Contains(wrestler.Name))
+                    {
+                        promotion = HireWrestler(wrestler, promotion);
+                    }
+                }
+                fpw_promoList_SelectedIndexChanged(sender, e);
             }
-            fpw_promoList_SelectedIndexChanged(sender, e);
+            catch (Exception ex)
+            {
+                L.D("HireGroupException: " + ex);
+            }
+
         }
         private void ms_fireOne_Click(object sender, EventArgs e)
         {
@@ -666,19 +683,24 @@ namespace FireProWar
         }
         private Promotion HireWrestler(WresIDGroup wrestler, Promotion promotion)
         {
-            WRS_PROF profile = DataBase.GetWrestlerProfile((WrestlerID)wrestler.ID);
+            //WRS_PROF profile = DataBase.GetWrestlerProfile((WrestlerID)wrestler.ID);
             WrestlerParam param = DataBase.GetWrestlerParam((WrestlerID)wrestler.ID);
+
+            if (param == null)
+            {
+                L.D("Param is null");
+            }
             int moraleBonus = 0;
 
             Employee employee = new Employee();
             employee.Name = SanitizeWrestlerName(DataBase.GetWrestlerFullName((WrestlerID)wrestler.ID));
-            employee.Region = CorrectRegionName(profile.country);
+            employee.Region = CorrectRegionName(param.country.ToString());
             employee.Type = CorrectStyleName(param.fightStyle);
             employee.QuitRollCeiling = 5 - (int)param.wrestlerRank;
 
             //Determine wrestler's starting morale rank.
             //Region
-            if (!promotion.Region.Equals(CorrectRegionName(profile.country)))
+            if (!promotion.Region.Equals(CorrectRegionName(param.country.ToString())))
             {
                 moraleBonus -= 1;
             }
