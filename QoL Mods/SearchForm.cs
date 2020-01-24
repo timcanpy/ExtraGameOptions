@@ -61,7 +61,6 @@ namespace QoL_Mods
                 {
                     WresIDGroup wresIDGroup = new WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
-                    //wresIDGroup.ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
                     index = SaveData.inst.editWrestlerData.IndexOf(current);

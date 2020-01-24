@@ -131,7 +131,7 @@ namespace MatchConfig
                 WresIDGroup wresIDGroup = new WresIDGroup
                 {
                     Name = DataBase.GetWrestlerFullName(current.wrestlerParam),
-                    ID = (Int32)WrestlerID.EditWrestlerIDTop + SaveData.inst.editWrestlerData.IndexOf(current),
+                    ID = (Int32)current.editWrestlerID,
                     Group = current.wrestlerParam.groupID
                 };
                 wrestlers.Add(wresIDGroup);
