@@ -421,6 +421,10 @@ namespace FireProWar
         {
             try
             {
+                if (!War_Form.form.fpw_showRecord.Checked)
+                {
+                    return;
+                }
                 String message = "";
                 //Get record for each edit
                 foreach (var index in pl_idx)

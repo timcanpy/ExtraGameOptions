@@ -7,6 +7,7 @@ using Data_Classes;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using System.Drawing;
 
 namespace FireProWar
 {
@@ -19,7 +20,7 @@ namespace FireProWar
         private static Dictionary<String, FightStyleEnum[]> groupFightingStyles;
         private static String[] moraleRank = new String[] { "E", "D", "C", "B", "A", "S" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
-        private static String[] saveFileNames = new String[] { "FPWData.dat" };
+        private static String[] saveFileNames = new String[] { "FPWData.dat", "FPWConfig.dat" };
         private static HashSet<String> promotionsAdded = new HashSet<String>();
         private static HashSet<String> employeesAdded = new HashSet<String>();
         private static String promotionDivider = "|--Promotion--|";
@@ -27,7 +28,16 @@ namespace FireProWar
         public static War_Form form = null;
         public static int promotionFactor = 5;
         public static int demotionFactor = -5;
-        public static String csvLocation = "./EGOData/Reports";
+        public static String csvLocation = "./EGOData/Reports/";
+        public static String imageRootFolder = "./EGOData/Images/";
+        public static String[] imageFolders = new String[] { "Wrestlers/", "Logos/" };
+        public static String defaultWrestlerImage = "Default.png";
+
+        public enum ImageTypes
+        {
+            Wrestler,
+            Logo
+        };
         #endregion
 
         #region Form Initialize
@@ -153,6 +163,8 @@ namespace FireProWar
             {
                 PrepareForLoad();
                 String filePath = saveFolderNames[0] + saveFileNames[0];
+
+                #region Loading Promotion Data
                 if (File.Exists(filePath))
                 {
                     var lines = File.ReadAllLines(filePath);
@@ -202,6 +214,33 @@ namespace FireProWar
                         fpw_promoList_SelectedIndexChanged(null, null);
                     }
                 }
+                #endregion
+
+                #region Loading Config Data
+
+                filePath = saveFolderNames[0] + saveFileNames[1];
+                if (File.Exists(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    foreach (String line in lines)
+                    {
+                        String[] elements = line.Split(':');
+                        bool value;
+                        switch (elements[0])
+                        {
+                            case "fpw_Enable":
+                                Boolean.TryParse(elements[1], out value);
+                                fpw_Enable.Checked = value;
+                                break;
+                            case "fpw_showRecord":
+                                Boolean.TryParse(elements[1], out value);
+                                fpw_showRecord.Checked = value;
+                                break;
+                        }
+                    }
+                }
+
+                #endregion
             }
             catch (Exception e)
             {
@@ -219,11 +258,9 @@ namespace FireProWar
         private void SaveWarData()
         {
             String folder = saveFolderNames[0];
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
+            CheckForDirectory(folder);
 
+            #region Saving Promotion Data
             String filePath = saveFolderNames[0] + saveFileNames[0];
             if (File.Exists(filePath))
             {
@@ -264,7 +301,31 @@ namespace FireProWar
                     sw.WriteLine(employeeData);
                 }
             }
+            #endregion
 
+            try
+            {
+                #region Saving Config Data
+
+                filePath = saveFolderNames[0] + saveFileNames[1];
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    sw.WriteLine("fpw_Enable: " + fpw_Enable.Checked);
+                    sw.WriteLine("fpw_showRecord: " + fpw_showRecord.Checked);
+                }
+                #endregion
+
+            }
+            catch (Exception e)
+            {
+                L.D("Save Config Data Error:" + e);
+            }
+      
         }
         private void btn_SaveData_Click(object sender, EventArgs e)
         {
@@ -342,6 +403,24 @@ namespace FireProWar
         {
             LoadSubs();
             LoadOrgs();
+        }
+        private void ms_employeeList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ms_employeeList.Items.Count == 0)
+            {
+                return;
+            }
+            FindImage(ImageTypes.Wrestler, (String)ms_employeeList.SelectedItem);
+        }
+        private void ms_searchResults_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ms_searchResults.Items.Count == 0)
+            {
+                return;
+            }
+
+            WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
+            FindImage(ImageTypes.Wrestler, wrestler.Name);
         }
         #endregion
 
@@ -440,6 +519,8 @@ namespace FireProWar
                 L.D("SelectPromotionRosterError: " + ex);
             }
 
+            FindImage(ImageTypes.Logo, promotion.Name);
+            FindImage(ImageTypes.Wrestler, ""); //Ensure that we clear out the latest wrestler image
         }
         private void fpw_deletePromotion_Click(object sender, EventArgs e)
         {
@@ -1116,7 +1197,7 @@ namespace FireProWar
         }
         private void PopulateEmployeeReport()
         {
-            String savePath = "./EGOData/Reports/EmployeeList.csv";
+            String savePath = csvLocation + "EmployeeList.csv";
             if (File.Exists(savePath))
             {
                 File.Delete(savePath);
@@ -1143,7 +1224,7 @@ namespace FireProWar
         }
         private void PopulateRosterReport(Promotion promotion)
         {
-            String savePath = "./EGOData/Reports/" + promotion.Name + ".csv";
+            String savePath = csvLocation + promotion.Name + ".csv";
 
             if (File.Exists(savePath))
             {
@@ -1178,6 +1259,87 @@ namespace FireProWar
             catch (Exception e)
             {
                 L.D("WriteToCSVError: " + e);
+            }
+
+        }
+        private void CheckForDirectory(String filePath)
+        {
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+        }
+        private void FindImage(ImageTypes imageType, String imageName)
+        {
+            try
+            {
+                String filePath = imageRootFolder;
+
+                CheckForDirectory(filePath);
+
+                if (imageType == ImageTypes.Wrestler)
+                {
+                    filePath += imageFolders[0];
+                }
+                else if (imageType == ImageTypes.Logo)
+                {
+                    filePath += imageFolders[1];
+                }
+
+                CheckForDirectory(filePath);
+
+                //Check each file in the directory
+                var files = Directory.GetFiles(filePath);
+
+                String fileName = "";
+                imageName = imageName.ToLower(); //Eliminate casing for easier matching
+              
+                foreach (String file in files)
+                {
+                    String name = Path.GetFileName(file).Split('.')[0];
+                    if (name.ToLower().Equals(imageName))
+                    {
+                        fileName = file;
+                        break;
+                    }
+                }
+
+                //Determine whether we can display an image
+                if (imageType == ImageTypes.Wrestler)
+                {
+                    if (fileName.Equals(String.Empty))
+                    {
+                        //Determine whether the default image is available
+                        if (File.Exists(filePath + defaultWrestlerImage))
+                        {
+                            fpw_wrestlerImage.Image = Image.FromFile(filePath + defaultWrestlerImage);
+                        }     
+                    }
+                    else
+                    {
+                        fpw_wrestlerImage.Image = Image.FromFile(fileName);
+                    }
+                }
+                else if (imageType == ImageTypes.Logo)
+                {
+                    if (fileName.Equals(String.Empty))
+                    {
+                        fpw_logoImage.Image = null;
+                        fpw_logoImage.Visible = false;
+                        lbl_promoDetails.Visible = true;
+                        return;
+                    }
+                    else
+                    {
+                        fpw_logoImage.Image = Image.FromFile(fileName);
+                        fpw_logoImage.Visible = true;
+                        lbl_promoDetails.Visible = false;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("FindImageException: " + e);
             }
 
         }

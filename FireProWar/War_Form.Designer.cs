@@ -43,7 +43,7 @@
             this.label39 = new System.Windows.Forms.Label();
             this.fpw_promoList = new System.Windows.Forms.ComboBox();
             this.label46 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lbl_promoDetails = new System.Windows.Forms.Label();
             this.fpw_Enable = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.fpw_infoTabs = new System.Windows.Forms.TabControl();
@@ -100,6 +100,9 @@
             this.fpw_reports = new System.Windows.Forms.TabPage();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
+            this.fpw_wrestlerImage = new System.Windows.Forms.PictureBox();
+            this.fpw_logoImage = new System.Windows.Forms.PictureBox();
+            this.fpw_showRecord = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.fpw_infoTabs.SuspendLayout();
@@ -108,12 +111,16 @@
             this.fpw_management.SuspendLayout();
             this.fpw_details.SuspendLayout();
             this.fpw_reports.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.fpw_showRecord);
+            this.panel1.Controls.Add(this.fpw_logoImage);
             this.panel1.Controls.Add(this.fpw_refreshRings);
             this.panel1.Controls.Add(this.fpw_addPromotion);
             this.panel1.Controls.Add(this.fpw_deletePromotion);
@@ -128,19 +135,19 @@
             this.panel1.Controls.Add(this.label39);
             this.panel1.Controls.Add(this.fpw_promoList);
             this.panel1.Controls.Add(this.label46);
-            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.lbl_promoDetails);
             this.panel1.Controls.Add(this.fpw_Enable);
             this.panel1.Location = new System.Drawing.Point(14, 14);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(262, 491);
+            this.panel1.Size = new System.Drawing.Size(262, 526);
             this.panel1.TabIndex = 0;
             // 
             // fpw_refreshRings
             // 
             this.fpw_refreshRings.BackColor = System.Drawing.Color.Blue;
             this.fpw_refreshRings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_refreshRings.Location = new System.Drawing.Point(166, 316);
+            this.fpw_refreshRings.Location = new System.Drawing.Point(172, 353);
             this.fpw_refreshRings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_refreshRings.Name = "fpw_refreshRings";
             this.fpw_refreshRings.Size = new System.Drawing.Size(33, 31);
@@ -150,7 +157,7 @@
             // 
             // fpw_addPromotion
             // 
-            this.fpw_addPromotion.Location = new System.Drawing.Point(60, 390);
+            this.fpw_addPromotion.Location = new System.Drawing.Point(66, 427);
             this.fpw_addPromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_addPromotion.Name = "fpw_addPromotion";
             this.fpw_addPromotion.Size = new System.Drawing.Size(127, 26);
@@ -162,7 +169,7 @@
             // 
             // fpw_deletePromotion
             // 
-            this.fpw_deletePromotion.Location = new System.Drawing.Point(60, 455);
+            this.fpw_deletePromotion.Location = new System.Drawing.Point(66, 492);
             this.fpw_deletePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_deletePromotion.Name = "fpw_deletePromotion";
             this.fpw_deletePromotion.Size = new System.Drawing.Size(127, 26);
@@ -173,7 +180,7 @@
             // 
             // fpw_updatePromotion
             // 
-            this.fpw_updatePromotion.Location = new System.Drawing.Point(60, 423);
+            this.fpw_updatePromotion.Location = new System.Drawing.Point(66, 460);
             this.fpw_updatePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_updatePromotion.Name = "fpw_updatePromotion";
             this.fpw_updatePromotion.Size = new System.Drawing.Size(127, 26);
@@ -186,7 +193,7 @@
             // 
             this.label45.AutoSize = true;
             this.label45.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label45.Location = new System.Drawing.Point(96, 325);
+            this.label45.Location = new System.Drawing.Point(102, 362);
             this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(65, 11);
@@ -197,7 +204,7 @@
             // 
             this.fpw_promoRingList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fpw_promoRingList.FormattingEnabled = true;
-            this.fpw_promoRingList.Location = new System.Drawing.Point(8, 357);
+            this.fpw_promoRingList.Location = new System.Drawing.Point(14, 394);
             this.fpw_promoRingList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoRingList.Name = "fpw_promoRingList";
             this.fpw_promoRingList.Size = new System.Drawing.Size(236, 23);
@@ -208,7 +215,7 @@
             // 
             this.label44.AutoSize = true;
             this.label44.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label44.Location = new System.Drawing.Point(92, 263);
+            this.label44.Location = new System.Drawing.Point(98, 300);
             this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(79, 11);
@@ -219,7 +226,7 @@
             // 
             this.fpw_promoRegionList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fpw_promoRegionList.FormattingEnabled = true;
-            this.fpw_promoRegionList.Location = new System.Drawing.Point(8, 288);
+            this.fpw_promoRegionList.Location = new System.Drawing.Point(14, 325);
             this.fpw_promoRegionList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoRegionList.Name = "fpw_promoRegionList";
             this.fpw_promoRegionList.Size = new System.Drawing.Size(236, 23);
@@ -230,7 +237,7 @@
             // 
             this.label43.AutoSize = true;
             this.label43.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label43.Location = new System.Drawing.Point(90, 207);
+            this.label43.Location = new System.Drawing.Point(96, 244);
             this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(77, 11);
@@ -241,7 +248,7 @@
             // 
             this.fpw_promoStyleList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fpw_promoStyleList.FormattingEnabled = true;
-            this.fpw_promoStyleList.Location = new System.Drawing.Point(8, 228);
+            this.fpw_promoStyleList.Location = new System.Drawing.Point(14, 265);
             this.fpw_promoStyleList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoStyleList.Name = "fpw_promoStyleList";
             this.fpw_promoStyleList.Size = new System.Drawing.Size(236, 23);
@@ -250,7 +257,7 @@
             // 
             // fpw_promoName
             // 
-            this.fpw_promoName.Location = new System.Drawing.Point(8, 172);
+            this.fpw_promoName.Location = new System.Drawing.Point(14, 209);
             this.fpw_promoName.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoName.Name = "fpw_promoName";
             this.fpw_promoName.Size = new System.Drawing.Size(236, 22);
@@ -260,7 +267,7 @@
             // 
             this.label39.AutoSize = true;
             this.label39.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label39.Location = new System.Drawing.Point(107, 150);
+            this.label39.Location = new System.Drawing.Point(113, 187);
             this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(39, 11);
@@ -271,7 +278,7 @@
             // 
             this.fpw_promoList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fpw_promoList.FormattingEnabled = true;
-            this.fpw_promoList.Location = new System.Drawing.Point(8, 109);
+            this.fpw_promoList.Location = new System.Drawing.Point(14, 146);
             this.fpw_promoList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoList.Name = "fpw_promoList";
             this.fpw_promoList.Size = new System.Drawing.Size(236, 23);
@@ -283,30 +290,30 @@
             // 
             this.label46.AutoSize = true;
             this.label46.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label46.Location = new System.Drawing.Point(93, 87);
+            this.label46.Location = new System.Drawing.Point(99, 130);
             this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(76, 11);
             this.label46.TabIndex = 28;
             this.label46.Text = "Promotions";
             // 
-            // label1
+            // lbl_promoDetails
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(51, 49);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(177, 16);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Promotion Details";
+            this.lbl_promoDetails.AutoSize = true;
+            this.lbl_promoDetails.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_promoDetails.Location = new System.Drawing.Point(40, 83);
+            this.lbl_promoDetails.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbl_promoDetails.Name = "lbl_promoDetails";
+            this.lbl_promoDetails.Size = new System.Drawing.Size(177, 16);
+            this.lbl_promoDetails.TabIndex = 1;
+            this.lbl_promoDetails.Text = "Promotion Details";
             // 
             // fpw_Enable
             // 
             this.fpw_Enable.AutoSize = true;
             this.fpw_Enable.Checked = true;
             this.fpw_Enable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.fpw_Enable.Location = new System.Drawing.Point(8, 11);
+            this.fpw_Enable.Location = new System.Drawing.Point(8, 6);
             this.fpw_Enable.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_Enable.Name = "fpw_Enable";
             this.fpw_Enable.Size = new System.Drawing.Size(86, 19);
@@ -322,7 +329,7 @@
             this.panel2.Location = new System.Drawing.Point(284, 14);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(634, 491);
+            this.panel2.Size = new System.Drawing.Size(634, 526);
             this.panel2.TabIndex = 1;
             // 
             // fpw_infoTabs
@@ -337,7 +344,7 @@
             this.fpw_infoTabs.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_infoTabs.Name = "fpw_infoTabs";
             this.fpw_infoTabs.SelectedIndex = 0;
-            this.fpw_infoTabs.Size = new System.Drawing.Size(623, 480);
+            this.fpw_infoTabs.Size = new System.Drawing.Size(623, 520);
             this.fpw_infoTabs.TabIndex = 0;
             // 
             // fpw_history
@@ -353,7 +360,7 @@
             this.fpw_history.Location = new System.Drawing.Point(4, 22);
             this.fpw_history.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_history.Name = "fpw_history";
-            this.fpw_history.Size = new System.Drawing.Size(615, 454);
+            this.fpw_history.Size = new System.Drawing.Size(615, 494);
             this.fpw_history.TabIndex = 2;
             this.fpw_history.Text = "Promotion History";
             // 
@@ -382,7 +389,7 @@
             // fpw_promoClearHistory
             // 
             this.fpw_promoClearHistory.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_promoClearHistory.Location = new System.Drawing.Point(250, 417);
+            this.fpw_promoClearHistory.Location = new System.Drawing.Point(246, 448);
             this.fpw_promoClearHistory.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoClearHistory.Name = "fpw_promoClearHistory";
             this.fpw_promoClearHistory.Size = new System.Drawing.Size(127, 26);
@@ -402,7 +409,7 @@
             this.fpw_promoHistory.Name = "fpw_promoHistory";
             this.fpw_promoHistory.ReadOnly = true;
             this.fpw_promoHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_promoHistory.Size = new System.Drawing.Size(581, 239);
+            this.fpw_promoHistory.Size = new System.Drawing.Size(581, 265);
             this.fpw_promoHistory.TabIndex = 45;
             this.fpw_promoHistory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -447,7 +454,7 @@
             this.fpw_matches.Location = new System.Drawing.Point(4, 22);
             this.fpw_matches.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_matches.Name = "fpw_matches";
-            this.fpw_matches.Size = new System.Drawing.Size(615, 454);
+            this.fpw_matches.Size = new System.Drawing.Size(615, 494);
             this.fpw_matches.TabIndex = 3;
             this.fpw_matches.Text = "Recent Matches";
             this.fpw_matches.UseVisualStyleBackColor = true;
@@ -466,7 +473,7 @@
             // fpw_clearDetails
             // 
             this.fpw_clearDetails.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_clearDetails.Location = new System.Drawing.Point(253, 405);
+            this.fpw_clearDetails.Location = new System.Drawing.Point(257, 446);
             this.fpw_clearDetails.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_clearDetails.Name = "fpw_clearDetails";
             this.fpw_clearDetails.Size = new System.Drawing.Size(127, 26);
@@ -486,13 +493,14 @@
             this.fpw_detailsView.Name = "fpw_detailsView";
             this.fpw_detailsView.ReadOnly = true;
             this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_detailsView.Size = new System.Drawing.Size(581, 344);
+            this.fpw_detailsView.Size = new System.Drawing.Size(581, 386);
             this.fpw_detailsView.TabIndex = 46;
             this.fpw_detailsView.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // fpw_management
             // 
             this.fpw_management.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_management.Controls.Add(this.fpw_wrestlerImage);
             this.fpw_management.Controls.Add(this.btn_clean);
             this.fpw_management.Controls.Add(this.btn_LoadData);
             this.fpw_management.Controls.Add(this.btn_SaveData);
@@ -513,14 +521,14 @@
             this.fpw_management.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_management.Name = "fpw_management";
             this.fpw_management.Padding = new System.Windows.Forms.Padding(4);
-            this.fpw_management.Size = new System.Drawing.Size(615, 454);
+            this.fpw_management.Size = new System.Drawing.Size(615, 494);
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
             // 
             // btn_clean
             // 
             this.btn_clean.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_clean.Location = new System.Drawing.Point(129, 398);
+            this.btn_clean.Location = new System.Drawing.Point(131, 425);
             this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
             this.btn_clean.Name = "btn_clean";
             this.btn_clean.Size = new System.Drawing.Size(88, 26);
@@ -532,7 +540,7 @@
             // btn_LoadData
             // 
             this.btn_LoadData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_LoadData.Location = new System.Drawing.Point(248, 398);
+            this.btn_LoadData.Location = new System.Drawing.Point(250, 425);
             this.btn_LoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_LoadData.Name = "btn_LoadData";
             this.btn_LoadData.Size = new System.Drawing.Size(88, 26);
@@ -544,7 +552,7 @@
             // btn_SaveData
             // 
             this.btn_SaveData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_SaveData.Location = new System.Drawing.Point(7, 398);
+            this.btn_SaveData.Location = new System.Drawing.Point(9, 425);
             this.btn_SaveData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_SaveData.Name = "btn_SaveData";
             this.btn_SaveData.Size = new System.Drawing.Size(88, 26);
@@ -557,7 +565,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(428, 19);
+            this.label9.Location = new System.Drawing.Point(430, 46);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(91, 14);
@@ -567,7 +575,7 @@
             // ms_fireAll
             // 
             this.ms_fireAll.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_fireAll.Location = new System.Drawing.Point(511, 398);
+            this.ms_fireAll.Location = new System.Drawing.Point(513, 425);
             this.ms_fireAll.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireAll.Name = "ms_fireAll";
             this.ms_fireAll.Size = new System.Drawing.Size(95, 26);
@@ -579,7 +587,7 @@
             // ms_fireOne
             // 
             this.ms_fireOne.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_fireOne.Location = new System.Drawing.Point(358, 398);
+            this.ms_fireOne.Location = new System.Drawing.Point(360, 425);
             this.ms_fireOne.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireOne.Name = "ms_fireOne";
             this.ms_fireOne.Size = new System.Drawing.Size(104, 26);
@@ -593,19 +601,20 @@
             this.ms_employeeList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.ms_employeeList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_employeeList.FormattingEnabled = true;
-            this.ms_employeeList.Location = new System.Drawing.Point(358, 50);
+            this.ms_employeeList.Location = new System.Drawing.Point(360, 77);
             this.ms_employeeList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_employeeList.Name = "ms_employeeList";
             this.ms_employeeList.ScrollAlwaysVisible = true;
             this.ms_employeeList.Size = new System.Drawing.Size(248, 329);
             this.ms_employeeList.Sorted = true;
             this.ms_employeeList.TabIndex = 32;
+            this.ms_employeeList.SelectedIndexChanged += new System.EventHandler(this.ms_employeeList_SelectedIndexChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(117, 149);
+            this.label8.Location = new System.Drawing.Point(119, 176);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(122, 14);
@@ -616,7 +625,7 @@
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(133, 83);
+            this.label7.Location = new System.Drawing.Point(135, 110);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(82, 14);
@@ -627,7 +636,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(113, 19);
+            this.label6.Location = new System.Drawing.Point(115, 46);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(134, 14);
@@ -637,7 +646,7 @@
             // ms_hireGroup
             // 
             this.ms_hireGroup.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_hireGroup.Location = new System.Drawing.Point(125, 262);
+            this.ms_hireGroup.Location = new System.Drawing.Point(236, 287);
             this.ms_hireGroup.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireGroup.Name = "ms_hireGroup";
             this.ms_hireGroup.Size = new System.Drawing.Size(102, 26);
@@ -651,7 +660,7 @@
             this.ms_groupList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ms_groupList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_groupList.FormattingEnabled = true;
-            this.ms_groupList.Location = new System.Drawing.Point(7, 109);
+            this.ms_groupList.Location = new System.Drawing.Point(9, 136);
             this.ms_groupList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_groupList.Name = "ms_groupList";
             this.ms_groupList.Size = new System.Drawing.Size(329, 21);
@@ -663,7 +672,7 @@
             // ms_refreshList
             // 
             this.ms_refreshList.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_refreshList.Location = new System.Drawing.Point(125, 301);
+            this.ms_refreshList.Location = new System.Drawing.Point(236, 326);
             this.ms_refreshList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_refreshList.Name = "ms_refreshList";
             this.ms_refreshList.Size = new System.Drawing.Size(102, 26);
@@ -675,7 +684,7 @@
             // ms_hireWrestler
             // 
             this.ms_hireWrestler.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_hireWrestler.Location = new System.Drawing.Point(125, 224);
+            this.ms_hireWrestler.Location = new System.Drawing.Point(236, 249);
             this.ms_hireWrestler.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireWrestler.Name = "ms_hireWrestler";
             this.ms_hireWrestler.Size = new System.Drawing.Size(102, 26);
@@ -689,16 +698,17 @@
             this.ms_searchResults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ms_searchResults.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_searchResults.FormattingEnabled = true;
-            this.ms_searchResults.Location = new System.Drawing.Point(7, 176);
+            this.ms_searchResults.Location = new System.Drawing.Point(9, 203);
             this.ms_searchResults.Margin = new System.Windows.Forms.Padding(4);
             this.ms_searchResults.Name = "ms_searchResults";
             this.ms_searchResults.Size = new System.Drawing.Size(329, 21);
             this.ms_searchResults.Sorted = true;
             this.ms_searchResults.TabIndex = 18;
+            this.ms_searchResults.SelectedIndexChanged += new System.EventHandler(this.ms_searchResults_SelectedIndexChanged);
             // 
             // ms_wrestlerSearch
             // 
-            this.ms_wrestlerSearch.Location = new System.Drawing.Point(7, 46);
+            this.ms_wrestlerSearch.Location = new System.Drawing.Point(9, 73);
             this.ms_wrestlerSearch.Margin = new System.Windows.Forms.Padding(4);
             this.ms_wrestlerSearch.Name = "ms_wrestlerSearch";
             this.ms_wrestlerSearch.Size = new System.Drawing.Size(329, 20);
@@ -731,7 +741,7 @@
             this.fpw_details.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_details.Name = "fpw_details";
             this.fpw_details.Padding = new System.Windows.Forms.Padding(4);
-            this.fpw_details.Size = new System.Drawing.Size(615, 454);
+            this.fpw_details.Size = new System.Drawing.Size(615, 494);
             this.fpw_details.TabIndex = 1;
             this.fpw_details.Text = "Roster Details";
             this.fpw_details.UseVisualStyleBackColor = true;
@@ -951,7 +961,7 @@
             this.ms_rosterList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_rosterList.Name = "ms_rosterList";
             this.ms_rosterList.ScrollAlwaysVisible = true;
-            this.ms_rosterList.Size = new System.Drawing.Size(248, 329);
+            this.ms_rosterList.Size = new System.Drawing.Size(248, 407);
             this.ms_rosterList.Sorted = true;
             this.ms_rosterList.TabIndex = 36;
             this.ms_rosterList.SelectedIndexChanged += new System.EventHandler(this.ms_rosterList_SelectedIndexChanged);
@@ -963,7 +973,7 @@
             this.fpw_reports.Location = new System.Drawing.Point(4, 22);
             this.fpw_reports.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_reports.Name = "fpw_reports";
-            this.fpw_reports.Size = new System.Drawing.Size(615, 454);
+            this.fpw_reports.Size = new System.Drawing.Size(615, 494);
             this.fpw_reports.TabIndex = 4;
             this.fpw_reports.Text = "Reports";
             this.fpw_reports.UseVisualStyleBackColor = true;
@@ -992,12 +1002,43 @@
             this.rpt_promotions.UseVisualStyleBackColor = true;
             this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
             // 
+            // fpw_wrestlerImage
+            // 
+            this.fpw_wrestlerImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.fpw_wrestlerImage.Location = new System.Drawing.Point(41, 249);
+            this.fpw_wrestlerImage.Name = "fpw_wrestlerImage";
+            this.fpw_wrestlerImage.Size = new System.Drawing.Size(150, 150);
+            this.fpw_wrestlerImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.fpw_wrestlerImage.TabIndex = 39;
+            this.fpw_wrestlerImage.TabStop = false;
+            // 
+            // fpw_logoImage
+            // 
+            this.fpw_logoImage.Location = new System.Drawing.Point(10, 51);
+            this.fpw_logoImage.Name = "fpw_logoImage";
+            this.fpw_logoImage.Size = new System.Drawing.Size(242, 71);
+            this.fpw_logoImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.fpw_logoImage.TabIndex = 43;
+            this.fpw_logoImage.TabStop = false;
+            // 
+            // fpw_showRecord
+            // 
+            this.fpw_showRecord.AutoSize = true;
+            this.fpw_showRecord.Checked = true;
+            this.fpw_showRecord.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_showRecord.Location = new System.Drawing.Point(8, 29);
+            this.fpw_showRecord.Name = "fpw_showRecord";
+            this.fpw_showRecord.Size = new System.Drawing.Size(154, 19);
+            this.fpw_showRecord.TabIndex = 44;
+            this.fpw_showRecord.Text = "Show Record On Entrance";
+            this.fpw_showRecord.UseVisualStyleBackColor = true;
+            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(934, 520);
+            this.ClientSize = new System.Drawing.Size(934, 553);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1017,6 +1058,8 @@
             this.fpw_details.ResumeLayout(false);
             this.fpw_details.PerformLayout();
             this.fpw_reports.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1024,7 +1067,7 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lbl_promoDetails;
         private System.Windows.Forms.ComboBox fpw_promoList;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Label label45;
@@ -1095,5 +1138,8 @@
         private System.Windows.Forms.Button rpt_employees;
         private System.Windows.Forms.Button rpt_promotions;
         private System.Windows.Forms.Button btn_clean;
+        private System.Windows.Forms.PictureBox fpw_logoImage;
+        private System.Windows.Forms.PictureBox fpw_wrestlerImage;
+        public System.Windows.Forms.CheckBox fpw_showRecord;
     }
 }
