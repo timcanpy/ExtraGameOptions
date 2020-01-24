@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.fpw_showRecord = new System.Windows.Forms.CheckBox();
+            this.fpw_logoImage = new System.Windows.Forms.PictureBox();
             this.fpw_refreshRings = new System.Windows.Forms.Button();
             this.fpw_addPromotion = new System.Windows.Forms.Button();
             this.fpw_deletePromotion = new System.Windows.Forms.Button();
@@ -60,6 +62,7 @@
             this.fpw_clearDetails = new System.Windows.Forms.Button();
             this.fpw_detailsView = new System.Windows.Forms.TextBox();
             this.fpw_management = new System.Windows.Forms.TabPage();
+            this.fpw_wrestlerImage = new System.Windows.Forms.PictureBox();
             this.btn_clean = new System.Windows.Forms.Button();
             this.btn_LoadData = new System.Windows.Forms.Button();
             this.btn_SaveData = new System.Windows.Forms.Button();
@@ -100,19 +103,16 @@
             this.fpw_reports = new System.Windows.Forms.TabPage();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
-            this.fpw_wrestlerImage = new System.Windows.Forms.PictureBox();
-            this.fpw_logoImage = new System.Windows.Forms.PictureBox();
-            this.fpw_showRecord = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
             this.fpw_infoTabs.SuspendLayout();
             this.fpw_history.SuspendLayout();
             this.fpw_matches.SuspendLayout();
             this.fpw_management.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).BeginInit();
             this.fpw_details.SuspendLayout();
             this.fpw_reports.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -142,6 +142,27 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(262, 526);
             this.panel1.TabIndex = 0;
+            // 
+            // fpw_showRecord
+            // 
+            this.fpw_showRecord.AutoSize = true;
+            this.fpw_showRecord.Checked = true;
+            this.fpw_showRecord.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_showRecord.Location = new System.Drawing.Point(8, 29);
+            this.fpw_showRecord.Name = "fpw_showRecord";
+            this.fpw_showRecord.Size = new System.Drawing.Size(154, 19);
+            this.fpw_showRecord.TabIndex = 44;
+            this.fpw_showRecord.Text = "Show Record On Entrance";
+            this.fpw_showRecord.UseVisualStyleBackColor = true;
+            // 
+            // fpw_logoImage
+            // 
+            this.fpw_logoImage.Location = new System.Drawing.Point(10, 51);
+            this.fpw_logoImage.Name = "fpw_logoImage";
+            this.fpw_logoImage.Size = new System.Drawing.Size(242, 71);
+            this.fpw_logoImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.fpw_logoImage.TabIndex = 43;
+            this.fpw_logoImage.TabStop = false;
             // 
             // fpw_refreshRings
             // 
@@ -203,11 +224,12 @@
             // fpw_promoRingList
             // 
             this.fpw_promoRingList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_promoRingList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_promoRingList.FormattingEnabled = true;
             this.fpw_promoRingList.Location = new System.Drawing.Point(14, 394);
             this.fpw_promoRingList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoRingList.Name = "fpw_promoRingList";
-            this.fpw_promoRingList.Size = new System.Drawing.Size(236, 23);
+            this.fpw_promoRingList.Size = new System.Drawing.Size(236, 21);
             this.fpw_promoRingList.Sorted = true;
             this.fpw_promoRingList.TabIndex = 37;
             // 
@@ -225,11 +247,12 @@
             // fpw_promoRegionList
             // 
             this.fpw_promoRegionList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_promoRegionList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_promoRegionList.FormattingEnabled = true;
             this.fpw_promoRegionList.Location = new System.Drawing.Point(14, 325);
             this.fpw_promoRegionList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoRegionList.Name = "fpw_promoRegionList";
-            this.fpw_promoRegionList.Size = new System.Drawing.Size(236, 23);
+            this.fpw_promoRegionList.Size = new System.Drawing.Size(236, 21);
             this.fpw_promoRegionList.Sorted = true;
             this.fpw_promoRegionList.TabIndex = 35;
             // 
@@ -247,20 +270,22 @@
             // fpw_promoStyleList
             // 
             this.fpw_promoStyleList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_promoStyleList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_promoStyleList.FormattingEnabled = true;
             this.fpw_promoStyleList.Location = new System.Drawing.Point(14, 265);
             this.fpw_promoStyleList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoStyleList.Name = "fpw_promoStyleList";
-            this.fpw_promoStyleList.Size = new System.Drawing.Size(236, 23);
+            this.fpw_promoStyleList.Size = new System.Drawing.Size(236, 21);
             this.fpw_promoStyleList.Sorted = true;
             this.fpw_promoStyleList.TabIndex = 33;
             // 
             // fpw_promoName
             // 
+            this.fpw_promoName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_promoName.Location = new System.Drawing.Point(14, 209);
             this.fpw_promoName.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoName.Name = "fpw_promoName";
-            this.fpw_promoName.Size = new System.Drawing.Size(236, 22);
+            this.fpw_promoName.Size = new System.Drawing.Size(236, 20);
             this.fpw_promoName.TabIndex = 32;
             // 
             // label39
@@ -277,11 +302,12 @@
             // fpw_promoList
             // 
             this.fpw_promoList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_promoList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_promoList.FormattingEnabled = true;
             this.fpw_promoList.Location = new System.Drawing.Point(14, 146);
             this.fpw_promoList.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoList.Name = "fpw_promoList";
-            this.fpw_promoList.Size = new System.Drawing.Size(236, 23);
+            this.fpw_promoList.Size = new System.Drawing.Size(236, 21);
             this.fpw_promoList.Sorted = true;
             this.fpw_promoList.TabIndex = 29;
             this.fpw_promoList.SelectedIndexChanged += new System.EventHandler(this.fpw_promoList_SelectedIndexChanged);
@@ -524,6 +550,16 @@
             this.fpw_management.Size = new System.Drawing.Size(615, 494);
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
+            // 
+            // fpw_wrestlerImage
+            // 
+            this.fpw_wrestlerImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.fpw_wrestlerImage.Location = new System.Drawing.Point(41, 249);
+            this.fpw_wrestlerImage.Name = "fpw_wrestlerImage";
+            this.fpw_wrestlerImage.Size = new System.Drawing.Size(150, 150);
+            this.fpw_wrestlerImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.fpw_wrestlerImage.TabIndex = 39;
+            this.fpw_wrestlerImage.TabStop = false;
             // 
             // btn_clean
             // 
@@ -1002,37 +1038,6 @@
             this.rpt_promotions.UseVisualStyleBackColor = true;
             this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
             // 
-            // fpw_wrestlerImage
-            // 
-            this.fpw_wrestlerImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.fpw_wrestlerImage.Location = new System.Drawing.Point(41, 249);
-            this.fpw_wrestlerImage.Name = "fpw_wrestlerImage";
-            this.fpw_wrestlerImage.Size = new System.Drawing.Size(150, 150);
-            this.fpw_wrestlerImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.fpw_wrestlerImage.TabIndex = 39;
-            this.fpw_wrestlerImage.TabStop = false;
-            // 
-            // fpw_logoImage
-            // 
-            this.fpw_logoImage.Location = new System.Drawing.Point(10, 51);
-            this.fpw_logoImage.Name = "fpw_logoImage";
-            this.fpw_logoImage.Size = new System.Drawing.Size(242, 71);
-            this.fpw_logoImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.fpw_logoImage.TabIndex = 43;
-            this.fpw_logoImage.TabStop = false;
-            // 
-            // fpw_showRecord
-            // 
-            this.fpw_showRecord.AutoSize = true;
-            this.fpw_showRecord.Checked = true;
-            this.fpw_showRecord.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.fpw_showRecord.Location = new System.Drawing.Point(8, 29);
-            this.fpw_showRecord.Name = "fpw_showRecord";
-            this.fpw_showRecord.Size = new System.Drawing.Size(154, 19);
-            this.fpw_showRecord.TabIndex = 44;
-            this.fpw_showRecord.Text = "Show Record On Entrance";
-            this.fpw_showRecord.UseVisualStyleBackColor = true;
-            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1047,6 +1052,7 @@
             this.Text = "Fire Promotion Tracker";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).EndInit();
             this.panel2.ResumeLayout(false);
             this.fpw_infoTabs.ResumeLayout(false);
             this.fpw_history.ResumeLayout(false);
@@ -1055,11 +1061,10 @@
             this.fpw_matches.PerformLayout();
             this.fpw_management.ResumeLayout(false);
             this.fpw_management.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).EndInit();
             this.fpw_details.ResumeLayout(false);
             this.fpw_details.PerformLayout();
             this.fpw_reports.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).EndInit();
             this.ResumeLayout(false);
 
         }
