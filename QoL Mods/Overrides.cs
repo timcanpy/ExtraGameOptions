@@ -17,7 +17,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ignore Downtime", Name = "Attacker Ignores Pinfall/Submission Downtime", Description = "Attacker immediately recovers after a pinfall or grounded submission.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
-    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
+    //[GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "Allows players to override the default Face Lock attack with custom actions.")]
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
     [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
     [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
@@ -1798,10 +1798,11 @@ namespace QoL_Mods
         {
             try
             {
-                if (ai.PlObj.State == PlStateEnum.Walk)
+                if (ai.PlObj.Zone != ZoneEnum.OnCornerPost)
                 {
                     return;
                 }
+
                 Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
                 if (defender.State != PlStateEnum.Down_FaceDown && defender.State != PlStateEnum.Down_FaceUp)
                 {
@@ -1816,7 +1817,7 @@ namespace QoL_Mods
                     if (defender.DownTime <= 48)
                     {
                         //Allow instances for dives to miss early in the match.
-                        defender.DownTime = (51 + GetDamageLevel(defender)) * 3;
+                        defender.DownTime = (51 + GetDamageLevel(defender)) * 2;
                     }
 
                     //Ensure that the defender takes dives face up, to allow pins
@@ -1842,10 +1843,11 @@ namespace QoL_Mods
         {
             try
             {
-                if (ai.PlObj.State == PlStateEnum.Walk)
+                if (ai.PlObj.Zone != ZoneEnum.OnCornerPost && ai.PlObj.Zone != ZoneEnum.Apron)
                 {
                     return;
                 }
+
                 Player defender = global::PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
                 if (ai.PlObj.DistanceToTarget > 3.54166651f)
                 {
@@ -1856,7 +1858,11 @@ namespace QoL_Mods
                 if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
                 {
-                    defender.AddStunTime(4 * GetDamageLevel(defender));
+                    if (defender.StunTime <= 48)
+                    {
+                        defender.StunTime = (51 + GetDamageLevel(defender)) * 2;
+                    }
+
                     defender.isStandingStunOK = true;
                 }
             }
