@@ -31,6 +31,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
     //[GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "Audience may cheer when a defender reverses a move.")]
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
+    [GroupDescription(Group = "AutoSetCPU", Name = "Auto Set CPU", Description = "This will make the game automatically set all wrestler slots in the match screen to CPU so you don't have to repeatedly keep changing 1P to CPU manually.")]
 
     #endregion
     #region Field Access
@@ -1201,7 +1202,7 @@ namespace QoL_Mods
             {
                 L.D("ReplaceCurrentSkillError: " + e);
             }
-          
+
         }
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Recovery Taunts")]
@@ -1989,6 +1990,42 @@ namespace QoL_Mods
             }
 
         }
+        #endregion
+
+        #region Auto Set CPU on Match Select
+        public static bool AutoSetCPU = false;
+
+        [Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "UpdateCursor", InjectionLocation = 576, InjectDirection = HookInjectDirection.After, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "AutoSetCPU")]
+        public static void SetAllCPU(Menu_BattleSetting menu_Battle)
+        {
+            if (!GlobalParam.IsStoryMode())
+            {
+                if (!AutoSetCPU)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        if (GlobalParam.Select_WrestlerData[i].wrestlerID != WrestlerID.Invalid)
+                        {
+                            AutoSetCPU = true;
+                            return;
+                        }
+                    }
+                    menu_Battle.All_Entry_Reset();
+                    AutoSetCPU = true;
+                    L.D("ALL WRESTLER SLOTS TO CPU", new object[0]);
+                }
+            }
+        }
+
+        [Hook(TargetClass = "Menu_SceneManager/<Start>c__Iterator0", TargetMethod = "MoveNext", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "AutoSetCPU")]
+        public static void Check()
+        {
+            if (AutoSetCPU)
+            {
+                AutoSetCPU = false;
+            }
+        }
+
         #endregion
     }
 }
