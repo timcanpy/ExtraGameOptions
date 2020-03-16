@@ -434,8 +434,8 @@ namespace FireProWar
                     {
                         continue;
                     }
-                    message += CleanUpName(employee.Name) + ": " + employee.Wins + "-" +
-                               employee.Draws + "-" + employee.Losses +
+                    message += CleanUpName(employee.Name) + ": " + employee.Wins + "/" +
+                               employee.Losses + "/" + employee.Draws +
                                " || Morale: " + CheckMorale(employee.MoraleRank) + "\n";
                 }
 

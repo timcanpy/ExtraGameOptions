@@ -50,15 +50,25 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.fpw_infoTabs = new System.Windows.Forms.TabControl();
             this.fpw_history = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.fpw_historyRefresh = new System.Windows.Forms.Button();
+            this.fpw_historyTerm = new System.Windows.Forms.TextBox();
+            this.fpw_historyWrestler = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.fpw_historyCategory = new System.Windows.Forms.ComboBox();
             this.fpw_promoMthRating = new System.Windows.Forms.TextBox();
             this.fpw_promoMthCnt = new System.Windows.Forms.TextBox();
             this.fpw_promoClearHistory = new System.Windows.Forms.Button();
             this.fpw_promoHistory = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.fpw_matches = new System.Windows.Forms.TabPage();
-            this.label19 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.fpw_wrestlerRefresh = new System.Windows.Forms.Button();
+            this.fpw_matchTerm = new System.Windows.Forms.TextBox();
+            this.fpw_matchWrestler = new System.Windows.Forms.ComboBox();
+            this.label23 = new System.Windows.Forms.Label();
             this.fpw_clearDetails = new System.Windows.Forms.Button();
             this.fpw_detailsView = new System.Windows.Forms.TextBox();
             this.fpw_management = new System.Windows.Forms.TabPage();
@@ -148,9 +158,10 @@
             this.fpw_showRecord.AutoSize = true;
             this.fpw_showRecord.Checked = true;
             this.fpw_showRecord.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_showRecord.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_showRecord.Location = new System.Drawing.Point(8, 29);
             this.fpw_showRecord.Name = "fpw_showRecord";
-            this.fpw_showRecord.Size = new System.Drawing.Size(154, 19);
+            this.fpw_showRecord.Size = new System.Drawing.Size(150, 19);
             this.fpw_showRecord.TabIndex = 44;
             this.fpw_showRecord.Text = "Show Record On Entrance";
             this.fpw_showRecord.UseVisualStyleBackColor = true;
@@ -178,6 +189,7 @@
             // 
             // fpw_addPromotion
             // 
+            this.fpw_addPromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_addPromotion.Location = new System.Drawing.Point(66, 427);
             this.fpw_addPromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_addPromotion.Name = "fpw_addPromotion";
@@ -190,6 +202,7 @@
             // 
             // fpw_deletePromotion
             // 
+            this.fpw_deletePromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_deletePromotion.Location = new System.Drawing.Point(66, 492);
             this.fpw_deletePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_deletePromotion.Name = "fpw_deletePromotion";
@@ -201,6 +214,7 @@
             // 
             // fpw_updatePromotion
             // 
+            this.fpw_updatePromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_updatePromotion.Location = new System.Drawing.Point(66, 460);
             this.fpw_updatePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_updatePromotion.Name = "fpw_updatePromotion";
@@ -213,11 +227,11 @@
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label45.Location = new System.Drawing.Point(102, 362);
             this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(65, 11);
+            this.label45.Size = new System.Drawing.Size(69, 15);
             this.label45.TabIndex = 38;
             this.label45.Text = "Home Ring";
             // 
@@ -236,11 +250,11 @@
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label44.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label44.Location = new System.Drawing.Point(98, 300);
             this.label44.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(79, 11);
+            this.label44.Size = new System.Drawing.Size(83, 15);
             this.label44.TabIndex = 36;
             this.label44.Text = "Home Region";
             // 
@@ -259,11 +273,11 @@
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label43.Location = new System.Drawing.Point(96, 244);
             this.label43.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(77, 11);
+            this.label43.Size = new System.Drawing.Size(70, 15);
             this.label43.TabIndex = 34;
             this.label43.Text = "Fight Style";
             // 
@@ -291,11 +305,11 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label39.Location = new System.Drawing.Point(113, 187);
             this.label39.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(39, 11);
+            this.label39.Size = new System.Drawing.Size(39, 15);
             this.label39.TabIndex = 31;
             this.label39.Text = "Name";
             // 
@@ -315,11 +329,11 @@
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label46.Location = new System.Drawing.Point(99, 130);
+            this.label46.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.Location = new System.Drawing.Point(99, 126);
             this.label46.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(76, 11);
+            this.label46.Size = new System.Drawing.Size(73, 15);
             this.label46.TabIndex = 28;
             this.label46.Text = "Promotions";
             // 
@@ -339,10 +353,11 @@
             this.fpw_Enable.AutoSize = true;
             this.fpw_Enable.Checked = true;
             this.fpw_Enable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_Enable.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_Enable.Location = new System.Drawing.Point(8, 6);
             this.fpw_Enable.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_Enable.Name = "fpw_Enable";
-            this.fpw_Enable.Size = new System.Drawing.Size(86, 19);
+            this.fpw_Enable.Size = new System.Drawing.Size(84, 19);
             this.fpw_Enable.TabIndex = 0;
             this.fpw_Enable.Text = "Enable FPW";
             this.fpw_Enable.UseVisualStyleBackColor = true;
@@ -376,11 +391,17 @@
             // fpw_history
             // 
             this.fpw_history.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_history.Controls.Add(this.label21);
+            this.fpw_history.Controls.Add(this.fpw_historyRefresh);
+            this.fpw_history.Controls.Add(this.fpw_historyTerm);
+            this.fpw_history.Controls.Add(this.fpw_historyWrestler);
+            this.fpw_history.Controls.Add(this.label2);
+            this.fpw_history.Controls.Add(this.label20);
+            this.fpw_history.Controls.Add(this.fpw_historyCategory);
             this.fpw_history.Controls.Add(this.fpw_promoMthRating);
             this.fpw_history.Controls.Add(this.fpw_promoMthCnt);
             this.fpw_history.Controls.Add(this.fpw_promoClearHistory);
             this.fpw_history.Controls.Add(this.fpw_promoHistory);
-            this.fpw_history.Controls.Add(this.label5);
             this.fpw_history.Controls.Add(this.label4);
             this.fpw_history.Controls.Add(this.label3);
             this.fpw_history.Location = new System.Drawing.Point(4, 22);
@@ -390,10 +411,95 @@
             this.fpw_history.TabIndex = 2;
             this.fpw_history.Text = "Promotion History";
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(42, 383);
+            this.label21.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(118, 21);
+            this.label21.TabIndex = 56;
+            this.label21.Text = "Filter By Term";
+            // 
+            // fpw_historyRefresh
+            // 
+            this.fpw_historyRefresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_historyRefresh.Location = new System.Drawing.Point(58, 317);
+            this.fpw_historyRefresh.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_historyRefresh.Name = "fpw_historyRefresh";
+            this.fpw_historyRefresh.Size = new System.Drawing.Size(84, 26);
+            this.fpw_historyRefresh.TabIndex = 55;
+            this.fpw_historyRefresh.Text = "Refresh";
+            this.fpw_historyRefresh.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.fpw_historyRefresh.UseVisualStyleBackColor = true;
+            this.fpw_historyRefresh.Click += new System.EventHandler(this.fpw_historyRefresh_Click);
+            // 
+            // fpw_historyTerm
+            // 
+            this.fpw_historyTerm.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.fpw_historyTerm.Location = new System.Drawing.Point(15, 413);
+            this.fpw_historyTerm.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_historyTerm.Name = "fpw_historyTerm";
+            this.fpw_historyTerm.Size = new System.Drawing.Size(180, 20);
+            this.fpw_historyTerm.TabIndex = 45;
+            // 
+            // fpw_historyWrestler
+            // 
+            this.fpw_historyWrestler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_historyWrestler.FormattingEnabled = true;
+            this.fpw_historyWrestler.Location = new System.Drawing.Point(15, 269);
+            this.fpw_historyWrestler.Name = "fpw_historyWrestler";
+            this.fpw_historyWrestler.Size = new System.Drawing.Size(180, 21);
+            this.fpw_historyWrestler.Sorted = true;
+            this.fpw_historyWrestler.TabIndex = 54;
+            this.fpw_historyWrestler.SelectedIndexChanged += new System.EventHandler(this.fpw_historyWrestler_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(32, 241);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(143, 21);
+            this.label2.TabIndex = 53;
+            this.label2.Text = "Filter By Wrestler";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(32, 155);
+            this.label20.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(146, 21);
+            this.label20.TabIndex = 52;
+            this.label20.Text = "Filter By Category";
+            // 
+            // fpw_historyCategory
+            // 
+            this.fpw_historyCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_historyCategory.FormattingEnabled = true;
+            this.fpw_historyCategory.Items.AddRange(new object[] {
+            "All",
+            "Title History",
+            "Promotions",
+            "Demotions",
+            "Departures",
+            "Upset Victories",
+            "Knock Outs",
+            "Injuries"});
+            this.fpw_historyCategory.Location = new System.Drawing.Point(15, 188);
+            this.fpw_historyCategory.Name = "fpw_historyCategory";
+            this.fpw_historyCategory.Size = new System.Drawing.Size(180, 21);
+            this.fpw_historyCategory.TabIndex = 51;
+            this.fpw_historyCategory.SelectedIndexChanged += new System.EventHandler(this.fpw_historyCategory_SelectedIndexChanged);
+            // 
             // fpw_promoMthRating
             // 
             this.fpw_promoMthRating.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.fpw_promoMthRating.Location = new System.Drawing.Point(290, 106);
+            this.fpw_promoMthRating.Location = new System.Drawing.Point(290, 120);
             this.fpw_promoMthRating.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_promoMthRating.Name = "fpw_promoMthRating";
             this.fpw_promoMthRating.ReadOnly = true;
@@ -404,7 +510,7 @@
             // fpw_promoMthCnt
             // 
             this.fpw_promoMthCnt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.fpw_promoMthCnt.Location = new System.Drawing.Point(290, 42);
+            this.fpw_promoMthCnt.Location = new System.Drawing.Point(290, 56);
             this.fpw_promoMthCnt.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_promoMthCnt.Name = "fpw_promoMthCnt";
             this.fpw_promoMthCnt.ReadOnly = true;
@@ -414,8 +520,8 @@
             // 
             // fpw_promoClearHistory
             // 
-            this.fpw_promoClearHistory.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_promoClearHistory.Location = new System.Drawing.Point(246, 448);
+            this.fpw_promoClearHistory.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_promoClearHistory.Location = new System.Drawing.Point(344, 448);
             this.fpw_promoClearHistory.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoClearHistory.Name = "fpw_promoClearHistory";
             this.fpw_promoClearHistory.Size = new System.Drawing.Size(127, 26);
@@ -429,52 +535,45 @@
             // 
             this.fpw_promoHistory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.fpw_promoHistory.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_promoHistory.Location = new System.Drawing.Point(14, 175);
+            this.fpw_promoHistory.Location = new System.Drawing.Point(207, 175);
             this.fpw_promoHistory.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoHistory.Multiline = true;
             this.fpw_promoHistory.Name = "fpw_promoHistory";
             this.fpw_promoHistory.ReadOnly = true;
             this.fpw_promoHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_promoHistory.Size = new System.Drawing.Size(581, 265);
+            this.fpw_promoHistory.Size = new System.Drawing.Size(388, 265);
             this.fpw_promoHistory.TabIndex = 45;
             this.fpw_promoHistory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(243, 143);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(139, 16);
-            this.label5.TabIndex = 44;
-            this.label5.Text = "Event History";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(209, 75);
+            this.label4.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(221, 89);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(221, 16);
+            this.label4.Size = new System.Drawing.Size(181, 21);
             this.label4.TabIndex = 43;
             this.label4.Text = "Average Match Rating";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(238, 11);
+            this.label3.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(250, 25);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 16);
+            this.label3.Size = new System.Drawing.Size(138, 21);
             this.label3.TabIndex = 42;
             this.label3.Text = "Matches Booked";
             // 
             // fpw_matches
             // 
-            this.fpw_matches.Controls.Add(this.label19);
+            this.fpw_matches.Controls.Add(this.label22);
+            this.fpw_matches.Controls.Add(this.fpw_wrestlerRefresh);
+            this.fpw_matches.Controls.Add(this.fpw_matchTerm);
+            this.fpw_matches.Controls.Add(this.fpw_matchWrestler);
+            this.fpw_matches.Controls.Add(this.label23);
             this.fpw_matches.Controls.Add(this.fpw_clearDetails);
             this.fpw_matches.Controls.Add(this.fpw_detailsView);
             this.fpw_matches.Location = new System.Drawing.Point(4, 22);
@@ -485,21 +584,65 @@
             this.fpw_matches.Text = "Recent Matches";
             this.fpw_matches.UseVisualStyleBackColor = true;
             // 
-            // label19
+            // label22
             // 
-            this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(254, 19);
-            this.label19.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(145, 16);
-            this.label19.TabIndex = 48;
-            this.label19.Text = "Match Results";
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(48, 194);
+            this.label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(118, 21);
+            this.label22.TabIndex = 63;
+            this.label22.Text = "Filter By Term";
+            // 
+            // fpw_wrestlerRefresh
+            // 
+            this.fpw_wrestlerRefresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_wrestlerRefresh.Location = new System.Drawing.Point(64, 128);
+            this.fpw_wrestlerRefresh.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_wrestlerRefresh.Name = "fpw_wrestlerRefresh";
+            this.fpw_wrestlerRefresh.Size = new System.Drawing.Size(84, 26);
+            this.fpw_wrestlerRefresh.TabIndex = 62;
+            this.fpw_wrestlerRefresh.Text = "Refresh";
+            this.fpw_wrestlerRefresh.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.fpw_wrestlerRefresh.UseVisualStyleBackColor = true;
+            this.fpw_wrestlerRefresh.Click += new System.EventHandler(this.fpw_wrestlerRefresh_Click);
+            // 
+            // fpw_matchTerm
+            // 
+            this.fpw_matchTerm.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.fpw_matchTerm.Location = new System.Drawing.Point(21, 224);
+            this.fpw_matchTerm.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_matchTerm.Name = "fpw_matchTerm";
+            this.fpw_matchTerm.Size = new System.Drawing.Size(180, 20);
+            this.fpw_matchTerm.TabIndex = 57;
+            // 
+            // fpw_matchWrestler
+            // 
+            this.fpw_matchWrestler.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_matchWrestler.FormattingEnabled = true;
+            this.fpw_matchWrestler.Location = new System.Drawing.Point(21, 80);
+            this.fpw_matchWrestler.Name = "fpw_matchWrestler";
+            this.fpw_matchWrestler.Size = new System.Drawing.Size(180, 21);
+            this.fpw_matchWrestler.Sorted = true;
+            this.fpw_matchWrestler.TabIndex = 61;
+            this.fpw_matchWrestler.SelectedIndexChanged += new System.EventHandler(this.fpw_matchWrestler_SelectedIndexChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(38, 52);
+            this.label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(143, 21);
+            this.label23.TabIndex = 60;
+            this.label23.Text = "Filter By Wrestler";
             // 
             // fpw_clearDetails
             // 
-            this.fpw_clearDetails.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_clearDetails.Location = new System.Drawing.Point(257, 446);
+            this.fpw_clearDetails.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_clearDetails.Location = new System.Drawing.Point(332, 446);
             this.fpw_clearDetails.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_clearDetails.Name = "fpw_clearDetails";
             this.fpw_clearDetails.Size = new System.Drawing.Size(127, 26);
@@ -513,13 +656,13 @@
             // 
             this.fpw_detailsView.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             this.fpw_detailsView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_detailsView.Location = new System.Drawing.Point(15, 52);
+            this.fpw_detailsView.Location = new System.Drawing.Point(214, 52);
             this.fpw_detailsView.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_detailsView.Multiline = true;
             this.fpw_detailsView.Name = "fpw_detailsView";
             this.fpw_detailsView.ReadOnly = true;
             this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_detailsView.Size = new System.Drawing.Size(581, 386);
+            this.fpw_detailsView.Size = new System.Drawing.Size(382, 386);
             this.fpw_detailsView.TabIndex = 46;
             this.fpw_detailsView.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -563,11 +706,11 @@
             // 
             // btn_clean
             // 
-            this.btn_clean.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_clean.Location = new System.Drawing.Point(131, 425);
+            this.btn_clean.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_clean.Location = new System.Drawing.Point(122, 425);
             this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
             this.btn_clean.Name = "btn_clean";
-            this.btn_clean.Size = new System.Drawing.Size(88, 26);
+            this.btn_clean.Size = new System.Drawing.Size(111, 26);
             this.btn_clean.TabIndex = 38;
             this.btn_clean.Text = "Clean Rosters";
             this.btn_clean.UseVisualStyleBackColor = true;
@@ -575,7 +718,7 @@
             // 
             // btn_LoadData
             // 
-            this.btn_LoadData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_LoadData.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_LoadData.Location = new System.Drawing.Point(250, 425);
             this.btn_LoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_LoadData.Name = "btn_LoadData";
@@ -587,7 +730,7 @@
             // 
             // btn_SaveData
             // 
-            this.btn_SaveData.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn_SaveData.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn_SaveData.Location = new System.Drawing.Point(9, 425);
             this.btn_SaveData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_SaveData.Name = "btn_SaveData";
@@ -600,17 +743,17 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(430, 46);
             this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(91, 14);
+            this.label9.Size = new System.Drawing.Size(77, 17);
             this.label9.TabIndex = 35;
             this.label9.Text = "Roster List";
             // 
             // ms_fireAll
             // 
-            this.ms_fireAll.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ms_fireAll.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_fireAll.Location = new System.Drawing.Point(513, 425);
             this.ms_fireAll.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireAll.Name = "ms_fireAll";
@@ -622,7 +765,7 @@
             // 
             // ms_fireOne
             // 
-            this.ms_fireOne.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ms_fireOne.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_fireOne.Location = new System.Drawing.Point(360, 425);
             this.ms_fireOne.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireOne.Name = "ms_fireOne";
@@ -649,39 +792,39 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.Location = new System.Drawing.Point(119, 176);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(122, 14);
+            this.label8.Size = new System.Drawing.Size(104, 17);
             this.label8.TabIndex = 31;
             this.label8.Text = "Search Results";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(135, 110);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 14);
+            this.label7.Size = new System.Drawing.Size(73, 17);
             this.label7.TabIndex = 30;
             this.label7.Text = "Group List";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(115, 46);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(134, 14);
+            this.label6.Size = new System.Drawing.Size(110, 17);
             this.label6.TabIndex = 29;
             this.label6.Text = "Wrestler Search";
             // 
             // ms_hireGroup
             // 
-            this.ms_hireGroup.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ms_hireGroup.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_hireGroup.Location = new System.Drawing.Point(236, 287);
             this.ms_hireGroup.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireGroup.Name = "ms_hireGroup";
@@ -707,7 +850,7 @@
             // 
             // ms_refreshList
             // 
-            this.ms_refreshList.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ms_refreshList.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_refreshList.Location = new System.Drawing.Point(236, 326);
             this.ms_refreshList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_refreshList.Name = "ms_refreshList";
@@ -719,7 +862,7 @@
             // 
             // ms_hireWrestler
             // 
-            this.ms_hireWrestler.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ms_hireWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_hireWrestler.Location = new System.Drawing.Point(236, 249);
             this.ms_hireWrestler.Margin = new System.Windows.Forms.Padding(4);
             this.ms_hireWrestler.Name = "ms_hireWrestler";
@@ -829,10 +972,10 @@
             // rosterCount
             // 
             this.rosterCount.AutoSize = true;
-            this.rosterCount.Font = new System.Drawing.Font("NEWSFLASH", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rosterCount.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rosterCount.Location = new System.Drawing.Point(114, 27);
             this.rosterCount.Name = "rosterCount";
-            this.rosterCount.Size = new System.Drawing.Size(44, 17);
+            this.rosterCount.Size = new System.Drawing.Size(49, 17);
             this.rosterCount.TabIndex = 71;
             this.rosterCount.Text = "label2";
             this.rosterCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -853,88 +996,88 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(397, 387);
+            this.label18.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(404, 387);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(171, 14);
+            this.label18.Size = new System.Drawing.Size(157, 17);
             this.label18.TabIndex = 65;
             this.label18.Text = "Win/Loss/Draw Record";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(397, 330);
+            this.label17.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label17.Location = new System.Drawing.Point(404, 330);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(178, 14);
+            this.label17.Size = new System.Drawing.Size(150, 17);
             this.label17.TabIndex = 64;
             this.label17.Text = "Average Match Rating";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(413, 265);
+            this.label16.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label16.Location = new System.Drawing.Point(420, 265);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(122, 14);
+            this.label16.Size = new System.Drawing.Size(98, 17);
             this.label16.TabIndex = 63;
             this.label16.Text = "Total Matches";
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(470, 209);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(115, 14);
+            this.label15.Size = new System.Drawing.Size(97, 17);
             this.label15.TabIndex = 62;
             this.label15.Text = "Morale Points";
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(335, 209);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(105, 14);
+            this.label14.Size = new System.Drawing.Size(89, 17);
             this.label14.TabIndex = 61;
             this.label14.Text = "Morale Rank";
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(420, 140);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(110, 14);
+            this.label13.Size = new System.Drawing.Size(98, 17);
             this.label13.TabIndex = 60;
             this.label13.Text = "Native Region";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(454, 79);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(51, 14);
+            this.label12.Size = new System.Drawing.Size(39, 17);
             this.label12.TabIndex = 59;
             this.label12.Text = "Style";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(454, 19);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(48, 14);
+            this.label11.Size = new System.Drawing.Size(45, 17);
             this.label11.TabIndex = 58;
             this.label11.Text = "Name";
             // 
@@ -980,11 +1123,11 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("NEWSFLASH", 9.75F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(86, 6);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(106, 17);
+            this.label10.Size = new System.Drawing.Size(113, 17);
             this.label10.TabIndex = 37;
             this.label10.Text = "Roster Members";
             // 
@@ -1016,11 +1159,11 @@
             // 
             // rpt_employees
             // 
-            this.rpt_employees.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rpt_employees.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rpt_employees.Location = new System.Drawing.Point(270, 158);
             this.rpt_employees.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_employees.Name = "rpt_employees";
-            this.rpt_employees.Size = new System.Drawing.Size(78, 31);
+            this.rpt_employees.Size = new System.Drawing.Size(87, 31);
             this.rpt_employees.TabIndex = 1;
             this.rpt_employees.Text = "Employees";
             this.rpt_employees.UseVisualStyleBackColor = true;
@@ -1028,11 +1171,11 @@
             // 
             // rpt_promotions
             // 
-            this.rpt_promotions.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rpt_promotions.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rpt_promotions.Location = new System.Drawing.Point(270, 71);
             this.rpt_promotions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_promotions.Name = "rpt_promotions";
-            this.rpt_promotions.Size = new System.Drawing.Size(78, 31);
+            this.rpt_promotions.Size = new System.Drawing.Size(87, 31);
             this.rpt_promotions.TabIndex = 0;
             this.rpt_promotions.Text = "Promotions";
             this.rpt_promotions.UseVisualStyleBackColor = true;
@@ -1091,7 +1234,6 @@
         private System.Windows.Forms.TabPage fpw_history;
         private System.Windows.Forms.TabPage fpw_management;
         private System.Windows.Forms.TabPage fpw_details;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox fpw_promoHistory;
@@ -1130,7 +1272,6 @@
         private System.Windows.Forms.TabPage fpw_matches;
         private System.Windows.Forms.Button fpw_clearDetails;
         private System.Windows.Forms.TextBox fpw_detailsView;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Button fpw_refreshRings;
         private System.Windows.Forms.Label rosterCount;
         private System.Windows.Forms.TextBox fpw_promoMthRating;
@@ -1146,5 +1287,17 @@
         private System.Windows.Forms.PictureBox fpw_logoImage;
         private System.Windows.Forms.PictureBox fpw_wrestlerImage;
         public System.Windows.Forms.CheckBox fpw_showRecord;
+        private System.Windows.Forms.ComboBox fpw_historyCategory;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox fpw_historyWrestler;
+        private System.Windows.Forms.TextBox fpw_historyTerm;
+        private System.Windows.Forms.Button fpw_historyRefresh;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Button fpw_wrestlerRefresh;
+        private System.Windows.Forms.TextBox fpw_matchTerm;
+        private System.Windows.Forms.ComboBox fpw_matchWrestler;
+        private System.Windows.Forms.Label label23;
     }
 }

@@ -32,7 +32,18 @@ namespace FireProWar
         public static String imageRootFolder = "./EGOData/Images/";
         public static String[] imageFolders = new String[] { "Wrestlers/", "Logos/" };
         public static String defaultWrestlerImage = "Default.png";
-
+        public enum FilterType
+        {
+            All,
+            TitleHistory,
+            Promotions,
+            Demotions,
+            Departures,
+            UpsetVictories,
+            KnockOuts,
+            Injuries,
+            Term
+        };
         public enum ImageTypes
         {
             Wrestler,
@@ -53,7 +64,10 @@ namespace FireProWar
             LoadMoraleRank();
             LoadGroupFightingStyles();
             LoadWarData();
+            LoadFilterOptions();
             FormClosing += WarForm_FormClosing;
+            fpw_historyTerm.Leave += new System.EventHandler(fpw_HistoryTerm_LostFocus);
+            fpw_matchTerm.Leave += new System.EventHandler(fpw_MatchTerm_LostFocus);
         }
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -77,6 +91,8 @@ namespace FireProWar
             try
             {
                 this.ms_searchResults.Items.Clear();
+                fpw_historyWrestler.Items.Clear();
+                fpw_matchWrestler.Items.Clear();
                 wrestlerList.Clear();
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
@@ -88,14 +104,18 @@ namespace FireProWar
 
                     wrestlerList.Add(wresIDGroup);
                     this.ms_searchResults.Items.Add(wresIDGroup);
+                    fpw_historyWrestler.Items.Add(wresIDGroup);
+                    fpw_matchWrestler.Items.Add(wresIDGroup);
                 }
 
                 this.ms_searchResults.SelectedIndex = 0;
+                fpw_historyWrestler.SelectedIndex = 0;
+                fpw_matchWrestler.SelectedIndex = 0;
 
             }
-            catch
+            catch (Exception ex)
             {
-
+                L.D("LoadSubsError: " + ex);
             }
 
         }
@@ -153,7 +173,10 @@ namespace FireProWar
             groupFightingStyles.Add("Sumo", new FightStyleEnum[] { FightStyleEnum.Fighter, FightStyleEnum.Grappler, FightStyleEnum.Power });
             groupFightingStyles.Add("Indy", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Giant, FightStyleEnum.Heel, FightStyleEnum.Mysterious, FightStyleEnum.Junior, FightStyleEnum.Luchador, FightStyleEnum.Power, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Orthodox });
         }
-
+        private void LoadFilterOptions()
+        {
+            fpw_historyCategory.SelectedIndex = 0;
+        }
         #endregion
 
         #region Data Load
@@ -325,7 +348,7 @@ namespace FireProWar
             {
                 L.D("Save Config Data Error:" + e);
             }
-      
+
         }
         private void btn_SaveData_Click(object sender, EventArgs e)
         {
@@ -481,8 +504,14 @@ namespace FireProWar
             fpw_promoStyleList.SelectedIndex = fpw_promoStyleList.Items.IndexOf(promotion.Type);
             fpw_promoMthCnt.Text = promotion.MatchCount.ToString();
             fpw_promoMthRating.Text = Math.Round(Decimal.Parse(promotion.AverageRating.ToString()), 2) + "%";
-            fpw_promoHistory.Text = promotion.History.Replace("~", "\n");
 
+            //Reset filtering
+            fpw_historyCategory.SelectedIndex = 0;
+            fpw_historyCategory_SelectedIndexChanged(sender, e);
+
+            fpw_matchTerm.Text = "";
+            //fpw_promoHistory.Text = promotion.History.Replace("~", "\n");
+            
             #region Adding Details
             String details = "";
             foreach (String detail in promotion.MatchDetails)
@@ -900,6 +929,108 @@ namespace FireProWar
         }
 
         #endregion
+        
+        #region  Filter Management
+        private void fpw_historyRefresh_Click(object sender, EventArgs e)
+        {
+            LoadSubs();
+        }
+
+        private void fpw_wrestlerRefresh_Click(object sender, EventArgs e)
+        {
+            LoadSubs();
+        }
+        
+        private void fpw_historyCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+            //Determine which category has been selected
+            FilterType type = FilterType.All;
+            switch (fpw_historyCategory.SelectedIndex)
+            {
+                case 0:
+                    type = FilterType.All;
+                    break;
+                case 1: type = FilterType.TitleHistory;
+                    break;
+                case 2:
+                    type = FilterType.Promotions;
+                    break;
+                case 3:
+                    type = FilterType.Demotions;
+                    break;
+                case 4:
+                    type = FilterType.Departures;
+                    break;
+                case 5:
+                    type = FilterType.UpsetVictories;
+                    break;
+                case 6:
+                    type = FilterType.KnockOuts;
+                    break;
+                case 7:
+                    type = FilterType.Injuries;
+                    break;
+            }
+
+            fpw_promoHistory.Text = FilterHistory("", type, promotion.History);
+        }
+
+        private void fpw_historyWrestler_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+            fpw_promoHistory.Text = FilterHistory(((WresIDGroup)fpw_historyWrestler.SelectedItem).Name, FilterType.Term, promotion.History);
+        }
+
+        private void fpw_matchWrestler_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+            fpw_detailsView.Text = FilterHistory(((WresIDGroup)fpw_matchWrestler.SelectedItem).Name, FilterType.Term, String.Join("~", promotion.MatchDetails.ToArray()));
+        }
+
+        private void fpw_MatchTerm_LostFocus(object sender, System.EventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+            fpw_detailsView.Text = FilterHistory(fpw_matchTerm.Text, FilterType.Term, String.Join("~", promotion.MatchDetails.ToArray()));
+        }
+
+        private void fpw_HistoryTerm_LostFocus(object sender, System.EventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+            fpw_promoHistory.Text = FilterHistory(fpw_historyTerm.Text, FilterType.Term, promotion.History);
+        }
+        
+        #endregion
 
         #region Helper Methods
         private void SelectPromotionRoster(String name)
@@ -1293,7 +1424,7 @@ namespace FireProWar
 
                 String fileName = "";
                 imageName = imageName.ToLower(); //Eliminate casing for easier matching
-              
+
                 foreach (String file in files)
                 {
                     String name = Path.GetFileName(file).Split('.')[0];
@@ -1313,7 +1444,7 @@ namespace FireProWar
                         if (File.Exists(filePath + defaultWrestlerImage))
                         {
                             fpw_wrestlerImage.Image = Image.FromFile(filePath + defaultWrestlerImage);
-                        }     
+                        }
                     }
                     else
                     {
@@ -1342,6 +1473,79 @@ namespace FireProWar
                 L.D("FindImageException: " + e);
             }
 
+        }
+        private String FilterHistory(String term, FilterType type, String details)
+        {
+            if (type == FilterType.All)
+            {
+                return details.Replace("~", "\n");
+            }
+
+            String result = "";
+
+            foreach (String line in details.Split('~'))
+            {
+                String data = "";
+                switch (type)
+                {
+                    case FilterType.TitleHistory:
+                        if (line.Contains("defends") || line.Contains("gained") || line.Contains("lost"))
+                        {
+                            data = line;
+                        }
+                        break;
+                    case FilterType.Demotions:
+                        if (line.Contains("demoted"))
+                        {
+                            data = line;
+                        }
+
+                        break;
+                    case FilterType.Promotions:
+                        if (line.Contains("promoted"))
+                        {
+                            data = line;
+                        }
+                        break;
+                    case FilterType.Departures:
+                        if (line.Contains("left the promotion") || line.Contains("Final Record"))
+                        {
+                            data = line;
+                        }
+
+                        break;
+                    case FilterType.UpsetVictories:
+                        if (line.Contains("upset victory"))
+                        {
+                            data = line;
+                        }
+                        break;
+                    case FilterType.KnockOuts:
+                        if (line.Contains("knocked out"))
+                        {
+                            data = line;
+                        }
+                        break;
+                    case FilterType.Injuries:
+                        if (line.Contains("suffered"))
+                        {
+                            data = line;
+                        }
+                        break;
+                    case FilterType.Term:
+                        if (line.Contains(term))
+                        {
+                            data = line;
+                        }
+                        break;
+                }
+
+                if (!data.Equals(String.Empty))
+                {
+                    result += "\n" + data;
+                }
+            }
+            return result;
         }
 
         #endregion
