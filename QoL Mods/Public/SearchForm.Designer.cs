@@ -30,78 +30,50 @@ namespace QoL_Mods
         /// </summary>
         private void InitializeComponent()
         {
-            this.cb_comment = new System.Windows.Forms.CheckBox();
-            this.ego_MainTabs = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ql_Controls = new System.Windows.Forms.TabControl();
             this.ql_WrestlerEdit = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.searchWiki = new System.Windows.Forms.LinkLabel();
             this.label1 = new System.Windows.Forms.Label();
             this.ws_promotionLbl = new System.Windows.Forms.Label();
             this.we_refresh = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.btn_mainMenu = new System.Windows.Forms.Button();
             this.we_resultList = new System.Windows.Forms.ComboBox();
-            this.we_search = new System.Windows.Forms.Button();
             this.we_promotionBox = new System.Windows.Forms.ComboBox();
             this.we_edit = new System.Windows.Forms.Button();
             this.we_searchBox = new System.Windows.Forms.TextBox();
-            this.we_unsubscribe = new System.Windows.Forms.CheckBox();
-            this.ego_MainTabs.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.ql_RefereeEdit = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.refEdit = new System.Windows.Forms.Button();
+            this.re_refresh = new System.Windows.Forms.Button();
+            this.we_refList = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.ql_Controls.SuspendLayout();
             this.ql_WrestlerEdit.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.ql_RefereeEdit.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // cb_comment
-            // 
-            this.cb_comment.AutoSize = true;
-            this.cb_comment.Location = new System.Drawing.Point(297, 12);
-            this.cb_comment.Name = "cb_comment";
-            this.cb_comment.Size = new System.Drawing.Size(148, 17);
-            this.cb_comment.TabIndex = 0;
-            this.cb_comment.Text = "Track Crowd Excitement?";
-            this.cb_comment.UseVisualStyleBackColor = true;
-            // 
-            // ego_MainTabs
-            // 
-            this.ego_MainTabs.Controls.Add(this.tabPage1);
-            this.ego_MainTabs.Location = new System.Drawing.Point(12, 12);
-            this.ego_MainTabs.Name = "ego_MainTabs";
-            this.ego_MainTabs.SelectedIndex = 0;
-            this.ego_MainTabs.Size = new System.Drawing.Size(852, 340);
-            this.ego_MainTabs.TabIndex = 1;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.ql_Controls);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(844, 314);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Edit Management";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // ql_Controls
             // 
             this.ql_Controls.Controls.Add(this.ql_WrestlerEdit);
-            this.ql_Controls.Location = new System.Drawing.Point(6, 6);
+            this.ql_Controls.Controls.Add(this.ql_RefereeEdit);
+            this.ql_Controls.Location = new System.Drawing.Point(12, 12);
             this.ql_Controls.Name = "ql_Controls";
             this.ql_Controls.SelectedIndex = 0;
-            this.ql_Controls.Size = new System.Drawing.Size(832, 311);
-            this.ql_Controls.TabIndex = 0;
+            this.ql_Controls.Size = new System.Drawing.Size(569, 337);
+            this.ql_Controls.TabIndex = 1;
             // 
             // ql_WrestlerEdit
             // 
             this.ql_WrestlerEdit.BackColor = System.Drawing.Color.Transparent;
             this.ql_WrestlerEdit.Controls.Add(this.panel1);
-            this.ql_WrestlerEdit.Controls.Add(this.we_unsubscribe);
             this.ql_WrestlerEdit.Location = new System.Drawing.Point(4, 22);
             this.ql_WrestlerEdit.Name = "ql_WrestlerEdit";
             this.ql_WrestlerEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.ql_WrestlerEdit.Size = new System.Drawing.Size(824, 285);
+            this.ql_WrestlerEdit.Size = new System.Drawing.Size(561, 311);
             this.ql_WrestlerEdit.TabIndex = 0;
             this.ql_WrestlerEdit.Text = "Wrestlers";
             // 
@@ -109,26 +81,36 @@ namespace QoL_Mods
             // 
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.searchWiki);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.ws_promotionLbl);
             this.panel1.Controls.Add(this.we_refresh);
             this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.btn_mainMenu);
             this.panel1.Controls.Add(this.we_resultList);
-            this.panel1.Controls.Add(this.we_search);
             this.panel1.Controls.Add(this.we_promotionBox);
             this.panel1.Controls.Add(this.we_edit);
             this.panel1.Controls.Add(this.we_searchBox);
-            this.panel1.Location = new System.Drawing.Point(126, 46);
+            this.panel1.Location = new System.Drawing.Point(6, 38);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(543, 214);
             this.panel1.TabIndex = 16;
+            // 
+            // searchWiki
+            // 
+            this.searchWiki.AutoSize = true;
+            this.searchWiki.Location = new System.Drawing.Point(450, 141);
+            this.searchWiki.Name = "searchWiki";
+            this.searchWiki.Size = new System.Drawing.Size(54, 13);
+            this.searchWiki.TabIndex = 19;
+            this.searchWiki.TabStop = true;
+            this.searchWiki.Text = "Wikipedia";
+            this.searchWiki.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.searchWiki_LinkClicked);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(231, 15);
+            this.label1.Location = new System.Drawing.Point(200, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(98, 13);
             this.label1.TabIndex = 4;
@@ -139,7 +121,7 @@ namespace QoL_Mods
             this.ws_promotionLbl.AutoSize = true;
             this.ws_promotionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ws_promotionLbl.ForeColor = System.Drawing.Color.DarkGreen;
-            this.ws_promotionLbl.Location = new System.Drawing.Point(122, 112);
+            this.ws_promotionLbl.Location = new System.Drawing.Point(99, 112);
             this.ws_promotionLbl.Name = "ws_promotionLbl";
             this.ws_promotionLbl.Size = new System.Drawing.Size(93, 13);
             this.ws_promotionLbl.TabIndex = 7;
@@ -147,7 +129,7 @@ namespace QoL_Mods
             // 
             // we_refresh
             // 
-            this.we_refresh.Location = new System.Drawing.Point(283, 170);
+            this.we_refresh.Location = new System.Drawing.Point(345, 170);
             this.we_refresh.Name = "we_refresh";
             this.we_refresh.Size = new System.Drawing.Size(99, 23);
             this.we_refresh.TabIndex = 14;
@@ -159,48 +141,28 @@ namespace QoL_Mods
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(236, 65);
+            this.label2.Location = new System.Drawing.Point(205, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(87, 13);
             this.label2.TabIndex = 8;
             this.label2.Text = "Promotion List";
             // 
-            // btn_mainMenu
-            // 
-            this.btn_mainMenu.Location = new System.Drawing.Point(388, 170);
-            this.btn_mainMenu.Name = "btn_mainMenu";
-            this.btn_mainMenu.Size = new System.Drawing.Size(87, 23);
-            this.btn_mainMenu.TabIndex = 13;
-            this.btn_mainMenu.Text = "Main Menu";
-            this.btn_mainMenu.UseVisualStyleBackColor = true;
-            this.btn_mainMenu.Click += new System.EventHandler(this.btn_mainMenu_Click);
-            // 
             // we_resultList
             // 
             this.we_resultList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.we_resultList.FormattingEnabled = true;
-            this.we_resultList.Location = new System.Drawing.Point(115, 133);
+            this.we_resultList.Location = new System.Drawing.Point(84, 133);
             this.we_resultList.Name = "we_resultList";
             this.we_resultList.Size = new System.Drawing.Size(360, 21);
             this.we_resultList.Sorted = true;
             this.we_resultList.TabIndex = 9;
             this.we_resultList.SelectedIndexChanged += new System.EventHandler(this.we_resultList_SelectedIndexChanged);
             // 
-            // we_search
-            // 
-            this.we_search.Location = new System.Drawing.Point(115, 170);
-            this.we_search.Name = "we_search";
-            this.we_search.Size = new System.Drawing.Size(75, 23);
-            this.we_search.TabIndex = 12;
-            this.we_search.Text = "Search";
-            this.we_search.UseVisualStyleBackColor = true;
-            this.we_search.Click += new System.EventHandler(this.we_search_Click);
-            // 
             // we_promotionBox
             // 
             this.we_promotionBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.we_promotionBox.FormattingEnabled = true;
-            this.we_promotionBox.Location = new System.Drawing.Point(115, 83);
+            this.we_promotionBox.Location = new System.Drawing.Point(84, 83);
             this.we_promotionBox.Name = "we_promotionBox";
             this.we_promotionBox.Size = new System.Drawing.Size(360, 21);
             this.we_promotionBox.Sorted = true;
@@ -209,7 +171,7 @@ namespace QoL_Mods
             // 
             // we_edit
             // 
-            this.we_edit.Location = new System.Drawing.Point(202, 170);
+            this.we_edit.Location = new System.Drawing.Point(84, 170);
             this.we_edit.Name = "we_edit";
             this.we_edit.Size = new System.Drawing.Size(75, 23);
             this.we_edit.TabIndex = 0;
@@ -219,50 +181,108 @@ namespace QoL_Mods
             // 
             // we_searchBox
             // 
-            this.we_searchBox.Location = new System.Drawing.Point(115, 33);
+            this.we_searchBox.Location = new System.Drawing.Point(84, 33);
             this.we_searchBox.Name = "we_searchBox";
             this.we_searchBox.Size = new System.Drawing.Size(360, 20);
             this.we_searchBox.TabIndex = 11;
-            this.we_searchBox.LostFocus += new System.EventHandler(this.we_SearchBox_LostFocus);
             // 
-            // we_unsubscribe
+            // ql_RefereeEdit
             // 
-            this.we_unsubscribe.AutoSize = true;
-            this.we_unsubscribe.Font = new System.Drawing.Font("NCAA Utah St Aggies Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.we_unsubscribe.Location = new System.Drawing.Point(171, 16);
-            this.we_unsubscribe.Name = "we_unsubscribe";
-            this.we_unsubscribe.Size = new System.Drawing.Size(438, 24);
-            this.we_unsubscribe.TabIndex = 15;
-            this.we_unsubscribe.Text = "Unsubscribe Wrestler From Workshop";
-            this.we_unsubscribe.UseVisualStyleBackColor = true;
-            this.we_unsubscribe.Visible = false;
+            this.ql_RefereeEdit.BackColor = System.Drawing.SystemColors.Control;
+            this.ql_RefereeEdit.Controls.Add(this.label3);
+            this.ql_RefereeEdit.Controls.Add(this.panel6);
+            this.ql_RefereeEdit.Location = new System.Drawing.Point(4, 22);
+            this.ql_RefereeEdit.Name = "ql_RefereeEdit";
+            this.ql_RefereeEdit.Size = new System.Drawing.Size(561, 311);
+            this.ql_RefereeEdit.TabIndex = 1;
+            this.ql_RefereeEdit.Text = "Referees";
             // 
-            // QoL_Form
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.White;
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Controls.Add(this.label4);
+            this.panel6.Controls.Add(this.refEdit);
+            this.panel6.Controls.Add(this.re_refresh);
+            this.panel6.Controls.Add(this.we_refList);
+            this.panel6.Location = new System.Drawing.Point(103, 68);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(353, 164);
+            this.panel6.TabIndex = 6;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Franklin Gothic Medium", 18F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(99, 19);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(151, 30);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "Referee List";
+            // 
+            // refEdit
+            // 
+            this.refEdit.Location = new System.Drawing.Point(36, 113);
+            this.refEdit.Name = "refEdit";
+            this.refEdit.Size = new System.Drawing.Size(75, 29);
+            this.refEdit.TabIndex = 3;
+            this.refEdit.Text = "Edit";
+            this.refEdit.UseVisualStyleBackColor = true;
+            this.refEdit.Click += new System.EventHandler(this.refEdit_Click);
+            // 
+            // re_refresh
+            // 
+            this.re_refresh.Location = new System.Drawing.Point(230, 113);
+            this.re_refresh.Name = "re_refresh";
+            this.re_refresh.Size = new System.Drawing.Size(75, 29);
+            this.re_refresh.TabIndex = 4;
+            this.re_refresh.Text = "Refresh List";
+            this.re_refresh.UseVisualStyleBackColor = true;
+            this.re_refresh.Click += new System.EventHandler(this.re_refresh_Click);
+            // 
+            // we_refList
+            // 
+            this.we_refList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.we_refList.FormattingEnabled = true;
+            this.we_refList.Location = new System.Drawing.Point(36, 65);
+            this.we_refList.Name = "we_refList";
+            this.we_refList.Size = new System.Drawing.Size(269, 21);
+            this.we_refList.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Red;
+            this.label3.Location = new System.Drawing.Point(35, 18);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(506, 21);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Changes to Referee Automatically Save When Exiting Edit Menu";
+            // 
+            // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(866, 351);
-            this.Controls.Add(this.ego_MainTabs);
-            this.Controls.Add(this.cb_comment);
-            this.Name = "QoL_Form";
-            this.Text = "Wrestler Search";
+            this.ClientSize = new System.Drawing.Size(589, 351);
+            this.Controls.Add(this.ql_Controls);
+            this.Name = "SearchForm";
+            this.Text = "Edit Search";
             this.Load += new System.EventHandler(this.QoL_Form_Load);
-            this.ego_MainTabs.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.ql_Controls.ResumeLayout(false);
             this.ql_WrestlerEdit.ResumeLayout(false);
-            this.ql_WrestlerEdit.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.ql_RefereeEdit.ResumeLayout(false);
+            this.ql_RefereeEdit.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
-        
+
         #endregion
-        public System.Windows.Forms.CheckBox cb_comment;
-        private System.Windows.Forms.TabControl ego_MainTabs;
-        private System.Windows.Forms.TabPage tabPage1;
+
         public System.Windows.Forms.TabControl ql_Controls;
         public System.Windows.Forms.TabPage ql_WrestlerEdit;
         private System.Windows.Forms.Panel panel1;
@@ -270,12 +290,17 @@ namespace QoL_Mods
         private System.Windows.Forms.Label ws_promotionLbl;
         private System.Windows.Forms.Button we_refresh;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btn_mainMenu;
         public System.Windows.Forms.ComboBox we_resultList;
-        public System.Windows.Forms.Button we_search;
         public System.Windows.Forms.ComboBox we_promotionBox;
         public System.Windows.Forms.Button we_edit;
         public System.Windows.Forms.TextBox we_searchBox;
-        private System.Windows.Forms.CheckBox we_unsubscribe;
+        private System.Windows.Forms.TabPage ql_RefereeEdit;
+        private System.Windows.Forms.LinkLabel searchWiki;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button refEdit;
+        private System.Windows.Forms.Button re_refresh;
+        private System.Windows.Forms.ComboBox we_refList;
+        private System.Windows.Forms.Label label3;
     }
 }

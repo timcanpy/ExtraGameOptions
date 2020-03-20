@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using DG;
 using MatchConfig;
 using System.IO;
+using QoL_Mods.Helper_Classes;
 
 namespace QoL_Mods
 {
@@ -26,8 +27,9 @@ namespace QoL_Mods
             InitializeComponent();
             LoadOrgs();
             LoadSubs();
+            LoadReferees();
+            we_searchBox.LostFocus += we_SearchBox_LostFocus;
         }
-
         #endregion
 
         #region Data Load
@@ -90,9 +92,23 @@ namespace QoL_Mods
             }
 
         }
+        private void LoadReferees()
+        {
+            we_refList.Items.Clear();
+
+            foreach (RefereeInfo referee in MatchConfiguration.LoadReferees())
+            {
+                we_refList.Items.Add(referee);
+            }
+
+            if (we_refList.Items.Count > 0)
+            {
+                we_refList.SelectedIndex = 0;
+            }
+        }
         #endregion
 
-        #region Wrestler Management
+        #region Edit Management
         #region Wrestlers
         private void we_search_Click(object sender, EventArgs e)
         {
@@ -154,7 +170,7 @@ namespace QoL_Mods
                 CreateMenu_SceneManager manager = new CreateMenu_SceneManager();
                 WresIDGroup wrestler = (WresIDGroup)we_resultList.SelectedItem;
                 WrestlerID wID = (WrestlerID)wrestler.ID;
-                L.D("Loading " +wrestler.Name +" at " + wrestler.ID);
+                L.D("Loading " + wrestler.Name + " at " + wrestler.ID);
                 if (global::CreateMenu_SceneManager.edit_data == null)
                 {
                     global::CreateMenu_SceneManager.edit_data = new EditWrestlerData();
@@ -176,11 +192,6 @@ namespace QoL_Mods
                 global::CreateMenu_SceneManager.presetEditMode = false;
                 MyMusic.Init();
                 UnityEngine.SceneManagement.SceneManager.LoadScene("Scene_WrestlerEditMenu");
-
-                //if (this.we_unsubscribe.Checked)
-                //{
-                //    Unsubcribe(wID);
-                //}
             }
             catch (Exception ex)
             {
@@ -188,64 +199,21 @@ namespace QoL_Mods
             }
 
         }
+        private void searchWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (we_resultList.SelectedItem == null)
+            {
+                return;
+            }
+
+            var wrestler = (WresIDGroup)we_resultList.SelectedItem;
+            System.Diagnostics.Process.Start("https://en.wikipedia.org/wiki/" + wrestler.Name);
+
+        }
         private void btn_mainMenu_Click(object sender, EventArgs e)
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Scene_MainMenu");
         }
-        //private void Unsubcribe(WrestlerID wrestlerID)
-        //{
-        //    //Get current wrestler from list
-        //    WresIDGroup wrestler = null;
-        //    bool workshopAdded = false;
-        //    foreach (WresIDGroup edit in wrestlerList)
-        //    {
-        //        if (wrestlerID == (WrestlerID)edit.ID)
-        //        {
-        //            wrestler = edit;
-        //            break;
-        //        }
-        //    }
-
-        //    //Remove subscription if it exists
-        //    if (wrestler.Info == null)
-        //    {
-        //        return;
-        //    }
-
-        //    //Load the Steam Workshop item
-        //    GameObject[] array = UnityEngine.Object.FindObjectsOfType<GameObject>();
-        //    if (array.Length != 0)
-        //    {
-        //        try
-        //        {
-        //            workShop = array[0].GetComponent<SteamWorkshop_UGC>();
-        //            if (workShop == null)
-        //            {
-        //                workShop = array[0].AddComponent<SteamWorkshop_UGC>();
-        //                workshopAdded = true;
-        //            }
-
-        //            if (workShop != null)
-        //            {
-        //                workShop.UnsubscribeItem(wrestler.Info.GetPublishFileId());
-        //                SaveData.inst.subscribeItemInfoData.Remove(wrestler.Info);
-        //                wrestler.Info = null;
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            L.D("Unsubcribe Error: " + ex.Message);
-        //        }
-        //        finally
-        //        {
-        //            if (workshopAdded)
-        //            {
-        //                UnityEngine.Object.Destroy(workShop);
-        //                workShop = null;
-        //            }
-        //        }
-        //    }
-        //}
         private void we_refresh_Click(object sender, EventArgs e)
         {
             LoadSubs();
@@ -253,25 +221,101 @@ namespace QoL_Mods
         }
         private void we_SearchBox_LostFocus(object sender, System.EventArgs e)
         {
-            we_search_Click(sender, e);
+            SearchEdit();
         }
         private void we_promotionBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             we_search_Click(sender, e);
         }
-        #endregion
-        #endregion
+        private void we_resultList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            WresIDGroup edit = (WresIDGroup)we_resultList.SelectedItem;
+            ws_promotionLbl.Text = promotionList[edit.Group] + " (" + (DataBase.GetWrestlerParam((WrestlerID)edit.ID).fightStyle + ")"); ;
+        }
+        private void SearchEdit()
+        {
+            try
+            {
+                String query = we_searchBox.Text;
+                we_resultList.Items.Clear();
 
+                if (!query.TrimStart().TrimEnd().Equals(""))
+                {
+                    foreach (WresIDGroup wrestler in wrestlerList)
+                    {
+                        if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
+                        {
+                            we_resultList.Items.Add(wrestler);
+                        }
+                    }
+                }
+
+                if (we_resultList.Items.Count > 0)
+                {
+                    we_resultList.SelectedIndex = 0;
+                    return;
+                }
+
+                if (we_promotionBox.SelectedItem.ToString().Contains("未登録"))
+                {
+                    this.LoadSubs();
+                    return;
+                }
+
+                foreach (WresIDGroup current in wrestlerList)
+                {
+                    if (current.Group == FindGroup(we_promotionBox.SelectedItem.ToString()))
+                    {
+                        we_resultList.Items.Add(current);
+                    }
+                }
+
+                if (we_resultList.Items.Count > 0)
+                {
+                    we_resultList.SelectedIndex = 0;
+                }
+                else
+                {
+                    this.LoadSubs();
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("Search Error: " + ex.Message);
+            }
+        }
         private int FindGroup(String groupName)
         {
             return promotionList.IndexOf(groupName);
         }
-
-        private void we_resultList_SelectedIndexChanged(object sender, EventArgs e)
+        #endregion
+        #region Referees
+        private void refEdit_Click(object sender, EventArgs e)
         {
-            WresIDGroup edit = (WresIDGroup)we_resultList.SelectedItem;
-            ws_promotionLbl.Text = promotionList[edit.Group];
+            try
+            {
+                if (we_refList.Items.Count == 0)
+                {
+                    return;
+                }
+
+                RefereeInfo referee = (RefereeInfo)we_refList.SelectedItem;
+                global::Menu_RefereeCreate.referee_data = referee.Data;
+                global::CreateMenu_SceneManager.flg_Overwrite = true;
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Scene_RefereeEdit");
+            }
+            catch (Exception ex)
+            {
+                L.D("Create Ref Error: " + ex.Message);
+            }
         }
+        private void re_refresh_Click(object sender, EventArgs e)
+        {
+            LoadReferees();
+        }
+        #endregion
+        #endregion
+
     }
 }
 

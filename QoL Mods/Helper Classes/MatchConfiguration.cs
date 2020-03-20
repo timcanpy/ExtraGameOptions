@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using DG;
+using QoL_Mods.Helper_Classes;
 
 namespace MatchConfig
 {
@@ -89,16 +90,13 @@ namespace MatchConfig
             return rings;
         }
 
-        public static List<String> LoadReferees()
+        public static List<RefereeInfo> LoadReferees()
         {
-            List<String> referees = new List<String>
+            List<RefereeInfo> referees = new List<RefereeInfo>();
+            foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
             {
-                "Mr Judgement"
-            };
-            //foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
-            //{
-            //    referees.Add(referee.Prm.name);
-            //}
+                referees.Add(new RefereeInfo(referee));
+            }
             return referees;
         }
 
