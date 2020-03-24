@@ -97,6 +97,7 @@ namespace QoL_Mods
             // 
             // tabPage11
             // 
+            this.tabPage11.BackColor = System.Drawing.Color.RoyalBlue;
             this.tabPage11.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.tabPage11.Controls.Add(this.style_addCritical);
             this.tabPage11.Controls.Add(this.style_addHeavy);
@@ -117,10 +118,11 @@ namespace QoL_Mods
             this.tabPage11.Size = new System.Drawing.Size(586, 227);
             this.tabPage11.TabIndex = 0;
             this.tabPage11.Text = "Styles";
-            this.tabPage11.UseVisualStyleBackColor = true;
             // 
             // style_addCritical
             // 
+            this.style_addCritical.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.style_addCritical.ForeColor = System.Drawing.SystemColors.ControlText;
             this.style_addCritical.Location = new System.Drawing.Point(444, 154);
             this.style_addCritical.Name = "style_addCritical";
             this.style_addCritical.Size = new System.Drawing.Size(49, 23);
@@ -131,6 +133,8 @@ namespace QoL_Mods
             // 
             // style_addHeavy
             // 
+            this.style_addHeavy.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.style_addHeavy.ForeColor = System.Drawing.SystemColors.ControlText;
             this.style_addHeavy.Location = new System.Drawing.Point(444, 65);
             this.style_addHeavy.Name = "style_addHeavy";
             this.style_addHeavy.Size = new System.Drawing.Size(49, 23);
@@ -141,6 +145,8 @@ namespace QoL_Mods
             // 
             // style_addMedium
             // 
+            this.style_addMedium.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.style_addMedium.ForeColor = System.Drawing.SystemColors.ControlText;
             this.style_addMedium.Location = new System.Drawing.Point(237, 154);
             this.style_addMedium.Name = "style_addMedium";
             this.style_addMedium.Size = new System.Drawing.Size(49, 23);
@@ -151,6 +157,7 @@ namespace QoL_Mods
             // 
             // panel17
             // 
+            this.panel17.BackColor = System.Drawing.Color.RoyalBlue;
             this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel17.Controls.Add(this.nl_styleBox);
             this.panel17.Controls.Add(this.label100);
@@ -173,15 +180,18 @@ namespace QoL_Mods
             // label100
             // 
             this.label100.AutoSize = true;
-            this.label100.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label100.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label100.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label100.Location = new System.Drawing.Point(58, 11);
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(35, 13);
+            this.label100.Size = new System.Drawing.Size(42, 15);
             this.label100.TabIndex = 34;
             this.label100.Text = "Styles";
             // 
             // style_addLight
             // 
+            this.style_addLight.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.style_addLight.ForeColor = System.Drawing.SystemColors.ControlText;
             this.style_addLight.Location = new System.Drawing.Point(237, 65);
             this.style_addLight.Name = "style_addLight";
             this.style_addLight.Size = new System.Drawing.Size(49, 23);
@@ -229,45 +239,50 @@ namespace QoL_Mods
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label48.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label48.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label48.Location = new System.Drawing.Point(223, 110);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(87, 13);
+            this.label48.Size = new System.Drawing.Size(102, 15);
             this.label48.TabIndex = 21;
             this.label48.Text = "Medium Damage";
             // 
             // label47
             // 
             this.label47.AutoSize = true;
-            this.label47.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label47.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label47.Location = new System.Drawing.Point(425, 21);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(81, 13);
+            this.label47.Size = new System.Drawing.Size(91, 15);
             this.label47.TabIndex = 20;
             this.label47.Text = "Heavy Damage";
             // 
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label46.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label46.Location = new System.Drawing.Point(429, 110);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(81, 13);
+            this.label46.Size = new System.Drawing.Size(99, 15);
             this.label46.TabIndex = 19;
             this.label46.Text = "Critical Damage";
             // 
             // label45
             // 
             this.label45.AutoSize = true;
-            this.label45.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label45.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label45.Location = new System.Drawing.Point(226, 21);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(73, 13);
+            this.label45.Size = new System.Drawing.Size(86, 15);
             this.label45.TabIndex = 18;
             this.label45.Text = "Light Damage";
             // 
             // tabPage12
             // 
+            this.tabPage12.BackColor = System.Drawing.Color.RoyalBlue;
             this.tabPage12.Controls.Add(this.nl_wresterList);
             this.tabPage12.Controls.Add(this.label55);
             this.tabPage12.Controls.Add(this.wrestler_addCritical);
@@ -289,7 +304,6 @@ namespace QoL_Mods
             this.tabPage12.Size = new System.Drawing.Size(586, 227);
             this.tabPage12.TabIndex = 1;
             this.tabPage12.Text = "Wrestlers";
-            this.tabPage12.UseVisualStyleBackColor = true;
             // 
             // nl_wresterList
             // 
@@ -304,15 +318,17 @@ namespace QoL_Mods
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label55.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label55.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label55.Location = new System.Drawing.Point(370, 7);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(51, 13);
+            this.label55.Size = new System.Drawing.Size(62, 15);
             this.label55.TabIndex = 59;
             this.label55.Text = "Wrestlers";
             // 
             // wrestler_addCritical
             // 
+            this.wrestler_addCritical.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wrestler_addCritical.Location = new System.Drawing.Point(446, 180);
             this.wrestler_addCritical.Name = "wrestler_addCritical";
             this.wrestler_addCritical.Size = new System.Drawing.Size(49, 23);
@@ -323,6 +339,7 @@ namespace QoL_Mods
             // 
             // wrestler_addHeavy
             // 
+            this.wrestler_addHeavy.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wrestler_addHeavy.Location = new System.Drawing.Point(446, 97);
             this.wrestler_addHeavy.Name = "wrestler_addHeavy";
             this.wrestler_addHeavy.Size = new System.Drawing.Size(49, 23);
@@ -333,6 +350,7 @@ namespace QoL_Mods
             // 
             // wrestler_addMedium
             // 
+            this.wrestler_addMedium.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wrestler_addMedium.Location = new System.Drawing.Point(250, 180);
             this.wrestler_addMedium.Name = "wrestler_addMedium";
             this.wrestler_addMedium.Size = new System.Drawing.Size(49, 23);
@@ -343,6 +361,7 @@ namespace QoL_Mods
             // 
             // wrestler_addLight
             // 
+            this.wrestler_addLight.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wrestler_addLight.Location = new System.Drawing.Point(250, 99);
             this.wrestler_addLight.Name = "wrestler_addLight";
             this.wrestler_addLight.Size = new System.Drawing.Size(49, 23);
@@ -390,46 +409,50 @@ namespace QoL_Mods
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label51.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label51.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label51.Location = new System.Drawing.Point(237, 136);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(87, 13);
+            this.label51.Size = new System.Drawing.Size(102, 15);
             this.label51.TabIndex = 46;
             this.label51.Text = "Medium Damage";
             // 
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label52.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label52.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label52.Location = new System.Drawing.Point(429, 55);
             this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(81, 13);
+            this.label52.Size = new System.Drawing.Size(91, 15);
             this.label52.TabIndex = 45;
             this.label52.Text = "Heavy Damage";
             // 
             // label53
             // 
             this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label53.Location = new System.Drawing.Point(429, 136);
             this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(81, 13);
+            this.label53.Size = new System.Drawing.Size(99, 15);
             this.label53.TabIndex = 44;
             this.label53.Text = "Critical Damage";
             // 
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label54.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label54.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label54.Location = new System.Drawing.Point(237, 53);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(73, 13);
+            this.label54.Size = new System.Drawing.Size(86, 15);
             this.label54.TabIndex = 43;
             this.label54.Text = "Light Damage";
             // 
             // panel18
             // 
-            this.panel18.BackColor = System.Drawing.Color.White;
+            this.panel18.BackColor = System.Drawing.Color.RoyalBlue;
             this.panel18.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel18.Controls.Add(this.label49);
             this.panel18.Controls.Add(this.nl_removeWrestler);
@@ -445,15 +468,17 @@ namespace QoL_Mods
             // label49
             // 
             this.label49.AutoSize = true;
-            this.label49.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label49.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label49.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label49.Location = new System.Drawing.Point(50, 10);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(83, 13);
+            this.label49.Size = new System.Drawing.Size(99, 15);
             this.label49.TabIndex = 12;
             this.label49.Text = "Wrestler Search";
             // 
             // nl_removeWrestler
             // 
+            this.nl_removeWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nl_removeWrestler.Location = new System.Drawing.Point(53, 170);
             this.nl_removeWrestler.Name = "nl_removeWrestler";
             this.nl_removeWrestler.Size = new System.Drawing.Size(75, 23);
@@ -472,6 +497,7 @@ namespace QoL_Mods
             // 
             // nl_addWrestler
             // 
+            this.nl_addWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nl_addWrestler.Location = new System.Drawing.Point(53, 130);
             this.nl_addWrestler.Name = "nl_addWrestler";
             this.nl_addWrestler.Size = new System.Drawing.Size(75, 23);
@@ -483,10 +509,11 @@ namespace QoL_Mods
             // label50
             // 
             this.label50.AutoSize = true;
-            this.label50.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label50.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label50.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label50.Location = new System.Drawing.Point(59, 71);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(65, 13);
+            this.label50.Size = new System.Drawing.Size(81, 15);
             this.label50.TabIndex = 14;
             this.label50.Text = "Wrestler List";
             // 
@@ -501,7 +528,7 @@ namespace QoL_Mods
             // 
             // panel15
             // 
-            this.panel15.BackColor = System.Drawing.Color.White;
+            this.panel15.BackColor = System.Drawing.Color.RoyalBlue;
             this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel15.Controls.Add(this.nl_Categories);
             this.panel15.Controls.Add(this.label44);
@@ -528,15 +555,18 @@ namespace QoL_Mods
             // label44
             // 
             this.label44.AutoSize = true;
-            this.label44.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label44.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label44.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label44.Location = new System.Drawing.Point(57, 59);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(79, 13);
+            this.label44.Size = new System.Drawing.Size(92, 15);
             this.label44.TabIndex = 16;
             this.label44.Text = "Move Category";
             // 
             // nl_refreshMoves
             // 
+            this.nl_refreshMoves.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nl_refreshMoves.ForeColor = System.Drawing.SystemColors.ControlText;
             this.nl_refreshMoves.Location = new System.Drawing.Point(45, 219);
             this.nl_refreshMoves.Name = "nl_refreshMoves";
             this.nl_refreshMoves.Size = new System.Drawing.Size(99, 23);
@@ -559,20 +589,22 @@ namespace QoL_Mods
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label42.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label42.Location = new System.Drawing.Point(57, 135);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(79, 13);
+            this.label42.Size = new System.Drawing.Size(93, 15);
             this.label42.TabIndex = 6;
             this.label42.Text = "Search Results";
             // 
             // label43
             // 
             this.label43.AutoSize = true;
-            this.label43.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label43.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.label43.Location = new System.Drawing.Point(60, 7);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(71, 13);
+            this.label43.Size = new System.Drawing.Size(80, 15);
             this.label43.TabIndex = 5;
             this.label43.Text = "Move Search";
             // 
@@ -592,7 +624,7 @@ namespace QoL_Mods
             this.Controls.Add(this.tabControl2);
             this.Controls.Add(this.panel15);
             this.Name = "FaceLockForm";
-            this.Text = "Face Lock Override";
+            this.Text = "Face Lock Override Form";
             this.Load += new System.EventHandler(this.FaceLockForm_Load);
             this.tabControl2.ResumeLayout(false);
             this.tabPage11.ResumeLayout(false);

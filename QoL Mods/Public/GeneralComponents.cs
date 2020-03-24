@@ -28,7 +28,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
-    [GroupDescription(Group = "AutoSetCPU", Name = "Auto Set CPU", Description = "This will make the game automatically set all wrestler slots in the match screen to CPU so you don't have to repeatedly keep changing 1P to CPU manually.")]
+    //[GroupDescription(Group = "AutoSetCPU", Name = "Auto Set CPU", Description = "This will make the game automatically set all wrestler slots in the match screen to CPU so you don't have to repeatedly keep changing 1P to CPU manually.")]
 
     #endregion
     #region Field Access
@@ -660,6 +660,12 @@ namespace QoL_Mods
                 }
 
                 recoveryTauntCount[i] = ((int)player.WresParam.charismaRank + (int)player.WresParam.wrestlerRank) / 2;
+
+                //Ensure that every edit can use at least one Recovery Taun
+                if (recoveryTauntCount[i] <= 0)
+                {
+                    recoveryTauntCount[i] = 1;
+                }
             }
 
             foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_styles.Items)
@@ -796,7 +802,7 @@ namespace QoL_Mods
         {
             try
             {
-                if (animator.plObj == null || animator.AnmReqType != AnmReqTypeEnum.SkillID)
+                if (animator.plObj == null || animator.AnmReqType != AnmReqTypeEnum.SkillID || tauntData == null)
                 {
                     return;
                 }
@@ -805,6 +811,7 @@ namespace QoL_Mods
                 if (tauntData[animator.plObj.PlIdx] != null)
                 {
                     animator.CurrentSkill = tauntData[animator.plObj.PlIdx];
+                    tauntData[animator.plObj.PlIdx] = null;
                 }
             }
             catch (Exception e)
@@ -858,10 +865,13 @@ namespace QoL_Mods
                 player.isAddedDownTimeByPerformance = true;
             }
 
-            ExecuteWakeUpTaunt(taunt.WakeupMoves[damageLevel].SkillID, player);
+            //Ensure that taunts ending in a grounded position do not recovery SP
+            bool isGrounded = taunt.EndPositions[damageLevel] == TauntEndPosition.Grounded;
+            ExecuteWakeUpTaunt(taunt.WakeupMoves[damageLevel].SkillID, player, !isGrounded);
+
             tauntStatus[player.PlIdx] = TauntExecution.Executed;
         }
-        public static void ExecuteWakeUpTaunt(int skillID, Player player)
+        public static void ExecuteWakeUpTaunt(int skillID, Player player, bool regainSP)
         {
             player.animator.AnmReqType = AnmReqTypeEnum.SkillID;
             player.animator.anmType = SkillAnmTypeEnum.Single;
@@ -889,7 +899,11 @@ namespace QoL_Mods
             recoveryTauntCount[player.PlIdx] -= 1;
 
             //Increase spirit for every taunt executed
-            player.AddSP(256 * GetDamageLevel(player));
+            if (regainSP)
+            {
+                L.D("Recovery Taunt regens Spirit");
+                player.AddSP(256 * GetDamageLevel(player));
+            }
         }
         public static void ExecuteRoll(Player player, PlStateEnum position)
         {
@@ -1524,7 +1538,7 @@ namespace QoL_Mods
         #region Auto Set CPU on Match Select
         public static bool AutoSetCPU = false;
 
-        [Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "UpdateCursor", InjectionLocation = 576, InjectDirection = HookInjectDirection.After, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "AutoSetCPU")]
+        //[Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "UpdateCursor", InjectionLocation = 576, InjectDirection = HookInjectDirection.After, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "AutoSetCPU")]
         public static void SetAllCPU(Menu_BattleSetting menu_Battle)
         {
             if (!GlobalParam.IsStoryMode())
@@ -1546,7 +1560,7 @@ namespace QoL_Mods
             }
         }
 
-        [Hook(TargetClass = "Menu_SceneManager/<Start>c__Iterator0", TargetMethod = "MoveNext", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "AutoSetCPU")]
+        //[Hook(TargetClass = "Menu_SceneManager/<Start>c__Iterator0", TargetMethod = "MoveNext", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "AutoSetCPU")]
         public static void Check()
         {
             if (AutoSetCPU)
@@ -1556,5 +1570,6 @@ namespace QoL_Mods
         }
 
         #endregion
+        
     }
 }

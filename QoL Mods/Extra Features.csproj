@@ -34,6 +34,10 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="ModPack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\ModPack.dll</HintPath>
+    </Reference>
     <Reference Include="PWGR Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL Files\PWGR Framework.dll</HintPath>
@@ -61,7 +65,20 @@
     <Compile Include="FaceLockForm.Designer.cs">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper Classes\EnumLibrary.cs" />
     <Compile Include="Helper Classes\RefereeInfo.cs" />
+    <Compile Include="Private\CustomReversalForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\CustomReversalForm.Designer.cs">
+      <DependentUpon>CustomReversalForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Private\DynamicHighlightForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\DynamicHighlightForm.Designer.cs">
+      <DependentUpon>DynamicHighlightForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Private\Facelock\FaceLockMoves.cs" />
     <Compile Include="Private\Facelock\MoveCategory.cs" />
     <Compile Include="Private\Facelock\Skill.cs" />
@@ -69,6 +86,8 @@
     <Compile Include="Private\Facelock\SlotStorage.cs" />
     <Compile Include="Private\Facelock\Style.cs" />
     <Compile Include="Private\PrivateOverrides.cs" />
+    <Compile Include="Private\Reversal\Move.cs" />
+    <Compile Include="Private\Reversal\ReversalMove.cs" />
     <Compile Include="Public\Reports.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +118,12 @@
   <ItemGroup>
     <EmbeddedResource Include="FaceLockForm.resx">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\CustomReversalForm.resx">
+      <DependentUpon>CustomReversalForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\DynamicHighlightForm.resx">
+      <DependentUpon>DynamicHighlightForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\RecoveryTauntForm.resx">
       <DependentUpon>RecoveryTauntForm.cs</DependentUpon>
