@@ -43,12 +43,12 @@ namespace QoL_Mods
             this.we_edit = new System.Windows.Forms.Button();
             this.we_searchBox = new System.Windows.Forms.TextBox();
             this.ql_RefereeEdit = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.refEdit = new System.Windows.Forms.Button();
             this.re_refresh = new System.Windows.Forms.Button();
             this.we_refList = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.ql_Controls.SuspendLayout();
             this.ql_WrestlerEdit.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -98,9 +98,10 @@ namespace QoL_Mods
             // searchWiki
             // 
             this.searchWiki.AutoSize = true;
+            this.searchWiki.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchWiki.Location = new System.Drawing.Point(450, 141);
             this.searchWiki.Name = "searchWiki";
-            this.searchWiki.Size = new System.Drawing.Size(54, 13);
+            this.searchWiki.Size = new System.Drawing.Size(64, 15);
             this.searchWiki.TabIndex = 19;
             this.searchWiki.TabStop = true;
             this.searchWiki.Text = "Wikipedia";
@@ -109,26 +110,27 @@ namespace QoL_Mods
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(200, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 13);
+            this.label1.Size = new System.Drawing.Size(99, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "Wrestler Search";
             // 
             // ws_promotionLbl
             // 
             this.ws_promotionLbl.AutoSize = true;
-            this.ws_promotionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ws_promotionLbl.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ws_promotionLbl.ForeColor = System.Drawing.Color.DarkGreen;
             this.ws_promotionLbl.Location = new System.Drawing.Point(99, 112);
             this.ws_promotionLbl.Name = "ws_promotionLbl";
-            this.ws_promotionLbl.Size = new System.Drawing.Size(93, 13);
+            this.ws_promotionLbl.Size = new System.Drawing.Size(93, 15);
             this.ws_promotionLbl.TabIndex = 7;
             this.ws_promotionLbl.Text = "Search Results";
             // 
             // we_refresh
             // 
+            this.we_refresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.we_refresh.Location = new System.Drawing.Point(345, 170);
             this.we_refresh.Name = "we_refresh";
             this.we_refresh.Size = new System.Drawing.Size(99, 23);
@@ -140,10 +142,10 @@ namespace QoL_Mods
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(205, 65);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(87, 13);
+            this.label2.Size = new System.Drawing.Size(92, 15);
             this.label2.TabIndex = 8;
             this.label2.Text = "Promotion List";
             // 
@@ -171,6 +173,7 @@ namespace QoL_Mods
             // 
             // we_edit
             // 
+            this.we_edit.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.we_edit.Location = new System.Drawing.Point(84, 170);
             this.we_edit.Name = "we_edit";
             this.we_edit.Size = new System.Drawing.Size(75, 23);
@@ -197,6 +200,17 @@ namespace QoL_Mods
             this.ql_RefereeEdit.TabIndex = 1;
             this.ql_RefereeEdit.Text = "Referees";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = System.Drawing.Color.Red;
+            this.label3.Location = new System.Drawing.Point(35, 18);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(506, 21);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Changes to Referee Automatically Save When Exiting Edit Menu";
+            // 
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.White;
@@ -222,6 +236,7 @@ namespace QoL_Mods
             // 
             // refEdit
             // 
+            this.refEdit.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.refEdit.Location = new System.Drawing.Point(36, 113);
             this.refEdit.Name = "refEdit";
             this.refEdit.Size = new System.Drawing.Size(75, 29);
@@ -232,6 +247,7 @@ namespace QoL_Mods
             // 
             // re_refresh
             // 
+            this.re_refresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.re_refresh.Location = new System.Drawing.Point(230, 113);
             this.re_refresh.Name = "re_refresh";
             this.re_refresh.Size = new System.Drawing.Size(75, 29);
@@ -248,17 +264,6 @@ namespace QoL_Mods
             this.we_refList.Name = "we_refList";
             this.we_refList.Size = new System.Drawing.Size(269, 21);
             this.we_refList.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Franklin Gothic Medium", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.Red;
-            this.label3.Location = new System.Drawing.Point(35, 18);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(506, 21);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Changes to Referee Automatically Save When Exiting Edit Menu";
             // 
             // SearchForm
             // 

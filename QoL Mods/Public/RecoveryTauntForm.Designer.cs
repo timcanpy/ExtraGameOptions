@@ -251,10 +251,10 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(58, 11);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.Size = new System.Drawing.Size(42, 15);
             this.label3.TabIndex = 34;
             this.label3.Text = "Styles";
             // 
@@ -297,40 +297,40 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label19.Location = new System.Drawing.Point(223, 110);
+            this.label19.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label19.Location = new System.Drawing.Point(223, 106);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(87, 13);
+            this.label19.Size = new System.Drawing.Size(102, 15);
             this.label19.TabIndex = 21;
             this.label19.Text = "Medium Damage";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(425, 21);
+            this.label20.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(425, 17);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(81, 13);
+            this.label20.Size = new System.Drawing.Size(91, 15);
             this.label20.TabIndex = 20;
             this.label20.Text = "Heavy Damage";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label21.Location = new System.Drawing.Point(429, 110);
+            this.label21.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label21.Location = new System.Drawing.Point(429, 106);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(81, 13);
+            this.label21.Size = new System.Drawing.Size(99, 15);
             this.label21.TabIndex = 19;
             this.label21.Text = "Critical Damage";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(226, 21);
+            this.label22.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(226, 17);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(73, 13);
+            this.label22.Size = new System.Drawing.Size(86, 15);
             this.label22.TabIndex = 18;
             this.label22.Text = "Light Damage";
             // 
@@ -476,10 +476,10 @@
             // label23
             // 
             this.label23.AutoSize = true;
-            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.Location = new System.Drawing.Point(366, 7);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(51, 13);
+            this.label23.Size = new System.Drawing.Size(62, 15);
             this.label23.TabIndex = 59;
             this.label23.Text = "Wrestlers";
             // 
@@ -522,40 +522,40 @@
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(237, 136);
+            this.label24.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(237, 134);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(87, 13);
+            this.label24.Size = new System.Drawing.Size(102, 15);
             this.label24.TabIndex = 46;
             this.label24.Text = "Medium Damage";
             // 
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label57.Location = new System.Drawing.Point(429, 55);
+            this.label57.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label57.Location = new System.Drawing.Point(429, 53);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(81, 13);
+            this.label57.Size = new System.Drawing.Size(91, 15);
             this.label57.TabIndex = 45;
             this.label57.Text = "Heavy Damage";
             // 
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label58.Location = new System.Drawing.Point(429, 136);
+            this.label58.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label58.Location = new System.Drawing.Point(429, 134);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(81, 13);
+            this.label58.Size = new System.Drawing.Size(99, 15);
             this.label58.TabIndex = 44;
             this.label58.Text = "Critical Damage";
             // 
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label59.Location = new System.Drawing.Point(237, 53);
+            this.label59.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label59.Location = new System.Drawing.Point(237, 51);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(73, 13);
+            this.label59.Size = new System.Drawing.Size(86, 15);
             this.label59.TabIndex = 43;
             this.label59.Text = "Light Damage";
             // 
@@ -577,15 +577,16 @@
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label60.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label60.Location = new System.Drawing.Point(50, 10);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(83, 13);
+            this.label60.Size = new System.Drawing.Size(99, 15);
             this.label60.TabIndex = 12;
             this.label60.Text = "Wrestler Search";
             // 
             // wu_removeWrestler
             // 
+            this.wu_removeWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wu_removeWrestler.Location = new System.Drawing.Point(53, 170);
             this.wu_removeWrestler.Name = "wu_removeWrestler";
             this.wu_removeWrestler.Size = new System.Drawing.Size(75, 23);
@@ -603,6 +604,7 @@
             // 
             // wu_addWrestler
             // 
+            this.wu_addWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wu_addWrestler.Location = new System.Drawing.Point(53, 130);
             this.wu_addWrestler.Name = "wu_addWrestler";
             this.wu_addWrestler.Size = new System.Drawing.Size(75, 23);
@@ -614,10 +616,10 @@
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label61.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label61.Location = new System.Drawing.Point(59, 71);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(65, 13);
+            this.label61.Size = new System.Drawing.Size(81, 15);
             this.label61.TabIndex = 14;
             this.label61.Text = "Wrestler List";
             // 
@@ -647,6 +649,7 @@
             // 
             // wu_moveRefresh
             // 
+            this.wu_moveRefresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.wu_moveRefresh.Location = new System.Drawing.Point(40, 125);
             this.wu_moveRefresh.Name = "wu_moveRefresh";
             this.wu_moveRefresh.Size = new System.Drawing.Size(99, 23);
@@ -668,20 +671,20 @@
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label63.Location = new System.Drawing.Point(60, 59);
+            this.label63.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label63.Location = new System.Drawing.Point(47, 60);
             this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(79, 13);
+            this.label63.Size = new System.Drawing.Size(93, 15);
             this.label63.TabIndex = 6;
             this.label63.Text = "Search Results";
             // 
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label64.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label64.Location = new System.Drawing.Point(60, 7);
             this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(71, 13);
+            this.label64.Size = new System.Drawing.Size(80, 15);
             this.label64.TabIndex = 5;
             this.label64.Text = "Move Search";
             // 

@@ -77,15 +77,12 @@ namespace MatchConfig
             return venues;
         }
 
-        public static List<String> LoadRings()
+        public static List<RingData> LoadRings()
         {
-            List<String> rings = new List<String>
-            {
-                "SWA"
-            };
+            List<RingData> rings = new List<RingData>();
             foreach (RingData ring in SaveData.GetInst().editRingData)
             {
-                rings.Add(ring.name);
+                rings.Add(ring);
             }
             return rings;
         }

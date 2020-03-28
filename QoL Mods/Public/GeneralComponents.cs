@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using QoL_Mods.Data_Classes;
 using QoL_Mods.Data_Classes.Facelock;
 using System.IO;
+using QoL_Mods.Helper_Classes;
+using QoL_Mods.Public;
 using UnityEngine.UI;
 
 namespace QoL_Mods
@@ -104,6 +106,19 @@ namespace QoL_Mods
             else
             {
                 return Reports.form;
+            }
+        }
+
+        [ControlPanel(Group = "UkeNotification")]
+        public static Form UkemiForm()
+        {
+            if (UkemiNotificationForm.form == null)
+            {
+                return new UkemiNotificationForm();
+            }
+            else
+            {
+                return UkemiNotificationForm.form;
             }
         }
 
@@ -1169,6 +1184,7 @@ namespace QoL_Mods
             int tauntCeiling = 80 - (10 * damageLevel);
 
             //Make grunts more likely if an edit is ready to tap.
+            L.D("Attempting Submission Grunt for " + DataBase.GetWrestlerFullName(player.WresParam));
             if (player.isWannaGiveUp)
             {
                 tauntCeiling -= 20;
@@ -1296,38 +1312,68 @@ namespace QoL_Mods
         #endregion
 
         #region Ukemi Notification
-        [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "UkeNotification")]
-        public static void NotifyForUkemiTrigger()
+        [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "UkeNotification")]
+        public static void NotifyForUkemiTrigger(Player player)
         {
-            if (MatchMain.inst.isMatchEnd)
+            try
             {
-                return;
-            }
-            //Select cheer type based on venue
-            switch (GlobalWork.GetInst().MatchSetting.arena)
-            {
-                case VenueEnum.YurakuenHall:
-                case VenueEnum.SpikeDome:
-                    global::Audience.inst.Play_ClapHands();
-                    break;
-                case VenueEnum.SCSStadium:
-                case VenueEnum.ArenaDeUniverso:
-                    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.ThisIsWrestling, 2);
-                    break;
-                case VenueEnum.Cage:
-                case VenueEnum.Dodecagon:
-                case VenueEnum.BigGardenArena:
-                case VenueEnum.BarbedWire:
-                case VenueEnum.LandMine_BarbedWire:
-                case VenueEnum.LandMine_FluorescentLamp:
-                    global::Audience.inst.PlayCheerVoice(CheerVoiceEnum.HolyShit, 2);
-                    break;
-                default:
-                    global::Audience.inst.Play_ClapHands();
-                    break;
-            }
+                if (MatchMain.inst.isMatchEnd)
+                {
+                    return;
+                }
 
-            L.D("Playing Notification Uke: " + GlobalWork.GetInst().MatchSetting.arena);
+                //Select cheer from form
+                MatchSetting settings = GlobalWork.GetInst().MatchSetting;
+                String ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                String wrestler = DataBase.GetWrestlerFullName(player.WresParam);
+
+                CheerVoiceEnum cheer = CheerVoiceEnum.Num;
+
+                //Check the wrestlers first
+                foreach (UkemiNotification item in UkemiNotificationForm.form.uk_wrestlers.Items)
+                {
+                    if (item.Name.Equals(wrestler))
+                    {
+                        cheer = GetRandomCheer(item.CheerList);
+                        break;
+                    }
+                }
+
+                if (cheer == CheerVoiceEnum.Num)
+                {
+
+                    //Check the rings next
+                    foreach (UkemiNotification item in UkemiNotificationForm.form.uk_ringsList.Items)
+                    {
+                        if (item.Name.Equals(ringName))
+                        {
+                            cheer = GetRandomCheer(item.CheerList);
+                            break;
+                        }
+                    }
+                }
+
+                if (cheer != CheerVoiceEnum.Num)
+                {
+                    L.D("Playing Ukemi Notification for " + wrestler + " in " + ringName + ": " + cheer);
+                    Audience.inst.PlayCheerVoice(cheer, (int)player.WresParam.charismaRank);
+                }
+                else
+                {
+                    L.D("No Ukemi Notification for " + wrestler + " in " + ringName + ": " + cheer);
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("NotifyForUkemiTriggerError: " + e);
+            }
+          
+        }
+
+        public static CheerVoiceEnum GetRandomCheer(List<CheerVoiceEnum> cheers)
+        {
+            int index = UnityEngine.Random.Range(0, cheers.Count);
+            return cheers[index];
         }
         #endregion
 
@@ -1570,6 +1616,6 @@ namespace QoL_Mods
         }
 
         #endregion
-        
+
     }
 }

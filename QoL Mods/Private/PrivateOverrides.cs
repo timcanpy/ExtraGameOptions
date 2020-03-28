@@ -247,13 +247,17 @@ namespace QoL_Mods.Private
                     return false;
                 }
                 attacker.ChangeState(global::PlStateEnum.NormalAnm);
+                defender.ChangeState(global::PlStateEnum.NormalAnm);
 
                 if (moveset.Type[damageLevel] == SkillType.BasicMove)
                 {
+                    //defender.ChangeState(global::PlStateEnum.NormalAnm);
                     attacker.animator.ReqBasicAnm((BasicSkillEnum)moveset.BasicSkills[damageLevel].SkillID, true, attacker.TargetPlIdx);
                 }
                 else if (moveset.Type[damageLevel] == SkillType.IrishWhip)
                 {
+                    //defender.ChangeState(global::PlStateEnum.NormalAnm);
+
                     //Determine the direction to press
                     if (attacker.plController.kind == PlayerControllerKind.AI)
                     {
@@ -293,7 +297,7 @@ namespace QoL_Mods.Private
                         }
                     }
 
-                    //attacker.ProcessKeyInput_Grapple_Run();
+                    attacker.ProcessKeyInput_Grapple_Run();
 
                     if (attacker.plController.kind == PlayerControllerKind.AI)
                     {
@@ -1197,6 +1201,7 @@ namespace QoL_Mods.Private
                     {
                         if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
                         {
+                            L.D("Processing Knock-out");
                             if (ai.IsEffectiveFall())
                             {
                                 int value = UnityEngine.Random.Range(6, 8);
@@ -1205,6 +1210,7 @@ namespace QoL_Mods.Private
                         }
                         else
                         {
+                            L.D("Processing Drag");
                             ai.AIActFunc_DragDownOpponent();
                         }
                     }

@@ -60,5 +60,15 @@
             Corner
         };
         #endregion
+
+        #region Ukemi Notification
+
+        public enum NotificationType
+        {
+            Wrestler,
+            Promotion
+        };
+
+        #endregion
     }
 }

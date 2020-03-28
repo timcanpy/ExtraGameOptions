@@ -567,7 +567,7 @@ namespace QoL_Mods
             // 
             this.nl_refreshMoves.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nl_refreshMoves.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.nl_refreshMoves.Location = new System.Drawing.Point(45, 219);
+            this.nl_refreshMoves.Location = new System.Drawing.Point(50, 207);
             this.nl_refreshMoves.Name = "nl_refreshMoves";
             this.nl_refreshMoves.Size = new System.Drawing.Size(99, 23);
             this.nl_refreshMoves.TabIndex = 15;
