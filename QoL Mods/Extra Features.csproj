@@ -59,14 +59,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper Classes\GrappleSetting.cs" />
+    <Compile Include="Helper Classes\RingConfiguration.cs" />
     <Compile Include="Helper Classes\RingInfo.cs" />
     <Compile Include="Helper Classes\UkemiNotification.cs" />
-    <Compile Include="Private\FaceLockForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Private\FaceLockForm.Designer.cs">
-      <DependentUpon>FaceLockForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Helper Classes\EnumLibrary.cs" />
     <Compile Include="Helper Classes\RefereeInfo.cs" />
     <Compile Include="Private\CustomReversalForm.cs">
@@ -81,6 +77,12 @@
     <Compile Include="Private\DynamicHighlightForm.Designer.cs">
       <DependentUpon>DynamicHighlightForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Private\FaceLockForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\FaceLockForm.Designer.cs">
+      <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Private\Facelock\FaceLockMoves.cs" />
     <Compile Include="Private\Facelock\MoveCategory.cs" />
     <Compile Include="Private\Facelock\Skill.cs" />
@@ -90,6 +92,12 @@
     <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\Reversal\Move.cs" />
     <Compile Include="Private\Reversal\ReversalMove.cs" />
+    <Compile Include="Private\RingConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\RingConfigForm.Designer.cs">
+      <DependentUpon>RingConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Public\Reports.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -124,14 +132,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Private\FaceLockForm.resx">
-      <DependentUpon>FaceLockForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Private\CustomReversalForm.resx">
       <DependentUpon>CustomReversalForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Private\DynamicHighlightForm.resx">
       <DependentUpon>DynamicHighlightForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\FaceLockForm.resx">
+      <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\RingConfigForm.resx">
+      <DependentUpon>RingConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\RecoveryTauntForm.resx">
       <DependentUpon>RecoveryTauntForm.cs</DependentUpon>

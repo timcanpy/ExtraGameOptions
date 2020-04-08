@@ -151,6 +151,30 @@ namespace MatchConfig
             return wrestlers;
         }
 
+        public static RefereeInfo GetRefereeInfo(int refereeID)
+        {
+            foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
+            {
+                if ((int)referee.editRefereeID == refereeID)
+                {
+                    return new RefereeInfo(referee);
+                }
+            }
 
+            return null;
+        }
+
+        public static RefereeInfo GetRefereeInfo(String name)
+        {
+            foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
+            {
+                if (referee.Prm.name.Equals(name))
+                {
+                    return new RefereeInfo(referee);
+                }
+            }
+
+            return null;
+        }
     }
 }

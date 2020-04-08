@@ -15,8 +15,8 @@ namespace QoL_Mods.Public
 
         public static UkemiNotificationForm form = null;
         private static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
-        private static String saveFileName = "Notifications.dat";
-        private static String saveFolderName = "./EGOData/";
+        private static System.String saveFileName = "Notifications.dat";
+        private static System.String saveFolderName = "./EGOData/";
         #endregion
 
         public UkemiNotificationForm()
@@ -44,7 +44,7 @@ namespace QoL_Mods.Public
 
         private void LoadNotificationData()
         {
-            String filePath = Path.Combine(saveFolderName, saveFileName);
+            System.String filePath = Path.Combine(saveFolderName, saveFileName);
             if (File.Exists(filePath))
             {
                 using (StreamReader sr = new StreamReader(filePath))
@@ -53,10 +53,10 @@ namespace QoL_Mods.Public
                     List<UkemiNotification> rings = new List<UkemiNotification>();
 
                     var lines = File.ReadAllLines(filePath);
-                    foreach (String line in lines)
+                    foreach (System.String line in lines)
                     {
                         UkemiNotification notification = new UkemiNotification();
-                        notification.LoadNotificationData(line);
+                        notification.LoadNotificationData((string)line);
                         if (notification.Type == EnumLibrary.NotificationType.Wrestler)
                         {
                             wrestlers.Add(notification);
@@ -98,7 +98,7 @@ namespace QoL_Mods.Public
         {
             try
             {
-                String filePath = Path.Combine(saveFolderName, saveFileName);
+                System.String filePath = Path.Combine(saveFolderName, saveFileName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -190,7 +190,7 @@ namespace QoL_Mods.Public
         {
             try
             {
-                String query = uk_wrestlerSearch.Text;
+                System.String query = uk_wrestlerSearch.Text;
                 uk_wrestlerResults.Items.Clear();
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
@@ -227,7 +227,7 @@ namespace QoL_Mods.Public
         {
             try
             {
-                String query = uk_ringSearch.Text;
+                System.String query = uk_ringSearch.Text;
                 uk_ringResults.Items.Clear();
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
@@ -532,7 +532,7 @@ namespace QoL_Mods.Public
         }
         #endregion
 
-        private List<UkemiNotification> RemoveItem(ComboBox.ObjectCollection list, String itemName)
+        private List<UkemiNotification> RemoveItem(ComboBox.ObjectCollection list, System.String itemName)
         {
             List<UkemiNotification> newList = new List<UkemiNotification>();
 

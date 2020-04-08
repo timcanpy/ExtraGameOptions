@@ -5,7 +5,6 @@ using DLC;
 using System;
 using System.Collections.Generic;
 using QoL_Mods.Data_Classes;
-using QoL_Mods.Data_Classes.Facelock;
 using System.IO;
 using QoL_Mods.Helper_Classes;
 using QoL_Mods.Public;
@@ -16,7 +15,6 @@ namespace QoL_Mods
     #region Group Descriptions
     [GroupDescription(Group = "Wrestler Search", Name = "Edit Search Tool", Description = "Provides a UI for easily loading edits and referee within Edit Mode.\nNote that any changes to a Referee are automatically saved when exiting Edit Mode.")]
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
-    [GroupDescription(Group = "Forced Sell", Name = "Forced Finisher Sell", Description = "Increases down-time after special moves and finishers. The effect is lost after the second finisher is used.")]
     [GroupDescription(Group = "Ignore Downtime", Name = "Attacker Ignores Pinfall/Submission Downtime", Description = "Attacker immediately recovers after a pinfall or grounded submission.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
@@ -30,14 +28,12 @@ namespace QoL_Mods
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
-    //[GroupDescription(Group = "AutoSetCPU", Name = "Auto Set CPU", Description = "This will make the game automatically set all wrestler slots in the match screen to CPU so you don't have to repeatedly keep changing 1P to CPU manually.")]
-
+  
     #endregion
     #region Field Access
     #region Miscellaneous Fields
     [FieldAccess(Class = "MatchMain", Field = "InitMatch", Group = "Wrestler Search")]
     [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Ref Positions For Pinfall")]
-    [FieldAccess(Class = "Referee", Field = "GoToPlayer", Group = "Forced Sell")]
     [FieldAccess(Class = "Referee", Field = "CheckCount29", Group = "2.9Call")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "audio_source_index", Group = "GruntForSubmission")]
     [FieldAccess(Class = "Menu_SoundManager", Field = "sRefAudio", Group = "GruntForSubmission")]
@@ -121,46 +117,7 @@ namespace QoL_Mods
                 return UkemiNotificationForm.form;
             }
         }
-
-        #region Increase Down time
-        [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Forced Sell")]
-        public static void IncreaseDownTime(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
-        {
-            Player attacker = PlayerMan.inst.GetPlObj(plIDx);
-            Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
-
-            //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
-            if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
-                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
-            {
-                return;
-            }
-
-            if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
-            {
-                //Increase down time for submissions
-                if (sd.filteringType == SkillFilteringType.Choke || sd.filteringType == SkillFilteringType.Claw ||
-                    sd.filteringType == SkillFilteringType.Stretch
-                    || sd.filteringType == SkillFilteringType.Submission_Arm ||
-                    sd.filteringType == SkillFilteringType.Submission_Leg ||
-                    sd.filteringType == SkillFilteringType.Submission_Neck
-                    || sd.filteringType == SkillFilteringType.Submission_Complex)
-                {
-                    defender.DownTime += 300;
-                }
-
-                defender.DownTime += 300;
-                defender.isAddedDownTimeByPerformance = false;
-                if (defender.Zone == ZoneEnum.InRing)
-                {
-                    CheckForFall(defender.PlIdx);
-                }
-
-            }
-        }
-
-        #endregion
-
+        
         #region Force Preemptive Pinfall Count
 
         private static int downedPlayer;
@@ -173,6 +130,11 @@ namespace QoL_Mods
             }
             Player attacker = PlayerMan.inst.GetPlObj(plIDx);
             Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+
+            if (!defender.hasRight)
+            {
+                return;
+            }
 
             //Prepare for pinfall
             Referee mRef = RefereeMan.inst.GetRefereeObj();
@@ -205,6 +167,26 @@ namespace QoL_Mods
             {
                 downedPlayer = defender.PlIdx;
             }
+            else
+            {
+                return;
+            }
+
+            //Force check for all signatures and finishers
+            //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
+            if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
+                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
+            {
+                return;
+            }
+
+            if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
+            {
+                if (defender.Zone == ZoneEnum.InRing)
+                {
+                    CheckForFall(defender.PlIdx);
+                }
+            }
         }
 
         [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Ref Positions For Pinfall")]
@@ -215,14 +197,14 @@ namespace QoL_Mods
             {
                 return;
             }
-
-            if (player.PlIdx == downedPlayer && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
+            
+            if ((player.PlIdx == downedPlayer && player.hasRight) && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
             {
                 downedPlayer = -1;
                 CheckForFall(player.PlIdx);
             }
         }
-
+        
         public static void CheckForFall(int defender)
         {
             Referee mRef = RefereeMan.inst.GetRefereeObj();
@@ -237,7 +219,8 @@ namespace QoL_Mods
             return (state != RefeStateEnum.OutOfRingCount && state != RefeStateEnum.CheckSubmission && state != RefeStateEnum.DownCount && state != RefeStateEnum.FallCount &&
                     state != RefeStateEnum.Disturbed && state != RefeStateEnum.StartToDown &&
                     state != RefeStateEnum.R_KOCHECK && state != RefeStateEnum.DeclareVictory && state != RefeStateEnum.R_TKOCHECK
-                    && state != RefeStateEnum.FoulCount_Normal && state != RefeStateEnum.FoulCount_CornerPost && state != RefeStateEnum.FoulCount_Weapon);
+                    && state != RefeStateEnum.FoulCount_Normal && state != RefeStateEnum.FoulCount_CornerPost && state != RefeStateEnum.FoulCount_Weapon
+                    && state != RefeStateEnum.R_DOWN);
         }
         #endregion
 
@@ -432,6 +415,7 @@ namespace QoL_Mods
                 //If the check fails, do nothing
                 if (UnityEngine.Random.Range(0, 10 + (resilience * 5)) < 10)
                 {
+                    L.D("Resilient Critical Check failed");
                     return;
                 }
 
@@ -1155,6 +1139,28 @@ namespace QoL_Mods
                 {
                     //First Voice Slot determines voice type
                     voiceType[i] = plObj.WresParam.voiceType[0];
+                    try
+                    {
+                        //Ensure that females and japanese wrestlers use an appropriate voice type
+                        if (voiceType[i] == WrestlerVoiceTypeEnum.American_M_0)
+                        {
+                            if ((plObj.WresParam.sex == SexEnum.Male || plObj.WresParam.sex == SexEnum.MaybeMale) && (plObj.WresParam.country == CountryEnum.Japan ||
+                                                                                                                      plObj.WresParam.country == CountryEnum.NorthKorea || plObj.WresParam.country == CountryEnum.SouthKorea))
+                            {
+                                voiceType[i] = WrestlerVoiceTypeEnum.Japanease_M_0;
+                            }
+
+                            if ((plObj.WresParam.sex == SexEnum.Female || plObj.WresParam.sex == SexEnum.MaybeFemale)
+                                && (plObj.WresParam.country == CountryEnum.Japan || plObj.WresParam.country == CountryEnum.NorthKorea || plObj.WresParam.country == CountryEnum.SouthKorea))
+                            {
+                                voiceType[i] = WrestlerVoiceTypeEnum.Japanease_F_0;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        L.D("GetVoiceTypesError: " + ex);
+                    }
                 }
             }
         }
@@ -1164,17 +1170,20 @@ namespace QoL_Mods
         {
             if (!refe)
             {
+                L.D("Submission check: referee is null");
                 return;
             }
             global::Player player = global::PlayerMan.inst.GetPlObj(refe.TargetPlIdx);
 
             if (!player)
             {
+                L.D("Submission check: target player is null");
                 return;
             }
 
             if (!player.isSubmissionDef)
             {
+                L.D("Submission check: player is not in a submission");
                 return;
             }
 
@@ -1204,9 +1213,8 @@ namespace QoL_Mods
                 String[] voices = new String[4];
                 switch (voiceType)
                 {
-
                     case WrestlerVoiceTypeEnum.American_M_0:
-                    case WrestlerVoiceTypeEnum.Japanease_M_0:
+
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM0/WRAM0_004",
@@ -1216,7 +1224,6 @@ namespace QoL_Mods
                         };
                         break;
                     case WrestlerVoiceTypeEnum.American_M_1:
-                    case WrestlerVoiceTypeEnum.Japanease_M_1:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM1/WRAM1_004",
@@ -1226,7 +1233,6 @@ namespace QoL_Mods
                         };
                         break;
                     case WrestlerVoiceTypeEnum.American_M_2:
-                    case WrestlerVoiceTypeEnum.Japanease_M_2:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM2/WRAM2_004",
@@ -1236,7 +1242,6 @@ namespace QoL_Mods
                         };
                         break;
                     case WrestlerVoiceTypeEnum.American_M_3:
-                    case WrestlerVoiceTypeEnum.Japanease_M_3:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM3/WRAM3_004",
@@ -1246,7 +1251,6 @@ namespace QoL_Mods
                         };
                         break;
                     case WrestlerVoiceTypeEnum.American_M_4:
-                    case WrestlerVoiceTypeEnum.Japanease_M_4:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM4/WRAM4_004",
@@ -1256,8 +1260,6 @@ namespace QoL_Mods
                         };
                         break;
                     case WrestlerVoiceTypeEnum.American_M_5:
-                    case WrestlerVoiceTypeEnum.Japanease_M_5:
-                    case WrestlerVoiceTypeEnum.Japanease_M_6:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAM5/WRAM5_004",
@@ -1266,8 +1268,73 @@ namespace QoL_Mods
                         "Sound/Voice/wrestler/WRAM5/WRAM5_036"
                         };
                         break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_0:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM0/WRJM0_002",
+                            "Sound/Voice/wrestler/WRJM0/WRJM0_000",
+                            "Sound/Voice/wrestler/WRJM0/WRJM0_011",
+                            "Sound/Voice/wrestler/WRJM0/WRJM0_033"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_1:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM1/WRJM1_002",
+                            "Sound/Voice/wrestler/WRJM1/WRJM1_000",
+                            "Sound/Voice/wrestler/WRJM1/WRJM1_033",
+                            "Sound/Voice/wrestler/WRJM1/WRJM1_011"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_2:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM2/WRJM2_002",
+                            "Sound/Voice/wrestler/WRJM2/WRJM2_000",
+                            "Sound/Voice/wrestler/WRJM2/WRJM2_033",
+                            "Sound/Voice/wrestler/WRJM2/WRJM2_011"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_3:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM3/WRJM3_008",
+                            "Sound/Voice/wrestler/WRJM3/WRJM3_009",
+                            "Sound/Voice/wrestler/WRJM3/WRJM3_017",
+                            "Sound/Voice/wrestler/WRJM3/WRJM3_018"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_4:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM4/WRJM4_008",
+                            "Sound/Voice/wrestler/WRJM4/WRJM4_009",
+                            "Sound/Voice/wrestler/WRJM4/WRJM4_017",
+                            "Sound/Voice/wrestler/WRJM4/WRJM4_018"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_5:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM5/WRJM5_008",
+                            "Sound/Voice/wrestler/WRJM5/WRJM5_009",
+                            "Sound/Voice/wrestler/WRJM5/WRJM5_017",
+                            "Sound/Voice/wrestler/WRJM5/WRJM5_018"
+                        };
+                        break;
+                    case WrestlerVoiceTypeEnum.Japanease_M_6:
+                        voices = new String[]
+                        {
+                            "Sound/Voice/wrestler/WRJM6/WRJM6_008",
+                            "Sound/Voice/wrestler/WRJM6/WRJM6_009",
+                            "Sound/Voice/wrestler/WRJM6/WRJM6_017",
+                            "Sound/Voice/wrestler/WRJM6/WRJM6_018"
+                        };
+                        break;
                     case WrestlerVoiceTypeEnum.American_F_0:
                     case WrestlerVoiceTypeEnum.Japanease_F_0:
+                    case WrestlerVoiceTypeEnum.Japanease_F_2:
+                    case WrestlerVoiceTypeEnum.Japanease_F_4:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAF0/WRAF0_004",
@@ -1278,6 +1345,7 @@ namespace QoL_Mods
                         break;
                     case WrestlerVoiceTypeEnum.American_F_1:
                     case WrestlerVoiceTypeEnum.Japanease_F_1:
+                    case WrestlerVoiceTypeEnum.Japanease_F_3:
                         voices = new String[]
                         {
                         "Sound/Voice/wrestler/WRAF1/WRAF1_004",
@@ -1287,16 +1355,12 @@ namespace QoL_Mods
                         };
                         break;
                     default:
-                        voices = new String[]
-                        {
-                            "Sound/Voice/wrestler/WRAM0/WRAM0_004",
-                            "Sound/Voice/wrestler/WRAM0/WRAM0_005",
-                            "Sound/Voice/wrestler/WRAM0/WRAM0_005",
-                            "Sound/Voice/wrestler/WRAM0/WRAM0_018"
-                        };
-                        break;
+                        //Do not play a submission grunt
+                        L.D("Invalid grunt: " + voiceType);
+                        return;
                 }
 
+                L.D("Attempting to play " + voices[damageLevel]);
                 var clip = (AudioClip)Resources.Load(voices[damageLevel]);
                 var audioSrcInfo = global::Menu_SoundManager.audioSrcInfo[global::Menu_SoundManager.audio_source_index + 3];
                 var audioSource = audioSrcInfo.sRefAudio;
@@ -1367,7 +1431,7 @@ namespace QoL_Mods
             {
                 L.D("NotifyForUkemiTriggerError: " + e);
             }
-          
+
         }
 
         public static CheerVoiceEnum GetRandomCheer(List<CheerVoiceEnum> cheers)
@@ -1448,7 +1512,7 @@ namespace QoL_Mods
                 }
 
                 //Determine whether action proceeds based on defender's current damage and showmanship
-                if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
+                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
                 {
                     //Ensure the dive triggers
@@ -1493,7 +1557,7 @@ namespace QoL_Mods
                 }
 
                 //Determine whether action proceeds based on defender's current damage and showmanship
-                if (UnityEngine.Random.Range(1, 100) - (GetDamageLevel(defender) * 5) <
+                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
                 {
                     if (defender.StunTime <= 48)

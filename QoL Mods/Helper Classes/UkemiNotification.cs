@@ -60,6 +60,10 @@ namespace QoL_Mods.Helper_Classes
                 cheerList = new List<CheerVoiceEnum>();
                 foreach (String cheer in splitData[2].Split(listSeparator))
                 {
+                    if (cheer.Trim().Equals(String.Empty))
+                    {
+                        continue;
+                    }
                     cheerList.Add((CheerVoiceEnum)Enum.Parse(typeof(CheerVoiceEnum), cheer));
                 }
             }

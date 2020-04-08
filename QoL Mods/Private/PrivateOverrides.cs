@@ -7,9 +7,13 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Windows.Forms;
+using QoL_Mods.Helper_Classes;
 using UnityEngine;
 using UnityEngine.UI;
 using static Common_Classes.EnumLibrary;
+using System.IO;
+using MatchConfig;
+using WresIDGroup = ModPack.WresIDGroup;
 
 namespace QoL_Mods.Private
 {
@@ -22,8 +26,9 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
-    [GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
+    //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "(PRIVATE) Set the Attendance Level based on participating edits' Rank & Charisma.")]
+    [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "(PRIVATE) Automates match settings for different rings.")]
     #endregion
 
     #region Field Access
@@ -75,6 +80,18 @@ namespace QoL_Mods.Private
             }
             {
                 return DynamicHighlightsForm.highlightsForm;
+            }
+        }
+
+        [ControlPanel(Group = "Ring Config")]
+        public static Form RingForm()
+        {
+            if (RingConfigForm.ringForm == null)
+            {
+                return new RingConfigForm();
+            }
+            {
+                return RingConfigForm.ringForm;
             }
         }
         #endregion
@@ -531,82 +548,18 @@ namespace QoL_Mods.Private
             stageTaunt = new Boolean[8];
         }
 
-        //Yurakuen and Dojo Entrances
-        [Hook(TargetClass = "EntranceScene", TargetMethod = "MoveStart_ToStage", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Entrance Taunts")]
-        public static bool EnterYurakuenOrDojo(EntranceScene es)
-        {
-
-            try
-            {
-                if (Ring.inst.venueSetting.entranceSceneKind == (EntranceSceneKind)4)
-                {
-                    for (int i = 0; i < es.plIdxList.Length; i++)
-                    {
-                        Player plObj = PlayerMan.inst.GetPlObj(es.plIdxList[i]);
-                        plObj.Zone = ZoneEnum.OutOfRing;
-                        plObj.moveSpeed = 2;
-
-                    }
-
-
-                    EntranceSceneCamera.inst.CurrentTargetDist = 30f;
-                    EntranceSceneCamera.inst.ChangeMode(EntranceSceneCamera.Mode.ChasePlayer, es.plIdxList[0]);
-
-                    //Restricted to 1v1 due to positioning
-                    Player player = PlayerMan.inst.GetPlObj(es.plIdxList[0]);
-                    if (UnityEngine.Random.Range(0, 100) <= player.WresParam.aiParam.personalTraits && GetPlayerList().Length == 2)
-                    {
-                        ExecuteTaunt(player);
-                    }
-
-                    es.MoveStart_ToRing();
-
-                    return true;
-
-                }
-                else
-                {
-                    return false;
-                }
-
-            }
-            catch (Exception e)
-            {
-                L.D("Entrance Scene Exception: " + e.Message);
-            }
-
-            return false;
-        }
-
-        //For Venues with Entrance Ramps
-        [Hook(TargetClass = "EntranceScene", TargetMethod = "Update_ZoomCamera", InjectionLocation = 12,
+        [Hook(TargetClass = "EntranceScene", TargetMethod = "Update_ZoomCamera", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.After, InjectFlags = HookInjectFlags.PassInvokingInstance,
             Group = "Entrance Taunts")]
         public static void EnterRampVenue(EntranceScene es)
         {
-            if (Ring.inst.venueSetting.entranceSceneKind == (EntranceSceneKind)4)
+            if (Ring.inst.venueSetting.arenaModel == ArenaModelEnum.Dojo || Ring.inst.venueSetting.arenaModel == ArenaModelEnum.TakafumiCityGym || Ring.inst.venueSetting.arenaModel == ArenaModelEnum.YurakuenHall)
             {
                 return;
             }
-
-            //EntranceSceneCamera.inst.CurrentTargetDist = 30f;
 
             //Check the first member to determine if taunts occur
             Player player = PlayerMan.inst.GetPlObj(es.plIdxList[0]);
-
-            //Ensure that edits with Entrance Craft set-ups aren't used.
-            WresIDGroup wresID = GetWresIDGroup(DataBase.GetWrestlerFullName(player.WresParam));
-            if (wresID == null)
-            {
-                return;
-            }
-
-            if (CWE_SaveDataManager.inst.IsUsedWrestlerID((WrestlerID)wresID.ID))
-            {
-                return;
-            }
 
             EntranceSceneCamera.inst.ChangeMode(EntranceSceneCamera.Mode.ChasePlayer, es.plIdxList[0]);
 
@@ -835,8 +788,6 @@ namespace QoL_Mods.Private
                 SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
                 try
                 {
-                    L.D("Sweat Level (Form): " + DynamicHighlightsForm.highlightsForm.eh_sweatSpeed.SelectedItem);
-                    L.D("Sweat Speed (Form): " + DynamicHighlightsForm.highlightsForm.eh_sweatLevel.SelectedItem);
                     int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatSpeed.SelectedItem, out SweatSpeed);
                     int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatLevel.SelectedItem, out SweatLvl);
 
@@ -845,9 +796,6 @@ namespace QoL_Mods.Private
                 {
                     L.D("Error when attempting to parse the form fields");
                 }
-
-                L.D("Sweat Level: " + SweatLvl);
-                L.D("Sweat Speed: " + SweatSpeed);
 
                 if (SweatSpeed <= 0)
                 {
@@ -859,13 +807,11 @@ namespace QoL_Mods.Private
                 {
                     if (mwi[i] == null)
                     {
-                        L.D("MatchWrestlerInfo for " + i + " is null.");
                         continue;
                     }
                     if (mwi[i].entry)
                     {
                         origAppear[i] = DataBase.GetAppearanceData(mwi[i].wrestlerID);
-                        L.D("OrigAppear exists for #" + i + ": " + origAppear[i]);
 
                         //Determine if a default highlight should be set for all edits
                         if (DynamicHighlightsForm.highlightsForm.eh_isDefaultLevel.Checked)
@@ -1182,42 +1128,123 @@ namespace QoL_Mods.Private
         #endregion
 
         #region WIP
-        #region Opponent pins during knock-out
+        #region Automatic Match Configuration
 
-        [Hook(TargetClass = "PlayerController_AI", TargetMethod = "Update", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance,
-            Group = "Pin Critical Opponent")]
-        public static void CheckKnockOut(PlayerController_AI ai)
+        public static String configRingName = "";
+
+
+        [Hook(TargetClass = "GlobalParam", TargetMethod = "Set_MatchSetting_Rule", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateRefSettingn()
         {
-
-            if (ai.PlObj.State != PlStateEnum.S_GO_POST && ai.PlObj.State != PlStateEnum.S_GO_POST2 &&
-                ai.PlObj.State != PlStateEnum.OnCornerPost && ai.aiAct == AIActEnum.DoNothing)
+            try
             {
-                Player plObj = PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
-                if (plObj.State == PlStateEnum.Down_FaceUp || plObj.State == PlStateEnum.Down_FaceDown)
+                MatchSetting settings = GlobalWork.inst.MatchSetting;
+                String ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
                 {
-                    if (plObj.isKO && !GlobalWork.GetInst().MatchSetting.isS1Rule)
+                    if (config.RingName.Equals(ringName))
                     {
-                        if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
+                        //Referee
+                        if (config.Referees.Count > 0)
                         {
-                            L.D("Processing Knock-out");
-                            if (ai.IsEffectiveFall())
-                            {
-                                int value = UnityEngine.Random.Range(6, 8);
-                                ai.SetAIAct_DownAtk((AIOpt_Down)value, 240, false);
-                            }
-                        }
-                        else
-                        {
-                            L.D("Processing Drag");
-                            ai.AIActFunc_DragDownOpponent();
+                            RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
+                            L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
+                            settings.RefereeID = referee.Data.editRefereeID;
+                            break;
                         }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                L.D("AutomateRefError: " + e);
+            }
         }
 
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateRingSetting()
+        {
+            try
+            {
+                MatchSetting settings = GlobalWork.inst.MatchSetting;
+                String ringName = global::SaveData.inst.GetEditRingData(settings.ringID).name;
+                configRingName = "";
+
+                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                {
+                    if (config.RingName.Equals(ringName))
+                    {
+                        configRingName = ringName;
+
+                        ////Referee
+                        //if (config.Referees.Count > 0)
+                        //{
+                        //    RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
+                        //    L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
+                        //    settings.RefereeID = referee.Data.editRefereeID;
+                        //}
+
+                        //Grapple Settings
+                        ModPackForm.instance.numericUpDown5.Value = config.GrappleSetting.Low;
+                        ModPackForm.instance.numericUpDown6.Value = config.GrappleSetting.Medium;
+                        ModPackForm.instance.numericUpDown7.Value = config.GrappleSetting.High;
+                     
+                        //Clock Speed
+                        if (GetWrestlerList().Length == 2)
+                        {
+                            ModPackForm.instance.comboBox8.SelectedIndex = config.SinglesSpeed;
+                        }
+                        else
+                        {
+                            ModPackForm.instance.comboBox8.SelectedIndex = config.MultiSpeed;
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("AutomateRingSettingError: " + e);
+            }
+        }
+
+        [Hook(TargetClass = "Menu_SoundManager", TargetMethod = "MyMusic_Play", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateBGM()
+        {
+            try
+            {
+                if (!configRingName.Equals(String.Empty))
+                {
+                    foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                    {
+                        if (config.RingName.Equals(configRingName))
+                        {
+                            //BGM
+                            if (config.Bgms.Count > 0)
+                            {
+                                string matchBGM = "";
+                                string bgmPath = System.IO.Directory.GetCurrentDirectory() + @"\BGM";
+
+                                matchBGM = Path.Combine(bgmPath,
+                                    config.Bgms[UnityEngine.Random.Range(0, config.Bgms.Count)]);
+                                Menu_SoundManager.MyMusic_SelectFile_Match = matchBGM;
+
+                                L.D("Loading BGM " + matchBGM + " for " + configRingName);
+                                configRingName = "";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("AutomateBGMError: " + e);
+            }
+        }
         #endregion
         #endregion
 
@@ -1518,6 +1545,24 @@ namespace QoL_Mods.Private
                 if (plObj)
                 {
                     if (!plObj.isIntruder)
+                    {
+                        players.Add(plObj.PlIdx);
+                    }
+                }
+            }
+
+            return players.ToArray();
+        }
+
+        public static int[] GetWrestlerList()
+        {
+            List<int> players = new List<int>();
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (plObj)
+                {
+                    if (!plObj.isIntruder && !plObj.isSecond)
                     {
                         players.Add(plObj.PlIdx);
                     }
