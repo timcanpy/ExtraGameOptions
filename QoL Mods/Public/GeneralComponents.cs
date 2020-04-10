@@ -28,7 +28,8 @@ namespace QoL_Mods
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
-  
+    [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
+
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -1643,6 +1644,20 @@ namespace QoL_Mods
             }
 
         }
+        #endregion
+
+        #region Increase Fly Range for Juniors/Lucha/Panther
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Fly Range")]
+        public static void IncreaseFlyRange()
+        {
+            //Originally   1.1875f
+            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Junior] = 1.4600f;
+            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Luchador] = 1.4600f;
+            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Panther] = 1.4600f;
+        }
+
         #endregion
 
         #region Auto Set CPU on Match Select

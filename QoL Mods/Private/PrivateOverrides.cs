@@ -22,7 +22,6 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(PRIVATE) Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
     [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
-    [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "(PRIVATE) Increases Fly Range for Juniors/Lucha/Panther styles.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
@@ -39,8 +38,8 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
     [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
 
-    [FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
-    [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
+    //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
+    //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
     #endregion
 
     class PrivateOverrides
@@ -520,21 +519,7 @@ namespace QoL_Mods.Private
         }
 
         #endregion
-
-        #region Increase Fly Range for Juniors/Lucha/Panther
-
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Fly Range")]
-        public static void IncreaseFlyRange()
-        {
-            //Originally   1.1875f
-            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Junior] = 1.4600f;
-            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Luchador] = 1.4600f;
-            global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Panther] = 1.4600f;
-        }
-
-        #endregion
-
+        
         #region Entrance Taunts
         #region Variables
         public static bool[] stageTaunt;
@@ -1127,7 +1112,6 @@ namespace QoL_Mods.Private
         }
         #endregion
 
-        #region WIP
         #region Automatic Match Configuration
 
         public static String configRingName = "";
@@ -1178,19 +1162,11 @@ namespace QoL_Mods.Private
                     {
                         configRingName = ringName;
 
-                        ////Referee
-                        //if (config.Referees.Count > 0)
-                        //{
-                        //    RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
-                        //    L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
-                        //    settings.RefereeID = referee.Data.editRefereeID;
-                        //}
-
                         //Grapple Settings
                         ModPackForm.instance.numericUpDown5.Value = config.GrappleSetting.Low;
                         ModPackForm.instance.numericUpDown6.Value = config.GrappleSetting.Medium;
                         ModPackForm.instance.numericUpDown7.Value = config.GrappleSetting.High;
-                     
+
                         //Clock Speed
                         if (GetWrestlerList().Length == 2)
                         {
@@ -1245,7 +1221,6 @@ namespace QoL_Mods.Private
                 L.D("AutomateBGMError: " + e);
             }
         }
-        #endregion
         #endregion
 
         #region Dynamic Crowd Based on Participating Edits
