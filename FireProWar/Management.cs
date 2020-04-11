@@ -67,7 +67,7 @@ namespace FireProWar
                     }
                     else if ((int)settings.ringID >= (int)RingID.EditRingIDTop)
                     {
-                        ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                        ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name.Replace(War_Form.listSeparator, ' ');
                     }
                 }
                 catch (ArgumentOutOfRangeException e)
@@ -455,110 +455,8 @@ namespace FireProWar
                 L.D("ShowRecordError:" + e);
             }
         }
-
-        //[Hook(TargetClass = "MatchMain", TargetMethod = "Awake", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "FirePro War")]
-        public static void SetTVLogo()
-        {
-            if (fpwEnable)
-            {
-                //Set company logo
-                SetLogo(promotion);
-            }
-        }
-
+        
         #region Helper Methods
-        public static void SetLogo(Promotion promotion)
-        {
-            try
-            {
-                #region Load the Unity Asset
-
-                if (tvLogo == null)
-                {
-                    tvLogo = AssetBundle.LoadFromFile(logoAssetLocation);
-                }
-
-                if (GameObject.Find("TVLogo") == null)
-                {
-                    L.D("Could not find TVLogo");
-                    GameObject gameObject = (GameObject)tvLogo.LoadAsset("LogoCanvas");
-                    GameObject rootObj = (GameObject)GetField(Ring.inst, "rootObj", false);
-                    var logoObj = (GameObject)UnityEngine.Object.Instantiate(gameObject, rootObj.transform, false);
-                }
-                Image component;
-                if (GameObject.Find("TVLogo") == null)
-                {
-                    L.D("Can't find TVLogo GameObject", new object[0]);
-                    return;
-                }
-                GameObject logoObject = GameObject.Find("TVLogo");
-                component = logoObject.GetComponent<Image>();
-                if (component == null)
-                {
-                    L.D("Still unable to find uiComponent", new object[0]);
-                    return;
-                }
-                #endregion
-
-                #region Get the logo
-                string logo = "";
-                L.D("Checking logo location at " + storedLogoPath);
-                string[] logoCollection = Directory.GetFiles(storedLogoPath);
-                foreach (var file in logoCollection)
-                {
-                    string modifiedFileName = Path.GetFileName(file);
-                    modifiedFileName = modifiedFileName.Substring(0, (modifiedFileName.IndexOf('.')));
-                    if (promotion != null)
-                    {
-                        if (modifiedFileName.Equals(promotion.Name))
-                        {
-                            logo = promotion.Name + ".png";
-                            break;
-                        }
-                        else if (modifiedFileName.Equals(promotion.Ring))
-                        {
-                            logo = promotion.Ring + ".png";
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        logo = defaultLogo;
-                    }
-                }
-
-                if (logo.Equals(String.Empty))
-                {
-                    logo = "Default.png";
-                }
-                String logoPath = Path.Combine(storedLogoPath, logo);
-                #endregion
-
-                byte[] array = File.ReadAllBytes(logoPath);
-                Texture2D texture2D = new Texture2D(6, 6);
-                texture2D.LoadImage(array);
-                component.sprite = Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), Vector2.zero, 125f);
-
-                //Get transform lines from file
-                if (File.Exists(logoPositionFile))
-                {
-                    var lines = File.ReadAllLines(logoPositionFile);
-                    Single.TryParse(lines[0], out float x);
-                    Single.TryParse(lines[1], out float y);
-                    Single.TryParse(lines[2], out float z);
-                    component.rectTransform.Translate(x, y, z);
-                }
-                else
-                {
-                    component.rectTransform.Translate(0, 0, 0);
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("SetLogoException:" + e);
-            }
-
-        }
         public static String CheckMorale(int moraleRank)
         {
             switch (moraleRank)

@@ -31,12 +31,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.fpw_showRecord = new System.Windows.Forms.CheckBox();
             this.fpw_logoImage = new System.Windows.Forms.PictureBox();
-            this.fpw_refreshRings = new System.Windows.Forms.Button();
             this.fpw_addPromotion = new System.Windows.Forms.Button();
             this.fpw_deletePromotion = new System.Windows.Forms.Button();
             this.fpw_updatePromotion = new System.Windows.Forms.Button();
             this.label45 = new System.Windows.Forms.Label();
-            this.fpw_promoRingList = new System.Windows.Forms.ComboBox();
+            this.fpw_ringList = new System.Windows.Forms.ComboBox();
             this.label44 = new System.Windows.Forms.Label();
             this.fpw_promoRegionList = new System.Windows.Forms.ComboBox();
             this.label43 = new System.Windows.Forms.Label();
@@ -113,6 +112,11 @@
             this.fpw_reports = new System.Windows.Forms.TabPage();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.fpw_promoRingList = new System.Windows.Forms.ComboBox();
+            this.fpw_refreshRings = new System.Windows.Forms.LinkLabel();
+            this.fpw_addRing = new System.Windows.Forms.LinkLabel();
+            this.fpw_removeRing = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -129,14 +133,18 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.fpw_removeRing);
+            this.panel1.Controls.Add(this.fpw_addRing);
+            this.panel1.Controls.Add(this.fpw_refreshRings);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.fpw_promoRingList);
             this.panel1.Controls.Add(this.fpw_showRecord);
             this.panel1.Controls.Add(this.fpw_logoImage);
-            this.panel1.Controls.Add(this.fpw_refreshRings);
             this.panel1.Controls.Add(this.fpw_addPromotion);
             this.panel1.Controls.Add(this.fpw_deletePromotion);
             this.panel1.Controls.Add(this.fpw_updatePromotion);
             this.panel1.Controls.Add(this.label45);
-            this.panel1.Controls.Add(this.fpw_promoRingList);
+            this.panel1.Controls.Add(this.fpw_ringList);
             this.panel1.Controls.Add(this.label44);
             this.panel1.Controls.Add(this.fpw_promoRegionList);
             this.panel1.Controls.Add(this.label43);
@@ -147,10 +155,10 @@
             this.panel1.Controls.Add(this.label46);
             this.panel1.Controls.Add(this.lbl_promoDetails);
             this.panel1.Controls.Add(this.fpw_Enable);
-            this.panel1.Location = new System.Drawing.Point(14, 14);
+            this.panel1.Location = new System.Drawing.Point(19, 14);
             this.panel1.Margin = new System.Windows.Forms.Padding(4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(262, 526);
+            this.panel1.Size = new System.Drawing.Size(262, 562);
             this.panel1.TabIndex = 0;
             // 
             // fpw_showRecord
@@ -175,22 +183,10 @@
             this.fpw_logoImage.TabIndex = 43;
             this.fpw_logoImage.TabStop = false;
             // 
-            // fpw_refreshRings
-            // 
-            this.fpw_refreshRings.BackColor = System.Drawing.Color.Blue;
-            this.fpw_refreshRings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_refreshRings.Location = new System.Drawing.Point(172, 353);
-            this.fpw_refreshRings.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.fpw_refreshRings.Name = "fpw_refreshRings";
-            this.fpw_refreshRings.Size = new System.Drawing.Size(33, 31);
-            this.fpw_refreshRings.TabIndex = 42;
-            this.fpw_refreshRings.UseVisualStyleBackColor = false;
-            this.fpw_refreshRings.Click += new System.EventHandler(this.fpw_refreshRings_Click);
-            // 
             // fpw_addPromotion
             // 
             this.fpw_addPromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_addPromotion.Location = new System.Drawing.Point(66, 427);
+            this.fpw_addPromotion.Location = new System.Drawing.Point(66, 460);
             this.fpw_addPromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_addPromotion.Name = "fpw_addPromotion";
             this.fpw_addPromotion.Size = new System.Drawing.Size(127, 26);
@@ -203,7 +199,7 @@
             // fpw_deletePromotion
             // 
             this.fpw_deletePromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_deletePromotion.Location = new System.Drawing.Point(66, 492);
+            this.fpw_deletePromotion.Location = new System.Drawing.Point(66, 525);
             this.fpw_deletePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_deletePromotion.Name = "fpw_deletePromotion";
             this.fpw_deletePromotion.Size = new System.Drawing.Size(127, 26);
@@ -215,7 +211,7 @@
             // fpw_updatePromotion
             // 
             this.fpw_updatePromotion.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_updatePromotion.Location = new System.Drawing.Point(66, 460);
+            this.fpw_updatePromotion.Location = new System.Drawing.Point(66, 491);
             this.fpw_updatePromotion.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_updatePromotion.Name = "fpw_updatePromotion";
             this.fpw_updatePromotion.Size = new System.Drawing.Size(127, 26);
@@ -228,24 +224,24 @@
             // 
             this.label45.AutoSize = true;
             this.label45.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label45.Location = new System.Drawing.Point(102, 362);
+            this.label45.Location = new System.Drawing.Point(97, 354);
             this.label45.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(69, 15);
+            this.label45.Size = new System.Drawing.Size(58, 15);
             this.label45.TabIndex = 38;
-            this.label45.Text = "Home Ring";
+            this.label45.Text = "Ring List";
             // 
-            // fpw_promoRingList
+            // fpw_ringList
             // 
-            this.fpw_promoRingList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.fpw_promoRingList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.fpw_promoRingList.FormattingEnabled = true;
-            this.fpw_promoRingList.Location = new System.Drawing.Point(14, 394);
-            this.fpw_promoRingList.Margin = new System.Windows.Forms.Padding(4);
-            this.fpw_promoRingList.Name = "fpw_promoRingList";
-            this.fpw_promoRingList.Size = new System.Drawing.Size(236, 21);
-            this.fpw_promoRingList.Sorted = true;
-            this.fpw_promoRingList.TabIndex = 37;
+            this.fpw_ringList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_ringList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.fpw_ringList.FormattingEnabled = true;
+            this.fpw_ringList.Location = new System.Drawing.Point(14, 377);
+            this.fpw_ringList.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_ringList.Name = "fpw_ringList";
+            this.fpw_ringList.Size = new System.Drawing.Size(236, 21);
+            this.fpw_ringList.Sorted = true;
+            this.fpw_ringList.TabIndex = 37;
             // 
             // label44
             // 
@@ -367,10 +363,10 @@
             this.panel2.BackColor = System.Drawing.Color.Gainsboro;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.panel2.Controls.Add(this.fpw_infoTabs);
-            this.panel2.Location = new System.Drawing.Point(284, 14);
+            this.panel2.Location = new System.Drawing.Point(289, 14);
             this.panel2.Margin = new System.Windows.Forms.Padding(4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(634, 526);
+            this.panel2.Size = new System.Drawing.Size(634, 562);
             this.panel2.TabIndex = 1;
             // 
             // fpw_infoTabs
@@ -381,11 +377,11 @@
             this.fpw_infoTabs.Controls.Add(this.fpw_details);
             this.fpw_infoTabs.Controls.Add(this.fpw_reports);
             this.fpw_infoTabs.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_infoTabs.Location = new System.Drawing.Point(4, 4);
+            this.fpw_infoTabs.Location = new System.Drawing.Point(9, 6);
             this.fpw_infoTabs.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_infoTabs.Name = "fpw_infoTabs";
             this.fpw_infoTabs.SelectedIndex = 0;
-            this.fpw_infoTabs.Size = new System.Drawing.Size(623, 520);
+            this.fpw_infoTabs.Size = new System.Drawing.Size(623, 548);
             this.fpw_infoTabs.TabIndex = 0;
             // 
             // fpw_history
@@ -407,7 +403,7 @@
             this.fpw_history.Location = new System.Drawing.Point(4, 22);
             this.fpw_history.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_history.Name = "fpw_history";
-            this.fpw_history.Size = new System.Drawing.Size(615, 494);
+            this.fpw_history.Size = new System.Drawing.Size(615, 522);
             this.fpw_history.TabIndex = 2;
             this.fpw_history.Text = "Promotion History";
             // 
@@ -521,7 +517,7 @@
             // fpw_promoClearHistory
             // 
             this.fpw_promoClearHistory.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_promoClearHistory.Location = new System.Drawing.Point(344, 448);
+            this.fpw_promoClearHistory.Location = new System.Drawing.Point(344, 479);
             this.fpw_promoClearHistory.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_promoClearHistory.Name = "fpw_promoClearHistory";
             this.fpw_promoClearHistory.Size = new System.Drawing.Size(127, 26);
@@ -541,7 +537,7 @@
             this.fpw_promoHistory.Name = "fpw_promoHistory";
             this.fpw_promoHistory.ReadOnly = true;
             this.fpw_promoHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_promoHistory.Size = new System.Drawing.Size(388, 265);
+            this.fpw_promoHistory.Size = new System.Drawing.Size(388, 296);
             this.fpw_promoHistory.TabIndex = 45;
             this.fpw_promoHistory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -579,7 +575,7 @@
             this.fpw_matches.Location = new System.Drawing.Point(4, 22);
             this.fpw_matches.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_matches.Name = "fpw_matches";
-            this.fpw_matches.Size = new System.Drawing.Size(615, 494);
+            this.fpw_matches.Size = new System.Drawing.Size(615, 522);
             this.fpw_matches.TabIndex = 3;
             this.fpw_matches.Text = "Recent Matches";
             this.fpw_matches.UseVisualStyleBackColor = true;
@@ -642,7 +638,7 @@
             // fpw_clearDetails
             // 
             this.fpw_clearDetails.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fpw_clearDetails.Location = new System.Drawing.Point(332, 446);
+            this.fpw_clearDetails.Location = new System.Drawing.Point(332, 484);
             this.fpw_clearDetails.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_clearDetails.Name = "fpw_clearDetails";
             this.fpw_clearDetails.Size = new System.Drawing.Size(127, 26);
@@ -662,7 +658,7 @@
             this.fpw_detailsView.Name = "fpw_detailsView";
             this.fpw_detailsView.ReadOnly = true;
             this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.fpw_detailsView.Size = new System.Drawing.Size(382, 386);
+            this.fpw_detailsView.Size = new System.Drawing.Size(382, 419);
             this.fpw_detailsView.TabIndex = 46;
             this.fpw_detailsView.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -690,7 +686,7 @@
             this.fpw_management.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_management.Name = "fpw_management";
             this.fpw_management.Padding = new System.Windows.Forms.Padding(4);
-            this.fpw_management.Size = new System.Drawing.Size(615, 494);
+            this.fpw_management.Size = new System.Drawing.Size(615, 522);
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
             // 
@@ -707,7 +703,7 @@
             // btn_clean
             // 
             this.btn_clean.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_clean.Location = new System.Drawing.Point(122, 425);
+            this.btn_clean.Location = new System.Drawing.Point(122, 472);
             this.btn_clean.Margin = new System.Windows.Forms.Padding(4);
             this.btn_clean.Name = "btn_clean";
             this.btn_clean.Size = new System.Drawing.Size(111, 26);
@@ -719,7 +715,7 @@
             // btn_LoadData
             // 
             this.btn_LoadData.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_LoadData.Location = new System.Drawing.Point(250, 425);
+            this.btn_LoadData.Location = new System.Drawing.Point(250, 472);
             this.btn_LoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_LoadData.Name = "btn_LoadData";
             this.btn_LoadData.Size = new System.Drawing.Size(88, 26);
@@ -731,7 +727,7 @@
             // btn_SaveData
             // 
             this.btn_SaveData.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_SaveData.Location = new System.Drawing.Point(9, 425);
+            this.btn_SaveData.Location = new System.Drawing.Point(9, 472);
             this.btn_SaveData.Margin = new System.Windows.Forms.Padding(4);
             this.btn_SaveData.Name = "btn_SaveData";
             this.btn_SaveData.Size = new System.Drawing.Size(88, 26);
@@ -754,7 +750,7 @@
             // ms_fireAll
             // 
             this.ms_fireAll.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_fireAll.Location = new System.Drawing.Point(513, 425);
+            this.ms_fireAll.Location = new System.Drawing.Point(512, 472);
             this.ms_fireAll.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireAll.Name = "ms_fireAll";
             this.ms_fireAll.Size = new System.Drawing.Size(95, 26);
@@ -766,7 +762,7 @@
             // ms_fireOne
             // 
             this.ms_fireOne.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ms_fireOne.Location = new System.Drawing.Point(360, 425);
+            this.ms_fireOne.Location = new System.Drawing.Point(360, 472);
             this.ms_fireOne.Margin = new System.Windows.Forms.Padding(4);
             this.ms_fireOne.Name = "ms_fireOne";
             this.ms_fireOne.Size = new System.Drawing.Size(104, 26);
@@ -784,7 +780,7 @@
             this.ms_employeeList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_employeeList.Name = "ms_employeeList";
             this.ms_employeeList.ScrollAlwaysVisible = true;
-            this.ms_employeeList.Size = new System.Drawing.Size(248, 329);
+            this.ms_employeeList.Size = new System.Drawing.Size(248, 381);
             this.ms_employeeList.Sorted = true;
             this.ms_employeeList.TabIndex = 32;
             this.ms_employeeList.SelectedIndexChanged += new System.EventHandler(this.ms_employeeList_SelectedIndexChanged);
@@ -920,7 +916,7 @@
             this.fpw_details.Margin = new System.Windows.Forms.Padding(4);
             this.fpw_details.Name = "fpw_details";
             this.fpw_details.Padding = new System.Windows.Forms.Padding(4);
-            this.fpw_details.Size = new System.Drawing.Size(615, 494);
+            this.fpw_details.Size = new System.Drawing.Size(615, 522);
             this.fpw_details.TabIndex = 1;
             this.fpw_details.Text = "Roster Details";
             this.fpw_details.UseVisualStyleBackColor = true;
@@ -1140,7 +1136,7 @@
             this.ms_rosterList.Margin = new System.Windows.Forms.Padding(4);
             this.ms_rosterList.Name = "ms_rosterList";
             this.ms_rosterList.ScrollAlwaysVisible = true;
-            this.ms_rosterList.Size = new System.Drawing.Size(248, 407);
+            this.ms_rosterList.Size = new System.Drawing.Size(248, 459);
             this.ms_rosterList.Sorted = true;
             this.ms_rosterList.TabIndex = 36;
             this.ms_rosterList.SelectedIndexChanged += new System.EventHandler(this.ms_rosterList_SelectedIndexChanged);
@@ -1152,7 +1148,7 @@
             this.fpw_reports.Location = new System.Drawing.Point(4, 22);
             this.fpw_reports.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.fpw_reports.Name = "fpw_reports";
-            this.fpw_reports.Size = new System.Drawing.Size(615, 494);
+            this.fpw_reports.Size = new System.Drawing.Size(615, 522);
             this.fpw_reports.TabIndex = 4;
             this.fpw_reports.Text = "Reports";
             this.fpw_reports.UseVisualStyleBackColor = true;
@@ -1181,12 +1177,70 @@
             this.rpt_promotions.UseVisualStyleBackColor = true;
             this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(91, 411);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(75, 15);
+            this.label1.TabIndex = 46;
+            this.label1.Text = "Home Rings";
+            // 
+            // fpw_promoRingList
+            // 
+            this.fpw_promoRingList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.fpw_promoRingList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.fpw_promoRingList.FormattingEnabled = true;
+            this.fpw_promoRingList.Location = new System.Drawing.Point(11, 430);
+            this.fpw_promoRingList.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_promoRingList.Name = "fpw_promoRingList";
+            this.fpw_promoRingList.Size = new System.Drawing.Size(236, 21);
+            this.fpw_promoRingList.Sorted = true;
+            this.fpw_promoRingList.TabIndex = 45;
+            // 
+            // fpw_refreshRings
+            // 
+            this.fpw_refreshRings.AutoSize = true;
+            this.fpw_refreshRings.Location = new System.Drawing.Point(165, 355);
+            this.fpw_refreshRings.Name = "fpw_refreshRings";
+            this.fpw_refreshRings.Size = new System.Drawing.Size(46, 15);
+            this.fpw_refreshRings.TabIndex = 57;
+            this.fpw_refreshRings.TabStop = true;
+            this.fpw_refreshRings.Text = "Refresh";
+            this.fpw_refreshRings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_refreshRings_LinkClicked);
+            // 
+            // fpw_addRing
+            // 
+            this.fpw_addRing.AutoSize = true;
+            this.fpw_addRing.LinkColor = System.Drawing.Color.DarkGreen;
+            this.fpw_addRing.Location = new System.Drawing.Point(170, 411);
+            this.fpw_addRing.Name = "fpw_addRing";
+            this.fpw_addRing.Size = new System.Drawing.Size(27, 15);
+            this.fpw_addRing.TabIndex = 58;
+            this.fpw_addRing.TabStop = true;
+            this.fpw_addRing.Text = "Add";
+            this.fpw_addRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_addRing_LinkClicked);
+            // 
+            // fpw_removeRing
+            // 
+            this.fpw_removeRing.AutoSize = true;
+            this.fpw_removeRing.LinkColor = System.Drawing.Color.Red;
+            this.fpw_removeRing.Location = new System.Drawing.Point(203, 411);
+            this.fpw_removeRing.Name = "fpw_removeRing";
+            this.fpw_removeRing.Size = new System.Drawing.Size(44, 15);
+            this.fpw_removeRing.TabIndex = 59;
+            this.fpw_removeRing.TabStop = true;
+            this.fpw_removeRing.Text = "Remove";
+            this.fpw_removeRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_removeRing_LinkClicked);
+            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Black;
-            this.ClientSize = new System.Drawing.Size(934, 553);
+            this.ClientSize = new System.Drawing.Size(936, 589);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1219,7 +1273,7 @@
         private System.Windows.Forms.ComboBox fpw_promoList;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Label label45;
-        public System.Windows.Forms.ComboBox fpw_promoRingList;
+        public System.Windows.Forms.ComboBox fpw_ringList;
         private System.Windows.Forms.Label label44;
         public System.Windows.Forms.ComboBox fpw_promoRegionList;
         private System.Windows.Forms.Label label43;
@@ -1272,7 +1326,6 @@
         private System.Windows.Forms.TabPage fpw_matches;
         private System.Windows.Forms.Button fpw_clearDetails;
         private System.Windows.Forms.TextBox fpw_detailsView;
-        private System.Windows.Forms.Button fpw_refreshRings;
         private System.Windows.Forms.Label rosterCount;
         private System.Windows.Forms.TextBox fpw_promoMthRating;
         private System.Windows.Forms.TextBox fpw_promoMthCnt;
@@ -1299,5 +1352,10 @@
         private System.Windows.Forms.TextBox fpw_matchTerm;
         private System.Windows.Forms.ComboBox fpw_matchWrestler;
         private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.LinkLabel fpw_refreshRings;
+        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.ComboBox fpw_promoRingList;
+        private System.Windows.Forms.LinkLabel fpw_addRing;
+        private System.Windows.Forms.LinkLabel fpw_removeRing;
     }
 }

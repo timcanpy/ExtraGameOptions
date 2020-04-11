@@ -32,6 +32,8 @@ namespace FireProWar
         public static String imageRootFolder = "./EGOData/Images/";
         public static String[] imageFolders = new String[] { "Wrestlers/", "Logos/" };
         public static String defaultWrestlerImage = "Default.png";
+        public static String currentVersion = "V2";
+        public static char listSeparator = ':';
         public enum FilterType
         {
             All,
@@ -141,13 +143,14 @@ namespace FireProWar
         }
         private void LoadRings()
         {
-            fpw_promoRingList.Items.Clear();
+            fpw_ringList.Items.Clear();
             foreach (String ring in MatchConfiguration.LoadRings())
             {
-                fpw_promoRingList.Items.Add(ring);
+                //Ensure that there's no overlap with our chosen list separator character
+                fpw_ringList.Items.Add(ring.Replace(listSeparator, ' '));
             }
 
-            fpw_promoRingList.SelectedIndex = 0;
+            fpw_ringList.SelectedIndex = 0;
         }
         private void LoadMoraleRank()
         {
@@ -191,44 +194,91 @@ namespace FireProWar
                 if (File.Exists(filePath))
                 {
                     var lines = File.ReadAllLines(filePath);
-                    int i = 0;
-                    while (i < lines.Length)
+
+                    //Determine how we load data
+                    if (lines[0].Equals(currentVersion))
                     {
-                        /*Promotion Data
-                            Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
-                        */
-                        if (lines[i].Equals(promotionDivider))
+                        int i = 1;
+                        while (i < lines.Length)
                         {
-                            Promotion promotion = new Promotion();
-                            promotion.Name = lines[i + 1];
-                            promotion.Ring = lines[i + 2];
-                            promotion.Type = lines[i + 3];
-                            promotion.Region = lines[i + 4];
-                            promotion.MatchCount = int.Parse(lines[i + 5]);
-                            promotion.AverageRating = float.Parse(lines[i + 6]);
-                            promotion.History = lines[i + 7];
+                            /*Promotion Data
+                                Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
+                            */
+                            if (lines[i].Equals(promotionDivider))
+                            {
+                                Promotion promotion = new Promotion();
+                                promotion.Name = lines[i + 1];
+                                promotion.LoadRings(lines[i + 2]);
+                                promotion.Type = lines[i + 3];
+                                promotion.Region = lines[i + 4];
+                                promotion.MatchCount = int.Parse(lines[i + 5]);
+                                promotion.AverageRating = float.Parse(lines[i + 6]);
+                                promotion.History = lines[i + 7];
 
-                            if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
-                            {
-                                promotion.AddEmployeeFromData(lines[i + 8]);
-                                i += 9;
-                            }
-                            else
-                            {
-                                promotion.AddMatchDetailsFromData(lines[i + 8]);
-                                promotion.AddEmployeeFromData(lines[i + 9]);
-                                i += 10;
-                            }
-                            fpw_promoList.Items.Add(promotion);
+                                if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
+                                {
+                                    promotion.AddEmployeeFromData(lines[i + 8]);
+                                    i += 9;
+                                }
+                                else
+                                {
+                                    promotion.AddMatchDetailsFromData(lines[i + 8]);
+                                    promotion.AddEmployeeFromData(lines[i + 9]);
+                                    i += 10;
+                                }
+                                fpw_promoList.Items.Add(promotion);
 
-                            //Update Promotion and Employee Lists
-                            promotionsAdded.Add(promotion.Name);
-                            foreach (Employee employee in promotion.EmployeeList)
-                            {
-                                employeesAdded.Add(employee.Name);
+                                //Update Promotion and Employee Lists
+                                promotionsAdded.Add(promotion.Name);
+                                foreach (Employee employee in promotion.EmployeeList)
+                                {
+                                    employeesAdded.Add(employee.Name);
+                                }
                             }
+
                         }
+                    }
+                    else
+                    {
+                        int i = 0;
+                        while (i < lines.Length)
+                        {
+                            /*Promotion Data
+                                Name, Ring, Type, Region, MatchCount, AverageRating, History, MatchResults, EmployeeData 
+                            */
+                            if (lines[i].Equals(promotionDivider))
+                            {
+                                Promotion promotion = new Promotion();
+                                promotion.Name = lines[i + 1];
+                                promotion.Rings.Add(lines[i + 2]);
+                                promotion.Type = lines[i + 3];
+                                promotion.Region = lines[i + 4];
+                                promotion.MatchCount = int.Parse(lines[i + 5]);
+                                promotion.AverageRating = float.Parse(lines[i + 6]);
+                                promotion.History = lines[i + 7];
 
+                                if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
+                                {
+                                    promotion.AddEmployeeFromData(lines[i + 8]);
+                                    i += 9;
+                                }
+                                else
+                                {
+                                    promotion.AddMatchDetailsFromData(lines[i + 8]);
+                                    promotion.AddEmployeeFromData(lines[i + 9]);
+                                    i += 10;
+                                }
+                                fpw_promoList.Items.Add(promotion);
+
+                                //Update Promotion and Employee Lists
+                                promotionsAdded.Add(promotion.Name);
+                                foreach (Employee employee in promotion.EmployeeList)
+                                {
+                                    employeesAdded.Add(employee.Name);
+                                }
+                            }
+
+                        }
                     }
 
                     if (fpw_promoList.Items.Count > 0)
@@ -292,13 +342,16 @@ namespace FireProWar
 
             using (StreamWriter sw = File.AppendText(filePath))
             {
+                //Label save file for future version control
+                sw.WriteLine(currentVersion);
+
                 //Save Promotions
                 foreach (Promotion promotion in fpw_promoList.Items)
                 {
                     //Promotion Details
                     sw.WriteLine(promotionDivider);
                     sw.WriteLine(promotion.Name);
-                    sw.WriteLine(promotion.Ring);
+                    sw.WriteLine(promotion.GetRingList());
                     sw.WriteLine(promotion.Type);
                     sw.WriteLine(promotion.Region);
                     sw.WriteLine(promotion.MatchCount);
@@ -448,10 +501,6 @@ namespace FireProWar
         #endregion
 
         #region Promotion Management
-        private void fpw_refreshRings_Click(object sender, EventArgs e)
-        {
-            LoadRings();
-        }
         private void fpw_addPromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoName.Text.Trim().Equals(""))
@@ -466,14 +515,21 @@ namespace FireProWar
                 return;
             }
 
+            if (RingExists(fpw_ringList.SelectedItem.ToString()))
+            {
+                MessageBox.Show("Ring is currently used by another promotion.");
+                return;
+            }
+
             Promotion promotion = new Promotion();
             promotion.Name = fpw_promoName.Text.Trim();
             promotion.Region = fpw_promoRegionList.SelectedItem.ToString();
-            promotion.Ring = fpw_promoRingList.SelectedItem.ToString();
+            promotion.Rings.Add(fpw_ringList.SelectedItem.ToString());
             promotion.Type = fpw_promoStyleList.SelectedItem.ToString();
             promotionsAdded.Add(promotion.Name);
             fpw_promoList.Items.Add(promotion);
             fpw_promoList.SelectedIndex = fpw_promoList.Items.Count - 1;
+
         }
         private void fpw_updatePromotion_Click(object sender, EventArgs e)
         {
@@ -484,7 +540,7 @@ namespace FireProWar
 
             Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
             promotion.Region = fpw_promoRegionList.SelectedItem.ToString();
-            promotion.Ring = fpw_promoRingList.SelectedItem.ToString();
+            //promotion.Rings.Add((String)fpw_ringList.SelectedItem);
             promotion.Type = fpw_promoStyleList.SelectedItem.ToString();
             fpw_promoList.SelectedItem = promotion;
         }
@@ -500,7 +556,18 @@ namespace FireProWar
             Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
             fpw_promoName.Text = promotion.Name;
             fpw_promoRegionList.SelectedIndex = fpw_promoRegionList.Items.IndexOf(promotion.Region);
-            fpw_promoRingList.SelectedIndex = fpw_promoRingList.Items.IndexOf(promotion.Ring);
+
+            fpw_promoRingList.Items.Clear();
+            foreach (String item in promotion.Rings)
+            {
+                fpw_promoRingList.Items.Add(item);
+            }
+
+            if (fpw_promoRingList.Items.Count > 0)
+            {
+                fpw_promoRingList.SelectedIndex = 0;
+            }
+         
             fpw_promoStyleList.SelectedIndex = fpw_promoStyleList.Items.IndexOf(promotion.Type);
             fpw_promoMthCnt.Text = promotion.MatchCount.ToString();
             fpw_promoMthRating.Text = Math.Round(Decimal.Parse(promotion.AverageRating.ToString()), 2) + "%";
@@ -511,7 +578,7 @@ namespace FireProWar
 
             fpw_matchTerm.Text = "";
             //fpw_promoHistory.Text = promotion.History.Replace("~", "\n");
-            
+
             #region Adding Details
             String details = "";
             foreach (String detail in promotion.MatchDetails)
@@ -929,7 +996,7 @@ namespace FireProWar
         }
 
         #endregion
-        
+
         #region  Filter Management
         private void fpw_historyRefresh_Click(object sender, EventArgs e)
         {
@@ -940,7 +1007,7 @@ namespace FireProWar
         {
             LoadSubs();
         }
-        
+
         private void fpw_historyCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
@@ -957,7 +1024,8 @@ namespace FireProWar
                 case 0:
                     type = FilterType.All;
                     break;
-                case 1: type = FilterType.TitleHistory;
+                case 1:
+                    type = FilterType.TitleHistory;
                     break;
                 case 2:
                     type = FilterType.Promotions;
@@ -1029,7 +1097,7 @@ namespace FireProWar
 
             fpw_promoHistory.Text = FilterHistory(fpw_historyTerm.Text, FilterType.Term, promotion.History);
         }
-        
+
         #endregion
 
         #region Helper Methods
@@ -1119,10 +1187,14 @@ namespace FireProWar
         {
             foreach (Promotion promotion in fpw_promoList.Items)
             {
-                if (promotion.Ring.Equals(ringName))
+                foreach (String ring in promotion.Rings)
                 {
-                    return promotion;
+                    if (ring.Equals(ringName))
+                    {
+                        return promotion;
+                    }
                 }
+              
             }
 
             return null;
@@ -1549,5 +1621,87 @@ namespace FireProWar
         }
 
         #endregion
+
+        private void fpw_refreshRings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadRings();
+        }
+
+        private void fpw_addRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+                String ring = (String)fpw_ringList.SelectedItem;
+
+                //Determine if the current ring exists in any other promotions
+                foreach (Promotion item in fpw_promoList.Items)
+                {
+                    if (item.DoesRingExist(ring))
+                    {
+                        MessageBox.Show(ring + " is currently used by " + item.Name);
+                        fpw_promoList.SelectedItem = item;
+                        return;
+                    }
+                }
+
+                promotion.Rings.Add(ring);
+                fpw_promoList.SelectedItem = promotion;
+                fpw_promoList_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddRingException: " + exception);
+            }
+
+        }
+
+        private void fpw_removeRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+               
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+                //Promotions must have at least one home ring
+                if (promotion.Rings.Count == 1)
+                {
+                    return;
+                }
+
+                String ring = (String)fpw_promoRingList.SelectedItem;
+
+                promotion.Rings.Remove(ring);
+                fpw_promoList.SelectedItem = promotion;
+                fpw_promoList_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("RemoveRingError: " + exception);
+            }
+        }
+
+        private bool RingExists(String ring)
+        {
+            foreach (Promotion item in fpw_promoList.Items)
+            {
+                if (item.DoesRingExist(ring))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

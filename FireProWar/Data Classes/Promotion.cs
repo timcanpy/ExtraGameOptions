@@ -15,10 +15,13 @@ namespace Data_Classes
             averageRating = 0;
             history = "";
             matchDetails = new List<String>();
+            Rings = new List<String>();
 
         }
 
         #region Properties
+        private char listSeparator = ':';
+
         private String name;
 
         public String Name
@@ -27,12 +30,12 @@ namespace Data_Classes
             set { name = value; }
         }
 
-        private String ring;
+        private List<String> rings;
 
-        public String Ring
+        public List<String> Rings
         {
-            get { return ring; }
-            set { ring = value; }
+            get { return rings; }
+            set { rings = value; }
         }
 
         private String type;
@@ -101,7 +104,7 @@ namespace Data_Classes
 
         public String GetInfoString()
         {
-            return name + "\n" + ring + "\n" + type + "\n" + region;
+            return name + "\n" + GetRingList() + "\n" + type + "\n" + region;
         }
 
         public void AddHistory(String info)
@@ -233,7 +236,7 @@ namespace Data_Classes
 
         public String GetReportFormat()
         {
-            var reportInfo = new String[] { name, type, region, ring, matchCount.ToString(), Math.Round(averageRating, 2).ToString(), employeeList.Count.ToString() };
+            var reportInfo = new String[] { name, type, region, GetRingList(), matchCount.ToString(), Math.Round(averageRating, 2).ToString(), employeeList.Count.ToString() };
             string report = "";
             foreach (var info in reportInfo)
             {
@@ -241,6 +244,44 @@ namespace Data_Classes
             }
 
             return report;
+        }
+
+        public bool DoesRingExist(String ring)
+        {
+            foreach (String item in rings)
+            {
+                if (item.Equals(ring))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public String GetRingList()
+        {
+            string ringList = "";
+
+            foreach (String item in rings)
+            {
+                ringList += item + listSeparator;
+            }
+
+            return ringList;
+        }
+
+        public void LoadRings(string ringList)
+        {
+            foreach (String item in ringList.Split(listSeparator))
+            {
+                if (item.Trim().Equals(String.Empty))
+                {
+                    continue;
+                }
+
+                rings.Add(item);
+            }
         }
         #endregion
 
