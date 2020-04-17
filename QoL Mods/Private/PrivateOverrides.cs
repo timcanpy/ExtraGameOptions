@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Common_Classes.EnumLibrary;
 using System.IO;
+using Ace.AttireExtension;
 using MatchConfig;
 using WresIDGroup = ModPack.WresIDGroup;
 
@@ -28,6 +29,7 @@ namespace QoL_Mods.Private
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "(PRIVATE) Set the Attendance Level based on participating edits' Rank & Charisma.")]
     [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "(PRIVATE) Automates match settings for different rings.")]
+    [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "(PRIVATE) Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     #endregion
 
     #region Field Access
@@ -91,6 +93,18 @@ namespace QoL_Mods.Private
             }
             {
                 return RingConfigForm.ringForm;
+            }
+        }
+
+        [ControlPanel(Group = "Ref Costume")]
+        public static Form RefForm()
+        {
+            if (AttireExtensionForm.instance == null)
+            {
+                return new AttireExtensionForm();
+            }
+            {
+                return AttireExtensionForm.instance;
             }
         }
         #endregion
@@ -519,7 +533,7 @@ namespace QoL_Mods.Private
         }
 
         #endregion
-        
+
         #region Entrance Taunts
         #region Variables
         public static bool[] stageTaunt;
@@ -1282,6 +1296,100 @@ namespace QoL_Mods.Private
             {
                 L.D("SetAttendanceLevelError: " + e);
             }
+        }
+        #endregion
+
+        #region Extend Referee Attires
+     
+        public static Referee refObj;
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 2147483647,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Costume")]
+        public static void LoadRefereeCostume()
+        {
+            PrivateOverrides.refObj = RefereeMan.inst.GetRefereeObj();
+            DirectoryInfo directoryInfo2 = new DirectoryInfo("./AceModsData/AttireExtension/Referees/");
+            string text2 = AttireExtensionForm.RemoveSpecialCharacters(PrivateOverrides.refObj.RefePrm.name);
+            FileInfo[] files2 = directoryInfo2.GetFiles(text2 + "*.cos");
+            bool flag36 = files2.Length != 0;
+            if (flag36)
+            {
+                if (1 == 2)
+                {
+
+                }
+                else
+                {
+                    Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
+                    attire_Select2.ShowDialog();
+                    bool flag39 = File.Exists("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                    if (flag39)
+                    {
+                        StreamReader streamReader6 = new StreamReader("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                        CostumeData costumeData6 = new CostumeData();
+                        while (streamReader6.Peek() != -1)
+                        {
+                            costumeData6.valid = true;
+                            for (int num45 = 0; num45 < 9; num45++)
+                            {
+                                for (int num46 = 0; num46 < 16; num46++)
+                                {
+                                    costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
+                                    costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.highlightIntensity[num45, num46] = float.Parse(streamReader6.ReadLine());
+                                }
+                                costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
+                            }
+                        }
+                        streamReader6.Dispose();
+                        streamReader6.Close();
+                        try
+                        {
+                            PrivateOverrides.refObj.FormRen.DestroySprite();
+                            PrivateOverrides.refObj.FormRen.InitTexture(costumeData6, null);
+                            for (int num47 = 0; num47 < 9; num47++)
+                            {
+                                PrivateOverrides.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
+                            }
+                            PrivateOverrides.refObj.FormRen.InitSprite(false);
+                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
+                        }
+                        catch
+                        {
+                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
+                            RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
+                            RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
+                            PrivateOverrides.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0], null);
+                            PrivateOverrides.refObj.FormRen.InitSprite(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Costume")]
+        public static void ResetRefereeCostume()
+        {
+            try
+            {
+                PrivateOverrides.refObj = RefereeMan.inst.GetRefereeObj();
+                RefereeID refereeID = GlobalWork.inst.MatchSetting.RefereeID;
+                PrivateOverrides.refObj.FormRen.DestroySprite();
+                PrivateOverrides.refObj.FormRen.InitTexture(SaveData.GetInst().GetEditRefereeData(refereeID).appearanceData.costumeData[0], null);
+                for (int k = 0; k < 9; k++)
+                {
+                    PrivateOverrides.refObj.FormRen.partsScale[k] = SaveData.GetInst().GetEditRefereeData(refereeID).appearanceData.costumeData[0].partsScale[k];
+                }
+                PrivateOverrides.refObj.FormRen.InitSprite(false);
+            }
+            catch (Exception e)
+            {
+                L.D("ResetRefereeCostumeError: " + e);
+            }
+           
         }
         #endregion
 

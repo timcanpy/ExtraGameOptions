@@ -65,6 +65,18 @@
     <Compile Include="Helper Classes\UkemiNotification.cs" />
     <Compile Include="Helper Classes\EnumLibrary.cs" />
     <Compile Include="Helper Classes\RefereeInfo.cs" />
+    <Compile Include="Private\AttireExtension.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\AttireExtension.Designer.cs">
+      <DependentUpon>AttireExtension.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Private\Attire_Select.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\Attire_Select.Designer.cs">
+      <DependentUpon>Attire_Select.cs</DependentUpon>
+    </Compile>
     <Compile Include="Private\CustomReversalForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -89,6 +101,12 @@
     <Compile Include="Private\Facelock\SkillType.cs" />
     <Compile Include="Private\Facelock\SlotStorage.cs" />
     <Compile Include="Private\Facelock\Style.cs" />
+    <Compile Include="Private\PreMatchTaunts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Private\PreMatchTaunts.Designer.cs">
+      <DependentUpon>PreMatchTaunts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\Reversal\Move.cs" />
     <Compile Include="Private\Reversal\ReversalMove.cs" />
@@ -132,6 +150,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Private\AttireExtension.resx">
+      <DependentUpon>AttireExtension.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Private\Attire_Select.resx">
+      <DependentUpon>Attire_Select.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Private\CustomReversalForm.resx">
       <DependentUpon>CustomReversalForm.cs</DependentUpon>
     </EmbeddedResource>
