@@ -9,6 +9,8 @@ using System.IO;
 using QoL_Mods.Helper_Classes;
 using QoL_Mods.Public;
 using UnityEngine.UI;
+using WresIDGroup = ModPack.WresIDGroup;
+using ModPack;
 
 namespace QoL_Mods
 {
@@ -29,6 +31,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
     [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
+    [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
 
     #endregion
     #region Field Access
@@ -1658,6 +1661,112 @@ namespace QoL_Mods
             global::MatchData.FlyRangeMdfTbl[(int)FightStyleEnum.Panther] = 1.4600f;
         }
 
+        #endregion
+
+        #region Dynamic Crowd Based on Participating Edits
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitArena", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+            Group = "Dynamic Attendance")]
+        public static void SetAttendanceLevel()
+        {
+            try
+            {
+                double appeal = GetAverageCharisma() + GetAverageRank();
+
+                //Title matches gain extra Audience Appeal
+                if (GlobalParam.TitleMatch_BeltData != null)
+                    appeal += 2;
+
+                if (appeal < 0)
+                {
+                    appeal = 0;
+                }
+                else if (appeal > 10)
+                {
+                    appeal = 10;
+                }
+
+                L.D("Audience Appeal: " + appeal);
+
+                switch (appeal)
+                {
+                    case 0:
+                    case 1:
+                    case 2:
+                        ModPackForm.instance.comboBox2.SelectedIndex = 0;
+                        MatchMain.inst.AttendanceRate = 0f;
+                        break;
+                    case 3:
+                    case 4:
+                        ModPackForm.instance.comboBox2.SelectedIndex = 1;
+                        MatchMain.inst.AttendanceRate = 0.24f;
+                        break;
+                    case 5:
+                    case 6:
+                        ModPackForm.instance.comboBox2.SelectedIndex = 2;
+                        MatchMain.inst.AttendanceRate = 0.49f;
+                        break;
+                    case 7:
+                    case 8:
+                        ModPackForm.instance.comboBox2.SelectedIndex = 3;
+                        MatchMain.inst.AttendanceRate = 0.74f;
+                        break;
+                    default:
+                        ModPackForm.instance.comboBox2.SelectedIndex = 4;
+                        MatchMain.inst.AttendanceRate = 1f;
+                        break;
+                }
+
+            }
+            catch (Exception e)
+            {
+                L.D("SetAttendanceLevelError: " + e);
+            }
+        }
+        public static double GetAverageRank()
+        {
+            double rank = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
+                if (!plObj.entry)
+                {
+                    continue;
+                }
+
+                if (!plObj.isIntruder)
+                {
+                    rank += (int)plObj.param.wrestlerRank;
+                }
+            }
+
+            rank = rank / GetPlayerList().Length;
+
+            L.D("Average rank: " + rank);
+            return Math.Ceiling(rank);
+        }
+        public static double GetAverageCharisma()
+        {
+            double charisma = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
+                if (!plObj.entry)
+                {
+                    continue;
+                }
+
+                if (!plObj.isIntruder)
+                {
+                    charisma += (int)plObj.param.charismaRank;
+                }
+            }
+
+            charisma = charisma / GetPlayerList().Length;
+
+            L.D("Average Charisma: " + charisma);
+            return Math.Ceiling(charisma);
+        }
         #endregion
 
         #region Auto Set CPU on Match Select

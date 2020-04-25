@@ -125,6 +125,11 @@ namespace QoL_Mods.Private
                 {
                     foreach (RingConfiguration item in rc_ringList.Items)
                     {
+                        if (item == null)
+                        {
+                            continue;
+                        }
+                        
                         sw.WriteLine(item.SaveConfiguration());
                     }
                 }

@@ -46,6 +46,8 @@ namespace QoL_Mods.Helper_Classes
         {
             String data = "";
 
+            L.D("Saving " + ringName);
+            L.D("Referee Number: " + referees.Count);
             data += ringName + dataSeparator;
             data += grappleSetting.SaveSettings() + dataSeparator;
             data += singlesSpeed + "" + dataSeparator;
@@ -55,6 +57,10 @@ namespace QoL_Mods.Helper_Classes
             string listData = "";
             foreach (var referee in referees)
             {
+                if (referee == null)
+                {
+                    continue;
+                }
                 listData += referee.Data.Prm.name + listSeparator;
             }
             data += listData + dataSeparator;
@@ -78,6 +84,7 @@ namespace QoL_Mods.Helper_Classes
                 var dataLines = data.Split(dataSeparator);
 
                 ringName = dataLines[0];
+                L.D("Loading configuration for " + ringName);
                 grappleSetting.LoadSettings(dataLines[1]);
                 Int32.TryParse(dataLines[2], out singlesSpeed);
                 Int32.TryParse(dataLines[3], out multiSpeed);
@@ -93,7 +100,7 @@ namespace QoL_Mods.Helper_Classes
                     }
 
                     RefereeInfo referee = MatchConfiguration.GetRefereeInfo(item);
-
+                    
                     if (referee == null)
                     {
                         continue;

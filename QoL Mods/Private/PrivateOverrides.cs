@@ -27,7 +27,6 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
-    [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "(PRIVATE) Set the Attendance Level based on participating edits' Rank & Charisma.")]
     [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "(PRIVATE) Automates match settings for different rings.")]
     [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "(PRIVATE) Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     #endregion
@@ -1236,71 +1235,9 @@ namespace QoL_Mods.Private
             }
         }
         #endregion
-
-        #region Dynamic Crowd Based on Participating Edits
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitArena", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
-            Group = "Dynamic Attendance")]
-        public static void SetAttendanceLevel()
-        {
-            try
-            {
-                double appeal = GetAverageCharisma() + GetAverageRank();
-
-                //Title matches gain extra Audience Appeal
-                if (GlobalParam.TitleMatch_BeltData != null)
-                    appeal += 2;
-
-                if (appeal < 0)
-                {
-                    appeal = 0;
-                }
-                else if (appeal > 10)
-                {
-                    appeal = 10;
-                }
-
-                L.D("Audience Appeal: " + appeal);
-
-                switch (appeal)
-                {
-                    case 0:
-                    case 1:
-                    case 2:
-                        ModPackForm.instance.comboBox2.SelectedIndex = 0;
-                        MatchMain.inst.AttendanceRate = 0f;
-                        break;
-                    case 3:
-                    case 4:
-                        ModPackForm.instance.comboBox2.SelectedIndex = 1;
-                        MatchMain.inst.AttendanceRate = 0.24f;
-                        break;
-                    case 5:
-                    case 6:
-                        ModPackForm.instance.comboBox2.SelectedIndex = 2;
-                        MatchMain.inst.AttendanceRate = 0.49f;
-                        break;
-                    case 7:
-                    case 8:
-                        ModPackForm.instance.comboBox2.SelectedIndex = 3;
-                        MatchMain.inst.AttendanceRate = 0.74f;
-                        break;
-                    default:
-                        ModPackForm.instance.comboBox2.SelectedIndex = 4;
-                        MatchMain.inst.AttendanceRate = 1f;
-                        break;
-                }
-
-            }
-            catch (Exception e)
-            {
-                L.D("SetAttendanceLevelError: " + e);
-            }
-        }
-        #endregion
-
+        
         #region Extend Referee Attires
-     
+
         public static Referee refObj;
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 2147483647,
@@ -1314,59 +1251,53 @@ namespace QoL_Mods.Private
             bool flag36 = files2.Length != 0;
             if (flag36)
             {
-                if (1 == 2)
+                Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
+                attire_Select2.ShowDialog();
+                bool flag39 = File.Exists("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                if (flag39)
                 {
-
-                }
-                else
-                {
-                    Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
-                    attire_Select2.ShowDialog();
-                    bool flag39 = File.Exists("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
-                    if (flag39)
+                    StreamReader streamReader6 = new StreamReader("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                    CostumeData costumeData6 = new CostumeData();
+                    while (streamReader6.Peek() != -1)
                     {
-                        StreamReader streamReader6 = new StreamReader("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
-                        CostumeData costumeData6 = new CostumeData();
-                        while (streamReader6.Peek() != -1)
+                        costumeData6.valid = true;
+                        for (int num45 = 0; num45 < 9; num45++)
                         {
-                            costumeData6.valid = true;
-                            for (int num45 = 0; num45 < 9; num45++)
+                            for (int num46 = 0; num46 < 16; num46++)
                             {
-                                for (int num46 = 0; num46 < 16; num46++)
-                                {
-                                    costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
-                                    costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
-                                    costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
-                                    costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
-                                    costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
-                                    costumeData6.highlightIntensity[num45, num46] = float.Parse(streamReader6.ReadLine());
-                                }
-                                costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
+                                costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
+                                costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
+                                costumeData6.highlightIntensity[num45, num46] = float.Parse(streamReader6.ReadLine());
                             }
-                        }
-                        streamReader6.Dispose();
-                        streamReader6.Close();
-                        try
-                        {
-                            PrivateOverrides.refObj.FormRen.DestroySprite();
-                            PrivateOverrides.refObj.FormRen.InitTexture(costumeData6, null);
-                            for (int num47 = 0; num47 < 9; num47++)
-                            {
-                                PrivateOverrides.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
-                            }
-                            PrivateOverrides.refObj.FormRen.InitSprite(false);
-                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
-                        }
-                        catch
-                        {
-                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
-                            RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
-                            RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
-                            PrivateOverrides.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0], null);
-                            PrivateOverrides.refObj.FormRen.InitSprite(false);
+                            costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
                         }
                     }
+                    streamReader6.Dispose();
+                    streamReader6.Close();
+                    try
+                    {
+                        PrivateOverrides.refObj.FormRen.DestroySprite();
+                        PrivateOverrides.refObj.FormRen.InitTexture(costumeData6, null);
+                        for (int num47 = 0; num47 < 9; num47++)
+                        {
+                            PrivateOverrides.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
+                        }
+                        PrivateOverrides.refObj.FormRen.InitSprite(false);
+                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
+                    }
+                    catch
+                    {
+                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
+                        RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
+                        RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
+                        PrivateOverrides.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0], null);
+                        PrivateOverrides.refObj.FormRen.InitSprite(false);
+                    }
                 }
+
             }
         }
 
@@ -1389,56 +1320,11 @@ namespace QoL_Mods.Private
             {
                 L.D("ResetRefereeCostumeError: " + e);
             }
-           
+
         }
         #endregion
 
         #region Helper Methods
-
-        public static double GetAverageRank()
-        {
-            double rank = 0;
-            for (int i = 0; i < 8; i++)
-            {
-                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
-                if (!plObj.entry)
-                {
-                    continue;
-                }
-
-                if (!plObj.isIntruder)
-                {
-                    rank += (int)plObj.param.wrestlerRank;
-                }
-            }
-
-            rank = rank / GetPlayerList().Length;
-
-            L.D("Average rank: " + rank);
-            return Math.Ceiling(rank);
-        }
-        public static double GetAverageCharisma()
-        {
-            double charisma = 0;
-            for (int i = 0; i < 8; i++)
-            {
-                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
-                if (!plObj.entry)
-                {
-                    continue;
-                }
-
-                if (!plObj.isIntruder)
-                {
-                    charisma += (int)plObj.param.charismaRank;
-                }
-            }
-
-            charisma = charisma / GetPlayerList().Length;
-
-            L.D("Average Charisma: " + charisma);
-            return Math.Ceiling(charisma);
-        }
         public static WresIDGroup GetWresIDGroup(String wrestlerName)
         {
             WresIDGroup wresID = null;

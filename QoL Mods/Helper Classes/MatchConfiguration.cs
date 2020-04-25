@@ -166,14 +166,17 @@ namespace MatchConfig
 
         public static RefereeInfo GetRefereeInfo(String name)
         {
+            L.D("Looking for " + name);
             foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
             {
                 if (referee.Prm.name.Equals(name))
                 {
+                    L.D("Found");
                     return new RefereeInfo(referee);
                 }
             }
 
+            L.D("Not Found");
             return null;
         }
     }
