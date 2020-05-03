@@ -110,10 +110,10 @@
     <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\Reversal\Move.cs" />
     <Compile Include="Private\Reversal\ReversalMove.cs" />
-    <Compile Include="Private\RingConfigForm.cs">
+    <Compile Include="Public\RingConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Private\RingConfigForm.Designer.cs">
+    <Compile Include="Public\RingConfigForm.Designer.cs">
       <DependentUpon>RingConfigForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Public\Reports.cs">
@@ -165,7 +165,7 @@
     <EmbeddedResource Include="Private\FaceLockForm.resx">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Private\RingConfigForm.resx">
+    <EmbeddedResource Include="Public\RingConfigForm.resx">
       <DependentUpon>RingConfigForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\RecoveryTauntForm.resx">

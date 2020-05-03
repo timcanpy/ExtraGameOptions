@@ -11,6 +11,7 @@ using DG;
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using ModPack;
 
 namespace FireProWar
 {
@@ -169,6 +170,7 @@ namespace FireProWar
                 String titleMatch = "";
                 String winners = "";
                 String losers = "";
+                bool isFinals = IsTourneyFinals();
 
                 #region Setting End Match Time
                 String time = "";
@@ -207,6 +209,13 @@ namespace FireProWar
 
                     int moralePoints = 0;
                     Player player = PlayerMan.inst.GetPlObj(i);
+
+                    //Ensure intruders are exempt
+                    if (player.isIntruder)
+                    {
+                        continue;
+                    }
+
                     bool isWinner = true;
 
                     //Check Match Rating
@@ -236,7 +245,7 @@ namespace FireProWar
                             //Record if this was an upset victory
                             if (rankPoints != 0)
                             {
-                                promotion.AddHistory(DataBase.GetWrestlerFullName(winner.WresParam) +
+                                promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + DataBase.GetWrestlerFullName(winner.WresParam) +
                                                      " has scored an upset victory against " +
                                                      DataBase.GetWrestlerFullName(player.WresParam) + ".");
                             }
@@ -261,11 +270,35 @@ namespace FireProWar
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner)
                         {
                             moralePoints += 1;
+
+                            if (!player.isSecond)
+                            {
+                                if (String.IsNullOrEmpty(winners))
+                                {
+                                    winners = DataBase.GetWrestlerFullName(player.WresParam);
+                                }
+                                else
+                                {
+                                    winners += " & " + DataBase.GetWrestlerFullName(player.WresParam);
+                                }
+                            }
                         }
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner)
                         {
                             moralePoints -= 1;
                             isWinner = false;
+
+                            if (!player.isSecond)
+                            {
+                                if (String.IsNullOrEmpty(losers))
+                                {
+                                    losers = DataBase.GetWrestlerFullName(player.WresParam);
+                                }
+                                else
+                                {
+                                    losers += " & " + DataBase.GetWrestlerFullName(player.WresParam);
+                                }
+                            }
                         }
                     }
                     else
@@ -274,9 +307,9 @@ namespace FireProWar
                     }
 
                     //Check For Title Match
-                    if (GlobalParam.TitleMatch_BeltData != null)
+                    if (GlobalParam.TitleMatch_BeltData != null && isFinals)
                     {
-                        titleMatch = GlobalParam.TitleMatch_BeltData.titleName + ": ";
+                        titleMatch = GlobalParam.TitleMatch_BeltData.titleName.ToUpper() + ": ";
 
                         String champion = GlobalParam.TitleMatch_BeltData.GetCurrentTitleHolderName();
                         if (evaluation.ResultType == MatchResultEnum.RingOutDraw ||
@@ -290,7 +323,7 @@ namespace FireProWar
                                   && i >= 4)
                         {
                             promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                                  " has lost the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
+                                                  " has lost the " + GlobalParam.TitleMatch_BeltData.titleName.ToUpper() + ".");
                             moralePoints -= 3;
                         }
                         //Awarding a new champion
@@ -298,14 +331,35 @@ namespace FireProWar
                                   evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner)
                                   && i < 4)
                         {
-                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
+                            int championNumber = GlobalParam.TitleMatch_BeltData.titleMatch_Record_Data.Count + 1;
+                            string ordinalNumber = global::TitleMatch_Data.GetOrdinalNumberString(championNumber);
+
+                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has gained the " + GlobalParam.TitleMatch_BeltData.titleName.ToUpper() + " and becomes the " + ordinalNumber + ".");
                             moralePoints += (6 - employee.MoraleRank);
                         }
                         //Logging record for a successful defense
                         else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner ||
                                  evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner && i >= 4)
                         {
-                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " successfully defends the " + GlobalParam.TitleMatch_BeltData.titleName + ".");
+                            int defenseNumber = GlobalParam.TitleMatch_BeltData.GetLatestMatchRecord().DefenseCount;
+                            string ordinalNumber = global::TitleMatch_Data.GetOrdinalNumberString(defenseNumber);
+                            Player loser = GetPlayer(ResultPosition.Loser);
+                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " successfully defends the " + GlobalParam.TitleMatch_BeltData.titleName.ToUpper() + " (" + ordinalNumber + " defense) against " + DataBase.GetWrestlerFullName(loser.WresParam) + ".");
+                        }
+                    }
+
+                    //Determine whether the player won a league or tournament
+                    if ((GlobalParam.m_BattleMode == GlobalParam.BattleMode.Tournament)
+                        && isFinals)
+                    {
+                        if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner ||
+                            evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner && !player.isSecond && !player.isIntruder)
+                        {
+                            String eventType = "tournament";
+                            
+                            promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
+                                                 " has recently won a " + eventType.ToUpper() + ".");
+                            moralePoints += (6 - employee.MoraleRank);
                         }
                     }
 
@@ -455,7 +509,7 @@ namespace FireProWar
                 L.D("ShowRecordError:" + e);
             }
         }
-        
+
         #region Helper Methods
         public static String CheckMorale(int moraleRank)
         {
@@ -586,6 +640,28 @@ namespace FireProWar
                 default:
                     return 0;
             }
+        }
+        public static bool IsTourneyFinals()
+        {
+            if (GlobalParam.m_BattleMode == GlobalParam.BattleMode.Tournament)
+            {
+                try
+                {
+                    MethodInfo finalsInfo = typeof(ModPack.ModPack).GetMethod("CheckFinals", BindingFlags.Static | BindingFlags.NonPublic);
+                    bool isFinals = (bool)finalsInfo.Invoke(null, null);
+                    L.D("In " + GlobalParam.m_BattleMode + " Finals: " + isFinals);
+                    return isFinals;
+                }
+                catch (Exception e)
+                {
+                    L.D("IsTourneyLeagueFinalsError: " + e);
+                }
+            }
+
+           //Ensure that processing continues in the event of an error, or different match type.
+            L.D("Current mode is " + GlobalParam.m_BattleMode);
+            return true;
+
         }
         public static object GetField(object obj, string field, bool isStatic)
         {

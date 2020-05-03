@@ -11,6 +11,7 @@ using QoL_Mods.Public;
 using UnityEngine.UI;
 using WresIDGroup = ModPack.WresIDGroup;
 using ModPack;
+using QoL_Mods.Private;
 
 namespace QoL_Mods
 {
@@ -32,7 +33,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
     [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
     [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
-
+    [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "Automates match settings for different rings.")]
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -70,6 +71,20 @@ namespace QoL_Mods
 
     class GeneralComponents
     {
+
+
+        [ControlPanel(Group = "Ring Config")]
+        public static Form RingForm()
+        {
+            if (RingConfigForm.ringForm == null)
+            {
+                return new RingConfigForm();
+            }
+            {
+                return RingConfigForm.ringForm;
+            }
+        }
+
         [ControlPanel(Group = "Wrestler Search")]
         public static Form MSForm()
         {
@@ -1805,5 +1820,133 @@ namespace QoL_Mods
 
         #endregion
 
+        #region Automatic Match Configuration
+
+        public static String configRingName = "";
+
+
+        [Hook(TargetClass = "GlobalParam", TargetMethod = "Set_MatchSetting_Rule", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateRefSettingn()
+        {
+            try
+            {
+                MatchSetting settings = GlobalWork.inst.MatchSetting;
+                String ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
+                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                {
+                    if (config.RingName.Equals(ringName))
+                    {
+                        //Referee
+                        if (config.Referees.Count > 0)
+                        {
+                            RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
+                            L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
+                            settings.RefereeID = referee.Data.editRefereeID;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("AutomateRefError: " + e);
+            }
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateRingSetting()
+        {
+            try
+            {
+                MatchSetting settings = GlobalWork.inst.MatchSetting;
+                String ringName = global::SaveData.inst.GetEditRingData(settings.ringID).name;
+                configRingName = "";
+
+                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                {
+                    if (config.RingName.Equals(ringName))
+                    {
+                        configRingName = ringName;
+
+                        //Grapple Settings
+                        ModPackForm.instance.numericUpDown5.Value = config.GrappleSetting.Low;
+                        ModPackForm.instance.numericUpDown6.Value = config.GrappleSetting.Medium;
+                        ModPackForm.instance.numericUpDown7.Value = config.GrappleSetting.High;
+
+                        //Clock Speed
+                        if (GetWrestlerList().Length == 2)
+                        {
+                            ModPackForm.instance.comboBox8.SelectedIndex = config.SinglesSpeed;
+                        }
+                        else
+                        {
+                            ModPackForm.instance.comboBox8.SelectedIndex = config.MultiSpeed;
+                        }
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("AutomateRingSettingError: " + e);
+            }
+        }
+
+        [Hook(TargetClass = "Menu_SoundManager", TargetMethod = "MyMusic_Play", InjectionLocation = 68,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
+        public static void AutomateBGM()
+        {
+            try
+            {
+                if (!configRingName.Equals(String.Empty))
+                {
+                    foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                    {
+                        if (config.RingName.Equals(configRingName))
+                        {
+                            //BGM
+                            if (config.Bgms.Count > 0)
+                            {
+                                string matchBGM = "";
+                                string bgmPath = System.IO.Directory.GetCurrentDirectory() + @"\BGM";
+
+                                matchBGM = Path.Combine(bgmPath,
+                                    config.Bgms[UnityEngine.Random.Range(0, config.Bgms.Count)]);
+                                Menu_SoundManager.MyMusic_SelectFile_Match = matchBGM;
+
+                                L.D("Loading BGM " + matchBGM + " for " + configRingName);
+                                configRingName = "";
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("AutomateBGMError: " + e);
+            }
+        }
+
+        public static int[] GetWrestlerList()
+        {
+            List<int> players = new List<int>();
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (plObj)
+                {
+                    if (!plObj.isIntruder && !plObj.isSecond)
+                    {
+                        players.Add(plObj.PlIdx);
+                    }
+                }
+            }
+
+            return players.ToArray();
+        }
+        #endregion
     }
 }

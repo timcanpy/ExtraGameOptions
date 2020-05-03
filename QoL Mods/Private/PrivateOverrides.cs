@@ -27,8 +27,8 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
-    [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "(PRIVATE) Automates match settings for different rings.")]
     [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "(PRIVATE) Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
+    [GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
     #endregion
 
     #region Field Access
@@ -80,18 +80,6 @@ namespace QoL_Mods.Private
             }
             {
                 return DynamicHighlightsForm.highlightsForm;
-            }
-        }
-
-        [ControlPanel(Group = "Ring Config")]
-        public static Form RingForm()
-        {
-            if (RingConfigForm.ringForm == null)
-            {
-                return new RingConfigForm();
-            }
-            {
-                return RingConfigForm.ringForm;
             }
         }
 
@@ -1124,118 +1112,7 @@ namespace QoL_Mods.Private
 
         }
         #endregion
-
-        #region Automatic Match Configuration
-
-        public static String configRingName = "";
-
-
-        [Hook(TargetClass = "GlobalParam", TargetMethod = "Set_MatchSetting_Rule", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
-        public static void AutomateRefSettingn()
-        {
-            try
-            {
-                MatchSetting settings = GlobalWork.inst.MatchSetting;
-                String ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name;
-                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
-                {
-                    if (config.RingName.Equals(ringName))
-                    {
-                        //Referee
-                        if (config.Referees.Count > 0)
-                        {
-                            RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
-                            L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
-                            settings.RefereeID = referee.Data.editRefereeID;
-                            break;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("AutomateRefError: " + e);
-            }
-        }
-
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
-        public static void AutomateRingSetting()
-        {
-            try
-            {
-                MatchSetting settings = GlobalWork.inst.MatchSetting;
-                String ringName = global::SaveData.inst.GetEditRingData(settings.ringID).name;
-                configRingName = "";
-
-                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
-                {
-                    if (config.RingName.Equals(ringName))
-                    {
-                        configRingName = ringName;
-
-                        //Grapple Settings
-                        ModPackForm.instance.numericUpDown5.Value = config.GrappleSetting.Low;
-                        ModPackForm.instance.numericUpDown6.Value = config.GrappleSetting.Medium;
-                        ModPackForm.instance.numericUpDown7.Value = config.GrappleSetting.High;
-
-                        //Clock Speed
-                        if (GetWrestlerList().Length == 2)
-                        {
-                            ModPackForm.instance.comboBox8.SelectedIndex = config.SinglesSpeed;
-                        }
-                        else
-                        {
-                            ModPackForm.instance.comboBox8.SelectedIndex = config.MultiSpeed;
-                        }
-                        break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("AutomateRingSettingError: " + e);
-            }
-        }
-
-        [Hook(TargetClass = "Menu_SoundManager", TargetMethod = "MyMusic_Play", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ring Config")]
-        public static void AutomateBGM()
-        {
-            try
-            {
-                if (!configRingName.Equals(String.Empty))
-                {
-                    foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
-                    {
-                        if (config.RingName.Equals(configRingName))
-                        {
-                            //BGM
-                            if (config.Bgms.Count > 0)
-                            {
-                                string matchBGM = "";
-                                string bgmPath = System.IO.Directory.GetCurrentDirectory() + @"\BGM";
-
-                                matchBGM = Path.Combine(bgmPath,
-                                    config.Bgms[UnityEngine.Random.Range(0, config.Bgms.Count)]);
-                                Menu_SoundManager.MyMusic_SelectFile_Match = matchBGM;
-
-                                L.D("Loading BGM " + matchBGM + " for " + configRingName);
-                                configRingName = "";
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("AutomateBGMError: " + e);
-            }
-        }
-        #endregion
-        
+   
         #region Extend Referee Attires
 
         public static Referee refObj;
@@ -1322,6 +1199,19 @@ namespace QoL_Mods.Private
             }
 
         }
+        #endregion
+
+        #region Waza Support
+
+        [Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) }, Group = "Waza Support")]
+        public static void VerifyMoveLoad(global::SkillData skilldata, global::SkillInfo info, bool post)
+        {
+            L.D("Loading move data for " + info.skillName[1]);
+        }
+
+        //[Hook(TargetClass = "ToolSettingInfo", TargetMethod = "AddSelectSkillData", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Waza Support")]
         #endregion
 
         #region Helper Methods
@@ -1522,24 +1412,6 @@ namespace QoL_Mods.Private
 
             return players.ToArray();
         }
-
-        public static int[] GetWrestlerList()
-        {
-            List<int> players = new List<int>();
-            for (int i = 0; i < 8; i++)
-            {
-                Player plObj = PlayerMan.inst.GetPlObj(i);
-                if (plObj)
-                {
-                    if (!plObj.isIntruder && !plObj.isSecond)
-                    {
-                        players.Add(plObj.PlIdx);
-                    }
-                }
-            }
-
-            return players.ToArray();
-        }
         private static int GetMins(int frms)
         {
             int result = frms / 60;
@@ -1582,7 +1454,7 @@ namespace QoL_Mods.Private
             {
                 if (wrestlers.Count == 1)
                 {
-                    teamName = wrestlers[0];
+                    teamName = CleanUpName(wrestlers[0]);
                 }
                 else
                 {

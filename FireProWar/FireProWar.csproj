@@ -34,6 +34,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="ModPack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\ModPack.dll</HintPath>
+    </Reference>
     <Reference Include="PWGR Framework">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\PWGR Framework.dll</HintPath>
     </Reference>

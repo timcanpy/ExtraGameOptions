@@ -70,6 +70,7 @@ namespace FireProWar
             FormClosing += WarForm_FormClosing;
             fpw_historyTerm.Leave += new System.EventHandler(fpw_HistoryTerm_LostFocus);
             fpw_matchTerm.Leave += new System.EventHandler(fpw_MatchTerm_LostFocus);
+            fpw_rosterFiler.SelectedIndex = 0;
         }
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -567,7 +568,7 @@ namespace FireProWar
             {
                 fpw_promoRingList.SelectedIndex = 0;
             }
-         
+
             fpw_promoStyleList.SelectedIndex = fpw_promoStyleList.Items.IndexOf(promotion.Type);
             fpw_promoMthCnt.Text = promotion.MatchCount.ToString();
             fpw_promoMthRating.Text = Math.Round(Decimal.Parse(promotion.AverageRating.ToString()), 2) + "%";
@@ -583,7 +584,8 @@ namespace FireProWar
             String details = "";
             foreach (String detail in promotion.MatchDetails)
             {
-                details += "\n" + detail;
+                details += "\n" + detail + "\n";
+
             }
             fpw_detailsView.Text = details;
             #endregion
@@ -597,6 +599,9 @@ namespace FireProWar
                 ms_employeeList.Items.Add(employee.Name);
                 ms_rosterList.Items.Add(employee);
             }
+
+            //Ensure that we filter the roster list appropriately
+            fpw_rosterFiler_SelectedIndexChanged(null, null);
 
             if (ms_rosterList.Items.Count > 0)
             {
@@ -701,6 +706,72 @@ namespace FireProWar
             promotion.ClearEvents();
             fpw_promoList.SelectedItem = promotion;
             fpw_promoList_SelectedIndexChanged(sender, e);
+        }
+        private void fpw_refreshRings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadRings();
+        }
+        private void fpw_addRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+                String ring = (String)fpw_ringList.SelectedItem;
+
+                //Determine if the current ring exists in any other promotions
+                foreach (Promotion item in fpw_promoList.Items)
+                {
+                    if (item.DoesRingExist(ring))
+                    {
+                        MessageBox.Show(ring + " is currently used by " + item.Name);
+                        fpw_promoList.SelectedItem = item;
+                        return;
+                    }
+                }
+
+                promotion.Rings.Add(ring);
+                fpw_promoList.SelectedItem = promotion;
+                fpw_promoList_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddRingException: " + exception);
+            }
+
+        }
+        private void fpw_removeRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+                //Promotions must have at least one home ring
+                if (promotion.Rings.Count == 1)
+                {
+                    return;
+                }
+
+                String ring = (String)fpw_promoRingList.SelectedItem;
+
+                promotion.Rings.Remove(ring);
+                fpw_promoList.SelectedItem = promotion;
+                fpw_promoList_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("RemoveRingError: " + exception);
+            }
         }
         #endregion
 
@@ -1098,6 +1169,57 @@ namespace FireProWar
             fpw_promoHistory.Text = FilterHistory(fpw_historyTerm.Text, FilterType.Term, promotion.History);
         }
 
+        private void fpw_rosterFiler_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (fpw_promoList.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+
+                List<Employee> sortedList = new List<Employee>();
+
+                switch ((String)fpw_rosterFiler.SelectedItem)
+                {
+                    case "Wins":
+                        sortedList = promotion.EmployeeList.OrderByDescending(x => x.Wins).ToList();
+                        break;
+                    case "Losses":
+                        sortedList = promotion.EmployeeList.OrderByDescending(x => x.Losses).ToList();
+                        break;
+                    case "Total Matches":
+                        sortedList = promotion.EmployeeList.OrderByDescending(x => x.MatchCount).ToList();
+                        break;
+                    case "Average Rating":
+                        sortedList = promotion.EmployeeList.OrderByDescending(x => x.AverageRating).ToList();
+                        break;
+                    case "Morale":
+                    default:
+                        sortedList = promotion.EmployeeList.OrderByDescending(x => x.MoraleRank).ToList();
+                        break;
+                }
+
+                ms_rosterList.Items.Clear();
+                foreach (var employee in sortedList)
+                {
+                    ms_rosterList.Items.Add(employee);
+                }
+
+                if (ms_rosterList.Items.Count > 0)
+                {
+                    ms_rosterList_SelectedIndexChanged(null, null);
+                }
+            }
+            catch (Exception exception)
+            {
+                L.D("FilterRosterException: " + exception);
+            }
+          
+        }
+
         #endregion
 
         #region Helper Methods
@@ -1194,7 +1316,7 @@ namespace FireProWar
                         return promotion;
                     }
                 }
-              
+
             }
 
             return null;
@@ -1407,6 +1529,10 @@ namespace FireProWar
             }
             using (StreamWriter sw = File.AppendText(savePath))
             {
+                //Add headers
+                String header = "Promotion,Name,Style,Home Country,Total Matches, Average Rating, Wins, Losses, Draws, Morale Rank, Morale Points";
+                sw.WriteLine(header);
+                //return new List<String> { name, type, region, matchCount.ToString(), Math.Round(averageRating, 2).ToString(), wins.ToString(), losses.ToString(), draws.ToString() };
                 foreach (Promotion promotion in fpw_promoList.Items)
                 {
                     foreach (Employee employee in promotion.EmployeeList)
@@ -1550,7 +1676,7 @@ namespace FireProWar
         {
             if (type == FilterType.All)
             {
-                return details.Replace("~", "\n");
+                return details.Replace("~", "\n\n");
             }
 
             String result = "";
@@ -1614,83 +1740,11 @@ namespace FireProWar
 
                 if (!data.Equals(String.Empty))
                 {
-                    result += "\n" + data;
+                    result += "\n" + data + "\n";
                 }
             }
             return result;
         }
-
-        #endregion
-
-        private void fpw_refreshRings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            LoadRings();
-        }
-
-        private void fpw_addRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (fpw_promoList.SelectedIndex < 0)
-                {
-                    return;
-                }
-
-                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-                String ring = (String)fpw_ringList.SelectedItem;
-
-                //Determine if the current ring exists in any other promotions
-                foreach (Promotion item in fpw_promoList.Items)
-                {
-                    if (item.DoesRingExist(ring))
-                    {
-                        MessageBox.Show(ring + " is currently used by " + item.Name);
-                        fpw_promoList.SelectedItem = item;
-                        return;
-                    }
-                }
-
-                promotion.Rings.Add(ring);
-                fpw_promoList.SelectedItem = promotion;
-                fpw_promoList_SelectedIndexChanged(null, null);
-            }
-            catch (Exception exception)
-            {
-                L.D("AddRingException: " + exception);
-            }
-
-        }
-
-        private void fpw_removeRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            try
-            {
-                if (fpw_promoList.SelectedIndex < 0)
-                {
-                    return;
-                }
-
-               
-                Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-
-                //Promotions must have at least one home ring
-                if (promotion.Rings.Count == 1)
-                {
-                    return;
-                }
-
-                String ring = (String)fpw_promoRingList.SelectedItem;
-
-                promotion.Rings.Remove(ring);
-                fpw_promoList.SelectedItem = promotion;
-                fpw_promoList_SelectedIndexChanged(null, null);
-            }
-            catch (Exception exception)
-            {
-                L.D("RemoveRingError: " + exception);
-            }
-        }
-
         private bool RingExists(String ring)
         {
             foreach (Promotion item in fpw_promoList.Items)
@@ -1702,6 +1756,31 @@ namespace FireProWar
             }
 
             return false;
+        }
+
+        #endregion
+
+        private void fpw_resetPoints_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (ms_rosterList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Employee employee = (Employee)ms_rosterList.SelectedItem;
+            employee.ResetMoralePoints();
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+            promotion.UpdateEmployeeData(employee);
+
+            ms_rosterList.SelectedItem = employee;
+            fpw_promoList.SelectedItem = promotion;
+            ms_rosterList_SelectedIndexChanged(sender, e);
         }
     }
 }
