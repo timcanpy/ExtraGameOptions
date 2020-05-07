@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace FireProWar
 {
@@ -194,6 +195,34 @@ namespace FireProWar
                 #region Loading Promotion Data
                 if (File.Exists(filePath))
                 {
+                    List<String> titleNames = new List<String>();
+
+                    #region Resolve error related to Title Data
+                    foreach (var item in SaveData.inst.titleMatch_Data)
+                    {
+                        titleNames.Add(item.titleName.ToUpper());
+                    }
+
+                    //Remove all extra line breaks
+                    string text = File.ReadAllText(filePath);
+                    foreach (var title in titleNames)
+                    {
+                        text = text.Replace(title + Environment.NewLine, title + " - ");
+                    }
+
+                    //Rewrite file
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+
+                    using (StreamWriter sw = File.AppendText(filePath))
+                    {
+                        sw.Write(text);
+                    }
+
+                    #endregion
+
                     var lines = File.ReadAllLines(filePath);
 
                     //Determine how we load data
@@ -584,10 +613,10 @@ namespace FireProWar
             String details = "";
             foreach (String detail in promotion.MatchDetails)
             {
-                details += "\n" + detail + "\n";
+                details += detail + "~";
 
             }
-            fpw_detailsView.Text = details;
+            fpw_detailsView.Text = FilterHistory("", FilterType.All, details);
             #endregion
 
             ms_employeeList.Items.Clear();
@@ -1217,7 +1246,7 @@ namespace FireProWar
             {
                 L.D("FilterRosterException: " + exception);
             }
-          
+
         }
 
         #endregion
@@ -1676,12 +1705,27 @@ namespace FireProWar
         {
             if (type == FilterType.All)
             {
-                return details.Replace("~", "\n\n");
+                var split = details.Split('~');
+                Array.Reverse(split);
+                var lineSplit = split.ToList();
+
+                String value = "";
+                foreach (String line in lineSplit)
+                {
+                    value += "\n" + line + "\n";
+                }
+
+                return value;
             }
 
             String result = "";
 
-            foreach (String line in details.Split('~'))
+            //Sort by most recent
+            var splitArray = details.Split('~');
+            Array.Reverse(splitArray);
+            var lines = splitArray.ToList();
+
+            foreach (String line in lines)
             {
                 String data = "";
                 switch (type)
