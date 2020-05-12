@@ -50,6 +50,9 @@ namespace FireProWar
         public static String logoPositionFile = "./EGOData/LogoPosition.dat";
         public static String defaultLogo = "Default.png";
         public static AssetBundle tvLogo = null;
+        public static String[] teamNames = new String[2];
+        public static bool hasChamp = false;
+        public static TitleMatch_Data[] titleData = new TitleMatch_Data[8];
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "FirePro War")]
@@ -93,6 +96,108 @@ namespace FireProWar
                         employeeData[i] = promotion.GetEmployeeData(DataBase.GetWrestlerFullName(plObj.WresParam));
                     }
                 }
+
+                //Get team names
+                teamNames = new String[2];
+                List<String> members = new List<String>();
+
+                //Get Blue Team Name
+                for (int i = 0; i < 4; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (!player)
+                    {
+                        continue;
+                    }
+
+                    if (player.isSecond || player.isIntruder)
+                    {
+                        continue;
+                    }
+
+                    members.Add(DataBase.GetWrestlerFullName(player.WresParam));
+                }
+
+                GetTeamName(members, out teamNames[0]);
+
+                //Get Red Team Name
+                members.Clear();
+                for (int i = 4; i < 8; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (!player)
+                    {
+                        continue;
+                    }
+
+                    if (player.isSecond || player.isIntruder)
+                    {
+                        continue;
+                    }
+
+                    members.Add(DataBase.GetWrestlerFullName(player.WresParam));
+                }
+
+                GetTeamName(members, out teamNames[1]);
+
+                //Check for champions in a non-title match
+                titleData = new TitleMatch_Data[8];
+                hasChamp = false;
+                try
+                {
+                    if (GlobalParam.TitleMatch_BeltData == null)
+                    {
+                        for (int i = 0; i < 8; i++)
+                        {
+                            Player player = PlayerMan.inst.GetPlObj(i);
+                            if (!player)
+                            {
+                                continue;
+                            }
+
+                            if (player.isSecond || player.isIntruder)
+                            {
+                                continue;
+                            }
+
+                            foreach (var item in SaveData.inst.titleMatch_Data)
+                            {
+                                String currentChamp = item.GetCurrentTitleHolderName();
+                                if (currentChamp.Equals(DataBase.GetWrestlerFullName(player.WresParam)))
+                                {
+                                    hasChamp = true;
+                                    titleData[i] = item;
+                                    break;
+                                }
+                                else
+                                {
+                                    if (i < 4)
+                                    {
+                                        if (!teamNames[0].Equals(String.Empty) && teamNames[0].Equals(currentChamp))
+                                        {
+                                            hasChamp = true;
+                                            titleData[i] = item;
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!teamNames[1].Equals(String.Empty) && teamNames[1].Equals(currentChamp))
+                                        {
+                                            hasChamp = true;
+                                            titleData[i] = item;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    L.D("SetEmployees-NonTitleMatchException: " + ex);
+                }             
             }
         }
 
@@ -173,7 +278,7 @@ namespace FireProWar
                 bool winnerLogged = false;
                 bool loserLogged = false;
                 bool isFinals = IsTourneyFinals();
-                
+
                 //Get Loser
                 int rating = evaluation.EvaluateMatch();
                 bool isDraw = false;
@@ -318,6 +423,27 @@ namespace FireProWar
                         }
                     }
 
+                    //Check for the defeat of champions in a non-title match
+                    if (hasChamp)
+                    {
+                        TitleMatch_Data data = titleData[GetPlayer(ResultPosition.Loser).PlIdx];
+                        if (data != null)
+                        {
+                            //Singles match details
+                            if (GetPlayer(ResultPosition.Winner).PlIdx == i)
+                            {
+                                moralePoints += 3;
+                                promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" +
+                                                     DataBase.GetWrestlerFullName(GetPlayer(ResultPosition.Winner)
+                                                         .WresParam) + " has defeated "
+                                                     + DataBase.GetWrestlerFullName(GetPlayer(ResultPosition.Loser)
+                                                         .WresParam) + " (" + data.titleName.ToUpper() +
+                                                     " champion) in a non-title match.");
+                            }
+                        }
+
+                    }
+
                     //Determine whether the player won a league or tournament
                     if ((GlobalParam.m_BattleMode == GlobalParam.BattleMode.Tournament)
                         && isFinals)
@@ -349,32 +475,74 @@ namespace FireProWar
                                              " has been knocked out.");
                     }
 
+                    String injury = "";
+
                     if (player.HP_Arm <= 0)
                     {
                         moralePoints -= 1;
+
+                        if (War_Form.form.fpw_armInjuries.Items.Count == 0)
+                        {
+                            injury = "extreme arm damage";
+                        }
+                        else
+                        {
+                            injury = (String)War_Form.form.fpw_armInjuries.Items[UnityEngine.Random.Range(0, War_Form.form.fpw_armInjuries.Items.Count)];
+                        }
+
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                             " has suffered extreme arm damage.");
+                                             " has suffered " + injury + ".");
                     }
 
                     if (player.HP_Neck <= 0)
                     {
                         moralePoints -= 1;
+
+                        if (War_Form.form.fpw_neckInjuries.Items.Count == 0)
+                        {
+                            injury = "extreme neck damage";
+                        }
+                        else
+                        {
+                            injury = (String)War_Form.form.fpw_neckInjuries.Items[UnityEngine.Random.Range(0, War_Form.form.fpw_neckInjuries.Items.Count)];
+                        }
+
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                             " has suffered extreme neck damage.");
+                                             " has suffered " + injury + ".");
                     }
 
                     if (player.HP_Waist <= 0)
                     {
                         moralePoints -= 1;
+
+                        if (War_Form.form.fpw_waistInjuries.Items.Count == 0)
+                        {
+                            injury = "extreme waist damage";
+                        }
+                        else
+                        {
+                            injury = (String)War_Form.form.fpw_waistInjuries.Items[UnityEngine.Random.Range(0, War_Form.form.fpw_waistInjuries.Items.Count)];
+                        }
+
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                             " has suffered extreme body damage.");
+                                             " has suffered " + injury + ".");
                     }
 
                     if (player.HP_Leg <= 0)
                     {
                         moralePoints -= 1;
+
+                        if (War_Form.form.fpw_legInjuries.Items.Count == 0)
+                        {
+                            injury = "extreme leg damage";
+                        }
+                        else
+                        {
+                            injury = (String)War_Form.form.fpw_legInjuries.Items[UnityEngine.Random.Range(0, War_Form.form.fpw_legInjuries.Items.Count)];
+                        }
+
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                             " has suffered extreme leg damage.");
+                                             " has suffered " + injury + ".");
                     }
 
 
@@ -424,8 +592,8 @@ namespace FireProWar
                     if (isDraw)
                     {
                         matchDetails = promotion.MatchDetails.Count + 1 + ") " +
-                            DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch + "Draw between " + 
-                                       GetTeamName(ResultPosition.Draw) + " (" + rating + "%) in " + 
+                            DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch + "Draw between " +
+                                       GetTeamName(ResultPosition.Draw) + " (" + rating + "%) in " +
                                        GlobalWork.GetInst().MatchSetting.MatchTime + " minutes.";
                     }
                     else
@@ -433,7 +601,7 @@ namespace FireProWar
                         matchDetails = promotion.MatchDetails.Count + 1 + ") " +
                                        DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch +
                                        GetTeamName(ResultPosition.Winner) + " defeat(s) " +
-                                       GetTeamName(ResultPosition.Loser) + " (" + rating + "%) in " + 
+                                       GetTeamName(ResultPosition.Loser) + " (" + rating + "%) in " +
                                        MatchEvaluation.inst.PlResult[GetPlayer(ResultPosition.Loser).PlIdx].finishTime.min + " minutes.";
                     }
 
@@ -575,12 +743,21 @@ namespace FireProWar
                     {
                         name += BuildTeamName(ResultPosition.Winner_Partner, i);
                     }
+                    if (teamNames[0] != String.Empty)
+                    {
+                        name += " (" + teamNames[0] + ")";
+                    }
                 }
                 else
                 {
                     for (int i = 4; i < 8; i++)
                     {
                         name += BuildTeamName(ResultPosition.Winner_Partner, i);
+                    }
+
+                    if (teamNames[1] != String.Empty)
+                    {
+                        name += " (" + teamNames[1] + ")";
                     }
                 }
             }
@@ -595,6 +772,11 @@ namespace FireProWar
                     {
                         name += BuildTeamName(ResultPosition.Loser_Partner, i);
                     }
+
+                    if (teamNames[0] != String.Empty)
+                    {
+                        name += " (" + teamNames[0] + ")";
+                    }
                 }
                 else
                 {
@@ -602,10 +784,75 @@ namespace FireProWar
                     {
                         name += BuildTeamName(ResultPosition.Loser_Partner, i);
                     }
+
+                    if (teamNames[1] != String.Empty)
+                    {
+                        name += " (" + teamNames[1] + ")";
+                    }
                 }
             }
 
             return name;
+        }
+        public static void GetTeamName(List<String> wrestlers, out String teamName)
+        {
+            try
+            {
+                List<String> teams = new List<String>();
+                foreach (Team currentTeam in ModPack.ModPack.Teams)
+                {
+                    if (wrestlers.Count == 1)
+                    {
+                        break;
+                    }
+                    if (Contains(wrestlers, currentTeam.Members))
+                    {
+                        teams.Add(currentTeam.Name);
+                    }
+                }
+
+                if (teams.Count > 0)
+                {
+                    teamName = teams[UnityEngine.Random.Range(0, teams.Count)];
+                }
+                else
+                {
+                    teamName = String.Empty;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("GetTeamNamesException: " + e);
+                teamName = String.Empty;
+            }
+        }
+        public static bool Contains(List<string> champs, List<string> members)
+        {
+            bool result;
+            if (champs.Count <= members.Count)
+            {
+                foreach (string current in champs)
+                {
+                    if (!members.Contains(current))
+                    {
+                        result = false;
+                        return result;
+                    }
+                }
+            }
+            else
+            {
+                foreach (string current2 in members)
+                {
+                    if (!champs.Contains(current2))
+                    {
+                        result = false;
+                        return result;
+                    }
+                }
+            }
+            result = true;
+            return result;
         }
         public static int CompareRank(Player winner, Player loser, ResultPosition position)
         {

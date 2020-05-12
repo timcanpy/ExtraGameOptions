@@ -622,7 +622,7 @@
             this.fpw_promoHistory.Multiline = true;
             this.fpw_promoHistory.Name = "fpw_promoHistory";
             this.fpw_promoHistory.ReadOnly = true;
-            this.fpw_promoHistory.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.fpw_promoHistory.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.fpw_promoHistory.Size = new System.Drawing.Size(388, 296);
             this.fpw_promoHistory.TabIndex = 45;
             this.fpw_promoHistory.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -743,7 +743,7 @@
             this.fpw_detailsView.Multiline = true;
             this.fpw_detailsView.Name = "fpw_detailsView";
             this.fpw_detailsView.ReadOnly = true;
-            this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.fpw_detailsView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.fpw_detailsView.Size = new System.Drawing.Size(423, 419);
             this.fpw_detailsView.TabIndex = 46;
             this.fpw_detailsView.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -1378,6 +1378,7 @@
             this.fpw_removeNeck.Text = "Remove";
             this.fpw_removeNeck.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_removeNeck.UseVisualStyleBackColor = true;
+            this.fpw_removeNeck.Click += new System.EventHandler(this.fpw_removeNeck_Click);
             // 
             // fpw_addNeck
             // 
@@ -1390,6 +1391,7 @@
             this.fpw_addNeck.Text = "Add";
             this.fpw_addNeck.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_addNeck.UseVisualStyleBackColor = true;
+            this.fpw_addNeck.Click += new System.EventHandler(this.fpw_addNeck_Click);
             // 
             // fpw_removeWaist
             // 
@@ -1402,6 +1404,7 @@
             this.fpw_removeWaist.Text = "Remove";
             this.fpw_removeWaist.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_removeWaist.UseVisualStyleBackColor = true;
+            this.fpw_removeWaist.Click += new System.EventHandler(this.fpw_removeWaist_Click);
             // 
             // fpw_addWaist
             // 
@@ -1414,6 +1417,7 @@
             this.fpw_addWaist.Text = "Add";
             this.fpw_addWaist.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_addWaist.UseVisualStyleBackColor = true;
+            this.fpw_addWaist.Click += new System.EventHandler(this.fpw_addWaist_Click);
             // 
             // fpw_removeLeg
             // 
@@ -1426,6 +1430,7 @@
             this.fpw_removeLeg.Text = "Remove";
             this.fpw_removeLeg.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_removeLeg.UseVisualStyleBackColor = true;
+            this.fpw_removeLeg.Click += new System.EventHandler(this.fpw_removeLeg_Click);
             // 
             // fpw_addLeg
             // 
@@ -1438,6 +1443,7 @@
             this.fpw_addLeg.Text = "Add";
             this.fpw_addLeg.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_addLeg.UseVisualStyleBackColor = true;
+            this.fpw_addLeg.Click += new System.EventHandler(this.fpw_addLeg_Click);
             // 
             // fpw_removeArm
             // 
@@ -1450,6 +1456,7 @@
             this.fpw_removeArm.Text = "Remove";
             this.fpw_removeArm.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_removeArm.UseVisualStyleBackColor = true;
+            this.fpw_removeArm.Click += new System.EventHandler(this.fpw_removeArm_Click);
             // 
             // fpw_addArm
             // 
@@ -1462,6 +1469,7 @@
             this.fpw_addArm.Text = "Add";
             this.fpw_addArm.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_addArm.UseVisualStyleBackColor = true;
+            this.fpw_addArm.Click += new System.EventHandler(this.fpw_addArm_Click);
             // 
             // fpw_legText
             // 
@@ -1483,6 +1491,7 @@
             this.fpw_legInjuries.Size = new System.Drawing.Size(200, 21);
             this.fpw_legInjuries.Sorted = true;
             this.fpw_legInjuries.TabIndex = 48;
+            this.fpw_legInjuries.SelectedIndexChanged += new System.EventHandler(this.fpw_legInjuries_SelectedIndexChanged);
             // 
             // fpw_armText
             // 
@@ -1504,6 +1513,7 @@
             this.fpw_armInjuries.Size = new System.Drawing.Size(200, 21);
             this.fpw_armInjuries.Sorted = true;
             this.fpw_armInjuries.TabIndex = 46;
+            this.fpw_armInjuries.SelectedIndexChanged += new System.EventHandler(this.fpw_armInjuries_SelectedIndexChanged);
             // 
             // fpw_waistText
             // 
@@ -1525,6 +1535,7 @@
             this.fpw_waistInjuries.Size = new System.Drawing.Size(200, 21);
             this.fpw_waistInjuries.Sorted = true;
             this.fpw_waistInjuries.TabIndex = 44;
+            this.fpw_waistInjuries.SelectedIndexChanged += new System.EventHandler(this.fpw_waistInjuries_SelectedIndexChanged);
             // 
             // fpw_neckText
             // 
@@ -1546,6 +1557,7 @@
             this.fpw_neckInjuries.Size = new System.Drawing.Size(200, 21);
             this.fpw_neckInjuries.Sorted = true;
             this.fpw_neckInjuries.TabIndex = 42;
+            this.fpw_neckInjuries.SelectedIndexChanged += new System.EventHandler(this.fpw_neckInjuries_SelectedIndexChanged);
             // 
             // label25
             // 
@@ -1728,18 +1740,18 @@
         private System.Windows.Forms.Button fpw_removeArm;
         private System.Windows.Forms.Button fpw_addArm;
         private System.Windows.Forms.TextBox fpw_legText;
-        private System.Windows.Forms.ComboBox fpw_legInjuries;
         private System.Windows.Forms.TextBox fpw_armText;
-        private System.Windows.Forms.ComboBox fpw_armInjuries;
         private System.Windows.Forms.TextBox fpw_waistText;
-        private System.Windows.Forms.ComboBox fpw_waistInjuries;
         private System.Windows.Forms.TextBox fpw_neckText;
-        private System.Windows.Forms.ComboBox fpw_neckInjuries;
         private System.Windows.Forms.Label label26;
         private System.Windows.Forms.TextBox fpw_injuryExample;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.ComboBox fpw_rosterFiler;
         private System.Windows.Forms.LinkLabel fpw_resetPoints;
         private System.Windows.Forms.Button resetPoints;
+        public System.Windows.Forms.ComboBox fpw_legInjuries;
+        public System.Windows.Forms.ComboBox fpw_armInjuries;
+        public System.Windows.Forms.ComboBox fpw_waistInjuries;
+        public System.Windows.Forms.ComboBox fpw_neckInjuries;
     }
 }

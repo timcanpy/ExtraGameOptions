@@ -72,6 +72,8 @@ namespace FireProWar
             fpw_historyTerm.Leave += new System.EventHandler(fpw_HistoryTerm_LostFocus);
             fpw_matchTerm.Leave += new System.EventHandler(fpw_MatchTerm_LostFocus);
             fpw_rosterFiler.SelectedIndex = 0;
+            fpw_detailsView.WordWrap = true;
+            fpw_promoHistory.WordWrap = true;
         }
         private void WarForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -340,8 +342,90 @@ namespace FireProWar
                                 fpw_showRecord.Checked = value;
                                 break;
                         }
+
+                        elements = line.Split('-');
+                        switch (elements[0])
+                        {
+                            case "fpw_neckInjuries":
+                                var neckInjuries = elements[1].Split(listSeparator);
+                                fpw_neckInjuries.Items.Clear();
+                                foreach (String injury in neckInjuries)
+                                {
+                                    if (injury.Trim().Equals(String.Empty))
+                                    {
+                                        continue;
+                                    }
+                                    fpw_neckInjuries.Items.Add(injury);
+                                }
+                                break;
+
+                            case "fpw_waistInjuries":
+                                var waistInjuries = elements[1].Split(listSeparator);
+                                fpw_waistInjuries.Items.Clear();
+                                foreach (String injury in waistInjuries)
+                                {
+                                    if (injury.Trim().Equals(String.Empty))
+                                    {
+                                        continue;
+                                    }
+                                    fpw_waistInjuries.Items.Add(injury);
+                                }
+                                break;
+
+                            case "fpw_armInjuries":
+                                var armInjuries = elements[1].Split(listSeparator);
+                                fpw_armInjuries.Items.Clear();
+                                foreach (String injury in armInjuries)
+                                {
+                                    if (injury.Trim().Equals(String.Empty))
+                                    {
+                                        continue;
+                                    }
+                                    fpw_armInjuries.Items.Add(injury);
+                                }
+                                break;
+
+                            case "fpw_legInjuries":
+                                var legInjuries = elements[1].Split(listSeparator);
+                                fpw_legInjuries.Items.Clear();
+                                foreach (String injury in legInjuries)
+                                {
+                                    if (injury.Trim().Equals(String.Empty))
+                                    {
+                                        continue;
+                                    }
+                                    fpw_legInjuries.Items.Add(injury);
+                                }
+                                break;
+                        }
                     }
                 }
+
+                //Ensure we have at least one injury text
+                if (fpw_neckInjuries.Items.Count == 0)
+                {
+                    fpw_neckInjuries.Items.Add("extreme neck damage");
+                }
+
+                if (fpw_waistInjuries.Items.Count == 0)
+                {
+                    fpw_waistInjuries.Items.Add("extreme waist damage");
+                }
+
+                if (fpw_legInjuries.Items.Count == 0)
+                {
+                    fpw_legInjuries.Items.Add("extreme leg damage");
+                }
+
+                if (fpw_armInjuries.Items.Count == 0)
+                {
+                    fpw_armInjuries.Items.Add("extreme arm damage");
+                }
+
+                fpw_neckInjuries.SelectedIndex = 0;
+                fpw_armInjuries.SelectedIndex = 0;
+                fpw_legInjuries.SelectedIndex = 0;
+                fpw_waistInjuries.SelectedIndex = 0;
 
                 #endregion
             }
@@ -423,6 +507,42 @@ namespace FireProWar
                 {
                     sw.WriteLine("fpw_Enable: " + fpw_Enable.Checked);
                     sw.WriteLine("fpw_showRecord: " + fpw_showRecord.Checked);
+
+                    //Save Neck Injuries
+                    String injuries = "";
+                    foreach (var injury in fpw_neckInjuries.Items)
+                    {
+                        injuries += (String)injury + listSeparator;
+                    }
+
+                    sw.WriteLine("fpw_neckInjuries-" + injuries);
+
+                    //Save Arm Injuries
+                    injuries = "";
+                    foreach (var injury in fpw_armInjuries.Items)
+                    {
+                        injuries += (String)injury + listSeparator;
+                    }
+
+                    sw.WriteLine("fpw_armInjuries-" + injuries);
+
+                    //Save Leg Injuries
+                    injuries = "";
+                    foreach (var injury in fpw_legInjuries.Items)
+                    {
+                        injuries += (String)injury + listSeparator;
+                    }
+
+                    sw.WriteLine("fpw_legInjuries-" + injuries);
+
+                    //Save Arm Injuries
+                    injuries = "";
+                    foreach (var injury in fpw_waistInjuries.Items)
+                    {
+                        injuries += (String)injury + listSeparator;
+                    }
+
+                    sw.WriteLine("fpw_waistInjuries-" + injuries);
                 }
                 #endregion
 
@@ -801,6 +921,28 @@ namespace FireProWar
             {
                 L.D("RemoveRingError: " + exception);
             }
+        }
+        private void fpw_resetPoints_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (fpw_promoList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            if (ms_rosterList.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            Employee employee = (Employee)ms_rosterList.SelectedItem;
+            employee.ResetMoralePoints();
+
+            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
+            promotion.UpdateEmployeeData(employee);
+
+            ms_rosterList.SelectedItem = employee;
+            fpw_promoList.SelectedItem = promotion;
+            ms_rosterList_SelectedIndexChanged(sender, e);
         }
         #endregion
 
@@ -1804,27 +1946,194 @@ namespace FireProWar
 
         #endregion
 
-        private void fpw_resetPoints_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        #region Injuries
+        private void fpw_addNeck_Click(object sender, EventArgs e)
         {
-            if (fpw_promoList.SelectedIndex < 0)
+            if (fpw_neckText.Text.Equals(String.Empty))
             {
                 return;
             }
 
-            if (ms_rosterList.SelectedIndex < 0)
+            try
             {
-                return;
+                fpw_neckInjuries.Items.Add(fpw_neckText.Text);
+                fpw_neckInjuries.SelectedIndex = 0;
+                fpw_neckInjuries_SelectedIndexChanged(null, null);
             }
-
-            Employee employee = (Employee)ms_rosterList.SelectedItem;
-            employee.ResetMoralePoints();
-
-            Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-            promotion.UpdateEmployeeData(employee);
-
-            ms_rosterList.SelectedItem = employee;
-            fpw_promoList.SelectedItem = promotion;
-            ms_rosterList_SelectedIndexChanged(sender, e);
+            catch (Exception exception)
+            {
+                L.D("AddNeckException: " + exception);
+            }
         }
+
+        private void fpw_removeNeck_Click(object sender, EventArgs e)
+        {
+            if (fpw_neckInjuries.SelectedIndex < 0 || fpw_neckInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_neckInjuries.Items.RemoveAt(fpw_neckInjuries.SelectedIndex);
+            if (fpw_neckInjuries.Items.Count > 0)
+            {
+                fpw_neckInjuries.SelectedIndex = (fpw_neckInjuries.Items.Count - 1);
+                fpw_neckInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addWaist_Click(object sender, EventArgs e)
+        {
+            if (fpw_waistText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_waistInjuries.Items.Add(fpw_waistText.Text);
+                fpw_waistInjuries.SelectedIndex = 0;
+                fpw_waistInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddWaistException: " + exception);
+            }
+        }
+
+        private void fpw_removeWaist_Click(object sender, EventArgs e)
+        {
+            if (fpw_waistInjuries.SelectedIndex < 0 || fpw_waistInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_waistInjuries.Items.RemoveAt(fpw_waistInjuries.SelectedIndex);
+            if (fpw_waistInjuries.Items.Count > 0)
+            {
+                fpw_waistInjuries.SelectedIndex = (fpw_waistInjuries.Items.Count - 1);
+                fpw_waistInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addArm_Click(object sender, EventArgs e)
+        {
+            if (fpw_armText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_armInjuries.Items.Add(fpw_armText.Text);
+                fpw_armInjuries.SelectedIndex = 0;
+                fpw_armInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddArmException: " + exception);
+            }
+        }
+
+        private void fpw_removeArm_Click(object sender, EventArgs e)
+        {
+            if (fpw_armInjuries.SelectedIndex < 0 || fpw_armInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_armInjuries.Items.RemoveAt(fpw_armInjuries.SelectedIndex);
+            if (fpw_armInjuries.Items.Count > 0)
+            {
+                fpw_armInjuries.SelectedIndex = (fpw_armInjuries.Items.Count - 1);
+                fpw_armInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addLeg_Click(object sender, EventArgs e)
+        {
+            if (fpw_legText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_legInjuries.Items.Add(fpw_legText.Text);
+                fpw_legInjuries.SelectedIndex = 0;
+                fpw_legInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddLegException: " + exception);
+            }
+        }
+
+        private void fpw_removeLeg_Click(object sender, EventArgs e)
+        {
+            if (fpw_legInjuries.SelectedIndex < 0 || fpw_legInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_legInjuries.Items.RemoveAt(fpw_legInjuries.SelectedIndex);
+            if (fpw_legInjuries.Items.Count > 0)
+            {
+                fpw_legInjuries.SelectedIndex = (fpw_legInjuries.Items.Count - 1);
+                fpw_legInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_neckInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_neckInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_neckInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_neckText.Text = injury;
+        }
+
+        private void fpw_waistInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_waistInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_waistInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_waistText.Text = injury;
+        }
+
+        private void fpw_armInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_armInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_armInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_armText.Text = injury;
+        }
+
+        private void fpw_legInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_legInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_legInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_legText.Text = injury;
+        }
+        #endregion
     }
 }

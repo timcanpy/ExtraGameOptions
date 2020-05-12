@@ -39,6 +39,11 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
     [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
 
+    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
+    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
+    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
+    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
+    [FieldAccess(Class = "Data", Field = "WazaData", Group = "Waza Support")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
     #endregion
@@ -1112,7 +1117,7 @@ namespace QoL_Mods.Private
 
         }
         #endregion
-   
+
         #region Extend Referee Attires
 
         public static Referee refObj;
@@ -1203,15 +1208,85 @@ namespace QoL_Mods.Private
 
         #region Waza Support
 
-        [Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) }, Group = "Waza Support")]
-        public static void VerifyMoveLoad(global::SkillData skilldata, global::SkillInfo info, bool post)
+        //[Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) }, Group = "Waza Support")]
+        //public static void VerifyMoveLoad(global::SkillData skilldata, global::SkillInfo info, bool post)
+        //{
+        //    L.D("Loading move data for " + info.skillName[1]);
+        //}
+
+
+        [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Waza Support")]
+        public static bool FixPreview(Menu_CraftLoadSkill craftSkill)
         {
-            L.D("Loading move data for " + info.skillName[1]);
+            if (craftSkill.mPreview == null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
 
+
+        [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
+            Group = "Waza Support")]
+        public static void AddCustomForms(Menu_CraftLoadSkill craftSkill, SkillID skill_id)
+        {
+            try
+            {
+                //Ensure that only Custom Moves are processed
+                if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
+                {
+
+                    int index = craftSkill.mFileBank.GetSelecting();
+                    var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
+                    SkillData[] skillData = SkillDataMan.inst.GetSkillData(skill_id);
+                    foreach (var skill in skillData)
+                    {
+                        for (int i = 0; i < skill.anmNum; i++)
+                        {
+                            var anmData = skill.anmData[i];
+                            for (int j = 0; j < anmData.formNum; j++)
+                            {
+                                var formDispList = anmData.formDispList[j];
+                                ToolFormSaveData saveData =
+                                    new ToolFormSaveData(formDispList.formPartsList, formDispList.formIdx + 100000); //All custom forms begin at 100000
+                                saveList.Add(saveData);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("AddCustomFormsException: " + ex);
+            }
+        }
+
+        //[Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 442,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) },
+        //    LocalVarIds = new int[] {10 }, Group = "Waza Support")]
+        //public static void ModifyFormIdx(ref int num3, global::SkillData skilldata, global::SkillInfo info, bool post)
+        //{
+        //    L.D("Original Form # " + num3);
+
+        //    int result = ((num3 + 38000 - 37000) * global::FormDataMan.inst.GetBlockFormFileNum()) + 37000;
+        //    L.D("After calculation # " + result);
+        //}
+
         //[Hook(TargetClass = "ToolSettingInfo", TargetMethod = "AddSelectSkillData", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Waza Support")]
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "Waza Support")]
+        //public static void ReuseImporterID(ToolSkillData wazaData)
+        //{
+        //    L.D("Replacing ID for " + wazaData.nameEN + " here.");
+        //}
         #endregion
 
         #region Helper Methods
