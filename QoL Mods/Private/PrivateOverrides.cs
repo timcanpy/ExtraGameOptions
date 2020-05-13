@@ -44,6 +44,7 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
     [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
     [FieldAccess(Class = "Data", Field = "WazaData", Group = "Waza Support")]
+    [FieldAccess(Class = "ToolSettingInfo", Field = "mData", Group = "Waza Support")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
     #endregion
@@ -1207,15 +1208,6 @@ namespace QoL_Mods.Private
         #endregion
 
         #region Waza Support
-
-        //[Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) }, Group = "Waza Support")]
-        //public static void VerifyMoveLoad(global::SkillData skilldata, global::SkillInfo info, bool post)
-        //{
-        //    L.D("Loading move data for " + info.skillName[1]);
-        //}
-
-
         [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Waza Support")]
@@ -1232,7 +1224,6 @@ namespace QoL_Mods.Private
 
         }
 
-
         [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
@@ -1248,6 +1239,7 @@ namespace QoL_Mods.Private
                     int index = craftSkill.mFileBank.GetSelecting();
                     var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
                     SkillData[] skillData = SkillDataMan.inst.GetSkillData(skill_id);
+                    L.D("Adding custom forms for " + DataBase.GetSkillName(skill_id));
                     foreach (var skill in skillData)
                     {
                         for (int i = 0; i < skill.anmNum; i++)
@@ -1256,8 +1248,12 @@ namespace QoL_Mods.Private
                             for (int j = 0; j < anmData.formNum; j++)
                             {
                                 var formDispList = anmData.formDispList[j];
+                                //Ensure that the Custom ID matches the Preset ID
+                                //int formIdx = formDispList.formIdx;
+                                int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
+                               
                                 ToolFormSaveData saveData =
-                                    new ToolFormSaveData(formDispList.formPartsList, formDispList.formIdx + 100000); //All custom forms begin at 100000
+                                    new ToolFormSaveData(formDispList.formPartsList, formIdx + 100000); //All custom forms begin at 100000
                                 saveList.Add(saveData);
                             }
                         }
@@ -1270,23 +1266,42 @@ namespace QoL_Mods.Private
             }
         }
 
-        //[Hook(TargetClass = "WazaData", TargetMethod = "WazaConvert", InjectionLocation = 442,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, ParamTypes = new Type[] { typeof(SkillData), typeof(SkillInfo), typeof(bool) },
-        //    LocalVarIds = new int[] {10 }, Group = "Waza Support")]
-        //public static void ModifyFormIdx(ref int num3, global::SkillData skilldata, global::SkillInfo info, bool post)
+        //[Hook(TargetClass = "ToolSettingInfo", TargetMethod = "AddSaveList", InjectionLocation = 29,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassParametersRef, Group = "Waza Support")]
+        //public static void SetCustomIDs(ref ToolSkillData data, ref int uniqueID)
         //{
-        //    L.D("Original Form # " + num3);
 
-        //    int result = ((num3 + 38000 - 37000) * global::FormDataMan.inst.GetBlockFormFileNum()) + 37000;
-        //    L.D("After calculation # " + result);
+        //    //Checking file for existing move
+        //    String idFileName = "CustomMoveIDs.dat";
+        //    String idPath = Path.Combine(Directory.GetCurrentDirectory(), idFileName);
+
+        //    if (File.Exists(idPath))
+        //    {
+        //        try
+        //        {
+        //            var lines = File.ReadAllLines(idPath);
+        //            foreach (var line in lines)
+        //            {
+        //                var properties = line.Split(':');
+        //                if (data.nameEN.Equals(properties[0]))
+        //                {
+        //                    L.D(data.nameEN + " has a custom ID - " + properties[1]);
+        //                    Int32.TryParse(properties[1], out uniqueID);
+        //                    break;
+        //                }
+        //            }
+
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            L.D("SetCustomIDException: " + e);
+        //        }
+        //    }
+
+        //    L.D("Current move (" + data.nameEN + ") uses ID # " + uniqueID);
         //}
 
-        //[Hook(TargetClass = "ToolSettingInfo", TargetMethod = "AddSelectSkillData", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "Waza Support")]
-        //public static void ReuseImporterID(ToolSkillData wazaData)
-        //{
-        //    L.D("Replacing ID for " + wazaData.nameEN + " here.");
-        //}
         #endregion
 
         #region Helper Methods
@@ -1568,3 +1583,6 @@ namespace QoL_Mods.Private
         #endregion
     }
 }
+
+//Restrict access to Custom Form Loading
+//if (ModPack.vipID.Contains(Steamworks.SteamUser.GetSteamID().ToString()))
