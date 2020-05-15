@@ -122,7 +122,7 @@ namespace QoL_Mods
             // style_addCritical
             // 
             this.style_addCritical.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.style_addCritical.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.style_addCritical.ForeColor = System.Drawing.Color.White;
             this.style_addCritical.Location = new System.Drawing.Point(444, 154);
             this.style_addCritical.Name = "style_addCritical";
             this.style_addCritical.Size = new System.Drawing.Size(49, 23);
@@ -134,7 +134,7 @@ namespace QoL_Mods
             // style_addHeavy
             // 
             this.style_addHeavy.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.style_addHeavy.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.style_addHeavy.ForeColor = System.Drawing.Color.White;
             this.style_addHeavy.Location = new System.Drawing.Point(444, 65);
             this.style_addHeavy.Name = "style_addHeavy";
             this.style_addHeavy.Size = new System.Drawing.Size(49, 23);
@@ -146,7 +146,7 @@ namespace QoL_Mods
             // style_addMedium
             // 
             this.style_addMedium.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.style_addMedium.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.style_addMedium.ForeColor = System.Drawing.Color.White;
             this.style_addMedium.Location = new System.Drawing.Point(237, 154);
             this.style_addMedium.Name = "style_addMedium";
             this.style_addMedium.Size = new System.Drawing.Size(49, 23);
@@ -191,7 +191,7 @@ namespace QoL_Mods
             // style_addLight
             // 
             this.style_addLight.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.style_addLight.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.style_addLight.ForeColor = System.Drawing.Color.White;
             this.style_addLight.Location = new System.Drawing.Point(237, 65);
             this.style_addLight.Name = "style_addLight";
             this.style_addLight.Size = new System.Drawing.Size(49, 23);
@@ -329,6 +329,7 @@ namespace QoL_Mods
             // wrestler_addCritical
             // 
             this.wrestler_addCritical.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wrestler_addCritical.ForeColor = System.Drawing.Color.White;
             this.wrestler_addCritical.Location = new System.Drawing.Point(446, 180);
             this.wrestler_addCritical.Name = "wrestler_addCritical";
             this.wrestler_addCritical.Size = new System.Drawing.Size(49, 23);
@@ -340,6 +341,7 @@ namespace QoL_Mods
             // wrestler_addHeavy
             // 
             this.wrestler_addHeavy.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wrestler_addHeavy.ForeColor = System.Drawing.Color.White;
             this.wrestler_addHeavy.Location = new System.Drawing.Point(446, 97);
             this.wrestler_addHeavy.Name = "wrestler_addHeavy";
             this.wrestler_addHeavy.Size = new System.Drawing.Size(49, 23);
@@ -351,6 +353,7 @@ namespace QoL_Mods
             // wrestler_addMedium
             // 
             this.wrestler_addMedium.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wrestler_addMedium.ForeColor = System.Drawing.Color.White;
             this.wrestler_addMedium.Location = new System.Drawing.Point(250, 180);
             this.wrestler_addMedium.Name = "wrestler_addMedium";
             this.wrestler_addMedium.Size = new System.Drawing.Size(49, 23);
@@ -362,6 +365,7 @@ namespace QoL_Mods
             // wrestler_addLight
             // 
             this.wrestler_addLight.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wrestler_addLight.ForeColor = System.Drawing.Color.White;
             this.wrestler_addLight.Location = new System.Drawing.Point(250, 99);
             this.wrestler_addLight.Name = "wrestler_addLight";
             this.wrestler_addLight.Size = new System.Drawing.Size(49, 23);
@@ -479,6 +483,7 @@ namespace QoL_Mods
             // nl_removeWrestler
             // 
             this.nl_removeWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nl_removeWrestler.ForeColor = System.Drawing.Color.White;
             this.nl_removeWrestler.Location = new System.Drawing.Point(53, 170);
             this.nl_removeWrestler.Name = "nl_removeWrestler";
             this.nl_removeWrestler.Size = new System.Drawing.Size(75, 23);
@@ -498,6 +503,7 @@ namespace QoL_Mods
             // nl_addWrestler
             // 
             this.nl_addWrestler.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.nl_addWrestler.ForeColor = System.Drawing.Color.White;
             this.nl_addWrestler.Location = new System.Drawing.Point(53, 130);
             this.nl_addWrestler.Name = "nl_addWrestler";
             this.nl_addWrestler.Size = new System.Drawing.Size(75, 23);
@@ -566,7 +572,7 @@ namespace QoL_Mods
             // nl_refreshMoves
             // 
             this.nl_refreshMoves.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.nl_refreshMoves.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.nl_refreshMoves.ForeColor = System.Drawing.Color.White;
             this.nl_refreshMoves.Location = new System.Drawing.Point(50, 207);
             this.nl_refreshMoves.Name = "nl_refreshMoves";
             this.nl_refreshMoves.Size = new System.Drawing.Size(99, 23);

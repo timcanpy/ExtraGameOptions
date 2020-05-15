@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sort Moves", "Sort Moves\So
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Get Custom IDs", "Get Custom IDs\Get Custom IDs.csproj", "{C8FDA089-6C17-40B1-B32A-CD8EB2F24A4C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WazaSupport", "WazaSupport\WazaSupport.csproj", "{B0C61934-F044-4E9C-B602-1E32560AA455}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C8FDA089-6C17-40B1-B32A-CD8EB2F24A4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8FDA089-6C17-40B1-B32A-CD8EB2F24A4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8FDA089-6C17-40B1-B32A-CD8EB2F24A4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0C61934-F044-4E9C-B602-1E32560AA455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0C61934-F044-4E9C-B602-1E32560AA455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0C61934-F044-4E9C-B602-1E32560AA455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0C61934-F044-4E9C-B602-1E32560AA455}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

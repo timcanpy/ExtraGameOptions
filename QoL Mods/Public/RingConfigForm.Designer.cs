@@ -69,6 +69,9 @@
             this.rc_large = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
             this.rc_medium = new System.Windows.Forms.NumericUpDown();
+            this.ringRefresh = new System.Windows.Forms.LinkLabel();
+            this.refRefresh = new System.Windows.Forms.LinkLabel();
+            this.bgmRefresh = new System.Windows.Forms.LinkLabel();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -198,6 +201,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ringRefresh);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.rc_ringResults);
             this.panel1.Controls.Add(this.label3);
@@ -211,6 +215,7 @@
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.refRefresh);
             this.panel2.Controls.Add(this.rc_refSearch);
             this.panel2.Controls.Add(this.rc_refResults);
             this.panel2.Controls.Add(this.label1);
@@ -257,6 +262,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.bgmRefresh);
             this.tabPage3.Controls.Add(this.rc_bgmSearch);
             this.tabPage3.Controls.Add(this.rc_bgmResult);
             this.tabPage3.Controls.Add(this.label8);
@@ -507,6 +513,39 @@
             this.rc_medium.TabIndex = 47;
             this.rc_medium.ValueChanged += new System.EventHandler(this.rc_medium_ValueChanged);
             // 
+            // ringRefresh
+            // 
+            this.ringRefresh.AutoSize = true;
+            this.ringRefresh.Location = new System.Drawing.Point(158, 80);
+            this.ringRefresh.Name = "ringRefresh";
+            this.ringRefresh.Size = new System.Drawing.Size(44, 13);
+            this.ringRefresh.TabIndex = 24;
+            this.ringRefresh.TabStop = true;
+            this.ringRefresh.Text = "Refresh";
+            this.ringRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ringRefresh_LinkClicked);
+            // 
+            // refRefresh
+            // 
+            this.refRefresh.AutoSize = true;
+            this.refRefresh.Location = new System.Drawing.Point(174, 79);
+            this.refRefresh.Name = "refRefresh";
+            this.refRefresh.Size = new System.Drawing.Size(44, 13);
+            this.refRefresh.TabIndex = 30;
+            this.refRefresh.TabStop = true;
+            this.refRefresh.Text = "Refresh";
+            this.refRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.refRefresh_LinkClicked);
+            // 
+            // bgmRefresh
+            // 
+            this.bgmRefresh.AutoSize = true;
+            this.bgmRefresh.Location = new System.Drawing.Point(157, 81);
+            this.bgmRefresh.Name = "bgmRefresh";
+            this.bgmRefresh.Size = new System.Drawing.Size(44, 13);
+            this.bgmRefresh.TabIndex = 36;
+            this.bgmRefresh.TabStop = true;
+            this.bgmRefresh.Text = "Refresh";
+            this.bgmRefresh.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.bgmRefresh_LinkClicked);
+            // 
             // RingConfigForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -593,5 +632,8 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.NumericUpDown rc_medium;
         public System.Windows.Forms.ComboBox rc_ringList;
+        private System.Windows.Forms.LinkLabel ringRefresh;
+        private System.Windows.Forms.LinkLabel refRefresh;
+        private System.Windows.Forms.LinkLabel bgmRefresh;
     }
 }

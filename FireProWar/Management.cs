@@ -64,6 +64,13 @@ namespace FireProWar
             fpwEnable = War_Form.form.fpw_Enable.Checked;
             if (fpwEnable)
             {
+                //Disable for Battle Royales
+                if (settings.BattleRoyalKind != BattleRoyalKindEnum.Off)
+                {
+                    promotion = null;
+                    return;
+                }
+
                 try
                 {
                     if ((int)settings.ringID < (int)RingID.EditRingIDTop)
@@ -197,14 +204,24 @@ namespace FireProWar
                 catch (Exception ex)
                 {
                     L.D("SetEmployees-NonTitleMatchException: " + ex);
-                }             
+                }
+
+                if (teamNames[0] != String.Empty)
+                {
+                    L.D("Blue Team: " + teamNames[0]);
+                }
+
+                if (teamNames[1] != String.Empty)
+                {
+                    L.D("Red Team: " + teamNames[1]);
+                }
             }
         }
 
         [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "FirePro War")]
         public static void ProcessUkemi(Player player)
         {
-            if (!fpwEnable || player.isInvokedUkeBonus)
+            if (!fpwEnable || player.isInvokedUkeBonus || promotion == null)
             {
                 return;
             }
@@ -244,7 +261,7 @@ namespace FireProWar
         [Hook(TargetClass = "Player", TargetMethod = "InvokeUkeBonus", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "FirePro War")]
         public static void IncreaseBonusTime(Player player)
         {
-            if (!fpwEnable)
+            if (!fpwEnable || promotion == null)
             {
                 return;
             }
@@ -266,7 +283,7 @@ namespace FireProWar
         {
             try
             {
-                if (!fpwEnable || MatchMain.inst.isInterruptedMatch)
+                if (!fpwEnable || MatchMain.inst.isInterruptedMatch || promotion == null)
                 {
                     return;
                 }
@@ -621,7 +638,7 @@ namespace FireProWar
         {
             try
             {
-                if (!War_Form.form.fpw_showRecord.Checked)
+                if (!War_Form.form.fpw_showRecord.Checked || promotion == null)
                 {
                     return;
                 }
@@ -745,7 +762,7 @@ namespace FireProWar
                     }
                     if (teamNames[0] != String.Empty)
                     {
-                        name += " (" + teamNames[0] + ")";
+                        name = teamNames[0] + " (" + name + ")";
                     }
                 }
                 else
@@ -757,7 +774,7 @@ namespace FireProWar
 
                     if (teamNames[1] != String.Empty)
                     {
-                        name += " (" + teamNames[1] + ")";
+                        name = teamNames[1] + " (" + name + ")";
                     }
                 }
             }
@@ -775,7 +792,7 @@ namespace FireProWar
 
                     if (teamNames[0] != String.Empty)
                     {
-                        name += " (" + teamNames[0] + ")";
+                        name = teamNames[0] + " (" + name + ")";
                     }
                 }
                 else
@@ -787,9 +804,66 @@ namespace FireProWar
 
                     if (teamNames[1] != String.Empty)
                     {
-                        name += " (" + teamNames[1] + ")";
+                        name = teamNames[1] + " (" + name + ")";
                     }
                 }
+            }
+            else if (position == ResultPosition.Draw)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (player)
+                    {
+                        if (!player.isIntruder && !player.isSecond)
+                        {
+                            if (i == 0)
+                            {
+                                name = DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                            else
+                            {
+                              name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                        }
+                    }
+                }
+
+                if (teamNames[0] != String.Empty)
+                {
+                    name = teamNames[0] + "(" + name + ")";
+                }
+
+                String blueTeam = name;
+                name += "";
+
+                for (int i = 4; i < 8; i++)
+                {
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (player)
+                    {
+                        if (!player.isIntruder && !player.isSecond)
+                        {
+                            if (i == 4)
+                            {
+                                name = DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                            else
+                            {
+                                name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
+                            }
+                        }
+                    }
+                }
+
+                if (teamNames[1] != String.Empty)
+                {
+                    name = teamNames[1] + " (" + name + ")";
+                }
+
+                string redTeam = name;
+
+                name = blueTeam + " & " + redTeam;
             }
 
             return name;

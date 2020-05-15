@@ -65,16 +65,16 @@
     <Compile Include="Helper Classes\UkemiNotification.cs" />
     <Compile Include="Helper Classes\EnumLibrary.cs" />
     <Compile Include="Helper Classes\RefereeInfo.cs" />
-    <Compile Include="Private\AttireExtension.cs">
+    <Compile Include="Public\AttireExtension.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Private\AttireExtension.Designer.cs">
+    <Compile Include="Public\AttireExtension.Designer.cs">
       <DependentUpon>AttireExtension.cs</DependentUpon>
     </Compile>
-    <Compile Include="Private\Attire_Select.cs">
+    <Compile Include="Public\Attire_Select.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Private\Attire_Select.Designer.cs">
+    <Compile Include="Public\Attire_Select.Designer.cs">
       <DependentUpon>Attire_Select.cs</DependentUpon>
     </Compile>
     <Compile Include="Private\CustomReversalForm.cs">
@@ -101,15 +101,14 @@
     <Compile Include="Private\Facelock\SkillType.cs" />
     <Compile Include="Private\Facelock\SlotStorage.cs" />
     <Compile Include="Private\Facelock\Style.cs" />
-    <Compile Include="Private\PreMatchTaunts.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Private\PreMatchTaunts.Designer.cs">
-      <DependentUpon>PreMatchTaunts.cs</DependentUpon>
-    </Compile>
     <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\Reversal\Move.cs" />
     <Compile Include="Private\Reversal\ReversalMove.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Public\RingConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,10 +149,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Private\AttireExtension.resx">
+    <EmbeddedResource Include="Public\AttireExtension.resx">
       <DependentUpon>AttireExtension.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Private\Attire_Select.resx">
+    <EmbeddedResource Include="Public\Attire_Select.resx">
       <DependentUpon>Attire_Select.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Private\CustomReversalForm.resx">
@@ -164,6 +163,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Private\FaceLockForm.resx">
       <DependentUpon>FaceLockForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\RingConfigForm.resx">
       <DependentUpon>RingConfigForm.cs</DependentUpon>
@@ -181,6 +184,12 @@
     <EmbeddedResource Include="Public\UkemiNotificationForm.resx">
       <DependentUpon>UkemiNotificationForm.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Private\Images\ButtonActive.png" />
+    <Content Include="Private\Images\ButtonClicked.png" />
+    <Content Include="Private\Images\ButtonNotActive.png" />
+    <Content Include="Private\Images\tdialogBackground.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

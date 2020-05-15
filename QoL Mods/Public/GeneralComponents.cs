@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using WresIDGroup = ModPack.WresIDGroup;
 using ModPack;
 using QoL_Mods.Private;
+using Ace.AttireExtension;
 
 namespace QoL_Mods
 {
@@ -34,6 +35,8 @@ namespace QoL_Mods
     [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
     [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
     [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "Automates match settings for different rings.")]
+    [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents. The effect is lost after the second finisher is used.")]
+    [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -71,8 +74,6 @@ namespace QoL_Mods
 
     class GeneralComponents
     {
-
-
         [ControlPanel(Group = "Ring Config")]
         public static Form RingForm()
         {
@@ -136,7 +137,19 @@ namespace QoL_Mods
                 return UkemiNotificationForm.form;
             }
         }
-        
+
+        [ControlPanel(Group = "Ref Costume")]
+        public static Form RefForm()
+        {
+            if (AttireExtensionForm.instance == null)
+            {
+                return new AttireExtensionForm();
+            }
+            {
+                return AttireExtensionForm.instance;
+            }
+        }
+
         #region Force Preemptive Pinfall Count
 
         private static int downedPlayer;
@@ -216,14 +229,14 @@ namespace QoL_Mods
             {
                 return;
             }
-            
+
             if ((player.PlIdx == downedPlayer && player.hasRight) && (player.State == PlStateEnum.Down_FaceDown || player.State == PlStateEnum.Down_FaceUp))
             {
                 downedPlayer = -1;
                 CheckForFall(player.PlIdx);
             }
         }
-        
+
         public static void CheckForFall(int defender)
         {
             Referee mRef = RefereeMan.inst.GetRefereeObj();
@@ -1686,6 +1699,12 @@ namespace QoL_Mods
         {
             try
             {
+                //Check for ModPack, ensure that we aren't over-writing any options.
+                if (CheckForMOTWMatch())
+                {
+                    return;
+                }
+
                 double appeal = GetAverageCharisma() + GetAverageRank();
 
                 //Title matches gain extra Audience Appeal
@@ -1784,42 +1803,6 @@ namespace QoL_Mods
         }
         #endregion
 
-        #region Auto Set CPU on Match Select
-        public static bool AutoSetCPU = false;
-
-        //[Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "UpdateCursor", InjectionLocation = 576, InjectDirection = HookInjectDirection.After, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "AutoSetCPU")]
-        public static void SetAllCPU(Menu_BattleSetting menu_Battle)
-        {
-            if (!GlobalParam.IsStoryMode())
-            {
-                if (!AutoSetCPU)
-                {
-                    for (int i = 0; i < 8; i++)
-                    {
-                        if (GlobalParam.Select_WrestlerData[i].wrestlerID != WrestlerID.Invalid)
-                        {
-                            AutoSetCPU = true;
-                            return;
-                        }
-                    }
-                    menu_Battle.All_Entry_Reset();
-                    AutoSetCPU = true;
-                    L.D("ALL WRESTLER SLOTS TO CPU", new object[0]);
-                }
-            }
-        }
-
-        //[Hook(TargetClass = "Menu_SceneManager/<Start>c__Iterator0", TargetMethod = "MoveNext", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "AutoSetCPU")]
-        public static void Check()
-        {
-            if (AutoSetCPU)
-            {
-                AutoSetCPU = false;
-            }
-        }
-
-        #endregion
-
         #region Automatic Match Configuration
 
         public static String configRingName = "";
@@ -1874,6 +1857,12 @@ namespace QoL_Mods
                         ModPackForm.instance.numericUpDown5.Value = config.GrappleSetting.Low;
                         ModPackForm.instance.numericUpDown6.Value = config.GrappleSetting.Medium;
                         ModPackForm.instance.numericUpDown7.Value = config.GrappleSetting.High;
+
+                        //Check for ModPack, ensure that we aren't over-riding any options.
+                        if (CheckForMOTWMatch())
+                        {
+                            return;
+                        }
 
                         //Clock Speed
                         if (GetWrestlerList().Length == 2)
@@ -1946,6 +1935,168 @@ namespace QoL_Mods
             }
 
             return players.ToArray();
+        }
+        #endregion
+
+        #region Increase Down-time after Signatures
+        [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Forced Sell")]
+        public static void IncreaseDownTime(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
+        {
+            Player attacker = PlayerMan.inst.GetPlObj(plIDx);
+            Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+
+            //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
+            if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
+                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
+            {
+                return;
+            }
+
+            if (skillAttr == SkillSlotAttr.SpecialMove && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
+            {
+                //Increase down time for submissions
+                if (sd.filteringType == SkillFilteringType.Choke || sd.filteringType == SkillFilteringType.Claw ||
+                    sd.filteringType == SkillFilteringType.Stretch
+                    || sd.filteringType == SkillFilteringType.Submission_Arm ||
+                    sd.filteringType == SkillFilteringType.Submission_Leg ||
+                    sd.filteringType == SkillFilteringType.Submission_Neck
+                    || sd.filteringType == SkillFilteringType.Submission_Complex)
+                {
+                    defender.DownTime += GetDownTime(attacker);
+                }
+
+                defender.DownTime += GetDownTime(attacker);
+                defender.isAddedDownTimeByPerformance = false;
+                if (defender.Zone == ZoneEnum.InRing)
+                {
+                    CheckForFall(defender.PlIdx);
+                }
+
+            }
+        }
+
+        private static int GetDownTime(Player player)
+        {
+            switch (player.CriticalMoveHitCnt)
+            {
+                case 0:
+                case 1:
+                    return 300;
+                case 2:
+                case 3:
+                    return 200;
+                default:
+                    return 100;
+            }
+        }
+
+        #endregion
+
+        #region Extend Referee Attires
+
+        public static Referee refObj;
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 2147483647,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Costume")]
+        public static void LoadRefereeCostume()
+        {
+            GeneralComponents.refObj = RefereeMan.inst.GetRefereeObj();
+            DirectoryInfo directoryInfo2 = new DirectoryInfo("./AceModsData/AttireExtension/Referees/");
+            string text2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
+            FileInfo[] files2 = directoryInfo2.GetFiles(text2 + "*.cos");
+            bool flag36 = files2.Length != 0;
+            if (flag36)
+            {
+                Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
+                attire_Select2.ShowDialog();
+                bool flag39 = File.Exists("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                if (flag39)
+                {
+                    StreamReader streamReader6 = new StreamReader("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
+                    CostumeData costumeData6 = new CostumeData();
+                    while (streamReader6.Peek() != -1)
+                    {
+                        costumeData6.valid = true;
+                        for (int num45 = 0; num45 < 9; num45++)
+                        {
+                            for (int num46 = 0; num46 < 16; num46++)
+                            {
+                                costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
+                                costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
+                                costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
+                                costumeData6.highlightIntensity[num45, num46] = float.Parse(streamReader6.ReadLine());
+                            }
+                            costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
+                        }
+                    }
+                    streamReader6.Dispose();
+                    streamReader6.Close();
+                    try
+                    {
+                        GeneralComponents.refObj.FormRen.DestroySprite();
+                        GeneralComponents.refObj.FormRen.InitTexture(costumeData6, null);
+                        for (int num47 = 0; num47 < 9; num47++)
+                        {
+                            GeneralComponents.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
+                        }
+                        GeneralComponents.refObj.FormRen.InitSprite(false);
+                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
+                    }
+                    catch
+                    {
+                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
+                        RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
+                        RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
+                        GeneralComponents.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0], null);
+                        GeneralComponents.refObj.FormRen.InitSprite(false);
+                    }
+                }
+
+            }
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 2147483647, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Costume")]
+        public static void ResetRefereeCostume()
+        {
+            try
+            {
+                GeneralComponents.refObj = RefereeMan.inst.GetRefereeObj();
+                RefereeID refereeID = GlobalWork.inst.MatchSetting.RefereeID;
+                GeneralComponents.refObj.FormRen.DestroySprite();
+                GeneralComponents.refObj.FormRen.InitTexture(SaveData.GetInst().GetEditRefereeData(refereeID).appearanceData.costumeData[0], null);
+                for (int k = 0; k < 9; k++)
+                {
+                    GeneralComponents.refObj.FormRen.partsScale[k] = SaveData.GetInst().GetEditRefereeData(refereeID).appearanceData.costumeData[0].partsScale[k];
+                }
+                GeneralComponents.refObj.FormRen.InitSprite(false);
+            }
+            catch (Exception e)
+            {
+                L.D("ResetRefereeCostumeError: " + e);
+            }
+
+        }
+        #endregion
+
+        #region General Helper Methods
+        private static bool CheckForMOTWMatch()
+        {
+            var value = MotW.PromotionMenuForm.instance;
+            if (value == null)
+            {
+                return false;
+            }
+
+            if (value.MotWMatch)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         #endregion
     }

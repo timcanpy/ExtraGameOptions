@@ -547,5 +547,20 @@ namespace QoL_Mods.Private
                 L.D("ChangeGrappleError: " + exception);
             }
         }
+
+        private void ringRefresh_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadRings();
+        }
+
+        private void bgmRefresh_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadBGMs();
+        }
+
+        private void refRefresh_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            LoadReferees();
+        }
     }
 }

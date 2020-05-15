@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using QoL_Mods;
 using QoL_Mods.Private;
 
 namespace Ace.AttireExtension
@@ -63,16 +64,19 @@ namespace Ace.AttireExtension
                     bool flag3 = this.charType == "ref";
                     if (flag3)
                     {
-                        string oldValue2 = AttireExtensionForm.RemoveSpecialCharacters(PrivateOverrides.refObj.RefePrm.name);
+                        string oldValue2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
                         this.chosenAttire = this.comboBox1.SelectedItem.ToString().Replace(oldValue2, "");
                     }
                 }
             }
+
+            ButtonSound(0);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             base.Close();
+            ButtonSound(1);
         }
 
         private void Attire_Select_Load_1(object sender, EventArgs e)
@@ -93,7 +97,7 @@ namespace Ace.AttireExtension
                 bool flag2 = this.charType == "ref";
                 if (flag2)
                 {
-                    this.label2.Text = PrivateOverrides.refObj.RefePrm.name;
+                    this.label2.Text = GeneralComponents.refObj.RefePrm.name;
                 }
             }
             this.comboBox1.SelectedIndex = 0;
@@ -121,9 +125,10 @@ namespace Ace.AttireExtension
             // 
             // label2
             // 
+            this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.label2.Location = new System.Drawing.Point(11, 28);
+            this.label2.Location = new System.Drawing.Point(50, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(196, 23);
             this.label2.TabIndex = 9;
@@ -132,35 +137,52 @@ namespace Ace.AttireExtension
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button2.BackColor = System.Drawing.Color.Black;
+            this.button2.BackgroundImage = global::QoL_Mods.Properties.Resources.ButtonNotActive;
+            this.button2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.button2.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(93, 81);
+            this.button2.ForeColor = System.Drawing.Color.White;
+            this.button2.Location = new System.Drawing.Point(132, 101);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(114, 23);
             this.button2.TabIndex = 8;
-            this.button2.Text = "Cancel (Use Default)";
+            this.button2.Text = "Cancel (Default)";
             this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.button2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button2_MouseDown);
+            this.button2.MouseEnter += new System.EventHandler(this.button2_MouseEnter);
+            this.button2.MouseLeave += new System.EventHandler(this.button2_MouseLeave);
+            this.button2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button2_MouseMove);
+            this.button2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button2_MouseUp);
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.button1.BackColor = System.Drawing.Color.Black;
+            this.button1.BackgroundImage = global::QoL_Mods.Properties.Resources.ButtonNotActive;
+            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button1.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.button1.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 81);
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(51, 101);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 7;
             this.button1.Text = "OK";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.button2_MouseDown);
+            this.button1.MouseEnter += new System.EventHandler(this.button2_MouseEnter);
+            this.button1.MouseLeave += new System.EventHandler(this.button2_MouseLeave);
+            this.button1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.button2_MouseMove);
+            this.button1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.button2_MouseUp);
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(51, 24);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(196, 18);
             this.label1.TabIndex = 6;
@@ -171,7 +193,7 @@ namespace Ace.AttireExtension
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 54);
+            this.comboBox1.Location = new System.Drawing.Point(51, 69);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(195, 21);
             this.comboBox1.TabIndex = 5;
@@ -182,20 +204,79 @@ namespace Ace.AttireExtension
             this.AcceptButton = this.button1;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.RoyalBlue;
+            this.BackColor = System.Drawing.Color.Red;
+            this.BackgroundImage = global::QoL_Mods.Properties.Resources.tdialogBackground;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CancelButton = this.button2;
-            this.ClientSize = new System.Drawing.Size(219, 110);
+            this.ClientSize = new System.Drawing.Size(287, 152);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Attire_Select";
             this.Text = "Costume Select";
+            this.TransparencyKey = System.Drawing.Color.Red;
             this.Load += new System.EventHandler(this.Attire_Select_Load_1);
             this.ResumeLayout(false);
 
+        }
+
+        private void button2_MouseDown(object sender, MouseEventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.BackgroundImage = QoL_Mods.Properties.Resources.ButtonClicked;
+        }
+
+        private void button2_MouseLeave(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.BackgroundImage = QoL_Mods.Properties.Resources.ButtonNotActive;
+        }
+
+        private void button2_MouseMove(object sender, MouseEventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.BackgroundImage = QoL_Mods.Properties.Resources.ButtonActive;
+        }
+
+        private void button2_MouseEnter(object sender, EventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.BackgroundImage = QoL_Mods.Properties.Resources.ButtonActive;
+        }
+
+        private void button2_MouseUp(object sender, MouseEventArgs e)
+        {
+            Button btn = sender as Button;
+            btn.BackgroundImage = QoL_Mods.Properties.Resources.ButtonActive;
+        }
+
+        public static void FailSound()
+        {
+            Menu_SoundManager.Play_SE(Menu_SoundManager.SYSTEM_SOUND.CANCEL, Menu_SoundManager.PLAY_TYPE.ONCE, 1f);
+        }
+
+
+        public static void SuccessSound()
+        {
+            Menu_SoundManager.Play_SE(Menu_SoundManager.SYSTEM_SOUND.SELECT, Menu_SoundManager.PLAY_TYPE.ONCE, 1f);
+        }
+
+        public static void ButtonSound(int id)
+        {
+            switch (id)
+            {
+                case 0:
+                    SuccessSound();
+                    break;
+                case 1:
+                default:
+                    FailSound();
+                    break;
+            }
         }
     }
 }
