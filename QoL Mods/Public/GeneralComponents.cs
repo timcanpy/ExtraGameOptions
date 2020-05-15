@@ -35,7 +35,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
     [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
     [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "Automates match settings for different rings.")]
-    [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents. The effect is lost after the second finisher is used.")]
+    [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents.")]
     [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     #endregion
     #region Field Access
