@@ -1952,7 +1952,7 @@ namespace QoL_Mods
                 return;
             }
 
-            if (skillAttr == SkillSlotAttr.SpecialMove && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
+            if (skillAttr == SkillSlotAttr.SpecialMove && sd.filteringType != SkillFilteringType.Performance)
             {
                 //Increase down time for submissions
                 if (sd.filteringType == SkillFilteringType.Choke || sd.filteringType == SkillFilteringType.Claw ||
