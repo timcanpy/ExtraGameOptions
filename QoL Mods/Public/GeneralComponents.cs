@@ -1999,65 +1999,85 @@ namespace QoL_Mods
         #region Extend Referee Attires
 
         public static Referee refObj;
+        public static String costumePath = "./EGOData/RefereeCostumes/";
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 2147483647,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Costume")]
         public static void LoadRefereeCostume()
         {
-            GeneralComponents.refObj = RefereeMan.inst.GetRefereeObj();
-            DirectoryInfo directoryInfo2 = new DirectoryInfo("./AceModsData/AttireExtension/Referees/");
-            string text2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
-            FileInfo[] files2 = directoryInfo2.GetFiles(text2 + "*.cos");
-            bool flag36 = files2.Length != 0;
-            if (flag36)
+            try
             {
-                Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
-                attire_Select2.ShowDialog();
-                bool flag39 = File.Exists("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
-                if (flag39)
+                GeneralComponents.refObj = RefereeMan.inst.GetRefereeObj();
+                DirectoryInfo directoryInfo2 = new DirectoryInfo(costumePath);
+                if (!directoryInfo2.Exists)
                 {
-                    StreamReader streamReader6 = new StreamReader("./AceModsData/AttireExtension/Referees/" + text2 + attire_Select2.chosenAttire + ".cos");
-                    CostumeData costumeData6 = new CostumeData();
-                    while (streamReader6.Peek() != -1)
-                    {
-                        costumeData6.valid = true;
-                        for (int num45 = 0; num45 < 9; num45++)
-                        {
-                            for (int num46 = 0; num46 < 16; num46++)
-                            {
-                                costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
-                                costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
-                                costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
-                                costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
-                                costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
-                                costumeData6.highlightIntensity[num45, num46] = float.Parse(streamReader6.ReadLine());
-                            }
-                            costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
-                        }
-                    }
-                    streamReader6.Dispose();
-                    streamReader6.Close();
-                    try
-                    {
-                        GeneralComponents.refObj.FormRen.DestroySprite();
-                        GeneralComponents.refObj.FormRen.InitTexture(costumeData6, null);
-                        for (int num47 = 0; num47 < 9; num47++)
-                        {
-                            GeneralComponents.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
-                        }
-                        GeneralComponents.refObj.FormRen.InitSprite(false);
-                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
-                    }
-                    catch
-                    {
-                        L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
-                        RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
-                        RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
-                        GeneralComponents.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0], null);
-                        GeneralComponents.refObj.FormRen.InitSprite(false);
-                    }
+                    directoryInfo2.Create();
+                    return;
                 }
+                string text2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
+                FileInfo[] files2 = directoryInfo2.GetFiles(text2 + "*.cos");
+                bool flag36 = files2.Length != 0;
+                if (flag36)
+                {
+                    Attire_Select attire_Select2 = new Attire_Select(files2, 0, "ref");
+                    attire_Select2.ShowDialog();
+                    bool flag39 = File.Exists(costumePath + text2 +
+                                              attire_Select2.chosenAttire + ".cos");
+                    if (flag39)
+                    {
+                        StreamReader streamReader6 = new StreamReader(
+                            costumePath + text2 + attire_Select2.chosenAttire + ".cos");
+                        CostumeData costumeData6 = new CostumeData();
+                        while (streamReader6.Peek() != -1)
+                        {
+                            costumeData6.valid = true;
+                            for (int num45 = 0; num45 < 9; num45++)
+                            {
+                                for (int num46 = 0; num46 < 16; num46++)
+                                {
+                                    costumeData6.layerTex[num45, num46] = streamReader6.ReadLine();
+                                    costumeData6.color[num45, num46].r = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].g = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].b = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.color[num45, num46].a = float.Parse(streamReader6.ReadLine());
+                                    costumeData6.highlightIntensity[num45, num46] =
+                                        float.Parse(streamReader6.ReadLine());
+                                }
 
+                                costumeData6.partsScale[num45] = float.Parse(streamReader6.ReadLine());
+                            }
+                        }
+
+                        streamReader6.Dispose();
+                        streamReader6.Close();
+                        try
+                        {
+                            GeneralComponents.refObj.FormRen.DestroySprite();
+                            GeneralComponents.refObj.FormRen.InitTexture(costumeData6, null);
+                            for (int num47 = 0; num47 < 9; num47++)
+                            {
+                                GeneralComponents.refObj.FormRen.partsScale[num47] = costumeData6.partsScale[num47];
+                            }
+
+                            GeneralComponents.refObj.FormRen.InitSprite(false);
+                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
+                        }
+                        catch
+                        {
+                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
+                            RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
+                            RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
+                            GeneralComponents.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0],
+                                null);
+                            GeneralComponents.refObj.FormRen.InitSprite(false);
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("LoadRefereeCostumeError: " + ex);
             }
         }
 

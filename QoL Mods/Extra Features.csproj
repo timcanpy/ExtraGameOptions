@@ -65,6 +65,7 @@
     <Compile Include="Helper Classes\UkemiNotification.cs" />
     <Compile Include="Helper Classes\EnumLibrary.cs" />
     <Compile Include="Helper Classes\RefereeInfo.cs" />
+    <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Public\AttireExtension.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,7 +102,6 @@
     <Compile Include="Private\Facelock\SkillType.cs" />
     <Compile Include="Private\Facelock\SlotStorage.cs" />
     <Compile Include="Private\Facelock\Style.cs" />
-    <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\Reversal\Move.cs" />
     <Compile Include="Private\Reversal\ReversalMove.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
