@@ -198,7 +198,19 @@ namespace Data_Classes
                     employee.Wins = int.Parse(employeeDetails[5]);
                     employee.Losses = int.Parse(employeeDetails[6]);
                     employee.Draws = int.Parse(employeeDetails[7]);
-                    employee.MoraleRank = int.Parse(employeeDetails[8]);
+
+                    //Ensure that the rank is in bounds
+                    int rank = int.Parse(employeeDetails[8]);
+                    if (rank > 5)
+                    {
+                        rank = 5;
+                    }
+                    else if (rank < 0)
+                    {
+                        rank = 0;
+                    }
+
+                    employee.MoraleRank = rank;
                     employee.MoralePoints = int.Parse(employeeDetails[9]);
                     employee.FailedQuitRolls = int.Parse(employeeDetails[10]);
                     employee.QuitRollCeiling = int.Parse(employeeDetails[11]);

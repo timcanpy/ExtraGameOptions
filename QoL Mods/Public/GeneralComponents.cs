@@ -701,7 +701,11 @@ namespace QoL_Mods
 
             foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_styles.Items)
             {
-                styleTaunts.Add(taunt.StyleItem.Name, taunt);
+                //Ensure that we aren't adding duplicates.
+                if (!styleTaunts.ContainsKey(taunt.StyleItem.Name))
+                {
+                    styleTaunts.Add(taunt.StyleItem.Name, taunt);
+                }
             }
 
             foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_wrestlers.Items)

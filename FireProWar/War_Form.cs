@@ -949,20 +949,28 @@ namespace FireProWar
         #region Wrestler Management
         private void ms_rosterList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ms_rosterList.Items.Count == 0)
+            if (ms_rosterList.Items.Count == 0 || ms_rosterList.SelectedItem == null)
             {
                 return;
             }
 
             Employee employee = (Employee)ms_rosterList.SelectedItem;
-            ms_employeeName.Text = employee.Name;
-            ms_employeeStyle.Text = employee.Type;
-            ms_employeeCountry.Text = employee.Region;
-            ms_moraleRank.SelectedIndex = employee.MoraleRank;
-            ms_moralePoints.Text = employee.MoralePoints.ToString();
-            ms_empMatches.Text = employee.MatchCount.ToString();
-            ms_empRating.Text = Math.Round(Decimal.Parse(employee.AverageRating.ToString()), 2) + "%";
-            ms_empRecord.Text = employee.Wins + "/" + employee.Losses + "/" + employee.Draws;
+            try
+            {
+                ms_employeeName.Text = employee.Name;
+                ms_employeeStyle.Text = employee.Type;
+                ms_employeeCountry.Text = employee.Region;
+                ms_moraleRank.SelectedIndex = employee.MoraleRank;
+                ms_moralePoints.Text = employee.MoralePoints.ToString();
+                ms_empMatches.Text = employee.MatchCount.ToString();
+                ms_empRating.Text = Math.Round(Decimal.Parse(employee.AverageRating.ToString()), 2) + "%";
+                ms_empRecord.Text = employee.Wins + "/" + employee.Losses + "/" + employee.Draws;
+            }
+            catch(NullReferenceException)
+            {
+                L.D(employee.Name + " has null data.");
+            }
+
         }
         private void ms_hireWrestler_Click(object sender, EventArgs e)
         {
@@ -1368,8 +1376,11 @@ namespace FireProWar
                         sortedList = promotion.EmployeeList.OrderByDescending(x => x.AverageRating).ToList();
                         break;
                     case "Morale":
-                    default:
                         sortedList = promotion.EmployeeList.OrderByDescending(x => x.MoraleRank).ToList();
+                        break;
+                    case "Alphabetical":
+                    default:
+                        sortedList = promotion.EmployeeList.OrderBy(x => x.Name).ToList();
                         break;
                 }
 

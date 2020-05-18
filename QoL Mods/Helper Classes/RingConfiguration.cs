@@ -46,8 +46,8 @@ namespace QoL_Mods.Helper_Classes
         {
             String data = "";
 
-            L.D("Saving " + ringName);
-            L.D("Referee Number: " + referees.Count);
+            //L.D("Saving " + ringName);
+            //L.D("Referee Number: " + referees.Count);
             data += ringName + dataSeparator;
             data += grappleSetting.SaveSettings() + dataSeparator;
             data += singlesSpeed + "" + dataSeparator;
@@ -84,7 +84,6 @@ namespace QoL_Mods.Helper_Classes
                 var dataLines = data.Split(dataSeparator);
 
                 ringName = dataLines[0];
-                L.D("Loading configuration for " + ringName);
                 grappleSetting.LoadSettings(dataLines[1]);
                 Int32.TryParse(dataLines[2], out singlesSpeed);
                 Int32.TryParse(dataLines[3], out multiSpeed);

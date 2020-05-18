@@ -1,5 +1,6 @@
 ﻿using DG;
 using System;
+using System.Collections.Generic;
 
 namespace QoL_Mods.Data_Classes
 {
@@ -28,9 +29,9 @@ namespace QoL_Mods.Data_Classes
 
         public void AddWakeUpMove(Skill skill, int index)
         {
-                WakeupMoves[index] = skill;
-                StartPositions[index] = GetStartPosition((SkillID)skill.SkillID);
-                EndPositions[index] = GetEndPosition((SkillID) skill.SkillID);
+            WakeupMoves[index] = skill;
+            StartPositions[index] = GetStartPosition((SkillID)skill.SkillID);
+            EndPositions[index] = GetEndPosition((SkillID)skill.SkillID);
         }
 
         public void RemoveWakeUpMove(int index)
@@ -102,8 +103,9 @@ namespace QoL_Mods.Data_Classes
             return data;
         }
 
-        public void LoadWakeUpData(String data)
+        public void LoadWakeUpData(String data, HashSet<Skill> validSkills = null)
         {
+
             String[] information = data.Split('|');
             StyleItem.Name = information[0].Split(';')[0];
             StyleItem.StyleType = (FightStyleEnum)Enum.Parse(typeof(FightStyleEnum), information[0].Split(';')[1]);
@@ -120,6 +122,26 @@ namespace QoL_Mods.Data_Classes
                         SkillName = information[i + 1].Split(';')[0],
                         SkillID = int.Parse(information[i + 1].Split(';')[1])
                     };
+
+                    //Verify that the skillID stored matches the Move Data entry
+                    //If it does not, attempt to find a valid replacement
+                    if (validSkills != null)
+                    {
+                        if (!IsValidTaunt(WakeupMoves[i], validSkills))
+                        {
+                            L.D(WakeupMoves[i].SkillName + " has an invalid ID " + WakeupMoves[i].SkillID + ". Attempting to replace with a valid ID.");
+                            foreach (var skill in validSkills)
+                            {
+                                if (skill.SkillName == WakeupMoves[i].SkillName)
+                                {
+                                    L.D("Replacing " + WakeupMoves[i].SkillName + " ID from " + WakeupMoves[i].SkillID + " to " + skill.SkillID);
+                                    WakeupMoves[i].SkillID = skill.SkillID;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
                 }
                 StartPositions[i] = (TauntStartPosition)Enum.Parse(typeof(TauntStartPosition), information[i + 5]);
                 EndPositions[i] = (TauntEndPosition)Enum.Parse(typeof(TauntEndPosition), information[i + 9]);
@@ -129,6 +151,28 @@ namespace QoL_Mods.Data_Classes
         public override string ToString()
         {
             return this.StyleItem.Name;
+        }
+
+        private bool IsValidTaunt(Skill skill, HashSet<Skill> validSkills)
+        {
+            bool isValid = false;
+
+            //Ignore the value of Rolling, which is a default action
+            if (skill.SkillID == -100)
+            {
+                return true;
+            }
+
+            foreach (var item in validSkills)
+            {
+                if (item.SkillID == skill.SkillID)
+                {
+                    isValid = true;
+                    break;
+                }
+            }
+
+            return isValid;
         }
         
     }

@@ -36,7 +36,10 @@ namespace QoL_Mods.Helper_Classes
                 }
 
                 //Remove last separator
-                cheerData.Remove(cheerData.Length - 1, 1);
+                //if (cheerData[cheerData.Length - 1].Equals(':'))
+                //{
+                //    cheerData = cheerData.Remove(cheerData.Length - 1);
+                //}
                 saveData += cheerData;
 
             }

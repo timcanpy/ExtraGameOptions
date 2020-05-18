@@ -81,6 +81,7 @@
             this.label63 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
             this.wu_moveSearch = new System.Windows.Forms.TextBox();
+            this.wu_moveReload = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -637,6 +638,7 @@
             // 
             this.panel20.BackColor = System.Drawing.Color.White;
             this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel20.Controls.Add(this.wu_moveReload);
             this.panel20.Controls.Add(this.wu_moveRefresh);
             this.panel20.Controls.Add(this.wu_moveResults);
             this.panel20.Controls.Add(this.label63);
@@ -694,6 +696,17 @@
             this.wu_moveSearch.Name = "wu_moveSearch";
             this.wu_moveSearch.Size = new System.Drawing.Size(187, 20);
             this.wu_moveSearch.TabIndex = 1;
+            // 
+            // wu_moveReload
+            // 
+            this.wu_moveReload.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wu_moveReload.Location = new System.Drawing.Point(40, 154);
+            this.wu_moveReload.Name = "wu_moveReload";
+            this.wu_moveReload.Size = new System.Drawing.Size(99, 23);
+            this.wu_moveReload.TabIndex = 16;
+            this.wu_moveReload.Text = "Reload Data";
+            this.wu_moveReload.UseVisualStyleBackColor = true;
+            this.wu_moveReload.Click += new System.EventHandler(this.wu_moveReload_Click);
             // 
             // RecoveryTauntForm
             // 
@@ -774,5 +787,6 @@
         private System.Windows.Forms.Label label63;
         private System.Windows.Forms.Label label64;
         private System.Windows.Forms.TextBox wu_moveSearch;
+        private System.Windows.Forms.Button wu_moveReload;
     }
 }

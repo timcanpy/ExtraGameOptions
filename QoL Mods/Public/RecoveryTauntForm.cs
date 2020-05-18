@@ -49,7 +49,7 @@ namespace QoL_Mods
         #endregion
 
         #region Wake Up Taunts
-        private void LoadRecoveryTaunts()
+        private void LoadRecoveryTaunts(HashSet<Skill> validTaunts = null)
         {
             String filePath = CheckSaveFile("StyleWT");
             if (File.Exists(filePath))
@@ -62,7 +62,7 @@ namespace QoL_Mods
                         WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
                         try
                         {
-                            taunt.LoadWakeUpData(style);
+                            taunt.LoadWakeUpData(style, validTaunts);
                             wu_styles.Items.Add(taunt);
                         }
                         catch (Exception ex)
@@ -94,7 +94,7 @@ namespace QoL_Mods
 
                         try
                         {
-                            taunt.LoadWakeUpData(style);
+                            taunt.LoadWakeUpData(style, validTaunts);
                             wu_wrestlers.Items.Add(taunt);
                         }
                         catch (Exception ex)
@@ -525,7 +525,35 @@ namespace QoL_Mods
         {
             return (taunt != null);
         }
+        private HashSet<Skill> GetValidTaunts()
+        {
+            HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
+            foreach (KeyValuePair<SkillID, SkillInfo> current in SkillInfoManager.inst.skillInfoList)
+            {
+                try
+                {
+                    //Ensure that we only add performances beginning with either face up or face down positions.
+                    if (current.Value.filteringType == SkillFilteringType.Performance)
+                    {
+                        var anmData = SkillDataMan.inst.GetSkillData(current.Key)[0].anmData[0];
+                        if (anmData.formDispList[0].formIdx != 101 && anmData.formDispList[0].formIdx != 100)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            wakeUpSkills.Add(new Skill(DataBase.GetSkillName(current.Key), (Int32)current.Key));
+                            L.D("Added move " + DataBase.GetSkillName(current.Key) + " with " + (Int32)current.Key); 
+                        }
+                    }
+                }
+                catch
+                {
 
+                }
+            }
+            return wakeUpSkills;
+        }
         private void wu_moveSearch_LostFocus(object sender, System.EventArgs e)
         {
             if (wu_moveSearch.Text.Trim().Equals(""))
@@ -702,5 +730,12 @@ namespace QoL_Mods
 
         }
         #endregion
+
+        private void wu_moveReload_Click(object sender, EventArgs e)
+        {
+            wu_styles.Items.Clear();
+            wu_wrestlers.Items.Clear();
+            LoadRecoveryTaunts(GetValidTaunts());
+        }
     }
 }

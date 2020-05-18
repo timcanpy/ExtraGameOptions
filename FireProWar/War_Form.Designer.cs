@@ -1029,6 +1029,7 @@
             this.fpw_rosterFiler.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fpw_rosterFiler.FormattingEnabled = true;
             this.fpw_rosterFiler.Items.AddRange(new object[] {
+            "Alphabetical",
             "Average Rating",
             "Losses",
             "Morale",
