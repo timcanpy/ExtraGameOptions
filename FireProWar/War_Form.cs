@@ -1804,10 +1804,10 @@ namespace FireProWar
 
                 String fileName = "";
                 imageName = imageName.ToLower(); //Eliminate casing for easier matching
-
+               
                 foreach (String file in files)
                 {
-                    String name = Path.GetFileName(file).Split('.')[0];
+                    String name = Path.GetFileNameWithoutExtension(file);
                     if (name.ToLower().Equals(imageName))
                     {
                         fileName = file;

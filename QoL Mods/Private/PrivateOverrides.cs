@@ -1129,7 +1129,9 @@ namespace QoL_Mods.Private
             try
             {
                 //Ensure that only Custom Moves are processed
-                if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
+                //if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
+                //Allow moves exported in Move Craft to be processed as well
+                if ((int)skill_id >= 6660)
                 {
 
                     int index = craftSkill.mFileBank.GetSelecting();
@@ -1147,7 +1149,7 @@ namespace QoL_Mods.Private
                                 //Ensure that the Custom ID matches the Preset ID
                                 //int formIdx = formDispList.formIdx;
                                 int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
-                               
+
                                 ToolFormSaveData saveData =
                                     new ToolFormSaveData(formDispList.formPartsList, formIdx + 100000); //All custom forms begin at 100000
                                 saveList.Add(saveData);
