@@ -60,7 +60,8 @@ namespace WazaSupport
                     return;
                 }
                 //Ensure that only Custom Moves are processed
-                if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
+                //Allow moves exported in Move Craft to be processed as well
+                if ((int)skill_id >= 6660)
                 {
 
                     int index = craftSkill.mFileBank.GetSelecting();
@@ -79,8 +80,15 @@ namespace WazaSupport
                                 //int formIdx = formDispList.formIdx;
                                 int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
 
+                                //All custom forms begin at 100000
+                                //Ensure that we are loading existing custom form indexes, where applicable
+                                if (formIdx < 100000)
+                                {
+                                    formIdx += 100000;
+                                }
+
                                 ToolFormSaveData saveData =
-                                    new ToolFormSaveData(formDispList.formPartsList, formIdx + 100000); //All custom forms begin at 100000
+                                    new ToolFormSaveData(formDispList.formPartsList, formIdx);
                                 saveList.Add(saveData);
                             }
                         }

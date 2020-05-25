@@ -1150,8 +1150,15 @@ namespace QoL_Mods.Private
                                 //int formIdx = formDispList.formIdx;
                                 int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
 
+                                //All custom forms begin at 100000
+                                //Ensure that we are loading existing custom form indexes, where applicable
+                                if (formIdx < 100000)
+                                {
+                                    formIdx += 100000;
+                                }
+
                                 ToolFormSaveData saveData =
-                                    new ToolFormSaveData(formDispList.formPartsList, formIdx + 100000); //All custom forms begin at 100000
+                                    new ToolFormSaveData(formDispList.formPartsList, formIdx);
                                 saveList.Add(saveData);
                             }
                         }
