@@ -15,10 +15,10 @@ using WresIDGroup = ModPack.WresIDGroup;
 namespace QoL_Mods.Private
 {
     #region Group Descriptions
-    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(PRIVATE) Allows players to override the default Face Lock attack with custom actions.")]
+    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(PRIVATE) Allows players to override the default Face Lock attack with custom actions.\nIncompatible with the ModPack's Extended Move Lists.")]
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(PRIVATE) Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
-    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
+    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.\nIncompatible with the ModPack's Extended Move Lists.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
@@ -90,7 +90,7 @@ namespace QoL_Mods.Private
 
         #region Variables
         public static Dictionary<String, FaceLockMoves> faceLockMoves = new Dictionary<String, FaceLockMoves>();
-        public static SlotStorage[] slotStorage = new SlotStorage[8];
+        public static SlotStorage[] flSlotStorage = new SlotStorage[8];
         public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
         public static String finishingMove = "";
         #endregion
@@ -123,17 +123,20 @@ namespace QoL_Mods.Private
                 }
 
                 //Save Move Slots to Handle Over-writing
-                slotStorage = new SlotStorage[8];
+                flSlotStorage = new SlotStorage[8];
                 safeCritSlot = new SkillSlotEnum[8];
-                for (int i = 0; i < 8; i++)
-                {
-                    slotStorage[i] = new SlotStorage();
-                    safeCritSlot[i] = SkillSlotEnum.Grapple_XA;
-                }
+                //for (int i = 0; i < 8; i++)
+                //{
+                //    flSlotStorage[i] = new SlotStorage();
+                //    safeCritSlot[i] = SkillSlotEnum.Grapple_XA;
+                //}
 
                 for (int i = 0; i < 8; i++)
                 {
+                    flSlotStorage[i] = new SlotStorage();
+                    safeCritSlot[i] = SkillSlotEnum.Grapple_XA;
                     bool[] bigSlotOptions = new Boolean[4];
+
                     for (int j = 0; j < 4; j++)
                     {
                         bigSlotOptions[j] = true;
@@ -145,10 +148,10 @@ namespace QoL_Mods.Private
                         continue;
                     }
 
-                    slotStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
-                    slotStorage[i].mediumSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A];
-                    slotStorage[i].heavySlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B];
-                    slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA];
+                    flSlotStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
+                    flSlotStorage[i].mediumSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A];
+                    flSlotStorage[i].heavySlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B];
+                    flSlotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_XA];
 
                     //Find a safe big slot
                     foreach (AIPriorityAct priority in player.WresParam.aiParam.priorityAct)
@@ -193,7 +196,7 @@ namespace QoL_Mods.Private
 
                     if (safeCritSlot[i] != SkillSlotEnum.Grapple_XA)
                     {
-                        slotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)safeCritSlot[i]];
+                        flSlotStorage[i].criticalSlot = player.WresParam.skillSlot[(int)safeCritSlot[i]];
                     }
 
                 }
@@ -341,6 +344,18 @@ namespace QoL_Mods.Private
                     attacker.WresParam.skillSlot[(int)slotEnum] = (SkillID)moveset.CustomSkills[damageLevel].SkillID;
                     attacker.animator.ReqSlotAnm(slotEnum, false, -1, true);
                     attacker.lastSkillHit = true;
+
+
+                    //Ensure we're handling skill data correctly
+                    //Attempt to change how skills are called
+                    //Need to set animator.SkillAnmID
+                    //attacker.animator.AnmReqType = AnmReqTypeEnum.SkillID;
+                    //attacker.TargetPlIdx = defender.PlIdx;
+                    //attacker.lastSkill = slotEnum;
+                    //attacker.animator.CurrentSkill = SkillDataMan.inst.GetSkillData((SkillID)moveset.CustomSkills[damageLevel].SkillID)[0];
+                    //attacker.animator.InitAnimation();
+                    //attacker.lastSkillHit = true;
+
                 }
 
                 return true;
@@ -354,7 +369,7 @@ namespace QoL_Mods.Private
         }
 
         [Hook(TargetClass = "Player", TargetMethod = "ProcessKeyInput_Grapple", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Face Lock")]
-        public static void RefreshSlotMoves(Player player)
+        public static void RefreshSlotMoves_FaceLock(Player player)
         {
             try
             {
@@ -363,20 +378,20 @@ namespace QoL_Mods.Private
                     return;
                 }
 
-                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[player.PlIdx].weakSlot;
-                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[player.PlIdx].mediumSlot;
-                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[player.PlIdx].heavySlot;
-                player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = slotStorage[player.PlIdx].criticalSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = flSlotStorage[player.PlIdx].weakSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = flSlotStorage[player.PlIdx].mediumSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = flSlotStorage[player.PlIdx].heavySlot;
+                player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = flSlotStorage[player.PlIdx].criticalSlot;
             }
             catch (Exception e)
             {
-                L.D("RefreshSlotMoves Error: " + e.Message);
+                L.D("RefreshSlotMoves_FaceLockError: " + e.Message);
             }
 
         }
 
-        [Hook(TargetClass = "Menu_Result", TargetMethod = "Set_FinishSkill", InjectionLocation = 8,
-            InjectDirection = HookInjectDirection.After,
+        [Hook(TargetClass = "Menu_Result", TargetMethod = "Set_FinishSkill", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal |
                           HookInjectFlags.PassLocals, LocalVarIds = new int[] { 1 }, Group = "Face Lock")]
         public static void CorrectFinishingMove(Menu_Result result, ref UILabel finishText, string str)
@@ -423,7 +438,7 @@ namespace QoL_Mods.Private
         }
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
-        public static void RefreshAllSlots()
+        public static void RefreshAllSlots_FaceLocks()
         {
 
             for (int i = 0; i < 8; i++)
@@ -436,14 +451,14 @@ namespace QoL_Mods.Private
 
                 try
                 {
-                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = slotStorage[i].weakSlot;
-                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = slotStorage[i].mediumSlot;
-                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = slotStorage[i].heavySlot;
-                    player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = slotStorage[player.PlIdx].criticalSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = flSlotStorage[i].weakSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = flSlotStorage[i].mediumSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = flSlotStorage[i].heavySlot;
+                    player.WresParam.skillSlot[(int)safeCritSlot[player.PlIdx]] = flSlotStorage[player.PlIdx].criticalSlot;
                 }
                 catch (Exception e)
                 {
-                    L.D("RefreshAllSlots - Error on Player " + i + ": " + e.Message);
+                    L.D("RefreshAllSlots_FaceLocks - Error on Player " + i + ": " + e.Message);
                 }
 
             }
@@ -463,7 +478,7 @@ namespace QoL_Mods.Private
 
         #region Stamina Affects Reversal Rate
 
-        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 93,
+        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 92,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal | HookInjectFlags.PassLocals, LocalVarIds = new int[] { 6 },
             Group = "Stamina Affects Reversals")]
         public static void IncreaseReversalChance(ref int num, int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type, int def_pl_idx)
@@ -484,11 +499,10 @@ namespace QoL_Mods.Private
 
         #region Cheer on Reversal
 
-        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 115,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
+        [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 118,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, ParamTypes = new Type[] { typeof(int), typeof(int), typeof(SkillEquipTypeEnum), typeof(int) },
             Group = "Reversal Cheer")]
-        public static void CheerOnReversal(int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type,
-            int def_pl_idx)
+        public static void CheerOnReversal(int atk_pl_idx, int skill_idx, global::SkillEquipTypeEnum type, int def_pl_idx)
         {
             try
             {
@@ -975,8 +989,83 @@ namespace QoL_Mods.Private
 
         #region Implement Fake Reversal Moves
 
+        #region Variables
         public static int maxReversalChance = 50;
         public static SkillData[] moveData;
+        public static SlotStorage[] rvSlotStorage = new SlotStorage[8];
+        #endregion
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+            Group = "Custom Reversals")]
+        public static void StoreReversalSlotMoves()
+        {
+            rvSlotStorage = new SlotStorage[8];
+            for (int i = 0; i < 8; i++)
+            {
+                rvSlotStorage[i] = new SlotStorage();
+
+                Player player = PlayerMan.inst.GetPlObj(i);
+                if (!player)
+                {
+                    continue;
+                }
+
+                //Ensure that we're storing the initial slot moves for refreshing
+                rvSlotStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
+                rvSlotStorage[i].mediumSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A];
+                rvSlotStorage[i].heavySlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B];
+            }
+        }
+
+        [Hook(TargetClass = "Player", TargetMethod = "ProcessKeyInput_Grapple", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
+            Group = "Custom Reversals")]
+        public static void RefreshSlotMoves_Reversals(Player player)
+        {
+            try
+            {
+                if (!player)
+                {
+                    return;
+                }
+
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = rvSlotStorage[player.PlIdx].weakSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = rvSlotStorage[player.PlIdx].mediumSlot;
+                player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = rvSlotStorage[player.PlIdx].heavySlot;
+            }
+            catch (Exception e)
+            {
+                L.D("RefreshSlotMoves_ReversalError: " + e.Message);
+            }
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+            Group = "Custom Reversals")]
+        public static void RefreshAllSlots_Reversals()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Player player = PlayerMan.inst.GetPlObj(i);
+                if (!player)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X] = rvSlotStorage[i].weakSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_A] = rvSlotStorage[i].mediumSlot;
+                    player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_B] = rvSlotStorage[i].heavySlot;
+                }
+                catch (Exception e)
+                {
+                    L.D("RefreshAllSlots_Reversals - Error on Player " + i + ": " + e.Message);
+                }
+
+            }
+        }
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Custom Reversals")]
@@ -1057,7 +1146,6 @@ namespace QoL_Mods.Private
 
                         //If the defender needs to execute a reversal move, we call the animator for it
                         //Then we return true to ensure that the attacker's animator does not proceed.
-                        //DispNotification.inst.Show(DataBase.GetWrestlerFullName(defender.WresParam) + " reversed with a " + DataBase.GetSkillName((SkillID)skillID) + "!", 120);
                         attacker.State = PlStateEnum.NormalAnm;
                         defender.animator.ReqSlotAnm(skillSlotEnum, true, attacker.PlIdx, true);
                         MatchEvaluation.inst.SkillHit(defender.PlIdx, skillSlotEnum);
@@ -1205,6 +1293,111 @@ namespace QoL_Mods.Private
         //    }
 
         //    L.D("Current move (" + data.nameEN + ") uses ID # " + uniqueID);
+        //}
+
+        #endregion
+
+        #region Test Of Strength Override
+
+        //Attacker freezes up when executing the move.
+        //[Hook(TargetClass = "Player", TargetMethod = "CheckStartPowerCompetition", InjectionLocation = 74, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "ExtraFeatures")]
+        //public static bool ReplaceTestOfStrength(Player attacker, out bool result)
+        //{
+        //    //If this method returns true, then the result should be false.
+        //    //Otherwise, the code will continue if this method returns false.
+        //    result = false;
+
+        //    try
+        //    {
+        //        if (!attacker || tosMoves.Length == 0)
+        //        {
+        //            return false;
+        //        }
+
+        //        var style = attacker.WresParam.fightStyle;
+
+        //        //Certain styles ignore the replacement
+        //        if (style == FightStyleEnum.Giant || style == FightStyleEnum.Power ||
+        //            style == FightStyleEnum.Devilism || style == FightStyleEnum.Heel)
+        //        {
+        //            return false;
+        //        }
+
+        //        //Determine whether this should be replaced with unique animations.
+        //        Player defender = global::PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+
+        //        //If HP and SP are equal, perform normal test of strength
+        //        if (defender.SP == attacker.SP && defender.HP == attacker.HP)
+        //        {
+        //            return false;
+        //        }
+
+        //        int winner = attacker.PlIdx;
+        //        if (defender.SP == attacker.SP)
+        //        {
+        //            if (defender.HP > attacker.HP)
+        //            {
+        //                winner = defender.PlIdx;
+        //            }
+        //        }
+        //        else if (defender.SP > attacker.SP)
+        //        {
+        //            winner = defender.PlIdx;
+        //        }
+
+        //        //Ensure that the replacement is randomized
+        //        int rngValue = UnityEngine.Random.Range(1, 11);
+        //        if (rngValue > 8)
+        //        {
+        //            L.D("Failed TOS replacement attempt: " + rngValue);
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            L.D("Success TOS replacement attempt: " + rngValue);
+        //        }
+
+        //        Player player = PlayerMan.inst.GetPlObj(winner);
+
+        //        //Shoot Fighters must clinch
+        //        if (style == FightStyleEnum.Fighter || style == FightStyleEnum.Ground ||
+        //            style == FightStyleEnum.Grappler || style == FightStyleEnum.Shooter ||
+        //            style == FightStyleEnum.Wrestling)
+        //        {
+        //            player.ChangeState(global::PlStateEnum.NormalAnm);
+        //            player.animator.ReqBasicAnm(global::BasicSkillEnum.S1_Substitution_FrontHold, true,
+        //                player.TargetPlIdx);
+        //            return true;
+        //        }
+
+        //        int skillID = tosMoves[UnityEngine.Random.Range(0, tosMoves.Length)];
+
+        //        player.animator.AnmReqType = AnmReqTypeEnum.SkillID;
+        //        global::SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
+
+        //        //Ensure that both players return to neutral position
+        //        attacker.ChangeState(global::PlStateEnum.NormalAnm);
+        //        defender.ChangeState(global::PlStateEnum.NormalAnm);
+
+        //        //Ensure we're handling skill data correctly
+        //        if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
+        //        {
+        //            player.lastSkill = SkillSlotEnum.Grapple_X;
+        //        }
+
+        //        player.animator.CurrentSkill = skillData;
+        //        //moveData[player.PlIdx] = skillData;
+        //        player.animator.InitAnimation();
+        //        player.lastSkillHit = true;
+
+        //        return true;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("ReplaceTestOfStrengthException: " + e);
+        //        return false;
+        //    }
+
         //}
 
         #endregion
