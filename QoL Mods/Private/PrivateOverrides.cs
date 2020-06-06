@@ -298,11 +298,11 @@ namespace QoL_Mods.Private
                         {
                             if (attacker.PlDir == PlDirEnum.Right)
                             {
-                                attacker.padOn = PadBtnEnum.Dir_LD;
+                                attacker.padOn = PadBtnEnum.Dir_RU;
                             }
                             else
                             {
-                                attacker.padOn = PadBtnEnum.Dir_RU;
+                                attacker.padOn = PadBtnEnum.Dir_LD;
                             }
                         }
                     }
@@ -1228,8 +1228,10 @@ namespace QoL_Mods.Private
                     L.D("Adding custom forms for " + DataBase.GetSkillName(skill_id));
                     foreach (var skill in skillData)
                     {
+                        L.D("Total animation indices: " + skill.anmNum);
                         for (int i = 0; i < skill.anmNum; i++)
                         {
+                            //L.D("Checking Index " + i);
                             var anmData = skill.anmData[i];
                             for (int j = 0; j < anmData.formNum; j++)
                             {
@@ -1240,6 +1242,8 @@ namespace QoL_Mods.Private
 
                                 //All custom forms begin at 100000
                                 //Ensure that we are loading existing custom form indexes, where applicable
+                                //L.D("Adding form " + formIdx + " at line " + j);
+
                                 if (formIdx < 100000)
                                 {
                                     formIdx += 100000;
