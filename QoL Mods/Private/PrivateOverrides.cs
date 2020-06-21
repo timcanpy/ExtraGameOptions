@@ -49,6 +49,7 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "AnimListData", Field = "mRepeatBlock", Group = "Waza Support")]
     [FieldAccess(Class = "AnimListData", Field = "mRepeatClickBlock", Group = "Waza Support")]
     [FieldAccess(Class = "AnimListData", Field = "m_form", Group = "Waza Support")]
+    [FieldAccess(Class = "AnimListData", Field = "_buildinOldForm", Group = "Waza Support")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
 
@@ -1103,7 +1104,7 @@ namespace QoL_Mods.Private
         {
             try
             {
-                //Ensure this is a valid slot type
+                //Ensure animListData is a valid slot type
                 if (skillSlotEnum != SkillSlotEnum.Grapple_X && skillSlotEnum != SkillSlotEnum.Grapple_X_LR &&
                     skillSlotEnum != SkillSlotEnum.Grapple_X_U && skillSlotEnum != SkillSlotEnum.Grapple_X_D &&
                     skillSlotEnum != SkillSlotEnum.Grapple_A && skillSlotEnum != SkillSlotEnum.Grapple_A_LR &&
@@ -1125,7 +1126,7 @@ namespace QoL_Mods.Private
                 //Replacing front grapple move
                 Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
 
-                //Ensure this is a valid move;
+                //Ensure animListData is a valid move;
                 SkillData skill = attacker.GetSkillData_Equip(skillSlotEnum);
                 string skillName = DataBase.GetSkillName(attacker.WresParam.skillSlot[(int)skillSlotEnum]);
 
@@ -1217,6 +1218,7 @@ namespace QoL_Mods.Private
 
         #region Variables
         public static int maxCFormNum = 99999;
+        public static int maxCFormID = 100000 + maxCFormNum;
         #endregion
 
         [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
@@ -1290,6 +1292,11 @@ namespace QoL_Mods.Private
                             }
                         }
                     }
+
+                    if (craftSkill.mData.WazaData[index].formEditIdx + 5 <= maxCFormID)
+                    {
+                        craftSkill.mData.WazaData[index].formEditIdx += 5;
+                    }
                 }
             }
             catch (Exception ex)
@@ -1308,6 +1315,7 @@ namespace QoL_Mods.Private
             result = false;
             bool change = false;
 
+            L.D(name);
             try
             {
                 bool check = true;
@@ -1315,18 +1323,18 @@ namespace QoL_Mods.Private
                 int anmBankNo = global::AnimBankSetting.Context.GetSelectAnimNo();
                 int selectMin = global::AnimList.Context.selectMin;
                 int selectMax = global::AnimList.Context.selectMax;
-                
+
                 List<String> validFormOps = new List<String> { "FORM1", "FORM10", "FORM100", "FORM1000", "FORM10000" };
-                if (!validFormOps.Contains(name) && !name.Equals("P"))
+                if (!validFormOps.Contains(name)) //&& !name.Equals("FORMTYPE"))
                 {
                     return result;
                 }
                 else if (validFormOps.Contains(name))
                 {
                     int preForm = animListData.GetFORM();
-                    int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= maxCFormNum) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 100000 + maxCFormNum);
+                    int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= maxCFormNum) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : maxCFormID);
                     //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
-                    //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((this.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (this.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
+                    //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
                     L.D("Max: " + max);
                     L.D("Diff: " + diff);
 
@@ -1387,51 +1395,161 @@ namespace QoL_Mods.Private
                         }
                     }));
                 }
-                else if (name.Equals("P"))
-                {
-                    int oldP = animListData.GetP();
-                    int _p = oldP + diff;
-                    int formIdx = animListData.GetFORM();
-                    L.D("oldP: " + oldP);
-                    L.D("_p: " + _p);
-                    L.D("formIdx: " + formIdx);
+                //else if (name.Equals("FORMTYPE"))
+                //{
+                //    check = false;
+                //    int _form = animListData.GetFORM();
+                //    int formIdx = animListData.GetFORM();
+                //    int oldForm = _form;
+                //    int oldBuildIn = animListData._buildinOldForm;
+                //    int formEditIdx = animListData.dataAccessor.GetWazaData().formEditIdx;
+                //    if (pad)
+                //    {
+                //        if (self)
+                //        {
+                //            animListData.mRepeatBlock |= 3;
+                //        }
+                //        else
+                //        {
+                //            repeatBlock |= 3;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        animListData.mRepeatClickBlock |= 3;
+                //    }
+                //    global::CommandManager.Instance.Do(new global::Command(delegate
+                //    {
+                //        //Custom to Preset Forms
+                //        if (_form >= 100000)
+                //        {
+                //            L.D("Case 1");
+                //            _form = animListData._buildinOldForm;
+                //            global::FormNumber.Instance.CheckDeleteInitData(oldForm, _form);
+                //        }
+                //        //Preset to Custom Forms
+                //        else
+                //        {
+                //            L.D("Case 2");
+                //            animListData._buildinOldForm = oldForm;
+                //            //_form = 100000 + animListData.dataAccessor.GetWazaData().formEditIdx;
+                //            _form = 100000 + oldForm;
+                //            L.D("oldForm: " + oldForm);
+                //            L.D("_form: " + _form);
+                //            if (_form > maxCFormID)
+                //            {
+                //                _form = maxCFormID;
+                //            }
 
-                    _p = global::AnimListData.ClampValue(oldP, _p, global::AnimListConst.PMin, global::AnimListConst.PMax, pad, self, ref animListData.mRepeatBlock, ref animListData.mRepeatClickBlock, ref repeatBlock);
-                    global::CommandManager.Instance.Do(new global::Command(delegate
-                    {
-                        if (_p != oldP)
-                        {
-                            global::AnimList.Context.selectMin = selectMin;
-                            global::AnimList.Context.selectMax = selectMax;
-                            global::AnimList.Instance.RefreshSelect();
-                            global::AnimBankSetting.Context.bank.number = _bank;
-                            global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
-                                animListData.m_form = formIdx;
-                                animListData.SetupForm();
-                                animListData.SetP(_p, true);
-                                animListData.DataUpdateP();
-                                animListData.SetupForm();
-                            change = true;
-                        }
-                    }, delegate
-                    {
-                        global::AnimList.Context.selectMin = selectMin;
-                        global::AnimList.Context.selectMax = selectMax;
-                        global::AnimList.Instance.RefreshSelect();
-                        global::AnimBankSetting.Context.bank.number = _bank;
-                        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
-                            animListData.m_form = formIdx;
-                            animListData.SetupForm();
-                            animListData.SetP(oldP, true);
-                            animListData.DataUpdateP();
-                            animListData.SetupForm();
-                    }));
-                }
+                //            //Determine whether a custom form already exists
+                //            bool formExists = false;
+                //            var instance = FormNumber.Instance;
+                //            var toolSkillData = instance.mData.GetWazaData().toolFormSaveList;
+                //            foreach (var data in toolSkillData)
+                //            {
+                //                if (data.formNo == _form)
+                //                {
+                //                    formExists = true;
+                //                }
+                               
+                //                break;
+                //            }
+
+
+                //            if (formExists)
+                //            {
+                //                L.D(_form + " exists");
+                //                instance.mData.GetWazaData().changeData = true;
+                //            }
+                //            else
+                //            {
+                //                L.D(_form + " does not exists");
+                //                instance.InitPaste(oldForm, _form);
+                //            }
+
+                //        }
+                //        if (_form != oldForm)
+                //        {
+                //            L.D("Case 3");
+                //            animListData.SetFORM(_form, true);
+                //            animListData.SetFormTextColor(animListData.GetFormTextColor());
+                //            animListData.DataUpdateFORM();
+                //            animListData.SetupForm();
+                //            change = true;
+                //        }
+                //    }, delegate
+                //    {
+                //        global::AnimList.Context.selectMin = selectMin;
+                //        global::AnimList.Context.selectMax = selectMax;
+                //        global::AnimList.Instance.RefreshSelect();
+                //        global::AnimBankSetting.Context.bank.number = _bank;
+                //        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                //        animListData.m_form = oldForm;
+                //        animListData.SetupForm();
+                //        int num8 = oldForm;
+                //        if (num8 >= 100000)
+                //        {
+                //            L.D("Case 4");
+                //            if (num8 == 100000 + formEditIdx)
+                //            {
+                //                global::FormNumber.Instance.InitPaste(animListData._buildinOldForm, num8);
+                //            }
+                //            animListData._buildinOldForm = oldBuildIn;
+                //        }
+                //        else
+                //        {
+                //            L.D("Case 5");
+                //            num8 = animListData._buildinOldForm;
+                //            global::FormNumber.Instance.CheckDeleteInitData(num8, oldForm);
+                //        }
+                //        animListData.SetFORM(num8, true);
+                //        animListData.SetFormTextColor(animListData.GetFormTextColor());
+                //        animListData.DataUpdateFORM();
+                //        animListData.SetupForm();
+                //    }, delegate
+                //    {
+                //        global::AnimList.Context.selectMin = selectMin;
+                //        global::AnimList.Context.selectMax = selectMax;
+                //        global::AnimList.Instance.RefreshSelect();
+                //        global::AnimBankSetting.Context.bank.number = _bank;
+                //        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                //        animListData.m_form = formIdx;
+                //        animListData.SetupForm();
+                //        int num8 = oldForm;
+                //        if (num8 >= 100000)
+                //        {
+                //            L.D("Case 6");
+                //            num8 = animListData._buildinOldForm;
+                //            global::FormNumber.Instance.CheckDeleteInitData(oldForm, num8);
+                //        }
+                //        else
+                //        {
+                //            L.D("Case 7");
+                //            animListData._buildinOldForm = oldForm;
+                //            //num8 = 100000 + animListData.dataAccessor.GetWazaData().formEditIdx;
+                //            num8 += 100000;
+                //            if (num8 > maxCFormID)
+                //            {
+                //                num8 = maxCFormID;
+                //            }
+                //            global::FormNumber.Instance.InitPaste(oldForm, num8);
+                //        }
+                //        if (num8 != oldForm)
+                //        {
+                //            L.D("Case 8");
+                //            animListData.SetFORM(num8, true);
+                //            animListData.SetFormTextColor(animListData.GetFormTextColor());
+                //            animListData.DataUpdateFORM();
+                //            animListData.SetupForm();
+                //            change = true;
+                //        }
+                //    }));
+                //}
                 if (check)
                 {
                     global::FormNumber.Instance.CheckAddEditIdx();
                 }
-                if (result)
+                if (change)
                 {
                     animListData.dataAccessor.GetWazaData().changeData = true;
                     global::Menu_SoundManager.Play_SE(global::Menu_SoundManager.SYSTEM_SOUND.CURSOR, global::Menu_SoundManager.PLAY_TYPE.ONCE, 1f);
@@ -1456,8 +1574,8 @@ namespace QoL_Mods.Private
         [Hook(TargetClass = "Player", TargetMethod = "CheckStartPowerCompetition", InjectionLocation = 74, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "TOS Override")]
         public static bool ReplaceTestOfStrength(Player attacker, out bool result)
         {
-            //If this method returns true, then the result should be false.
-            //Otherwise, the code will continue if this method returns false.
+            //If animListData method returns true, then the result should be false.
+            //Otherwise, the code will continue if animListData method returns false.
             result = false;
 
             try
@@ -1470,7 +1588,7 @@ namespace QoL_Mods.Private
                 Player winner = attacker;
                 Player defender = global::PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
 
-                //Determine whether this should be replaced with unique animations.
+                //Determine whether animListData should be replaced with unique animations.
                 //If the current player loses the checks, then the opponent will naturally win on the separate check.
                 //If HP and SP are equal, perform normal test of strength
                 if (defender.SP == attacker.SP && defender.HP == attacker.HP)
@@ -1556,7 +1674,7 @@ namespace QoL_Mods.Private
                     }
                 }
 
-                //Ensure that this move exists
+                //Ensure that animListData move exists
                 if (DataBase.GetSkillName((SkillID)skillID).Equals(String.Empty))
                 {
                     return false;
