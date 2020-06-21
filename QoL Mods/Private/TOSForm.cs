@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -16,6 +17,8 @@ namespace QoL_Mods.Private
         #region Variables
         private static List<Skill> moves = new List<Skill>();
         private static String saveFolderName = "./EGOData/";
+        private static String wrestlerFile = "WrestlerTOS.dat";
+        private static String styleFile = "StyleTOS.dat";
         public static TOSForm form = null;
         #endregion
         public TOSForm()
@@ -23,6 +26,13 @@ namespace QoL_Mods.Private
             InitializeComponent();
             form = this;
             tos_moveSearch.LostFocus += tos_moveSearch_LostFocus;
+            FormClosing += TOSForm_FormClosing;
+            LoadStyles();
+        }
+
+        private void TOSForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveStyles();
         }
 
         #region Move Search
@@ -33,7 +43,11 @@ namespace QoL_Mods.Private
 
         private void tos_moveReload_Click(object sender, EventArgs e)
         {
-
+            LoadStyles();
+        }
+        private void tos_moveSave_Click(object sender, EventArgs e)
+        {
+            SaveStyles();
         }
 
         private void tos_moveSearch_LostFocus(object sender, System.EventArgs e)
@@ -60,22 +74,133 @@ namespace QoL_Mods.Private
         #endregion
 
         #region Style Management
-        #endregion
+
+        private void LoadStyles()
+        {
+            try
+            {
+                tos_styles.Items.Clear();
+
+                System.String filePath = Path.Combine(saveFolderName, styleFile);
+                if (File.Exists(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    foreach (var line in lines)
+                    {
+                        TOSMoves move = new TOSMoves("");
+                        move.LoadMoves(line);
+                        tos_styles.Items.Add(move);
+                    }
+                }
+                else
+                {
+                    tos_styles.Items.Add(new TOSMoves("Orthodox"));
+                    tos_styles.Items.Add(new TOSMoves("Technician"));
+                    tos_styles.Items.Add(new TOSMoves("Wrestling"));
+                    tos_styles.Items.Add(new TOSMoves("Ground"));
+                    tos_styles.Items.Add(new TOSMoves("Power"));
+                    tos_styles.Items.Add(new TOSMoves("American"));
+                    tos_styles.Items.Add(new TOSMoves("Junior"));
+                    tos_styles.Items.Add(new TOSMoves("Luchador"));
+                    tos_styles.Items.Add(new TOSMoves("Heel"));
+                    tos_styles.Items.Add(new TOSMoves("Mysterious"));
+                    tos_styles.Items.Add(new TOSMoves("Shooter"));
+                    tos_styles.Items.Add(new TOSMoves("Fighter"));
+                    tos_styles.Items.Add(new TOSMoves("Grappler"));
+                    tos_styles.Items.Add(new TOSMoves("Panther"));
+                    tos_styles.Items.Add(new TOSMoves("Giant"));
+                    tos_styles.Items.Add(new TOSMoves("Devilism"));
+
+                }
+
+                if (tos_styles.Items.Count > 0)
+                {
+                    tos_styles.SelectedIndex = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("LoadStylesError: " + e);
+            }
+        }
+
+        private void SaveStyles()
+        {
+            try
+            {
+                System.String filePath = Path.Combine(saveFolderName, styleFile);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    foreach (TOSMoves move in tos_styles.Items)
+                    {
+                        sw.WriteLine(move.SaveMoves());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("SaveStylesError: " + e);
+            }
+
+        }
+
         private void tos_styles_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (tos_styles.Items.Count == 0 || tos_styles.SelectedItem == null)
+            {
+                return;
+            }
 
+            TOSMoves moves = (TOSMoves) tos_styles.SelectedItem;
+            tos_styleMoves.Items.Clear();
+
+            foreach (Skill skill in moves.Moves.Skills)
+            {
+                tos_styleMoves.Items.Add(skill);
+            }
+
+            if (tos_styleMoves.Items.Count > 0)
+            {
+                tos_styleMoves.SelectedIndex = 0;
+            }
         }
 
         private void tos_addStyleMove_Click(object sender, EventArgs e)
         {
+            if (tos_styles.SelectedItem == null || tos_moveResults.SelectedItem == null)
+            {
+                return;
+            }
 
+            TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
+            moves.AddMove((Skill) tos_moveResults.SelectedItem);
+            tos_styles.SelectedItem = moves;
+            tos_styles_SelectedIndexChanged(null, null);
         }
 
         private void tos_removeStyleMove_Click(object sender, EventArgs e)
         {
 
+            if (tos_styles.SelectedItem == null || tos_styleMoves.SelectedItem == null)
+            {
+                return;
+            }
+
+            TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
+            Skill skill = (Skill) tos_styleMoves.SelectedItem;
+            moves.RemoveMove(skill);
+            tos_styles.SelectedItem = moves;
+            tos_styles_SelectedIndexChanged(null, null);
         }
 
+        #endregion
+
+        #region Wrestler Management
         private void tos_addWrestler_Click(object sender, EventArgs e)
         {
 
@@ -100,6 +225,8 @@ namespace QoL_Mods.Private
         {
 
         }
+        #endregion
+
 
         #region Helper Methods
         private void LoadMoves()
@@ -107,6 +234,8 @@ namespace QoL_Mods.Private
             try
             {
                 moves.Clear();
+
+                moves.Add(new Skill("Clinch", -1));
 
                 foreach (KeyValuePair<SkillID, SkillInfo> current in SkillInfoManager.inst.skillInfoList)
                 {
@@ -134,5 +263,6 @@ namespace QoL_Mods.Private
             }
         }
         #endregion
+        
     }
 }

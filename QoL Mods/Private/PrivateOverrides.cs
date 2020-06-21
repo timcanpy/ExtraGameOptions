@@ -19,6 +19,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(PRIVATE) Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
     [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.\nIncompatible with the ModPack's Extended Move Lists.")]
+    [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "(PRIVATE) Allows players to override the Test of Strength animation with custom actions.\nIncompatible with the ModPack's Extended Move Lists.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
@@ -40,8 +41,17 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
     [FieldAccess(Class = "Data", Field = "WazaData", Group = "Waza Support")]
     [FieldAccess(Class = "ToolSettingInfo", Field = "mData", Group = "Waza Support")]
+    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
+    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
+    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
+    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
+    [FieldAccess(Class = "AnimListData", Field = "dataAccessor", Group = "Waza Support")]
+    [FieldAccess(Class = "AnimListData", Field = "mRepeatBlock", Group = "Waza Support")]
+    [FieldAccess(Class = "AnimListData", Field = "mRepeatClickBlock", Group = "Waza Support")]
+    [FieldAccess(Class = "AnimListData", Field = "m_form", Group = "Waza Support")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
+
     #endregion
 
     class PrivateOverrides
@@ -81,6 +91,18 @@ namespace QoL_Mods.Private
             }
             {
                 return DynamicHighlightsForm.highlightsForm;
+            }
+        }
+
+        [ControlPanel(Group = "TOS Override")]
+        public static Form TestOfStrengthForm()
+        {
+            if (TOSForm.form == null)
+            {
+                return new TOSForm();
+            }
+            {
+                return TOSForm.form;
             }
         }
 
@@ -1164,7 +1186,7 @@ namespace QoL_Mods.Private
             return false;
         }
 
-        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 115,
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Custom Reversals")]
         public static void ReplaceSkillWithReversal(FormAnimator animator)
@@ -1192,10 +1214,15 @@ namespace QoL_Mods.Private
         #endregion
 
         #region Waza Support
-        [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
+
+        #region Variables
+        public static int maxCFormNum = 99999;
+        #endregion
+
+        [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Waza Support")]
-        public static bool FixPreview(Menu_CraftLoadSkill craftSkill)
+        public static bool FixPreview(WazaMenu_CraftLoadSkill craftSkill)
         {
             if (craftSkill.mPreview == null)
             {
@@ -1208,22 +1235,23 @@ namespace QoL_Mods.Private
 
         }
 
-        [Hook(TargetClass = "Menu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
+        [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
             Group = "Waza Support")]
-        public static void AddCustomForms(Menu_CraftLoadSkill craftSkill, SkillID skill_id)
+        public static void AddCustomForms(WazaMenu_CraftLoadSkill craftSkill, SkillID skill_id)
         {
             try
             {
                 //Ensure that only Custom Moves are processed
                 //if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
                 //Allow moves exported in Move Craft to be processed as well
+                L.D("Checking skill: " + DataBase.GetSkillName(skill_id) + " with ID " + skill_id);
                 if ((int)skill_id >= 6660)
                 {
-
                     int index = craftSkill.mFileBank.GetSelecting();
                     var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
+
                     SkillData[] skillData = SkillDataMan.inst.GetSkillData(skill_id);
                     L.D("Adding custom forms for " + DataBase.GetSkillName(skill_id));
                     foreach (var skill in skillData)
@@ -1236,14 +1264,19 @@ namespace QoL_Mods.Private
                             for (int j = 0; j < anmData.formNum; j++)
                             {
                                 var formDispList = anmData.formDispList[j];
+
                                 //Ensure that the Custom ID matches the Preset ID
-                                //int formIdx = formDispList.formIdx;
                                 int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
+
+                                //Necessary to ensure that the upper limit for created custom forms is properly set.
+                                if (formIdx > craftSkill.mData.WazaData[index].formEditIdx)
+                                {
+                                    craftSkill.mData.WazaData[index].formEditIdx = formIdx;
+                                }
+
 
                                 //All custom forms begin at 100000
                                 //Ensure that we are loading existing custom form indexes, where applicable
-                                //L.D("Adding form " + formIdx + " at line " + j);
-
                                 if (formIdx < 100000)
                                 {
                                     formIdx += 100000;
@@ -1252,6 +1285,8 @@ namespace QoL_Mods.Private
                                 ToolFormSaveData saveData =
                                     new ToolFormSaveData(formDispList.formPartsList, formIdx);
                                 saveList.Add(saveData);
+
+                                //saveList[formIdx] = saveData;
                             }
                         }
                     }
@@ -1263,146 +1298,296 @@ namespace QoL_Mods.Private
             }
         }
 
-        //[Hook(TargetClass = "ToolSettingInfo", TargetMethod = "AddSaveList", InjectionLocation = 29,
-        //    InjectDirection = HookInjectDirection.Before,
-        //    InjectFlags = HookInjectFlags.PassParametersRef, Group = "Waza Support")]
-        //public static void SetCustomIDs(ref ToolSkillData data, ref int uniqueID)
-        //{
+        //Ensure that we can navigate beyond the hard-coded upper limit
+        [Hook(TargetClass = "AnimListData", TargetMethod = "AddValue", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn | HookInjectFlags.PassParametersVal,
+            Group = "Waza Support")]
+        public static bool IncreaseMaxCFormLimit(AnimListData animListData, out bool result, string name, int diff, bool pad, bool self, ref int repeatBlock)
+        {
+            result = false;
+            bool change = false;
 
-        //    //Checking file for existing move
-        //    String idFileName = "CustomMoveIDs.dat";
-        //    String idPath = Path.Combine(Directory.GetCurrentDirectory(), idFileName);
+            try
+            {
+                bool check = true;
+                int _bank = global::AnimBankSetting.Context.bank.number;
+                int anmBankNo = global::AnimBankSetting.Context.GetSelectAnimNo();
+                int selectMin = global::AnimList.Context.selectMin;
+                int selectMax = global::AnimList.Context.selectMax;
+                
+                List<String> validFormOps = new List<String> { "FORM1", "FORM10", "FORM100", "FORM1000", "FORM10000" };
+                if (!validFormOps.Contains(name) && !name.Equals("P"))
+                {
+                    return result;
+                }
+                else if (validFormOps.Contains(name))
+                {
+                    int preForm = animListData.GetFORM();
+                    int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= maxCFormNum) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 100000 + maxCFormNum);
+                    //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
+                    //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((this.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (this.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
+                    L.D("Max: " + max);
+                    L.D("Diff: " + diff);
 
-        //    if (File.Exists(idPath))
-        //    {
-        //        try
-        //        {
-        //            var lines = File.ReadAllLines(idPath);
-        //            foreach (var line in lines)
-        //            {
-        //                var properties = line.Split(':');
-        //                if (data.nameEN.Equals(properties[0]))
-        //                {
-        //                    L.D(data.nameEN + " has a custom ID - " + properties[1]);
-        //                    Int32.TryParse(properties[1], out uniqueID);
-        //                    break;
-        //                }
-        //            }
+                    //Get value for the _form calculation
+                    string formValue = name.Substring(4);
+                    Int32.TryParse(formValue, out int value);
 
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            L.D("SetCustomIDException: " + e);
-        //        }
-        //    }
+                    int _form = global::AnimListData.CalcFormNo(preForm, diff * value, self, pad, max, ref animListData.mRepeatBlock, ref animListData.mRepeatClickBlock, ref repeatBlock);
 
-        //    L.D("Current move (" + data.nameEN + ") uses ID # " + uniqueID);
-        //}
+                    L.D("Form Number: " + _form);
+
+                    global::CommandManager.Instance.Do(new global::Command(delegate
+                    {
+                        change = animListData.SetFORM(_form, true);
+                        if (diff > 0 || max == _form)
+                        {
+                            check = false;
+                        }
+                        if (change)
+                        {
+                            global::FormNumber.Instance.CheckDeleteInitData(preForm, _form);
+                            animListData.SetFormTextColor(animListData.GetFormTextColor());
+                            animListData.DataUpdateFORM();
+                            animListData.SetupForm();
+                        }
+                    }, delegate
+                    {
+                        global::AnimList.Context.selectMin = selectMin;
+                        global::AnimList.Context.selectMax = selectMax;
+                        global::AnimList.Instance.RefreshSelect();
+                        global::AnimBankSetting.Context.bank.number = _bank;
+                        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                        animListData.m_form = _form;
+                        animListData.SetupForm();
+                        change = animListData.SetFORM(preForm, true);
+                        if (change)
+                        {
+                            animListData.SetFormTextColor(animListData.GetFormTextColor());
+                            animListData.DataUpdateFORM();
+                            animListData.SetupForm();
+                        }
+                    }, delegate
+                    {
+                        global::AnimList.Context.selectMin = selectMin;
+                        global::AnimList.Context.selectMax = selectMax;
+                        global::AnimList.Instance.RefreshSelect();
+                        global::AnimBankSetting.Context.bank.number = _bank;
+                        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                        animListData.m_form = preForm;
+                        animListData.SetupForm();
+                        change = animListData.SetFORM(_form, true);
+                        if (change)
+                        {
+                            global::FormNumber.Instance.CheckDeleteInitData(preForm, _form);
+                            animListData.SetFormTextColor(animListData.GetFormTextColor());
+                            animListData.DataUpdateFORM();
+                            animListData.SetupForm();
+                        }
+                    }));
+                }
+                else if (name.Equals("P"))
+                {
+                    int oldP = animListData.GetP();
+                    int _p = oldP + diff;
+                    int formIdx = animListData.GetFORM();
+                    L.D("oldP: " + oldP);
+                    L.D("_p: " + _p);
+                    L.D("formIdx: " + formIdx);
+
+                    _p = global::AnimListData.ClampValue(oldP, _p, global::AnimListConst.PMin, global::AnimListConst.PMax, pad, self, ref animListData.mRepeatBlock, ref animListData.mRepeatClickBlock, ref repeatBlock);
+                    global::CommandManager.Instance.Do(new global::Command(delegate
+                    {
+                        if (_p != oldP)
+                        {
+                            global::AnimList.Context.selectMin = selectMin;
+                            global::AnimList.Context.selectMax = selectMax;
+                            global::AnimList.Instance.RefreshSelect();
+                            global::AnimBankSetting.Context.bank.number = _bank;
+                            global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                                animListData.m_form = formIdx;
+                                animListData.SetupForm();
+                                animListData.SetP(_p, true);
+                                animListData.DataUpdateP();
+                                animListData.SetupForm();
+                            change = true;
+                        }
+                    }, delegate
+                    {
+                        global::AnimList.Context.selectMin = selectMin;
+                        global::AnimList.Context.selectMax = selectMax;
+                        global::AnimList.Instance.RefreshSelect();
+                        global::AnimBankSetting.Context.bank.number = _bank;
+                        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
+                            animListData.m_form = formIdx;
+                            animListData.SetupForm();
+                            animListData.SetP(oldP, true);
+                            animListData.DataUpdateP();
+                            animListData.SetupForm();
+                    }));
+                }
+                if (check)
+                {
+                    global::FormNumber.Instance.CheckAddEditIdx();
+                }
+                if (result)
+                {
+                    animListData.dataAccessor.GetWazaData().changeData = true;
+                    global::Menu_SoundManager.Play_SE(global::Menu_SoundManager.SYSTEM_SOUND.CURSOR, global::Menu_SoundManager.PLAY_TYPE.ONCE, 1f);
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("IncreaseMaxCFormLimitException: " + e);
+                return result;
+            }
+
+            result = change;
+            return result;
+
+        }
 
         #endregion
 
         #region Test Of Strength Override
 
         //Attacker freezes up when executing the move.
-        //[Hook(TargetClass = "Player", TargetMethod = "CheckStartPowerCompetition", InjectionLocation = 74, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "ExtraFeatures")]
-        //public static bool ReplaceTestOfStrength(Player attacker, out bool result)
-        //{
-        //    //If this method returns true, then the result should be false.
-        //    //Otherwise, the code will continue if this method returns false.
-        //    result = false;
+        [Hook(TargetClass = "Player", TargetMethod = "CheckStartPowerCompetition", InjectionLocation = 74, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "TOS Override")]
+        public static bool ReplaceTestOfStrength(Player attacker, out bool result)
+        {
+            //If this method returns true, then the result should be false.
+            //Otherwise, the code will continue if this method returns false.
+            result = false;
 
-        //    try
-        //    {
-        //        if (!attacker || tosMoves.Length == 0)
-        //        {
-        //            return false;
-        //        }
+            try
+            {
+                if (!attacker)
+                {
+                    return false;
+                }
 
-        //        var style = attacker.WresParam.fightStyle;
+                Player winner = attacker;
+                Player defender = global::PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
 
-        //        //Certain styles ignore the replacement
-        //        if (style == FightStyleEnum.Giant || style == FightStyleEnum.Power ||
-        //            style == FightStyleEnum.Devilism || style == FightStyleEnum.Heel)
-        //        {
-        //            return false;
-        //        }
+                //Determine whether this should be replaced with unique animations.
+                //If the current player loses the checks, then the opponent will naturally win on the separate check.
+                //If HP and SP are equal, perform normal test of strength
+                if (defender.SP == attacker.SP && defender.HP == attacker.HP)
+                {
+                    return false;
+                }
 
-        //        //Determine whether this should be replaced with unique animations.
-        //        Player defender = global::PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
+                if (defender.SP == attacker.SP)
+                {
+                    if (defender.HP > attacker.HP)
+                    {
+                        return false;
+                    }
+                }
+                else if (defender.SP > attacker.SP)
+                {
+                    return false;
+                }
 
-        //        //If HP and SP are equal, perform normal test of strength
-        //        if (defender.SP == attacker.SP && defender.HP == attacker.HP)
-        //        {
-        //            return false;
-        //        }
+                List<Skill> tosMoves = new List<Skill>();
 
-        //        int winner = attacker.PlIdx;
-        //        if (defender.SP == attacker.SP)
-        //        {
-        //            if (defender.HP > attacker.HP)
-        //            {
-        //                winner = defender.PlIdx;
-        //            }
-        //        }
-        //        else if (defender.SP > attacker.SP)
-        //        {
-        //            winner = defender.PlIdx;
-        //        }
+                //Determine whether we should pull from the Wrestler or Style list
+                String style = winner.WresParam.fightStyle.ToString();
+                String name = DataBase.GetWrestlerFullName(winner.WresParam);
 
-        //        //Ensure that the replacement is randomized
-        //        int rngValue = UnityEngine.Random.Range(1, 11);
-        //        if (rngValue > 8)
-        //        {
-        //            L.D("Failed TOS replacement attempt: " + rngValue);
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            L.D("Success TOS replacement attempt: " + rngValue);
-        //        }
+                L.D("Wrestler is " + name + ".\nStyle is " + style);
 
-        //        Player player = PlayerMan.inst.GetPlObj(winner);
+                foreach (TOSMoves move in TOSForm.form.tos_wrestlers.Items)
+                {
+                    L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
+                    if (move.Name.Trim().Equals(name))
+                    {
+                        L.D("Match found");
+                        tosMoves = move.Skills;
+                        break;
+                    }
+                }
 
-        //        //Shoot Fighters must clinch
-        //        if (style == FightStyleEnum.Fighter || style == FightStyleEnum.Ground ||
-        //            style == FightStyleEnum.Grappler || style == FightStyleEnum.Shooter ||
-        //            style == FightStyleEnum.Wrestling)
-        //        {
-        //            player.ChangeState(global::PlStateEnum.NormalAnm);
-        //            player.animator.ReqBasicAnm(global::BasicSkillEnum.S1_Substitution_FrontHold, true,
-        //                player.TargetPlIdx);
-        //            return true;
-        //        }
+                if (tosMoves.Count == 0)
+                {
+                    L.D("No wrestler move found");
+                    foreach (TOSMoves move in TOSForm.form.tos_styles.Items)
+                    {
+                        L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
+                        if (move.Name.Trim().Equals(style))
+                        {
+                            L.D("Match found");
+                            tosMoves = move.Skills;
+                            break;
+                        }
+                    }
+                }
 
-        //        int skillID = tosMoves[UnityEngine.Random.Range(0, tosMoves.Length)];
+                if (tosMoves.Count == 0)
+                {
+                    L.D("No style move found");
+                    return false;
+                }
 
-        //        player.animator.AnmReqType = AnmReqTypeEnum.SkillID;
-        //        global::SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
+                //Ensure that the replacement is randomized
+                int rngValue = UnityEngine.Random.Range(1, 11);
+                if (rngValue > 8)
+                {
+                    L.D("Failed TOS replacement attempt: " + rngValue);
+                    return false;
+                }
+                else
+                {
+                    L.D("Success TOS replacement attempt: " + rngValue);
+                }
 
-        //        //Ensure that both players return to neutral position
-        //        attacker.ChangeState(global::PlStateEnum.NormalAnm);
-        //        defender.ChangeState(global::PlStateEnum.NormalAnm);
+                int skillID = tosMoves[UnityEngine.Random.Range(0, tosMoves.Count)].SkillID;
 
-        //        //Ensure we're handling skill data correctly
-        //        if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
-        //        {
-        //            player.lastSkill = SkillSlotEnum.Grapple_X;
-        //        }
+                //Handle the Clinch action
+                if (skillID == -1)
+                {
+                    {
+                        winner.ChangeState(global::PlStateEnum.NormalAnm);
+                        winner.animator.ReqBasicAnm(global::BasicSkillEnum.S1_Substitution_FrontHold, true,
+                            winner.TargetPlIdx);
 
-        //        player.animator.CurrentSkill = skillData;
-        //        //moveData[player.PlIdx] = skillData;
-        //        player.animator.InitAnimation();
-        //        player.lastSkillHit = true;
+                        return true;
+                    }
+                }
 
-        //        return true;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        L.D("ReplaceTestOfStrengthException: " + e);
-        //        return false;
-        //    }
+                //Ensure that this move exists
+                if (DataBase.GetSkillName((SkillID)skillID).Equals(String.Empty))
+                {
+                    return false;
+                }
 
-        //}
+                winner.animator.AnmReqType = AnmReqTypeEnum.SkillID;
+                global::SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
+
+                //Ensure that both players return to neutral position
+                attacker.ChangeState(global::PlStateEnum.NormalAnm);
+                defender.ChangeState(global::PlStateEnum.NormalAnm);
+
+                //moveData[winner.PlIdx] = skillData;
+
+                var skillSlot = SkillSlotEnum.Grapple_X;
+
+                winner.lastSkill = skillSlot;
+
+                winner.WresParam.skillSlot[(int)skillSlot] = (SkillID)skillID;
+                winner.animator.ReqSlotAnm(skillSlot, false, -1, true);
+                winner.lastSkillHit = true;
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                L.D("ReplaceTestOfStrengthException: " + e);
+                return false;
+            }
+
+        }
 
         #endregion
 
@@ -1682,6 +1867,7 @@ namespace QoL_Mods.Private
             result = true;
             return result;
         }
+
         #endregion
     }
 }

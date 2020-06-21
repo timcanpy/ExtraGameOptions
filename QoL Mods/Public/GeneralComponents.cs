@@ -830,7 +830,7 @@ namespace QoL_Mods
             }
         }
 
-        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 115,
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Recovery Taunts")]
         public static void ReplaceCurrentSkill(FormAnimator animator)

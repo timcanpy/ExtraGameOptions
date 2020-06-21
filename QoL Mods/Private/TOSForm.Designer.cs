@@ -58,6 +58,7 @@
             this.tos_addWrestler = new System.Windows.Forms.Button();
             this.label61 = new System.Windows.Forms.Label();
             this.tos_wrestlerResults = new System.Windows.Forms.ComboBox();
+            this.tos_moveSave = new System.Windows.Forms.Button();
             this.panel20.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -70,6 +71,7 @@
             // 
             this.panel20.BackColor = System.Drawing.Color.White;
             this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel20.Controls.Add(this.tos_moveSave);
             this.panel20.Controls.Add(this.tos_moveReload);
             this.panel20.Controls.Add(this.tos_moveRefresh);
             this.panel20.Controls.Add(this.tos_moveResults);
@@ -205,9 +207,9 @@
             // 
             this.tos_styleMoves.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tos_styleMoves.FormattingEnabled = true;
-            this.tos_styleMoves.Location = new System.Drawing.Point(213, 47);
+            this.tos_styleMoves.Location = new System.Drawing.Point(163, 47);
             this.tos_styleMoves.Name = "tos_styleMoves";
-            this.tos_styleMoves.Size = new System.Drawing.Size(168, 21);
+            this.tos_styleMoves.Size = new System.Drawing.Size(257, 21);
             this.tos_styleMoves.Sorted = true;
             this.tos_styleMoves.TabIndex = 38;
             // 
@@ -298,9 +300,9 @@
             // 
             this.tos_wrestlerMoves.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tos_wrestlerMoves.FormattingEnabled = true;
-            this.tos_wrestlerMoves.Location = new System.Drawing.Point(225, 105);
+            this.tos_wrestlerMoves.Location = new System.Drawing.Point(197, 105);
             this.tos_wrestlerMoves.Name = "tos_wrestlerMoves";
-            this.tos_wrestlerMoves.Size = new System.Drawing.Size(168, 21);
+            this.tos_wrestlerMoves.Size = new System.Drawing.Size(227, 21);
             this.tos_wrestlerMoves.Sorted = true;
             this.tos_wrestlerMoves.TabIndex = 17;
             // 
@@ -308,9 +310,9 @@
             // 
             this.tos_wrestlers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.tos_wrestlers.FormattingEnabled = true;
-            this.tos_wrestlers.Location = new System.Drawing.Point(225, 44);
+            this.tos_wrestlers.Location = new System.Drawing.Point(197, 44);
             this.tos_wrestlers.Name = "tos_wrestlers";
-            this.tos_wrestlers.Size = new System.Drawing.Size(168, 21);
+            this.tos_wrestlers.Size = new System.Drawing.Size(227, 21);
             this.tos_wrestlers.TabIndex = 18;
             this.tos_wrestlers.SelectedIndexChanged += new System.EventHandler(this.tos_wrestlers_SelectedIndexChanged);
             // 
@@ -397,6 +399,17 @@
             this.tos_wrestlerResults.Size = new System.Drawing.Size(168, 21);
             this.tos_wrestlerResults.TabIndex = 15;
             // 
+            // tos_moveSave
+            // 
+            this.tos_moveSave.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tos_moveSave.Location = new System.Drawing.Point(41, 183);
+            this.tos_moveSave.Name = "tos_moveSave";
+            this.tos_moveSave.Size = new System.Drawing.Size(99, 23);
+            this.tos_moveSave.TabIndex = 17;
+            this.tos_moveSave.Text = "Save Data";
+            this.tos_moveSave.UseVisualStyleBackColor = true;
+            this.tos_moveSave.Click += new System.EventHandler(this.tos_moveSave_Click);
+            // 
             // TOSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -406,7 +419,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel20);
             this.Name = "TOSForm";
-            this.Text = "Test Of Strength";
+            this.Text = "Custom Tests Of Strength";
             this.panel20.ResumeLayout(false);
             this.panel20.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -454,5 +467,6 @@
         private System.Windows.Forms.Button tos_addStyleMove;
         private System.Windows.Forms.Button tos_removeWrestlerMove;
         private System.Windows.Forms.Button tos_addWrestlerMove;
+        private System.Windows.Forms.Button tos_moveSave;
     }
 }

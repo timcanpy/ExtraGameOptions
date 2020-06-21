@@ -31,7 +31,7 @@ namespace QoL_Mods
             wu_wrestlerSearch.LostFocus += wu_wrestlerSearch_LostFocus;
             wu_moveSearch.LostFocus += wu_wrestlerSearch_LostFocus;
         }
-        
+
         private void RecoveryForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveRecoveryTaunts();
@@ -85,29 +85,27 @@ namespace QoL_Mods
             filePath = CheckSaveFile("WrestlerWT");
             if (File.Exists(filePath))
             {
-                using (StreamReader sr = new StreamReader(filePath))
+                var lines = File.ReadAllLines(filePath);
+                foreach (String style in lines)
                 {
-                    var lines = File.ReadAllLines(filePath);
-                    foreach (String style in lines)
-                    {
-                        WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
+                    WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
 
-                        try
-                        {
-                            taunt.LoadWakeUpData(style, validTaunts);
-                            wu_wrestlers.Items.Add(taunt);
-                        }
-                        catch (Exception ex)
-                        {
-                            L.D("WakeUpTaunt Load Error:" + ex);
-                        }
+                    try
+                    {
+                        taunt.LoadWakeUpData(style, validTaunts);
+                        wu_wrestlers.Items.Add(taunt);
                     }
-
-                    if (wu_wrestlers.Items.Count > 0)
+                    catch (Exception ex)
                     {
-                        wu_wrestlers.SelectedIndex = 0;
+                        L.D("WakeUpTaunt Load Error:" + ex);
                     }
                 }
+
+                if (wu_wrestlers.Items.Count > 0)
+                {
+                    wu_wrestlers.SelectedIndex = 0;
+                }
+
             }
 
             SetValidMoves();
@@ -253,7 +251,7 @@ namespace QoL_Mods
             {
                 L.D("TESTEXCEPTION:" + ex);
             }
-          
+
         }
 
         private void wu_wrestlerResults_SelectedIndexChanged(object sender, EventArgs e)
@@ -543,7 +541,7 @@ namespace QoL_Mods
                         else
                         {
                             wakeUpSkills.Add(new Skill(DataBase.GetSkillName(current.Key), (Int32)current.Key));
-                            L.D("Added move " + DataBase.GetSkillName(current.Key) + " with " + (Int32)current.Key); 
+                            L.D("Added move " + DataBase.GetSkillName(current.Key) + " with " + (Int32)current.Key);
                         }
                     }
                 }
