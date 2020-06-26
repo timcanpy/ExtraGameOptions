@@ -1593,6 +1593,7 @@ namespace QoL_Mods.Private
                 //If HP and SP are equal, perform normal test of strength
                 if (defender.SP == attacker.SP && defender.HP == attacker.HP)
                 {
+                    L.D("TOSFail: Defender HP = Attacker");
                     return false;
                 }
 
@@ -1600,11 +1601,13 @@ namespace QoL_Mods.Private
                 {
                     if (defender.HP > attacker.HP)
                     {
+                        L.D("TOSFail: Defender HP > Attacker");
                         return false;
                     }
                 }
                 else if (defender.SP > attacker.SP)
                 {
+                    L.D("TOSFail: Defender SP > Attacker");
                     return false;
                 }
 

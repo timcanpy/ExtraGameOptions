@@ -1,6 +1,7 @@
 ﻿using DG;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -25,12 +26,191 @@ namespace WazaSupport
         //ViewThePhenom
         //DakotaK
         //JamesRah
+        //ihaQ
 
         public static List<String> steamIDs = new List<String>
         {
             "76561198100955117",
             "76561197966612994",
-                "76561198451263822"
+                "76561198451263822",
+                    "76561198202550973"
+        };
+
+        public static List<String> fp2Moves = new List<String>
+        {
+            "Alternating Lariats",
+            "Arm Trap Chop & Kesagiri Chop",
+            "Arm Trap Chop",
+            "Avalanche Half-Nelson Suplex",
+            "Black Crush",
+            "Burning Hammer C. Roll",
+            "Burning Lariat C. Axehandle",
+            "Burning Lariat",
+            "Burning Sword",
+            "Chest Chop & Kesagiri Chop 1",
+            "Chest Chop & Kesagiri Chop 2",
+            "Chest Chop & Kesagiri Chop 3",
+            "Clashing Lariats",
+            "Dangerous Chop Combination",
+            "Dangerous Chop",
+            "Diamond Head",
+            "Elbow Rush & Back Switch",
+            "Elbow Rush",
+            "Enzui Fierce Chop",
+            "Falling Chop",
+            "Fierce Chop & Back Switch",
+            "Fierce Chop",
+            "Fighting Spirit Backdrop",
+            "Fighting Spirit German Suplex",
+            "Head Pickup Lariat B",
+            "Head Pickup Lariat C. Cyclone Whip",
+            "Head Pickup Lariat C. Duck",
+            "Head Pickup Lariat C. Exploder",
+            "Lifting Head Pickup Lariat",
+            "Machinegun Chop Rush A",
+            "Machinegun Chop Rush B",
+            "Orange Crush B",
+            "Pickup Sleeper Suplex",
+            "Punching Lariat B",
+            "Quick Chop Combo Fierce",
+            "Quick Chop Combo Spinning",
+            "Rebound Sleeper Suplex",
+            "Revenge Chop",
+            "Rolling Chop & Back Switch",
+            "Rolling Chop",
+            "Rolling Chop 2",
+            "Three Chop Combination",
+            "Top Rope Moonsault Press",
+            "Turnbuckle Burning Sword",
+            "Wrist Clutch Burning Hammer",
+            "Running Phenomenal Kneedrop",
+                "Turnbuckle Snap Suplex",
+                "Phenomenal Lariat",
+                "Pumphandle Gutbuster",
+                "Phenomenal Blitz",
+                "Torturerack Spinning Bomb",
+                "Phenomenal Forearm",
+                "Outside Phenomenal Forearm",
+                "Slingshot Forearm",
+                "Phenomenal DDT",
+                "Pele",
+                "Phenomenal Blitz Pele",
+                "Kip Up Rana",
+                "Corner Pele",
+                "Back Suplex Pele",
+                "Phenomenal Kneedrop",
+                "Back Suplex Facebuster",
+                "Snap Body Buster",
+                "Tiger Body Buster",
+                "Avalanche Body Buster",
+                "Rolling Body Buster",
+                "Deadlift Body Buster",
+                "Jackknife Body Buster",
+                "R.T. Body Buster",
+                "Styles Suplex Combo",
+                "Cliffhanger",
+                "Spiral Tap",
+                "Brainbuster Neckbreaker",
+                "Backbreaker & Gutbuster",
+                "Reverse Tombstone & Body Buster",
+                "Rolling Calf Killer",
+                "Calf Killer",
+                "Body Buster Combo EX",
+                "Body Buster Backdrop Counter",
+                "Phenomenal Blitz Forearm Counter",
+                "Phenomenal Blitz German Counter",
+                "Body Buster Trip Counter",
+                "Body Buster Rana Counter",
+                "Pele Dodge Counter",
+            "Dangerous Monkey Flip",
+            "Rebound Cyclone Whip",
+            "Slingshot Head-Scissors",
+            "Run Up & Apron",
+            "Cartwheel Poison-Rana",
+            "Somersault Guillotine Drop",
+            "Twisting Moonsault Fall",
+            "Rolling Senton Atomico",
+            "Cartwheel Clutch",
+            "Run Up Poison-Rana",
+            "Double-Spring Moonsault",
+            "Rolling Rana Clutch",
+            "Tilta-Tornado-DDT",
+            "Molly Go Round",
+            "Gori Backslide",
+            "Cyclone Backstabber",
+            "Swan Dive Swinging Rana",
+            "Tiltawhirl Stunner",
+            "Arm Whip 2",
+            "Arm Whip 3",
+            "Arm Wrench Arm Whip",
+            "Counter Arm Drag (Powerbomb)",
+            "Counter Hammerlock",
+            "Cyclone Whip B",
+            "Force Chest Slap",
+            "Force Chest Slap B",
+            "Frankensteiner Whip Reversal",
+            "Hammerlock to BackMount",
+            "Hammerlock",
+            "Headlock (BackMount)",
+            "Hesitation Dropkick",
+            "Low Dropkick 2",
+            "Pick Opp. Up 2",
+            "Rollup Pin (FrontGrapple)",
+            "Rollup Pin (FrontGrapple) Counter 1",
+            "Rollup Pin (FrontGrapple) Counter 2",
+            "Rollup Pin (FrontGrapple) Counter 3",
+            "Runup Arm Drag",
+            "Standing Wristlock",
+            "Test of Strength (Body Press)",
+            "Test of Strength (Counter)",
+            "Test of Strength (Counter Monkey Flip)",
+            "Test of Strength (Monkey Flip)",
+            "Twisting Wristlock",
+            "Tiltawhirl Arm Drag",
+            "Twisting Arm Drag",
+            "Wristlock Counter 1",
+            "Wristlock Counter 2",
+            "Wristlock Counter 3",
+            "Wristlock Counter 4",
+            "Dash Start",
+            "Run Up Stunner",
+            "Run Up Corbata",
+            "Quebradoracongiro",
+            "Rolling Hina Tonic",
+            "Fake Muscle Revenger",
+            "Sobat B",
+            "De javu",
+            "De javu B",
+            "Spread Wing",
+            "Strike Back",
+            "Back Mount Hammerfists",
+            "Back Mount Hammerfists B",
+            "Belly-to-Belly B",
+            "Body Knees Pin Down",
+            "Crown Knee Kick B",
+            "Deadlift Gutwrench",
+            "Double Leg Slam",
+            "Double Leg Slam B",
+            "Fireman's Carry Spike",
+            "Floatover Body Choke Sleeper",
+            "Floatover Cross Armbreaker",
+            "Guard Cross Kneebreaker",
+            "Gutwrench",
+            "Gutwrench B",
+            "Judo Throw",
+            "Mount Elbows",
+            "Mount Elbows B",
+            "Mount Hammerfists",
+            "Mount Hammerfists B",
+            "Pin Down Original Powerbomb",
+            "Pinned Omoplata Crossface",
+            "Power Double Leg",
+            "Power Double Leg B",
+            "Pride Soccer Kick",
+            "Pride Soccer Kick B",
+            "Quick Double Leg",
+            "Roll to Guard",
+            "Sweeping Hip Toss Armbar",
         };
         
     public static String userID = Steamworks.SteamUser.GetSteamID().ToString();
@@ -76,9 +256,25 @@ namespace WazaSupport
 
                 //Ensure that only Custom Moves are processed
                 //Allow moves exported in Move Craft to be processed as well
-                L.D("Checking skill: " + DataBase.GetSkillName(skill_id) + " with ID " + skill_id);
-                if ((int)skill_id >= 6660)
+                if ((int)skill_id >= 6660 && (int)skill_id <= 10000)
                 {
+
+                    //Ensure that ONLY moves current in the LoadOrder.dat file can be used.
+                    //This version of the tool is meant for converting Byte files into the new format ONLY
+                    if (userID.Equals("76561198451263822")) //Covering our bases
+                    {
+                        if (!IsInLoadOrder(DataBase.GetSkillName(skill_id)))
+                        {
+                            return;
+                        }
+                    }
+
+                    //Ensure that FP2 Move Pack release moves cannot be used
+                    if (IsFp2Move(DataBase.GetSkillName(skill_id)))
+                    {
+                        return;
+                    }
+
                     int index = craftSkill.mFileBank.GetSelecting();
                     var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
 
@@ -249,6 +445,42 @@ namespace WazaSupport
             result = change;
             return result;
 
+        }
+
+
+        public static bool IsInLoadOrder(String name)
+        {
+
+            String loadOrderPath = Path.Combine(Directory.GetCurrentDirectory(), "NewMoves"); ;
+            loadOrderPath = Path.Combine(loadOrderPath, "LoadOrder.dat");
+            if (File.Exists(loadOrderPath))
+            {
+                var installedMoves = File.ReadAllLines(loadOrderPath);
+                foreach (var line in installedMoves)
+                {
+                    var items = line.Split('/');
+                    var move = items[items.Length - 1].Replace(".move", "");
+                    if (name.Equals(move))
+                    {
+                        L.D(name + " is valid");
+                        return true;
+                    }
+                }
+            }
+
+            L.D(name + " is invalid");
+            return false;
+        }
+
+        public static bool IsFp2Move(String name)
+        {
+            if (fp2Moves.Contains(name))
+            {
+                L.D(name + " cannot be used");
+                return true;
+            }
+
+            return false;
         }
 
         #endregion
