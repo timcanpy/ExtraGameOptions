@@ -18,8 +18,8 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(PRIVATE) Allows players to override the default Face Lock attack with custom actions.\nIncompatible with the ModPack's Extended Move Lists.")]
     [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(PRIVATE) Lower stamina increases the chance that a defender will reverse moves.")]
     [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
-    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.\nIncompatible with the ModPack's Extended Move Lists.")]
-    [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "(PRIVATE) Allows players to override the Test of Strength animation with custom actions.\nIncompatible with the ModPack's Extended Move Lists.")]
+    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
+    [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "(PRIVATE) Allows players to override the Test of Strength animation with custom actions.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
@@ -116,6 +116,7 @@ namespace QoL_Mods.Private
         public static SlotStorage[] flSlotStorage = new SlotStorage[8];
         public static SkillSlotEnum[] safeCritSlot = new SkillSlotEnum[8];
         public static String finishingMove = "";
+        public static SkillID faceLockSkill = (SkillID)0;
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
@@ -364,8 +365,9 @@ namespace QoL_Mods.Private
                     }
 
                     SkillID currentSkill = attacker.WresParam.skillSlot[(int)slotEnum];
+                    faceLockSkill = (SkillID)moveset.CustomSkills[damageLevel].SkillID;
                     attacker.WresParam.skillSlot[(int)slotEnum] = (SkillID)moveset.CustomSkills[damageLevel].SkillID;
-                    attacker.animator.ReqSlotAnm(slotEnum, false, -1, true);
+                    attacker.animator.ReqSlotAnm(slotEnum, false, defender.PlIdx, true);
                     attacker.lastSkillHit = true;
 
 
@@ -396,6 +398,8 @@ namespace QoL_Mods.Private
         {
             try
             {
+                faceLockSkill = 0;
+
                 if (!player)
                 {
                     return;
@@ -458,6 +462,51 @@ namespace QoL_Mods.Private
             {
                 L.D("SetLastSkillHit_FacelockError: " + e);
             }
+        }
+
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 2,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "Face Lock")]
+        public static void VerifyFLMove(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
+        {
+            try
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(animator.plObj.PlIdx);
+
+                if (!plObj)
+                {
+                    return;
+                }
+
+                if (faceLockSkill == 0)
+                {
+                    return;
+                }
+
+                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                {
+                    L.D("Verifying FaceLock Replacement");
+                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
+                    L.D("Replacemtn Skill: " + DataBase.GetSkillName(faceLockSkill));
+
+                    if (faceLockSkill != plObj.WresParam.skillSlot[(int)skill_slot])
+                    {
+                        L.D("Skills do not match.");
+                        plObj.WresParam.skillSlot[(int)skill_slot] = faceLockSkill;
+                    }
+                    else
+                    {
+                        L.D("Skills match");
+                    }
+
+                    faceLockSkill = 0;
+
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("VerifyFLMoveException: " + e);
+            }
+
         }
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Face Lock")]
@@ -1016,6 +1065,7 @@ namespace QoL_Mods.Private
         public static int maxReversalChance = 50;
         public static SkillData[] moveData;
         public static SlotStorage[] rvSlotStorage = new SlotStorage[8];
+        public static SkillID reversalSkill = 0;
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
@@ -1048,6 +1098,7 @@ namespace QoL_Mods.Private
         {
             try
             {
+                reversalSkill = 0;
                 if (!player)
                 {
                     return;
@@ -1148,6 +1199,7 @@ namespace QoL_Mods.Private
                     int skillID = move.ID;
                     SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
                     L.D("Replaced " + skillName + " with " + DataBase.GetSkillName((SkillID)skillID));
+                    reversalSkill = (SkillID)skillID;
 
                     skillSlotEnum = ChooseSkillSlot(skillSlotEnum);
 
@@ -1185,6 +1237,51 @@ namespace QoL_Mods.Private
             }
 
             return false;
+        }
+
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 2,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "Custom Reversals")]
+        public static void VerifyReversalMove(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
+        {
+            try
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(animator.plObj.PlIdx);
+
+                if (!plObj)
+                {
+                    return;
+                }
+
+                if (reversalSkill == 0)
+                {
+                    return;
+                }
+
+                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                {
+                    L.D("Verifying Reversal Replacement");
+                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
+                    L.D("Replacemtn Skill: " + DataBase.GetSkillName(reversalSkill));
+
+                    if (reversalSkill != plObj.WresParam.skillSlot[(int)skill_slot])
+                    {
+                        L.D("Skills do not match.");
+                        plObj.WresParam.skillSlot[(int)skill_slot] = reversalSkill;
+                    }
+                    else
+                    {
+                        L.D("Skills match");
+                    }
+
+                    reversalSkill = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("VerifyReversalMoveException: " + e);
+                reversalSkill = 0;
+            }
+
         }
 
         [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
@@ -1451,7 +1548,7 @@ namespace QoL_Mods.Private
                 //                {
                 //                    formExists = true;
                 //                }
-                               
+
                 //                break;
                 //            }
 
@@ -1570,16 +1667,53 @@ namespace QoL_Mods.Private
 
         #region Test Of Strength Override
 
-        //Attacker freezes up when executing the move.
+        #region Variables
+
+        public static SkillID tosSkill = 0;
+        public static SlotStorage[] tosStorage = new SlotStorage[8];
+
+        #endregion
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "TOS Override")]
+        public static void StoreTOSMoves()
+        {
+            try
+            {
+                for (int i = 0; i < 8; i++)
+                {
+                    tosStorage[i] = new SlotStorage();
+
+                    Player player = PlayerMan.inst.GetPlObj(i);
+                    if (!player)
+                    {
+                        continue;
+                    }
+
+                    tosStorage[i].weakSlot = player.WresParam.skillSlot[(int)SkillSlotEnum.Grapple_X];
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("StoreTOSMovesException: " + e);
+             }     
+        }
+
         [Hook(TargetClass = "Player", TargetMethod = "CheckStartPowerCompetition", InjectionLocation = 74, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "TOS Override")]
         public static bool ReplaceTestOfStrength(Player attacker, out bool result)
         {
             //If animListData method returns true, then the result should be false.
             //Otherwise, the code will continue if animListData method returns false.
             result = false;
-
             try
             {
+                //Ensure we aren't running the check twice
+                if (tosSkill != 0)
+                {
+                    L.D("TOS replacement already in progress");
+                    return false;
+                }
+
                 if (!attacker)
                 {
                     return false;
@@ -1593,7 +1727,7 @@ namespace QoL_Mods.Private
                 //If HP and SP are equal, perform normal test of strength
                 if (defender.SP == attacker.SP && defender.HP == attacker.HP)
                 {
-                    L.D("TOSFail: Defender HP = Attacker");
+                    L.D("TOSFail: Defender HP & SP = Attacker");
                     return false;
                 }
 
@@ -1605,11 +1739,13 @@ namespace QoL_Mods.Private
                         return false;
                     }
                 }
-                else if (defender.SP > attacker.SP)
-                {
-                    L.D("TOSFail: Defender SP > Attacker");
-                    return false;
-                }
+                //else if (defender.SP > attacker.SP)
+                //{
+                //    L.D("TOSFail: Defender SP > Attacker");
+                //    L.D("Defender SP: " + defender.SP);
+                //    L.D("Attacker SP: " + attacker.SP);
+                //    return false;
+                //}
 
                 List<Skill> tosMoves = new List<Skill>();
 
@@ -1621,7 +1757,7 @@ namespace QoL_Mods.Private
 
                 foreach (TOSMoves move in TOSForm.form.tos_wrestlers.Items)
                 {
-                    L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
+                    //L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
                     if (move.Name.Trim().Equals(name))
                     {
                         L.D("Match found");
@@ -1635,7 +1771,7 @@ namespace QoL_Mods.Private
                     L.D("No wrestler move found");
                     foreach (TOSMoves move in TOSForm.form.tos_styles.Items)
                     {
-                        L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
+                        //L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
                         if (move.Name.Trim().Equals(style))
                         {
                             L.D("Match found");
@@ -1677,11 +1813,16 @@ namespace QoL_Mods.Private
                     }
                 }
 
+                L.D("Replacing TOS with " + DataBase.GetSkillName((SkillID)skillID));
+
                 //Ensure that animListData move exists
                 if (DataBase.GetSkillName((SkillID)skillID).Equals(String.Empty))
                 {
+                    L.D("Invalid Skill ID");
                     return false;
                 }
+
+                tosSkill = (SkillID)skillID;
 
                 winner.animator.AnmReqType = AnmReqTypeEnum.SkillID;
                 global::SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
@@ -1697,7 +1838,7 @@ namespace QoL_Mods.Private
                 winner.lastSkill = skillSlot;
 
                 winner.WresParam.skillSlot[(int)skillSlot] = (SkillID)skillID;
-                winner.animator.ReqSlotAnm(skillSlot, false, -1, true);
+                winner.animator.ReqSlotAnm(skillSlot, false, defender.PlIdx, true);
                 winner.lastSkillHit = true;
 
                 return true;
@@ -1710,10 +1851,81 @@ namespace QoL_Mods.Private
 
         }
 
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 2,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "TOS Override")]
+        public static void VerifyTOSMove(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
+        {
+            try
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(animator.plObj.PlIdx);
+
+                if (!plObj)
+                {
+                    L.D("VerifyTOSMove - Player Not Found");
+                    return;
+                }
+
+                if (tosSkill == 0)
+                {
+                    return;
+                }
+
+                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                {
+                    L.D("Verifying TOS Replacement");
+                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
+                    L.D("Replacement Skill: " + DataBase.GetSkillName(tosSkill));
+
+                    if (tosSkill != plObj.WresParam.skillSlot[(int)skill_slot])
+                    {
+                        L.D("Skills do not match.");
+                        plObj.WresParam.skillSlot[(int)skill_slot] = tosSkill;
+                    }
+                    else
+                    {
+                        L.D("Skills match");
+                    }
+
+                    tosSkill = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("VerifyTOSMoveException: " + e);
+                tosSkill = 0;
+            }
+
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "TOS Override")]
+        public static void RefreshTOSSlots()
+        {
+
+            for (int i = 0; i < 8; i++)
+            {
+                Player player = PlayerMan.inst.GetPlObj(i);
+                if (!player)
+                {
+                    continue;
+                }
+
+                try
+                {
+                    player.WresParam.skillSlot[(int) SkillSlotEnum.Grapple_X] = tosStorage[i].weakSlot;
+                }
+                catch (Exception e)
+                {
+                    L.D("RefreshTOSSlots - Error on Player " + i + ": " + e.Message);
+                }
+
+            }
+        }
+
         #endregion
 
-        #region Helper Methods
-        public static WresIDGroup GetWresIDGroup(String wrestlerName)
+            #region Helper Methods
+            public static WresIDGroup GetWresIDGroup(String wrestlerName)
         {
             WresIDGroup wresID = null;
             foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)

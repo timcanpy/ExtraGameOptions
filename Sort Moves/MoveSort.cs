@@ -10,13 +10,13 @@ namespace Sort_Moves
     #endregion
 
     #region Field Access
-    [FieldAccess(Class = "Dialog_ArtsSetting", Field = "WretelerActive", Group = "View Move Sort")]
+    [FieldAccess(Class = "Dialog_MoveList", Field = "WretelerActive", Group = "View Move Sort")]
     #endregion
     public class MoveSort
     {
         #region Sort Moves By Custom Names
 
-        [Hook(TargetClass = "Dialog_ArtsSetting", TargetMethod = "WretelerActive", InjectionLocation = int.MaxValue,
+        [Hook(TargetClass = "Dialog_MoveList", TargetMethod = "WretelerActive", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before,
             InjectFlags = HookInjectFlags.None,
             Group = "View Move Sort")]

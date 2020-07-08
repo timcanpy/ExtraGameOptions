@@ -618,6 +618,7 @@ namespace QoL_Mods
         {
             try
             {
+                L.D("Replacing Critical Image");
                 Sprite sprite = null;
                 String imagePath = imageName;
 
