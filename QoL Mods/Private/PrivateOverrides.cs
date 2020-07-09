@@ -236,6 +236,8 @@ namespace QoL_Mods.Private
         {
             try
             {
+                faceLockSkill = 0;
+
                 if ((attacker.padPush & PadBtnEnum.AllAtk) == 0)
                 {
                     return false;
@@ -482,9 +484,9 @@ namespace QoL_Mods.Private
                     return;
                 }
 
-                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                if (skill_slot >= SkillSlotEnum.Grapple_X && skill_slot <= SkillSlotEnum.Grapple_XA)
                 {
-                    L.D("Verifying FaceLock Replacement");
+                    L.D("Verifying FaceLock Replacement for " + DataBase.GetWrestlerFullName(plObj.WresParam));
                     L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
                     L.D("Replacemtn Skill: " + DataBase.GetSkillName(faceLockSkill));
 
@@ -1257,7 +1259,7 @@ namespace QoL_Mods.Private
                     return;
                 }
 
-                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                if (skill_slot >= SkillSlotEnum.Grapple_X && skill_slot <= SkillSlotEnum.Grapple_XA)
                 {
                     L.D("Verifying Reversal Replacement");
                     L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
@@ -1829,7 +1831,9 @@ namespace QoL_Mods.Private
 
                 //Ensure that both players return to neutral position
                 attacker.ChangeState(global::PlStateEnum.NormalAnm);
-                defender.ChangeState(global::PlStateEnum.NormalAnm);
+                //defender.ChangeState(global::PlStateEnum.NormalAnm);
+                //attacker.ChangeState(global::PlStateEnum.Grapple);
+                //defender.ChangeState(global::PlStateEnum.Grapple);
 
                 //moveData[winner.PlIdx] = skillData;
 
@@ -1870,9 +1874,9 @@ namespace QoL_Mods.Private
                     return;
                 }
 
-                if (skill_slot >= SkillSlotEnum.Grapple_A && skill_slot <= SkillSlotEnum.Grapple_XA)
+                if (skill_slot == SkillSlotEnum.Grapple_X)
                 {
-                    L.D("Verifying TOS Replacement");
+                    L.D("Verifying TOS Replacement for " + DataBase.GetWrestlerFullName(plObj.WresParam));
                     L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
                     L.D("Replacement Skill: " + DataBase.GetSkillName(tosSkill));
 
