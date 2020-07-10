@@ -645,8 +645,35 @@ namespace FireProWar
                 return;
             }
 
-            WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
-            FindImage(ImageTypes.Wrestler, wrestler.Name);
+            try
+            {
+                WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
+                FindImage(ImageTypes.Wrestler, wrestler.Name);
+
+                //Set Championship Data
+                var titleData = GetChampionData(wrestler.Name);
+                if (titleData == null)
+                {
+                    rosterTitleInfo.Text = "";
+                    rosterTitle.Image = null;
+                }
+                else
+                {
+                    int defenseCount = 0;
+                    if (titleData.GetLatestMatchRecord() != null)
+                    {
+                        defenseCount = titleData.GetLatestMatchRecord().DefenseCount;
+                    }
+
+                    rosterTitleInfo.Text = titleData.titleName + "\nTitle Type: " + titleData.matchType + " - " +
+                                           titleData.playerNum + "\nNumber of Defenses: " + defenseCount;
+                    rosterTitle.Image = ModPack.Utility.GetBeltImageFromTex(titleData);
+                }
+            }
+            catch (Exception exception)
+            {
+                L.D("ms_searchResults_SelectedIndexChangedError: " + exception);
+            }
         }
         #endregion
 
@@ -965,8 +992,29 @@ namespace FireProWar
                 ms_empMatches.Text = employee.MatchCount.ToString();
                 ms_empRating.Text = Math.Round(Decimal.Parse(employee.AverageRating.ToString()), 2) + "%";
                 ms_empRecord.Text = employee.Wins + "/" + employee.Losses + "/" + employee.Draws;
+
+                //Set Championship Data
+                var titleData = GetChampionData(employee.Name);
+                if (titleData == null)
+                {
+                    championInfo.Text = "";
+                    titleBox.Image = null;
+                }
+                else
+                {
+                    int defenseCount = 0;
+                    if (titleData.GetLatestMatchRecord() != null)
+                    {
+                        defenseCount = titleData.GetLatestMatchRecord().DefenseCount;
+                    }
+                    championInfo.Text = titleData.titleName + "\nTitle Type: " + titleData.matchType + " - " +
+                                        titleData.playerNum + "\nTotal Title Holders: " +
+                                        TitleMatch_Data.GetOrdinalNumberString(titleData.titleMatch_Record_Data.Count) +
+                                        "\nNumber of Defenses: " + defenseCount;
+                    titleBox.Image = ModPack.Utility.GetBeltImageFromTex(titleData);
+                }
             }
-            catch(NullReferenceException)
+            catch (NullReferenceException)
             {
                 L.D(employee.Name + " has null data.");
             }
@@ -1404,6 +1452,196 @@ namespace FireProWar
 
         #endregion
 
+        #region Injuries
+        private void fpw_addNeck_Click(object sender, EventArgs e)
+        {
+            if (fpw_neckText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_neckInjuries.Items.Add(fpw_neckText.Text);
+                fpw_neckInjuries.SelectedIndex = 0;
+                fpw_neckInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddNeckException: " + exception);
+            }
+        }
+
+        private void fpw_removeNeck_Click(object sender, EventArgs e)
+        {
+            if (fpw_neckInjuries.SelectedIndex < 0 || fpw_neckInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_neckInjuries.Items.RemoveAt(fpw_neckInjuries.SelectedIndex);
+            if (fpw_neckInjuries.Items.Count > 0)
+            {
+                fpw_neckInjuries.SelectedIndex = (fpw_neckInjuries.Items.Count - 1);
+                fpw_neckInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addWaist_Click(object sender, EventArgs e)
+        {
+            if (fpw_waistText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_waistInjuries.Items.Add(fpw_waistText.Text);
+                fpw_waistInjuries.SelectedIndex = 0;
+                fpw_waistInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddWaistException: " + exception);
+            }
+        }
+
+        private void fpw_removeWaist_Click(object sender, EventArgs e)
+        {
+            if (fpw_waistInjuries.SelectedIndex < 0 || fpw_waistInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_waistInjuries.Items.RemoveAt(fpw_waistInjuries.SelectedIndex);
+            if (fpw_waistInjuries.Items.Count > 0)
+            {
+                fpw_waistInjuries.SelectedIndex = (fpw_waistInjuries.Items.Count - 1);
+                fpw_waistInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addArm_Click(object sender, EventArgs e)
+        {
+            if (fpw_armText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_armInjuries.Items.Add(fpw_armText.Text);
+                fpw_armInjuries.SelectedIndex = 0;
+                fpw_armInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddArmException: " + exception);
+            }
+        }
+
+        private void fpw_removeArm_Click(object sender, EventArgs e)
+        {
+            if (fpw_armInjuries.SelectedIndex < 0 || fpw_armInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_armInjuries.Items.RemoveAt(fpw_armInjuries.SelectedIndex);
+            if (fpw_armInjuries.Items.Count > 0)
+            {
+                fpw_armInjuries.SelectedIndex = (fpw_armInjuries.Items.Count - 1);
+                fpw_armInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_addLeg_Click(object sender, EventArgs e)
+        {
+            if (fpw_legText.Text.Equals(String.Empty))
+            {
+                return;
+            }
+
+            try
+            {
+                fpw_legInjuries.Items.Add(fpw_legText.Text);
+                fpw_legInjuries.SelectedIndex = 0;
+                fpw_legInjuries_SelectedIndexChanged(null, null);
+            }
+            catch (Exception exception)
+            {
+                L.D("AddLegException: " + exception);
+            }
+        }
+
+        private void fpw_removeLeg_Click(object sender, EventArgs e)
+        {
+            if (fpw_legInjuries.SelectedIndex < 0 || fpw_legInjuries.Items.Count == 1)
+            {
+                return;
+            }
+
+            fpw_legInjuries.Items.RemoveAt(fpw_legInjuries.SelectedIndex);
+            if (fpw_legInjuries.Items.Count > 0)
+            {
+                fpw_legInjuries.SelectedIndex = (fpw_legInjuries.Items.Count - 1);
+                fpw_legInjuries_SelectedIndexChanged(null, null);
+
+            }
+        }
+
+        private void fpw_neckInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_neckInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_neckInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_neckText.Text = injury;
+        }
+
+        private void fpw_waistInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_waistInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_waistInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_waistText.Text = injury;
+        }
+
+        private void fpw_armInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_armInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_armInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_armText.Text = injury;
+        }
+
+        private void fpw_legInjuries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (fpw_legInjuries.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            String injury = (String)fpw_legInjuries.SelectedItem;
+            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
+            fpw_legText.Text = injury;
+        }
+        #endregion
+
         #region Helper Methods
         private void SelectPromotionRoster(String name)
         {
@@ -1804,7 +2042,7 @@ namespace FireProWar
 
                 String fileName = "";
                 imageName = imageName.ToLower(); //Eliminate casing for easier matching
-               
+
                 foreach (String file in files)
                 {
                     String name = Path.GetFileNameWithoutExtension(file);
@@ -1954,197 +2192,35 @@ namespace FireProWar
 
             return false;
         }
-
-        #endregion
-
-        #region Injuries
-        private void fpw_addNeck_Click(object sender, EventArgs e)
+        private TitleMatch_Data GetChampionData(String wrestlerName)
         {
-            if (fpw_neckText.Text.Equals(String.Empty))
-            {
-                return;
-            }
+            TitleMatch_Data data = null;
 
             try
             {
-                fpw_neckInjuries.Items.Add(fpw_neckText.Text);
-                fpw_neckInjuries.SelectedIndex = 0;
-                fpw_neckInjuries_SelectedIndexChanged(null, null);
+                foreach (TitleMatch_Data item in SaveData.GetInst().titleMatch_Data)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (item.wrestlerID[i] == WrestlerID.Invalid)
+                        {
+                            continue;
+                        }
+                        if (wrestlerName.Equals(DataBase.GetWrestlerFullName(item.wrestlerID[i])))
+                        {
+                            data = item;
+                            break;
+                        }
+                    }
+                }
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                L.D("AddNeckException: " + exception);
+                L.D("GetChampionDataError: " + e);
             }
+
+            return data;
         }
-
-        private void fpw_removeNeck_Click(object sender, EventArgs e)
-        {
-            if (fpw_neckInjuries.SelectedIndex < 0 || fpw_neckInjuries.Items.Count == 1)
-            {
-                return;
-            }
-
-            fpw_neckInjuries.Items.RemoveAt(fpw_neckInjuries.SelectedIndex);
-            if (fpw_neckInjuries.Items.Count > 0)
-            {
-                fpw_neckInjuries.SelectedIndex = (fpw_neckInjuries.Items.Count - 1);
-                fpw_neckInjuries_SelectedIndexChanged(null, null);
-
-            }
-        }
-
-        private void fpw_addWaist_Click(object sender, EventArgs e)
-        {
-            if (fpw_waistText.Text.Equals(String.Empty))
-            {
-                return;
-            }
-
-            try
-            {
-                fpw_waistInjuries.Items.Add(fpw_waistText.Text);
-                fpw_waistInjuries.SelectedIndex = 0;
-                fpw_waistInjuries_SelectedIndexChanged(null, null);
-            }
-            catch (Exception exception)
-            {
-                L.D("AddWaistException: " + exception);
-            }
-        }
-
-        private void fpw_removeWaist_Click(object sender, EventArgs e)
-        {
-            if (fpw_waistInjuries.SelectedIndex < 0 || fpw_waistInjuries.Items.Count == 1)
-            {
-                return;
-            }
-
-            fpw_waistInjuries.Items.RemoveAt(fpw_waistInjuries.SelectedIndex);
-            if (fpw_waistInjuries.Items.Count > 0)
-            {
-                fpw_waistInjuries.SelectedIndex = (fpw_waistInjuries.Items.Count - 1);
-                fpw_waistInjuries_SelectedIndexChanged(null, null);
-
-            }
-        }
-
-        private void fpw_addArm_Click(object sender, EventArgs e)
-        {
-            if (fpw_armText.Text.Equals(String.Empty))
-            {
-                return;
-            }
-
-            try
-            {
-                fpw_armInjuries.Items.Add(fpw_armText.Text);
-                fpw_armInjuries.SelectedIndex = 0;
-                fpw_armInjuries_SelectedIndexChanged(null, null);
-            }
-            catch (Exception exception)
-            {
-                L.D("AddArmException: " + exception);
-            }
-        }
-
-        private void fpw_removeArm_Click(object sender, EventArgs e)
-        {
-            if (fpw_armInjuries.SelectedIndex < 0 || fpw_armInjuries.Items.Count == 1)
-            {
-                return;
-            }
-
-            fpw_armInjuries.Items.RemoveAt(fpw_armInjuries.SelectedIndex);
-            if (fpw_armInjuries.Items.Count > 0)
-            {
-                fpw_armInjuries.SelectedIndex = (fpw_armInjuries.Items.Count - 1);
-                fpw_armInjuries_SelectedIndexChanged(null, null);
-
-            }
-        }
-
-        private void fpw_addLeg_Click(object sender, EventArgs e)
-        {
-            if (fpw_legText.Text.Equals(String.Empty))
-            {
-                return;
-            }
-
-            try
-            {
-                fpw_legInjuries.Items.Add(fpw_legText.Text);
-                fpw_legInjuries.SelectedIndex = 0;
-                fpw_legInjuries_SelectedIndexChanged(null, null);
-            }
-            catch (Exception exception)
-            {
-                L.D("AddLegException: " + exception);
-            }
-        }
-
-        private void fpw_removeLeg_Click(object sender, EventArgs e)
-        {
-            if (fpw_legInjuries.SelectedIndex < 0 || fpw_legInjuries.Items.Count == 1)
-            {
-                return;
-            }
-
-            fpw_legInjuries.Items.RemoveAt(fpw_legInjuries.SelectedIndex);
-            if (fpw_legInjuries.Items.Count > 0)
-            {
-                fpw_legInjuries.SelectedIndex = (fpw_legInjuries.Items.Count - 1);
-                fpw_legInjuries_SelectedIndexChanged(null, null);
-
-            }
-        }
-
-        private void fpw_neckInjuries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (fpw_neckInjuries.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            String injury = (String)fpw_neckInjuries.SelectedItem;
-            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
-            fpw_neckText.Text = injury;
-        }
-
-        private void fpw_waistInjuries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (fpw_waistInjuries.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            String injury = (String)fpw_waistInjuries.SelectedItem;
-            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
-            fpw_waistText.Text = injury;
-        }
-
-        private void fpw_armInjuries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (fpw_armInjuries.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            String injury = (String)fpw_armInjuries.SelectedItem;
-            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
-            fpw_armText.Text = injury;
-        }
-
-        private void fpw_legInjuries_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (fpw_legInjuries.SelectedIndex < 0)
-            {
-                return;
-            }
-
-            String injury = (String)fpw_legInjuries.SelectedItem;
-            fpw_injuryExample.Text = "Wrestler has suffered " + injury + ".";
-            fpw_legText.Text = injury;
-        }
-        #endregion
+        #endregion   
     }
 }

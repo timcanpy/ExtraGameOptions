@@ -94,6 +94,7 @@
             this.ms_searchResults = new System.Windows.Forms.ComboBox();
             this.ms_wrestlerSearch = new System.Windows.Forms.TextBox();
             this.fpw_details = new System.Windows.Forms.TabPage();
+            this.championInfo = new System.Windows.Forms.Label();
             this.fpw_resetPoints = new System.Windows.Forms.LinkLabel();
             this.fpw_rosterFiler = new System.Windows.Forms.ComboBox();
             this.label27 = new System.Windows.Forms.Label();
@@ -143,6 +144,9 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.titleBox = new System.Windows.Forms.PictureBox();
+            this.rosterTitle = new System.Windows.Forms.PictureBox();
+            this.rosterTitleInfo = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -154,6 +158,8 @@
             this.fpw_details.SuspendLayout();
             this.fpw_reports.SuspendLayout();
             this.fpw_injuries.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -751,6 +757,8 @@
             // fpw_management
             // 
             this.fpw_management.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_management.Controls.Add(this.rosterTitle);
+            this.fpw_management.Controls.Add(this.rosterTitleInfo);
             this.fpw_management.Controls.Add(this.fpw_wrestlerImage);
             this.fpw_management.Controls.Add(this.btn_clean);
             this.fpw_management.Controls.Add(this.btn_LoadData);
@@ -978,6 +986,8 @@
             // 
             // fpw_details
             // 
+            this.fpw_details.Controls.Add(this.titleBox);
+            this.fpw_details.Controls.Add(this.championInfo);
             this.fpw_details.Controls.Add(this.fpw_resetPoints);
             this.fpw_details.Controls.Add(this.fpw_rosterFiler);
             this.fpw_details.Controls.Add(this.label27);
@@ -1010,12 +1020,24 @@
             this.fpw_details.Text = "Roster Details";
             this.fpw_details.UseVisualStyleBackColor = true;
             // 
+            // championInfo
+            // 
+            this.championInfo.AutoSize = true;
+            this.championInfo.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.championInfo.ForeColor = System.Drawing.Color.DarkGreen;
+            this.championInfo.Location = new System.Drawing.Point(268, 404);
+            this.championInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.championInfo.Name = "championInfo";
+            this.championInfo.Size = new System.Drawing.Size(64, 15);
+            this.championInfo.TabIndex = 77;
+            this.championInfo.Text = "Title Data";
+            // 
             // fpw_resetPoints
             // 
             this.fpw_resetPoints.AutoSize = true;
             this.fpw_resetPoints.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fpw_resetPoints.LinkColor = System.Drawing.Color.Red;
-            this.fpw_resetPoints.Location = new System.Drawing.Point(556, 236);
+            this.fpw_resetPoints.Location = new System.Drawing.Point(556, 213);
             this.fpw_resetPoints.Name = "fpw_resetPoints";
             this.fpw_resetPoints.Size = new System.Drawing.Size(40, 13);
             this.fpw_resetPoints.TabIndex = 60;
@@ -1057,7 +1079,7 @@
             // ms_empRecord
             // 
             this.ms_empRecord.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ms_empRecord.Location = new System.Drawing.Point(434, 410);
+            this.ms_empRecord.Location = new System.Drawing.Point(434, 387);
             this.ms_empRecord.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ms_empRecord.Name = "ms_empRecord";
             this.ms_empRecord.ReadOnly = true;
@@ -1068,7 +1090,7 @@
             // ms_empRating
             // 
             this.ms_empRating.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ms_empRating.Location = new System.Drawing.Point(434, 353);
+            this.ms_empRating.Location = new System.Drawing.Point(434, 330);
             this.ms_empRating.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ms_empRating.Name = "ms_empRating";
             this.ms_empRating.ReadOnly = true;
@@ -1079,7 +1101,7 @@
             // ms_empMatches
             // 
             this.ms_empMatches.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ms_empMatches.Location = new System.Drawing.Point(434, 290);
+            this.ms_empMatches.Location = new System.Drawing.Point(434, 267);
             this.ms_empMatches.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ms_empMatches.Name = "ms_empMatches";
             this.ms_empMatches.ReadOnly = true;
@@ -1090,7 +1112,7 @@
             // ms_moralePoints
             // 
             this.ms_moralePoints.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ms_moralePoints.Location = new System.Drawing.Point(483, 230);
+            this.ms_moralePoints.Location = new System.Drawing.Point(483, 207);
             this.ms_moralePoints.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.ms_moralePoints.Name = "ms_moralePoints";
             this.ms_moralePoints.ReadOnly = true;
@@ -1115,7 +1137,7 @@
             this.resetPoints.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.resetPoints.Enabled = false;
             this.resetPoints.ForeColor = System.Drawing.Color.Red;
-            this.resetPoints.Location = new System.Drawing.Point(559, 436);
+            this.resetPoints.Location = new System.Drawing.Point(559, 413);
             this.resetPoints.Margin = new System.Windows.Forms.Padding(4);
             this.resetPoints.Name = "resetPoints";
             this.resetPoints.Size = new System.Drawing.Size(31, 26);
@@ -1128,7 +1150,7 @@
             // 
             this.label18.AutoSize = true;
             this.label18.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(404, 387);
+            this.label18.Location = new System.Drawing.Point(404, 364);
             this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(157, 17);
@@ -1139,7 +1161,7 @@
             // 
             this.label17.AutoSize = true;
             this.label17.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label17.Location = new System.Drawing.Point(404, 330);
+            this.label17.Location = new System.Drawing.Point(404, 307);
             this.label17.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(150, 17);
@@ -1150,7 +1172,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label16.Location = new System.Drawing.Point(430, 265);
+            this.label16.Location = new System.Drawing.Point(430, 242);
             this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(98, 17);
@@ -1161,7 +1183,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(470, 209);
+            this.label15.Location = new System.Drawing.Point(470, 186);
             this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(97, 17);
@@ -1172,7 +1194,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(335, 209);
+            this.label14.Location = new System.Drawing.Point(365, 186);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(89, 17);
@@ -1183,7 +1205,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(420, 140);
+            this.label13.Location = new System.Drawing.Point(420, 128);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(98, 17);
@@ -1194,7 +1216,7 @@
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Franklin Gothic Medium", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(454, 79);
+            this.label12.Location = new System.Drawing.Point(454, 67);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(39, 17);
@@ -1217,7 +1239,7 @@
             this.ms_moraleRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ms_moraleRank.Font = new System.Drawing.Font("NEWSFLASH", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ms_moraleRank.FormattingEnabled = true;
-            this.ms_moraleRank.Location = new System.Drawing.Point(338, 233);
+            this.ms_moraleRank.Location = new System.Drawing.Point(368, 210);
             this.ms_moraleRank.Margin = new System.Windows.Forms.Padding(4);
             this.ms_moraleRank.Name = "ms_moraleRank";
             this.ms_moraleRank.Size = new System.Drawing.Size(86, 23);
@@ -1226,7 +1248,7 @@
             // 
             // ms_employeeCountry
             // 
-            this.ms_employeeCountry.Location = new System.Drawing.Point(368, 176);
+            this.ms_employeeCountry.Location = new System.Drawing.Point(368, 153);
             this.ms_employeeCountry.Margin = new System.Windows.Forms.Padding(4);
             this.ms_employeeCountry.Name = "ms_employeeCountry";
             this.ms_employeeCountry.ReadOnly = true;
@@ -1235,7 +1257,7 @@
             // 
             // ms_employeeStyle
             // 
-            this.ms_employeeStyle.Location = new System.Drawing.Point(368, 102);
+            this.ms_employeeStyle.Location = new System.Drawing.Point(368, 90);
             this.ms_employeeStyle.Margin = new System.Windows.Forms.Padding(4);
             this.ms_employeeStyle.Name = "ms_employeeStyle";
             this.ms_employeeStyle.ReadOnly = true;
@@ -1604,6 +1626,38 @@
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
             // 
+            // titleBox
+            // 
+            this.titleBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.titleBox.Location = new System.Drawing.Point(271, 326);
+            this.titleBox.Name = "titleBox";
+            this.titleBox.Size = new System.Drawing.Size(114, 69);
+            this.titleBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.titleBox.TabIndex = 79;
+            this.titleBox.TabStop = false;
+            // 
+            // rosterTitle
+            // 
+            this.rosterTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.rosterTitle.Location = new System.Drawing.Point(43, 407);
+            this.rosterTitle.Name = "rosterTitle";
+            this.rosterTitle.Size = new System.Drawing.Size(140, 58);
+            this.rosterTitle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.rosterTitle.TabIndex = 81;
+            this.rosterTitle.TabStop = false;
+            // 
+            // rosterTitleInfo
+            // 
+            this.rosterTitleInfo.AutoSize = true;
+            this.rosterTitleInfo.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rosterTitleInfo.ForeColor = System.Drawing.Color.DarkGreen;
+            this.rosterTitleInfo.Location = new System.Drawing.Point(194, 404);
+            this.rosterTitleInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rosterTitleInfo.Name = "rosterTitleInfo";
+            this.rosterTitleInfo.Size = new System.Drawing.Size(64, 15);
+            this.rosterTitleInfo.TabIndex = 80;
+            this.rosterTitleInfo.Text = "Title Data";
+            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1633,6 +1687,8 @@
             this.fpw_reports.ResumeLayout(false);
             this.fpw_injuries.ResumeLayout(false);
             this.fpw_injuries.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1754,5 +1810,9 @@
         public System.Windows.Forms.ComboBox fpw_armInjuries;
         public System.Windows.Forms.ComboBox fpw_waistInjuries;
         public System.Windows.Forms.ComboBox fpw_neckInjuries;
+        private System.Windows.Forms.Label championInfo;
+        private System.Windows.Forms.PictureBox titleBox;
+        private System.Windows.Forms.PictureBox rosterTitle;
+        private System.Windows.Forms.Label rosterTitleInfo;
     }
 }
