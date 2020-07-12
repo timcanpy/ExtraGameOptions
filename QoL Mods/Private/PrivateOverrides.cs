@@ -1352,6 +1352,7 @@ namespace QoL_Mods.Private
                 {
                     int index = craftSkill.mFileBank.GetSelecting();
                     var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
+                    HashSet<int> usedCIds = new HashSet<Int32>();
 
                     SkillData[] skillData = SkillDataMan.inst.GetSkillData(skill_id);
                     L.D("Adding custom forms for " + DataBase.GetSkillName(skill_id));
@@ -1360,7 +1361,7 @@ namespace QoL_Mods.Private
                         L.D("Total animation indices: " + skill.anmNum);
                         for (int i = 0; i < skill.anmNum; i++)
                         {
-                            //L.D("Checking Index " + i);
+                            L.D("Checking Index " + i);
                             var anmData = skill.anmData[i];
                             for (int j = 0; j < anmData.formNum; j++)
                             {
@@ -1368,7 +1369,7 @@ namespace QoL_Mods.Private
 
                                 //Ensure that the Custom ID matches the Preset ID
                                 int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
-
+                             
                                 //Necessary to ensure that the upper limit for created custom forms is properly set.
                                 if (formIdx > craftSkill.mData.WazaData[index].formEditIdx)
                                 {
@@ -1382,12 +1383,26 @@ namespace QoL_Mods.Private
                                 {
                                     formIdx += 100000;
                                 }
+                                
+                                if (formIdx >= 100000)
+                                {
+                                    //Determine if this ID has already been used
+                                    while (usedCIds.Contains(formIdx))
+                                    {
+                                        formIdx += 10;
+                                    }
 
+                                    L.D("Row " + j + " is C" + (formIdx - 100000));
+                                    usedCIds.Add(formIdx);
+                                }
+                                else
+                                {
+                                    L.D("Row " + j + " is P" + (formIdx - 100000));
+                                }
+                                
                                 ToolFormSaveData saveData =
                                     new ToolFormSaveData(formDispList.formPartsList, formIdx);
                                 saveList.Add(saveData);
-
-                                //saveList[formIdx] = saveData;
                             }
                         }
                     }
@@ -1414,7 +1429,6 @@ namespace QoL_Mods.Private
             result = false;
             bool change = false;
 
-            L.D(name);
             try
             {
                 bool check = true;
@@ -1494,156 +1508,7 @@ namespace QoL_Mods.Private
                         }
                     }));
                 }
-                //else if (name.Equals("FORMTYPE"))
-                //{
-                //    check = false;
-                //    int _form = animListData.GetFORM();
-                //    int formIdx = animListData.GetFORM();
-                //    int oldForm = _form;
-                //    int oldBuildIn = animListData._buildinOldForm;
-                //    int formEditIdx = animListData.dataAccessor.GetWazaData().formEditIdx;
-                //    if (pad)
-                //    {
-                //        if (self)
-                //        {
-                //            animListData.mRepeatBlock |= 3;
-                //        }
-                //        else
-                //        {
-                //            repeatBlock |= 3;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        animListData.mRepeatClickBlock |= 3;
-                //    }
-                //    global::CommandManager.Instance.Do(new global::Command(delegate
-                //    {
-                //        //Custom to Preset Forms
-                //        if (_form >= 100000)
-                //        {
-                //            L.D("Case 1");
-                //            _form = animListData._buildinOldForm;
-                //            global::FormNumber.Instance.CheckDeleteInitData(oldForm, _form);
-                //        }
-                //        //Preset to Custom Forms
-                //        else
-                //        {
-                //            L.D("Case 2");
-                //            animListData._buildinOldForm = oldForm;
-                //            //_form = 100000 + animListData.dataAccessor.GetWazaData().formEditIdx;
-                //            _form = 100000 + oldForm;
-                //            L.D("oldForm: " + oldForm);
-                //            L.D("_form: " + _form);
-                //            if (_form > maxCFormID)
-                //            {
-                //                _form = maxCFormID;
-                //            }
-
-                //            //Determine whether a custom form already exists
-                //            bool formExists = false;
-                //            var instance = FormNumber.Instance;
-                //            var toolSkillData = instance.mData.GetWazaData().toolFormSaveList;
-                //            foreach (var data in toolSkillData)
-                //            {
-                //                if (data.formNo == _form)
-                //                {
-                //                    formExists = true;
-                //                }
-
-                //                break;
-                //            }
-
-
-                //            if (formExists)
-                //            {
-                //                L.D(_form + " exists");
-                //                instance.mData.GetWazaData().changeData = true;
-                //            }
-                //            else
-                //            {
-                //                L.D(_form + " does not exists");
-                //                instance.InitPaste(oldForm, _form);
-                //            }
-
-                //        }
-                //        if (_form != oldForm)
-                //        {
-                //            L.D("Case 3");
-                //            animListData.SetFORM(_form, true);
-                //            animListData.SetFormTextColor(animListData.GetFormTextColor());
-                //            animListData.DataUpdateFORM();
-                //            animListData.SetupForm();
-                //            change = true;
-                //        }
-                //    }, delegate
-                //    {
-                //        global::AnimList.Context.selectMin = selectMin;
-                //        global::AnimList.Context.selectMax = selectMax;
-                //        global::AnimList.Instance.RefreshSelect();
-                //        global::AnimBankSetting.Context.bank.number = _bank;
-                //        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
-                //        animListData.m_form = oldForm;
-                //        animListData.SetupForm();
-                //        int num8 = oldForm;
-                //        if (num8 >= 100000)
-                //        {
-                //            L.D("Case 4");
-                //            if (num8 == 100000 + formEditIdx)
-                //            {
-                //                global::FormNumber.Instance.InitPaste(animListData._buildinOldForm, num8);
-                //            }
-                //            animListData._buildinOldForm = oldBuildIn;
-                //        }
-                //        else
-                //        {
-                //            L.D("Case 5");
-                //            num8 = animListData._buildinOldForm;
-                //            global::FormNumber.Instance.CheckDeleteInitData(num8, oldForm);
-                //        }
-                //        animListData.SetFORM(num8, true);
-                //        animListData.SetFormTextColor(animListData.GetFormTextColor());
-                //        animListData.DataUpdateFORM();
-                //        animListData.SetupForm();
-                //    }, delegate
-                //    {
-                //        global::AnimList.Context.selectMin = selectMin;
-                //        global::AnimList.Context.selectMax = selectMax;
-                //        global::AnimList.Instance.RefreshSelect();
-                //        global::AnimBankSetting.Context.bank.number = _bank;
-                //        global::AnimBankSetting.Context.bank.no[_bank] = anmBankNo;
-                //        animListData.m_form = formIdx;
-                //        animListData.SetupForm();
-                //        int num8 = oldForm;
-                //        if (num8 >= 100000)
-                //        {
-                //            L.D("Case 6");
-                //            num8 = animListData._buildinOldForm;
-                //            global::FormNumber.Instance.CheckDeleteInitData(oldForm, num8);
-                //        }
-                //        else
-                //        {
-                //            L.D("Case 7");
-                //            animListData._buildinOldForm = oldForm;
-                //            //num8 = 100000 + animListData.dataAccessor.GetWazaData().formEditIdx;
-                //            num8 += 100000;
-                //            if (num8 > maxCFormID)
-                //            {
-                //                num8 = maxCFormID;
-                //            }
-                //            global::FormNumber.Instance.InitPaste(oldForm, num8);
-                //        }
-                //        if (num8 != oldForm)
-                //        {
-                //            L.D("Case 8");
-                //            animListData.SetFORM(num8, true);
-                //            animListData.SetFormTextColor(animListData.GetFormTextColor());
-                //            animListData.DataUpdateFORM();
-                //            animListData.SetupForm();
-                //            change = true;
-                //        }
-                //    }));
-                //}
+         
                 if (check)
                 {
                     global::FormNumber.Instance.CheckAddEditIdx();
