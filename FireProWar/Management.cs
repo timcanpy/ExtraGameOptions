@@ -45,9 +45,6 @@ namespace FireProWar
         public static Employee[] employeeData = new Employee[8];
         public static String ringName = "";
         public static Promotion promotion = null;
-        public static String storedLogoPath = "./EGOData/Watermarks/";
-        public static String logoAssetLocation = "./EGOData/tvlogo.obj";
-        public static String logoPositionFile = "./EGOData/LogoPosition.dat";
         public static String defaultLogo = "Default.png";
         public static AssetBundle tvLogo = null;
         public static String[] teamNames = new String[2];

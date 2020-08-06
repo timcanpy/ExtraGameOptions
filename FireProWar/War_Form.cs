@@ -1196,6 +1196,9 @@ namespace FireProWar
                 moraleBonus += 2;
             }
 
+            //Determine if employee has a previous record
+            employee = GetPreviousRecord(employee, promotion.History);
+
             employee.MoraleRank = 2 + moraleBonus;
             promotion.EmployeeList.Add(employee);
             employeesAdded.Add(employee.Name);
@@ -2220,6 +2223,65 @@ namespace FireProWar
             }
 
             return data;
+        }
+        private Employee GetPreviousRecord(Employee employee, String history)
+        {
+            try
+            {
+                var details = history.Split('~');
+                String lookup = employee.Name + " has left the promotion.";
+
+                for (int i = 0; i < details.Length; i++)
+                {
+                    if (details[i].Contains(lookup))
+                    {
+                        if (i + 1 < details.Length)
+                        {
+
+                            var record = details[i + 1];
+
+                            L.D("Previous Record Found: " + record);
+
+                            //Total Matches: # Average Rating: #. Final Record: 1/0/0
+                            var recordInfo = record.Split(' ');
+                            for (int j = 0; j < recordInfo.Length; j++)
+                            {
+                                if (recordInfo[j].Equals("Matches:"))
+                                {
+                                    Int32.TryParse(recordInfo[j + 1], out int matchCount);
+                                    employee.MatchCount = matchCount;
+                                }
+                                else if (recordInfo[j].Equals("Rating:"))
+                                {
+                                    var value = recordInfo[j + 1].Split('.');
+                                    float.TryParse(value[0], out float avg);
+                                    employee.AverageRating = avg;
+                                }
+                                else if (recordInfo[j].Equals("Record:"))
+                                {
+                                    var results = recordInfo[j + 1].Split('/');
+                                    Int32.TryParse(results[0], out int wins);
+                                    Int32.TryParse(results[1], out int losses);
+                                    Int32.TryParse(results[2], out int draws);
+
+                                    employee.Wins = wins;
+                                    employee.Losses = losses;
+                                    employee.Draws = draws;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("GetPreviousRecordError: " + e);
+            }
+
+            return employee;
+
         }
         #endregion   
     }

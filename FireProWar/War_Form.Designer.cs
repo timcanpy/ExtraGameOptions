@@ -76,6 +76,8 @@
             this.fpw_clearDetails = new System.Windows.Forms.Button();
             this.fpw_detailsView = new System.Windows.Forms.TextBox();
             this.fpw_management = new System.Windows.Forms.TabPage();
+            this.rosterTitle = new System.Windows.Forms.PictureBox();
+            this.rosterTitleInfo = new System.Windows.Forms.Label();
             this.fpw_wrestlerImage = new System.Windows.Forms.PictureBox();
             this.btn_clean = new System.Windows.Forms.Button();
             this.btn_LoadData = new System.Windows.Forms.Button();
@@ -94,6 +96,7 @@
             this.ms_searchResults = new System.Windows.Forms.ComboBox();
             this.ms_wrestlerSearch = new System.Windows.Forms.TextBox();
             this.fpw_details = new System.Windows.Forms.TabPage();
+            this.titleBox = new System.Windows.Forms.PictureBox();
             this.championInfo = new System.Windows.Forms.Label();
             this.fpw_resetPoints = new System.Windows.Forms.LinkLabel();
             this.fpw_rosterFiler = new System.Windows.Forms.ComboBox();
@@ -144,9 +147,6 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.titleBox = new System.Windows.Forms.PictureBox();
-            this.rosterTitle = new System.Windows.Forms.PictureBox();
-            this.rosterTitleInfo = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -154,12 +154,12 @@
             this.fpw_history.SuspendLayout();
             this.fpw_matches.SuspendLayout();
             this.fpw_management.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).BeginInit();
             this.fpw_details.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).BeginInit();
             this.fpw_reports.SuspendLayout();
             this.fpw_injuries.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -784,6 +784,28 @@
             this.fpw_management.TabIndex = 0;
             this.fpw_management.Text = "Roster Management";
             // 
+            // rosterTitle
+            // 
+            this.rosterTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.rosterTitle.Location = new System.Drawing.Point(43, 407);
+            this.rosterTitle.Name = "rosterTitle";
+            this.rosterTitle.Size = new System.Drawing.Size(140, 58);
+            this.rosterTitle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.rosterTitle.TabIndex = 81;
+            this.rosterTitle.TabStop = false;
+            // 
+            // rosterTitleInfo
+            // 
+            this.rosterTitleInfo.AutoSize = true;
+            this.rosterTitleInfo.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rosterTitleInfo.ForeColor = System.Drawing.Color.DarkGreen;
+            this.rosterTitleInfo.Location = new System.Drawing.Point(194, 404);
+            this.rosterTitleInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.rosterTitleInfo.Name = "rosterTitleInfo";
+            this.rosterTitleInfo.Size = new System.Drawing.Size(64, 15);
+            this.rosterTitleInfo.TabIndex = 80;
+            this.rosterTitleInfo.Text = "Title Data";
+            // 
             // fpw_wrestlerImage
             // 
             this.fpw_wrestlerImage.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -1019,6 +1041,16 @@
             this.fpw_details.TabIndex = 1;
             this.fpw_details.Text = "Roster Details";
             this.fpw_details.UseVisualStyleBackColor = true;
+            // 
+            // titleBox
+            // 
+            this.titleBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.titleBox.Location = new System.Drawing.Point(271, 326);
+            this.titleBox.Name = "titleBox";
+            this.titleBox.Size = new System.Drawing.Size(114, 69);
+            this.titleBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.titleBox.TabIndex = 79;
+            this.titleBox.TabStop = false;
             // 
             // championInfo
             // 
@@ -1626,38 +1658,6 @@
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
             // 
-            // titleBox
-            // 
-            this.titleBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.titleBox.Location = new System.Drawing.Point(271, 326);
-            this.titleBox.Name = "titleBox";
-            this.titleBox.Size = new System.Drawing.Size(114, 69);
-            this.titleBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.titleBox.TabIndex = 79;
-            this.titleBox.TabStop = false;
-            // 
-            // rosterTitle
-            // 
-            this.rosterTitle.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.rosterTitle.Location = new System.Drawing.Point(43, 407);
-            this.rosterTitle.Name = "rosterTitle";
-            this.rosterTitle.Size = new System.Drawing.Size(140, 58);
-            this.rosterTitle.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.rosterTitle.TabIndex = 81;
-            this.rosterTitle.TabStop = false;
-            // 
-            // rosterTitleInfo
-            // 
-            this.rosterTitleInfo.AutoSize = true;
-            this.rosterTitleInfo.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rosterTitleInfo.ForeColor = System.Drawing.Color.DarkGreen;
-            this.rosterTitleInfo.Location = new System.Drawing.Point(194, 404);
-            this.rosterTitleInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.rosterTitleInfo.Name = "rosterTitleInfo";
-            this.rosterTitleInfo.Size = new System.Drawing.Size(64, 15);
-            this.rosterTitleInfo.TabIndex = 80;
-            this.rosterTitleInfo.Text = "Title Data";
-            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1681,14 +1681,14 @@
             this.fpw_matches.PerformLayout();
             this.fpw_management.ResumeLayout(false);
             this.fpw_management.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_wrestlerImage)).EndInit();
             this.fpw_details.ResumeLayout(false);
             this.fpw_details.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).EndInit();
             this.fpw_reports.ResumeLayout(false);
             this.fpw_injuries.ResumeLayout(false);
             this.fpw_injuries.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.titleBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.rosterTitle)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1697,7 +1697,6 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lbl_promoDetails;
-        private System.Windows.Forms.ComboBox fpw_promoList;
         private System.Windows.Forms.Label label46;
         private System.Windows.Forms.Label label45;
         public System.Windows.Forms.ComboBox fpw_ringList;
@@ -1814,5 +1813,6 @@
         private System.Windows.Forms.PictureBox titleBox;
         private System.Windows.Forms.PictureBox rosterTitle;
         private System.Windows.Forms.Label rosterTitleInfo;
+        public System.Windows.Forms.ComboBox fpw_promoList;
     }
 }
