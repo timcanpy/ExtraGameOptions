@@ -45,11 +45,10 @@ namespace FireProWar
         public static Employee[] employeeData = new Employee[8];
         public static String ringName = "";
         public static Promotion promotion = null;
-        public static String defaultLogo = "Default.png";
-        public static AssetBundle tvLogo = null;
         public static String[] teamNames = new String[2];
         public static bool hasChamp = false;
         public static TitleMatch_Data[] titleData = new TitleMatch_Data[8];
+        public static int playerNum = 0;
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "FirePro War")]
@@ -57,17 +56,11 @@ namespace FireProWar
         {
             ringName = "";
             promotion = null;
+            playerNum = GetPlayerCount();
             MatchSetting settings = GlobalWork.GetInst().MatchSetting;
             fpwEnable = War_Form.form.fpw_Enable.Checked;
             if (fpwEnable)
             {
-                //Disable for Battle Royales
-                if (settings.BattleRoyalKind != BattleRoyalKindEnum.Off)
-                {
-                    promotion = null;
-                    return;
-                }
-
                 try
                 {
                     if ((int)settings.ringID < (int)RingID.EditRingIDTop)
@@ -292,6 +285,7 @@ namespace FireProWar
                 bool winnerLogged = false;
                 bool loserLogged = false;
                 bool isFinals = IsTourneyFinals();
+                MatchSetting matchSetting = GlobalWork.inst.MatchSetting;
 
                 //Get Loser
                 int rating = evaluation.EvaluateMatch();
@@ -308,6 +302,16 @@ namespace FireProWar
                     int moralePoints = 0;
                     Player player = PlayerMan.inst.GetPlObj(i);
 
+                    //Verify that employee and player match
+                    employee = VerifyEmployeeMatch(employee, DataBase.GetWrestlerFullName(player.WresParam), promotion);
+
+                    //This occurs if an invalid employee is selected.
+                    //Handles cases where ModPack Royal Rumbles could include a winner from another promotion.
+                    if (employee == null)
+                    {
+                        continue;
+                    }
+
                     //Ensure intruders are exempt
                     if (player.isIntruder)
                     {
@@ -320,9 +324,10 @@ namespace FireProWar
                     moralePoints += EvaluateMatchRating(rating);
 
                     //Check Win Condition
+                    //Losers only checked if the match IS NOT a Battle Royal
                     if (CheckWinCondition(evaluation))
                     {
-                        if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser)
+                        if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser && matchSetting.BattleRoyalKind == BattleRoyalKindEnum.Off)
                         {
                             moralePoints -= 1;
 
@@ -349,12 +354,48 @@ namespace FireProWar
                             Player loser = GetPlayer(ResultPosition.Loser);
                             int rankPoints = CompareRank(player, loser, ResultPosition.Winner);
                             moralePoints += rankPoints;
+
+                            //Additional points for winning a Battle Royal
+                            if (matchSetting.BattleRoyalKind != BattleRoyalKindEnum.Off)
+                            {
+                                L.D("Adding points for Battle Royal win to " +
+                                    DataBase.GetWrestlerFullName(player.WresParam));
+
+                                //Determine how many points the employee receives
+                                //Based on Employee Morale Rank and Number of Opponents
+                                int points = 0;
+                                if (playerNum <= 3)
+                                {
+                                    points = 2;
+                                }
+                                else if (playerNum <= 7)
+                                {
+                                    points = 3;
+                                }
+                                else
+                                {
+                                    points = 4;
+                                }
+
+                                if (employee.MoraleRank == 1)
+                                {
+                                    points *= 2;
+                                }
+                                else if (employee.MoraleRank == 0)
+                                {
+                                    points *= 3;
+                                }
+
+                                L.D("Morale Rank: " + employee.MoraleRank + "\nParticipant Number: " + playerNum);
+
+                                moralePoints += points;
+                            }
                         }
-                        else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner)
+                        else if (evaluation.PlResult[i].resultPosition == ResultPosition.Winner_Partner && matchSetting.BattleRoyalKind == BattleRoyalKindEnum.Off)
                         {
                             moralePoints += 1;
                         }
-                        else if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner)
+                        else if (evaluation.PlResult[i].resultPosition == ResultPosition.Loser_Partner && matchSetting.BattleRoyalKind == BattleRoyalKindEnum.Off)
                         {
                             moralePoints -= 1;
                             isWinner = false;
@@ -455,7 +496,6 @@ namespace FireProWar
                                                      " champion) in a non-title match.");
                             }
                         }
-
                     }
 
                     //Determine whether the player won a league or tournament
@@ -603,7 +643,70 @@ namespace FireProWar
                     }
 
                     String matchDetails = "";
-                    if (isDraw)
+
+                    //Ensure that we're tracking Battle Royale Results
+                    if (matchSetting.BattleRoyalKind != BattleRoyalKindEnum.Off)
+                    {
+                        
+                        matchDetails = promotion.MatchDetails.Count + 1 + ") " +
+                                       DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch +
+                                       GetTeamName(ResultPosition.Winner) + " has won a Battle Royal Match!";
+
+                        try
+                        {
+                            //Adding Rumble Statistics
+                            Employee emp = new Employee{Name = String.Empty};
+                            string mostElims = RumbleForm.GetMatchStat(MatchStatEnum.MostEliminations);
+                            string longest = RumbleForm.GetMatchStat(MatchStatEnum.LongestTime);
+                            string shortest = RumbleForm.GetMatchStat(MatchStatEnum.ShortestTime);
+
+
+                            if (mostElims != "NONE")
+                            {
+                                Employee statElim = VerifyEmployeeMatch(emp, mostElims, promotion);
+                                if (statElim != null)
+                                {
+                                    statElim.MoralePoints += 3;
+                                    War_Form.form.UpdateEmployeeMorale(statElim, true);
+                                    L.D("Most Eliminations: " + statElim.Name);
+                                    matchDetails += " - Most Eliminations: " + mostElims;
+                                }
+
+                            }
+
+                            if (longest != "NONE")
+                            {
+
+                                Employee statlong = VerifyEmployeeMatch(emp, longest, promotion);
+                                if (statlong != null)
+                                {
+                                    statlong.MoralePoints += 3;
+                                    War_Form.form.UpdateEmployeeMorale(statlong, true);
+                                    L.D("Longest Time: " + statlong.Name);
+                                    matchDetails += " - Longest Time: " + longest;
+                                }
+                            }
+
+                            if (shortest != "NONE")
+                            {
+                               Employee statshort = VerifyEmployeeMatch(emp, shortest, promotion);
+                                if (statshort != null)
+                                {
+                                    statshort.MoralePoints -= 3;
+                                    War_Form.form.UpdateEmployeeMorale(statshort, false);
+                                    L.D("Shortest Time: " + statshort.Name);
+                                    matchDetails += " - Shortest Time: " + shortest;
+                                }
+
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            L.D("Error while attempting to add ModPack Rumble stats: " + e);
+                        }         
+
+                    }
+                    else if (isDraw)
                     {
                         matchDetails = promotion.MatchDetails.Count + 1 + ") " +
                             DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch + "Draw between " +
@@ -671,6 +774,55 @@ namespace FireProWar
         }
 
         #region Helper Methods
+        public static int GetPlayerCount()
+        {
+            int players = 0;
+            MatchSetting matchSetting = global::GlobalWork.inst.MatchSetting;
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+
+                if (!plObj)
+                {
+                    continue;
+                }
+
+                if (matchSetting.matchWrestlerInfo[plObj.PlIdx].isSecond || matchSetting.matchWrestlerInfo[plObj.PlIdx].isIntruder)
+                {
+                    continue;
+                }
+
+                players++;
+            }
+
+            return players;
+        }
+        public static Employee VerifyEmployeeMatch(Employee emp, String playerName, Promotion promotion)
+        {
+            if (!emp.Name.Equals(playerName))
+            {
+                L.D("Selected employee " + emp.Name + " does not match current player " + playerName);
+                
+                //Ensure that we ONLY update if a valid employee is found
+                //This is necessary for ModPack Royal Rumbles, where various promotions are involved.
+                emp = null;
+
+                foreach (var employee in promotion.EmployeeList)
+                {
+                    if (employee.Name.Equals(playerName))
+                    {
+                        L.D("Employee Match Found for " + employee.Name);
+                        emp = employee;
+                        return emp;
+                    }
+                }
+            }
+            else
+            {
+                L.D("Selected employee " + emp.Name + " matches current player " + playerName);
+            }
+            return emp;
+        }
         public static String CheckMorale(int moraleRank)
         {
             switch (moraleRank)
@@ -706,7 +858,7 @@ namespace FireProWar
             if (evaluation.ResultType == MatchResultEnum.Fall || evaluation.ResultType == MatchResultEnum.GiveUp ||
                 evaluation.ResultType == MatchResultEnum.RingOut || evaluation.ResultType == MatchResultEnum.Escape ||
                 evaluation.ResultType == MatchResultEnum.OverRope || evaluation.ResultType == MatchResultEnum.KO ||
-                evaluation.ResultType == MatchResultEnum.Foul)
+                evaluation.ResultType == MatchResultEnum.Foul || GlobalWork.inst.MatchSetting.BattleRoyalKind != BattleRoyalKindEnum.Off)
             {
                 return true;
             }
@@ -749,6 +901,11 @@ namespace FireProWar
             if (position == ResultPosition.Winner)
             {
                 Player winner = GetPlayer(ResultPosition.Winner);
+                if (!winner)
+                {
+                    L.D("No winner found");
+                    return "";
+                }
                 name = DataBase.GetWrestlerFullName(winner.WresParam);
 
                 if (winner.PlIdx < 4)
@@ -778,6 +935,13 @@ namespace FireProWar
             else if (position == ResultPosition.Loser)
             {
                 Player loser = GetPlayer(ResultPosition.Loser);
+
+                if (!loser)
+                {
+                    L.D("No loser found");
+                    return "";
+                }
+
                 name = DataBase.GetWrestlerFullName(loser.WresParam);
 
                 if (loser.PlIdx < 4)
@@ -820,7 +984,7 @@ namespace FireProWar
                             }
                             else
                             {
-                              name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
+                                name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
                             }
                         }
                     }

@@ -143,6 +143,10 @@ namespace Data_Classes
 
         public void UpdateEmployeeData(Employee emp)
         {
+            if (emp.Name.Equals(String.Empty))
+            {
+                return;
+            }
             foreach (Employee employee in EmployeeList)
             {
                 if (employee.Name.Equals(emp.Name))

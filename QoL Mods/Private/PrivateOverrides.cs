@@ -20,7 +20,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
     [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
-    [GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
+    //[GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
@@ -82,17 +82,17 @@ namespace QoL_Mods.Private
             }
         }
 
-        [ControlPanel(Group = "Dynamic Highlights")]
-        public static Form HighlightForm()
-        {
-            if (DynamicHighlightsForm.highlightsForm == null)
-            {
-                return new DynamicHighlightsForm();
-            }
-            {
-                return DynamicHighlightsForm.highlightsForm;
-            }
-        }
+        //[ControlPanel(Group = "Dynamic Highlights")]
+        //public static Form HighlightForm()
+        //{
+        //    if (DynamicHighlightsForm.highlightsForm == null)
+        //    {
+        //        return new DynamicHighlightsForm();
+        //    }
+        //    {
+        //        return DynamicHighlightsForm.highlightsForm;
+        //    }
+        //}
         
         #endregion
 
@@ -809,242 +809,242 @@ namespace QoL_Mods.Private
 
         #region Dynamic Highlights
 
-        public static WrestlerAppearanceData[] origAppear = new WrestlerAppearanceData[8]
-            {null, null, null, null, null, null, null, null};
+        //public static WrestlerAppearanceData[] origAppear = new WrestlerAppearanceData[8]
+        //    {null, null, null, null, null, null, null, null};
 
-        public static int[] timeInMatch = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int[] SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        public static int SweatSpeed = 30;
-        public static int SweatLvl = 1;
-        public static bool EnableSweat;
+        //public static int[] timeInMatch = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+        //public static int[] SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+        //public static int SweatSpeed = 30;
+        //public static int SweatLvl = 1;
+        //public static bool EnableSweat;
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
-            Group = "Dynamic Highlights")]
-        public static void StoreOriginalWAD()
-        {
-            try
-            {
-                try
-                {
-                    EnableSweat = DynamicHighlightsForm.highlightsForm.eh_enableSweat.Checked;
-                }
-                catch
-                {
-                    EnableSweat = false;
-                    L.D("Failed to check enable sweat");
-                }
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+        //    Group = "Dynamic Highlights")]
+        //public static void StoreOriginalWAD()
+        //{
+        //    try
+        //    {
+        //        try
+        //        {
+        //            EnableSweat = DynamicHighlightsForm.highlightsForm.eh_enableSweat.Checked;
+        //        }
+        //        catch
+        //        {
+        //            EnableSweat = false;
+        //            L.D("Failed to check enable sweat");
+        //        }
 
-                origAppear = new WrestlerAppearanceData[8] { null, null, null, null, null, null, null, null };
-                SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-                try
-                {
-                    int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatSpeed.SelectedItem, out SweatSpeed);
-                    int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatLevel.SelectedItem, out SweatLvl);
+        //        origAppear = new WrestlerAppearanceData[8] { null, null, null, null, null, null, null, null };
+        //        SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+        //        try
+        //        {
+        //            int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatSpeed.SelectedItem, out SweatSpeed);
+        //            int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatLevel.SelectedItem, out SweatLvl);
 
-                }
-                catch (NullReferenceException)
-                {
-                    L.D("Error when attempting to parse the form fields");
-                }
+        //        }
+        //        catch (NullReferenceException)
+        //        {
+        //            L.D("Error when attempting to parse the form fields");
+        //        }
 
-                if (SweatSpeed <= 0)
-                {
-                    SweatSpeed = 1;
-                }
+        //        if (SweatSpeed <= 0)
+        //        {
+        //            SweatSpeed = 1;
+        //        }
 
-                MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
-                for (int i = 0; i < 8; i++)
-                {
-                    if (mwi[i] == null)
-                    {
-                        continue;
-                    }
-                    if (mwi[i].entry)
-                    {
-                        origAppear[i] = DataBase.GetAppearanceData(mwi[i].wrestlerID);
+        //        MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
+        //        for (int i = 0; i < 8; i++)
+        //        {
+        //            if (mwi[i] == null)
+        //            {
+        //                continue;
+        //            }
+        //            if (mwi[i].entry)
+        //            {
+        //                origAppear[i] = DataBase.GetAppearanceData(mwi[i].wrestlerID);
 
-                        //Determine if a default highlight should be set for all edits
-                        if (DynamicHighlightsForm.highlightsForm.eh_isDefaultLevel.Checked)
-                        {
-                            CostumeData cd = new CostumeData();
-                            if (cd == null)
-                            {
-                                continue;
-                            }
-                            cd.Set(DataBase.GetCostumeData(mwi[i].wrestlerID, mwi[i].costume_no));
-                            for (int p = 0; p < 9; p++)
-                            {
-                                cd.highlightIntensity[p, 0] = SweatLvl / 100;
-                                try
-                                {
-                                    var plObj = PlayerMan.inst.GetPlObj(i);
-                                    if (plObj == null)
-                                    {
-                                        continue;
-                                    }
-                                    plObj.FormRen.DestroySprite();
-                                    plObj.FormRen.InitTexture(cd);
-                                    plObj.FormRen.InitSprite();
-                                }
-                                catch (Exception e)
-                                {
-                                    L.D("Error updating initial highlights: " + e);
-                                }
+        //                //Determine if a default highlight should be set for all edits
+        //                if (DynamicHighlightsForm.highlightsForm.eh_isDefaultLevel.Checked)
+        //                {
+        //                    CostumeData cd = new CostumeData();
+        //                    if (cd == null)
+        //                    {
+        //                        continue;
+        //                    }
+        //                    cd.Set(DataBase.GetCostumeData(mwi[i].wrestlerID, mwi[i].costume_no));
+        //                    for (int p = 0; p < 9; p++)
+        //                    {
+        //                        cd.highlightIntensity[p, 0] = SweatLvl / 100;
+        //                        try
+        //                        {
+        //                            var plObj = PlayerMan.inst.GetPlObj(i);
+        //                            if (plObj == null)
+        //                            {
+        //                                continue;
+        //                            }
+        //                            plObj.FormRen.DestroySprite();
+        //                            plObj.FormRen.InitTexture(cd);
+        //                            plObj.FormRen.InitSprite();
+        //                        }
+        //                        catch (Exception e)
+        //                        {
+        //                            L.D("Error updating initial highlights: " + e);
+        //                        }
 
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("StoreOriginalWAD: " + e);
-            }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("StoreOriginalWAD: " + e);
+        //    }
 
-        }
+        //}
 
-        [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
-            Group = "Dynamic Highlights")]
-        public static void TimeInMatch(Player plObj)
-        {
-            if (!EnableSweat)
-            {
-                return;
-            }
+        //[Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
+        //    Group = "Dynamic Highlights")]
+        //public static void TimeInMatch(Player plObj)
+        //{
+        //    if (!EnableSweat)
+        //    {
+        //        return;
+        //    }
 
-            if (MatchMain.inst == null)
-            {
-                return;
-            }
+        //    if (MatchMain.inst == null)
+        //    {
+        //        return;
+        //    }
 
-            if (MatchMain.inst.Pause)
-            {
-                return;
-            }
+        //    if (MatchMain.inst.Pause)
+        //    {
+        //        return;
+        //    }
 
-            if (plObj.hasRight || plObj.isSallying)
-            {
-                float bpct = MatchMisc.GetParamRate(plObj.BP);
-                int sp = 0;
-                if (bpct < 90)
-                {
-                    sp += SweatSpeed;
-                }
+        //    if (plObj.hasRight || plObj.isSallying)
+        //    {
+        //        float bpct = MatchMisc.GetParamRate(plObj.BP);
+        //        int sp = 0;
+        //        if (bpct < 90)
+        //        {
+        //            sp += SweatSpeed;
+        //        }
 
-                if (bpct < 70)
-                {
-                    sp += SweatSpeed;
-                }
+        //        if (bpct < 70)
+        //        {
+        //            sp += SweatSpeed;
+        //        }
 
-                if (bpct < 50)
-                {
-                    sp += SweatSpeed;
-                }
+        //        if (bpct < 50)
+        //        {
+        //            sp += SweatSpeed;
+        //        }
 
-                if (bpct < 30)
-                {
-                    sp += SweatSpeed;
-                }
+        //        if (bpct < 30)
+        //        {
+        //            sp += SweatSpeed;
+        //        }
 
-                if (bpct < 10)
-                {
-                    sp += SweatSpeed;
-                }
+        //        if (bpct < 10)
+        //        {
+        //            sp += SweatSpeed;
+        //        }
 
-                timeInMatch[plObj.PlIdx] += sp;
-            }
+        //        timeInMatch[plObj.PlIdx] += sp;
+        //    }
 
-            if (plObj.isTagPartnerStandby && MatchMain.inst.matchTime.frm % (5) == 0)
-            {
-                timeInMatch[plObj.PlIdx]--;
-            }
+        //    if (plObj.isTagPartnerStandby && MatchMain.inst.matchTime.frm % (5) == 0)
+        //    {
+        //        timeInMatch[plObj.PlIdx]--;
+        //    }
 
-            int minsInMatch = GetMins(timeInMatch[plObj.PlIdx]);
-            int[] sweatLevelTbl = new int[10] { 7, 14, 20, 22, 27, 30, 35, 45, 50, 60 };
+        //    int minsInMatch = GetMins(timeInMatch[plObj.PlIdx]);
+        //    int[] sweatLevelTbl = new int[10] { 7, 14, 20, 22, 27, 30, 35, 45, 50, 60 };
 
-            int sweatLevel = 0;
-            for (int i = 0; i < 10; i++)
-            {
-                if (minsInMatch >= sweatLevelTbl[i])
-                {
-                    sweatLevel++;
-                }
-                else
-                {
-                    break;
-                }
-            }
+        //    int sweatLevel = 0;
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        if (minsInMatch >= sweatLevelTbl[i])
+        //        {
+        //            sweatLevel++;
+        //        }
+        //        else
+        //        {
+        //            break;
+        //        }
+        //    }
 
-            if (sweatLevel > SweatLevel[plObj.PlIdx])
-            {
-                MatchWrestlerInfo mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo[plObj.PlIdx];
-                CostumeData cd = new CostumeData();
-                cd.Set(DataBase.GetCostumeData(mwi.wrestlerID, mwi.costume_no));
+        //    if (sweatLevel > SweatLevel[plObj.PlIdx])
+        //    {
+        //        MatchWrestlerInfo mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo[plObj.PlIdx];
+        //        CostumeData cd = new CostumeData();
+        //        cd.Set(DataBase.GetCostumeData(mwi.wrestlerID, mwi.costume_no));
 
-                SweatLevel[plObj.PlIdx] = sweatLevel;
+        //        SweatLevel[plObj.PlIdx] = sweatLevel;
 
-                for (int p = 0; p < 9; p++)
-                {
-                    cd.highlightIntensity[p, 0] += 0.1f;
-                    if (cd.highlightIntensity[p, 0] > 1f)
-                    {
-                        cd.highlightIntensity[p, 0] = 1f;
-                    }
-                }
+        //        for (int p = 0; p < 9; p++)
+        //        {
+        //            cd.highlightIntensity[p, 0] += 0.1f;
+        //            if (cd.highlightIntensity[p, 0] > 1f)
+        //            {
+        //                cd.highlightIntensity[p, 0] = 1f;
+        //            }
+        //        }
 
-                plObj.FormRen.DestroySprite();
-                plObj.FormRen.InitTexture(cd);
-                plObj.FormRen.InitSprite();
-            }
-        }
+        //        plObj.FormRen.DestroySprite();
+        //        plObj.FormRen.InitTexture(cd);
+        //        plObj.FormRen.InitSprite();
+        //    }
+        //}
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitRound", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
-            Group = "Dynamic Highlights")]
-        public static void TowelOff(int round)
-        {
-            if (round == 0)
-            {
-                return;
-            }
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitRound", InjectionLocation = int.MaxValue,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
+        //    Group = "Dynamic Highlights")]
+        //public static void TowelOff(int round)
+        //{
+        //    if (round == 0)
+        //    {
+        //        return;
+        //    }
 
-            for (int i = 0; i < 8; i++)
-            {
-                if (timeInMatch[i] > 0)
-                {
-                    timeInMatch[i] /= 2;
-                }
-            }
-        }
+        //    for (int i = 0; i < 8; i++)
+        //    {
+        //        if (timeInMatch[i] > 0)
+        //        {
+        //            timeInMatch[i] /= 2;
+        //        }
+        //    }
+        //}
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Dynamic Highlights")]
-        public static void RestoreAppearanceData()
-        {
-            MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
-            for (int i = 0; i < 8; i++)
-            {
-                if (origAppear[i] != null)
-                {
-                    if (mwi[i] != null)
-                    {
-                        if (mwi[i].wrestlerID < WrestlerID.EditWrestlerIDTop)
-                        {
-                            PresetWrestlerData preset =
-                                PresetWrestlerDataMan.inst.GetPresetWrestlerData(mwi[i].wrestlerID);
-                            preset.appearance.Set(origAppear[i]);
-                        }
-                        else
-                        {
-                            EditWrestlerData edit = SaveData.inst.GetEditWrestlerData(mwi[i].wrestlerID);
-                            edit.appearanceData.Set(origAppear[i]);
-                        }
-                    }
-                }
-            }
-        }
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Dynamic Highlights")]
+        //public static void RestoreAppearanceData()
+        //{
+        //    MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
+        //    for (int i = 0; i < 8; i++)
+        //    {
+        //        if (origAppear[i] != null)
+        //        {
+        //            if (mwi[i] != null)
+        //            {
+        //                if (mwi[i].wrestlerID < WrestlerID.EditWrestlerIDTop)
+        //                {
+        //                    PresetWrestlerData preset =
+        //                        PresetWrestlerDataMan.inst.GetPresetWrestlerData(mwi[i].wrestlerID);
+        //                    preset.appearance.Set(origAppear[i]);
+        //                }
+        //                else
+        //                {
+        //                    EditWrestlerData edit = SaveData.inst.GetEditWrestlerData(mwi[i].wrestlerID);
+        //                    edit.appearanceData.Set(origAppear[i]);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
 

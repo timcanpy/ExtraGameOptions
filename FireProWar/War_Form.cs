@@ -1146,6 +1146,11 @@ namespace FireProWar
                 employeesAdded.Remove(employee.Name);
                 promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
                 ". Final Record: " + employee.GetRecord());
+
+                MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
+                                ". Final Record: " + employee.GetRecord(), "Resignation Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+
                 promotion.RemoveEmployee(employee.Name);
                 return promotion;
             }
@@ -1771,7 +1776,7 @@ namespace FireProWar
                     return region;
             }
         }
-        public void UpdateEmployeeMorale(Employee employee, bool isWinner)
+        public void UpdateEmployeeMorale(Employee employee, bool isSuccess)
         {
             Promotion promotion = GetEmployeePromotion(employee.Name);
             if (promotion == null)
@@ -1780,8 +1785,13 @@ namespace FireProWar
 
             }
 
+            if (employee.Name.Equals(String.Empty))
+            {
+                L.D("Name is empty, unable to process");
+            }
+            
             //Determine if the employee should be promoted.
-            if (isWinner)
+            if (isSuccess)
             {
                 if (ProcessEmployeePromotion(employee))
                 {
@@ -1793,6 +1803,10 @@ namespace FireProWar
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                              " has been promoted (Rank " +
                                              ms_moraleRank.Items[employee.MoraleRank].ToString() + ").");
+
+                        MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
+                                        " has been promoted (Rank " +
+                                        ms_moraleRank.Items[employee.MoraleRank].ToString() + ").", "Promotion Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
             }
@@ -1808,6 +1822,10 @@ namespace FireProWar
                         promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                              " has been demoted (Rank " +
                                              ms_moraleRank.Items[employee.MoraleRank].ToString() + ").");
+
+                        MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
+                                        " has been demoted (Rank " +
+                                        ms_moraleRank.Items[employee.MoraleRank].ToString() + ").", "Demotion Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                 }
                 else

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel20 = new System.Windows.Forms.Panel();
+            this.tos_moveSave = new System.Windows.Forms.Button();
             this.tos_moveReload = new System.Windows.Forms.Button();
             this.tos_moveRefresh = new System.Windows.Forms.Button();
             this.tos_moveResults = new System.Windows.Forms.ComboBox();
@@ -58,7 +59,6 @@
             this.tos_addWrestler = new System.Windows.Forms.Button();
             this.label61 = new System.Windows.Forms.Label();
             this.tos_wrestlerResults = new System.Windows.Forms.ComboBox();
-            this.tos_moveSave = new System.Windows.Forms.Button();
             this.panel20.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
@@ -82,6 +82,17 @@
             this.panel20.Name = "panel20";
             this.panel20.Size = new System.Drawing.Size(197, 247);
             this.panel20.TabIndex = 5;
+            // 
+            // tos_moveSave
+            // 
+            this.tos_moveSave.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tos_moveSave.Location = new System.Drawing.Point(41, 183);
+            this.tos_moveSave.Name = "tos_moveSave";
+            this.tos_moveSave.Size = new System.Drawing.Size(99, 23);
+            this.tos_moveSave.TabIndex = 17;
+            this.tos_moveSave.Text = "Save Data";
+            this.tos_moveSave.UseVisualStyleBackColor = true;
+            this.tos_moveSave.Click += new System.EventHandler(this.tos_moveSave_Click);
             // 
             // tos_moveReload
             // 
@@ -399,22 +410,11 @@
             this.tos_wrestlerResults.Size = new System.Drawing.Size(168, 21);
             this.tos_wrestlerResults.TabIndex = 15;
             // 
-            // tos_moveSave
-            // 
-            this.tos_moveSave.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tos_moveSave.Location = new System.Drawing.Point(41, 183);
-            this.tos_moveSave.Name = "tos_moveSave";
-            this.tos_moveSave.Size = new System.Drawing.Size(99, 23);
-            this.tos_moveSave.TabIndex = 17;
-            this.tos_moveSave.Text = "Save Data";
-            this.tos_moveSave.UseVisualStyleBackColor = true;
-            this.tos_moveSave.Click += new System.EventHandler(this.tos_moveSave_Click);
-            // 
             // TOSForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.RoyalBlue;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(723, 271);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel20);

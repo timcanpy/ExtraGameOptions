@@ -210,6 +210,7 @@
             this.rev_replacementList.Name = "rev_replacementList";
             this.rev_replacementList.ScrollAlwaysVisible = true;
             this.rev_replacementList.Size = new System.Drawing.Size(198, 186);
+            this.rev_replacementList.Sorted = true;
             this.rev_replacementList.TabIndex = 28;
             this.rev_replacementList.SelectedIndexChanged += new System.EventHandler(this.rev_replacementList_SelectedIndexChanged);
             // 
@@ -287,6 +288,7 @@
             this.rev_reversalList.Name = "rev_reversalList";
             this.rev_reversalList.ScrollAlwaysVisible = true;
             this.rev_reversalList.Size = new System.Drawing.Size(198, 186);
+            this.rev_reversalList.Sorted = true;
             this.rev_reversalList.TabIndex = 19;
             this.rev_reversalList.SelectedIndexChanged += new System.EventHandler(this.rev_reversalList_SelectedIndexChanged);
             // 

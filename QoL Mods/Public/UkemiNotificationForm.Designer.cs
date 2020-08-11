@@ -58,10 +58,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.uk_ringResults = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.uk_notificationList = new System.Windows.Forms.ComboBox();
-            this.label6 = new System.Windows.Forms.Label();
             this.uk_load = new System.Windows.Forms.Button();
             this.uk_save = new System.Windows.Forms.Button();
+            this.uk_notificationList = new System.Windows.Forms.ComboBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.uk_wrestlerTab.SuspendLayout();
             this.panel19.SuspendLayout();
@@ -136,6 +136,7 @@
             this.uk_wrestlerNotification.Location = new System.Drawing.Point(211, 100);
             this.uk_wrestlerNotification.Name = "uk_wrestlerNotification";
             this.uk_wrestlerNotification.Size = new System.Drawing.Size(168, 21);
+            this.uk_wrestlerNotification.Sorted = true;
             this.uk_wrestlerNotification.TabIndex = 63;
             // 
             // uk_wrestlers
@@ -145,6 +146,7 @@
             this.uk_wrestlers.Location = new System.Drawing.Point(212, 39);
             this.uk_wrestlers.Name = "uk_wrestlers";
             this.uk_wrestlers.Size = new System.Drawing.Size(168, 21);
+            this.uk_wrestlers.Sorted = true;
             this.uk_wrestlers.TabIndex = 60;
             this.uk_wrestlers.SelectedIndexChanged += new System.EventHandler(this.uk_wrestlers_SelectedIndexChanged);
             // 
@@ -287,6 +289,7 @@
             this.uk_ringNotifications.Location = new System.Drawing.Point(213, 102);
             this.uk_ringNotifications.Name = "uk_ringNotifications";
             this.uk_ringNotifications.Size = new System.Drawing.Size(168, 21);
+            this.uk_ringNotifications.Sorted = true;
             this.uk_ringNotifications.TabIndex = 69;
             // 
             // uk_ringsList
@@ -296,6 +299,7 @@
             this.uk_ringsList.Location = new System.Drawing.Point(214, 41);
             this.uk_ringsList.Name = "uk_ringsList";
             this.uk_ringsList.Size = new System.Drawing.Size(168, 21);
+            this.uk_ringsList.Sorted = true;
             this.uk_ringsList.TabIndex = 66;
             this.uk_ringsList.SelectedIndexChanged += new System.EventHandler(this.uk_rings_SelectedIndexChanged);
             // 
@@ -394,25 +398,6 @@
             this.panel2.Size = new System.Drawing.Size(138, 230);
             this.panel2.TabIndex = 1;
             // 
-            // uk_notificationList
-            // 
-            this.uk_notificationList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.uk_notificationList.FormattingEnabled = true;
-            this.uk_notificationList.Location = new System.Drawing.Point(5, 41);
-            this.uk_notificationList.Name = "uk_notificationList";
-            this.uk_notificationList.Size = new System.Drawing.Size(126, 21);
-            this.uk_notificationList.TabIndex = 67;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(25, 12);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(81, 15);
-            this.label6.TabIndex = 66;
-            this.label6.Text = "Notifications";
-            // 
             // uk_load
             // 
             this.uk_load.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -434,6 +419,25 @@
             this.uk_save.Text = "Save";
             this.uk_save.UseVisualStyleBackColor = true;
             this.uk_save.Click += new System.EventHandler(this.uk_save_Click);
+            // 
+            // uk_notificationList
+            // 
+            this.uk_notificationList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.uk_notificationList.FormattingEnabled = true;
+            this.uk_notificationList.Location = new System.Drawing.Point(5, 41);
+            this.uk_notificationList.Name = "uk_notificationList";
+            this.uk_notificationList.Size = new System.Drawing.Size(126, 21);
+            this.uk_notificationList.TabIndex = 67;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(25, 12);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(81, 15);
+            this.label6.TabIndex = 66;
+            this.label6.Text = "Notifications";
             // 
             // UkemiNotificationForm
             // 
