@@ -602,30 +602,35 @@ namespace FireProWar
 
                     //Update Employee Details
                     employee.MoralePoints += moralePoints;
-                    employee.MatchCount += 1;
 
-                    if (isDraw)
+                    //Ensure that Seconds do not gain a record update
+                    if (!player.isSecond)
                     {
-                        employee.Draws += 1;
-                    }
-                    else if (isWinner)
-                    {
-                        employee.Wins += 1;
-                    }
-                    else if (!isWinner)
-                    {
-                        employee.Losses += 1;
-                    }
+                        employee.MatchCount += 1;
 
-                    if (employee.MatchCount == 1)
-                    {
-                        employee.AverageRating = rating;
-                    }
-                    else
-                    {
-                        employee.AverageRating = (employee.AverageRating + rating) / 2;
-                    }
+                        if (isDraw)
+                        {
+                            employee.Draws += 1;
+                        }
+                        else if (isWinner)
+                        {
+                            employee.Wins += 1;
+                        }
+                        else if (!isWinner)
+                        {
+                            employee.Losses += 1;
+                        }
 
+                        if (employee.MatchCount == 1)
+                        {
+                            employee.AverageRating = rating;
+                        }
+                        else
+                        {
+                            employee.AverageRating = (employee.AverageRating + rating) / 2;
+                        }
+                    }
+                 
                     War_Form.form.UpdateEmployeeMorale(employee, isWinner);
                 }
 
@@ -655,7 +660,7 @@ namespace FireProWar
                         try
                         {
                             //Adding Rumble Statistics
-                            Employee emp = new Employee{Name = String.Empty};
+                            Employee emp = new Employee { Name = String.Empty };
                             string mostElims = RumbleForm.GetMatchStat(MatchStatEnum.MostEliminations);
                             string longest = RumbleForm.GetMatchStat(MatchStatEnum.LongestTime);
                             string shortest = RumbleForm.GetMatchStat(MatchStatEnum.ShortestTime);
@@ -689,7 +694,7 @@ namespace FireProWar
 
                             if (shortest != "NONE")
                             {
-                               Employee statshort = VerifyEmployeeMatch(emp, shortest, promotion);
+                                Employee statshort = VerifyEmployeeMatch(emp, shortest, promotion);
                                 if (statshort != null)
                                 {
                                     statshort.MoralePoints -= 3;
@@ -703,7 +708,7 @@ namespace FireProWar
                         catch (Exception e)
                         {
                             L.D("Error while attempting to add ModPack Rumble stats: " + e);
-                        }         
+                        }
 
                     }
                     else if (isDraw)

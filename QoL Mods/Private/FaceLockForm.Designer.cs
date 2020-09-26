@@ -77,6 +77,7 @@ namespace QoL_Mods
             this.label42 = new System.Windows.Forms.Label();
             this.label43 = new System.Windows.Forms.Label();
             this.nl_moveSearch = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl2.SuspendLayout();
             this.tabPage11.SuspendLayout();
             this.panel17.SuspendLayout();
@@ -536,6 +537,7 @@ namespace QoL_Mods
             // 
             this.panel15.BackColor = System.Drawing.Color.RoyalBlue;
             this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel15.Controls.Add(this.button1);
             this.panel15.Controls.Add(this.nl_Categories);
             this.panel15.Controls.Add(this.label44);
             this.panel15.Controls.Add(this.nl_refreshMoves);
@@ -622,6 +624,16 @@ namespace QoL_Mods
             this.nl_moveSearch.TabIndex = 1;
             this.nl_moveSearch.LostFocus += new System.EventHandler(this.nl_moveSearch_LostFocus);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(65, 182);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // FaceLockForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -696,6 +708,6 @@ namespace QoL_Mods
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.Label label43;
         private System.Windows.Forms.TextBox nl_moveSearch;
-
-        }
+        private System.Windows.Forms.Button button1;
+    }
     }

@@ -816,5 +816,17 @@ namespace QoL_Mods
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                GeneralComponents.ReplaceCriticalImage(PlayerMan.GetInst().PlObj[0]);
+            }
+            catch (Exception exception)
+            {
+                L.D("Force Critical Error: " + exception);
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     //[GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
-    [GroupDescription(Group = "Modify Plates", Name = "Modify Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
+    [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
     #endregion
@@ -660,8 +660,8 @@ namespace QoL_Mods.Private
 
         [Hook(TargetClass = "EntranceScene", TargetMethod = "DispName", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
-            Group = "Modify Plates")]
-        public static void ModifyNamePlate(EntranceScene es)
+            Group = "Update Plates")]
+        public static void UpdateNamePlate(EntranceScene es)
         {
             try
             {
@@ -688,6 +688,8 @@ namespace QoL_Mods.Private
                     global::WrestlerParam wrestlerParam =
                         global::DataBase.GetWrestlerParam(matchWrestlerInfo.wrestlerID);
                     bool isNickEmpty = wrestlerParam.nickName.Trim() == String.Empty;
+
+                    L.D("Checking # " +i + " - " + DataBase.GetWrestlerFullName(wrestlerParam));
 
                     //Add delimeters to the titles
                     if (i != 0)
@@ -737,6 +739,7 @@ namespace QoL_Mods.Private
                     {
                         name += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
                         teamMembers.Add(DataBase.GetWrestlerFullName(wrestlerParam));
+                        L.D("Added to participants");
                     }
                     else
                     {
@@ -746,6 +749,7 @@ namespace QoL_Mods.Private
                         }
 
                         seconds += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
+                        L.D("Added to Seconds");
                     }
 
                 }
@@ -757,6 +761,7 @@ namespace QoL_Mods.Private
                     GetTeamName(teamMembers, out dbTeamName);
                     if (dbTeamName == String.Empty)
                     {
+                        L.D("Team name is empty");
                         gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
                         //If title information exists, avoid over-writing it.
@@ -768,6 +773,7 @@ namespace QoL_Mods.Private
                     }
                     else
                     {
+                        L.D("Team name is not empty: " + dbTeamName);
                         gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = dbTeamName;
 
                         //If title information exists, avoid over-writing it.
@@ -780,6 +786,7 @@ namespace QoL_Mods.Private
                 }
                 else
                 {
+                    L.D("Setting team text");
                     //For single wrestlers, we only need to set the modified name.
                     gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
@@ -794,6 +801,7 @@ namespace QoL_Mods.Private
                 //Add seconds to the team
                 if (seconds != String.Empty)
                 {
+                    L.D("Setting Seconds text");
                     gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text +=
                         " w/ " + seconds;
                 }

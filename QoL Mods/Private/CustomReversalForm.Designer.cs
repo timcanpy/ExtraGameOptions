@@ -210,7 +210,6 @@
             this.rev_replacementList.Name = "rev_replacementList";
             this.rev_replacementList.ScrollAlwaysVisible = true;
             this.rev_replacementList.Size = new System.Drawing.Size(198, 186);
-            this.rev_replacementList.Sorted = true;
             this.rev_replacementList.TabIndex = 28;
             this.rev_replacementList.SelectedIndexChanged += new System.EventHandler(this.rev_replacementList_SelectedIndexChanged);
             // 

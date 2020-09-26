@@ -14,6 +14,8 @@ using ModPack;
 using QoL_Mods.Private;
 using Ace.AttireExtension;
 using QoL_Mods.Data_Classes.Facelock;
+using UnityEngine.Windows.Speech;
+using System.Reflection;
 
 namespace QoL_Mods
 {
@@ -39,6 +41,8 @@ namespace QoL_Mods
     [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents.")]
     [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "Allows players to override the Test of Strength animation with custom actions.")]
+    [GroupDescription(Group = "Enable Seconds", Name = "Enable Seconds in All Matches", Description = "Allows players to select Seconds in all matches.\nThis can have unintended effects for modes like S-1, so use your best judgement.")]
+    [GroupDescription(Group = "Submission Ignore", Name = "Referee Ignores Submissions", Description = "Gives the referee a chance, based on his Tolerance, to ignore 'Give Up' attempts from the defender.")]
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -498,6 +502,7 @@ namespace QoL_Mods
         public static String imageFolder = "Images";
         public static String _noImageValue = "None";
         public static Dictionary<int, String> critImages = new Dictionary<int, String>();
+        public static GameObject critImage;
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
@@ -619,6 +624,25 @@ namespace QoL_Mods
             }
         }
 
+
+        [Hook(TargetClass = "Referee", TargetMethod = "CallFight", InjectionLocation = 0,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.None,
+            Group = "ChangeCritImage")]
+        public static void SetFightImageCopy()
+        {
+            try
+            {
+                //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
+                critImage = MatchUI.inst.gameObj_Critical;
+            }
+            catch (Exception e)
+            {
+                L.D("Error Setting Up Custom Critical Image: " + e);
+                critImage = null;
+            }
+        }
+
         //Prevent default critical image from being displayed
         [Hook(TargetClass = "MatchUI", TargetMethod = "Show_Critical", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
@@ -632,23 +656,38 @@ namespace QoL_Mods
         {
             try
             {
-                L.D("Replacing Critical Image");
+                L.D("Replacing Critical Image with " + imageName);
                 Sprite sprite = null;
                 String imagePath = imageName;
 
                 byte[] data = File.ReadAllBytes(imageName);
                 Texture2D texture = new Texture2D(2, 2);
                 texture.LoadImage(data);
-                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), new Vector2(0f, 0f));
-                MatchUI.inst.animator_Fight.speed = .5f;
+                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), new Vector2(90f, 90f));
+                MatchUI.inst.animator_Critical.speed = .5f;
 
-                if (sprite != null)
+                if (sprite != null && critImage != null)
                 {
-                    GameObject gameObject = MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject;
-                    Image component = gameObject.GetComponent<Image>();
-                    component.sprite = sprite;
-                    global::MatchSEPlayer.inst.PlayMatchSE(global::MatchSEEnum.Critical, 1f, -1);
-                    MatchUI.inst.gameObj_Fight.SetActive(true);
+                    L.D("Success");
+                    Image img = critImage.GetComponent<Image>();
+                    if (img == null)
+                    {
+                        L.D("gameObj_Critical<Image> = null");
+                        return;
+                    }
+                    //fightImage.transform.FindChild("Image_Fight").gameObject.GetComponent<Image>().sprite = sprite;
+                    img.sprite = sprite;
+                    MatchSEPlayer.inst.PlayMatchSE(MatchSEEnum.Critical, 1f, -1);
+                    //MatchUI.inst.gameObj_Fight = fightImage;
+                    //MatchUI.inst.gameObj_Fight.SetActive(true);
+
+                    //critImage.transform.eulerAngles = new Vector3(
+                    //    critImage.transform.eulerAngles.x + 180,
+                    //    critImage.transform.eulerAngles.y + 180,
+                    //    critImage.transform.eulerAngles.z
+                    //);
+                    //critImage.transform.Rotate(90f, 90f, 0f, Space.World);
+                    critImage.SetActive(true);
                 }
             }
             catch (Exception e)
@@ -1161,6 +1200,8 @@ namespace QoL_Mods
         #endregion
 
         #region 2.9 Calls
+        public static System.Timers.Timer voiceTimer;
+
         [Hook(TargetClass = "Audience", TargetMethod = "Play_Surprise", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "2.9Call")]
         public static bool Play29Sound()
@@ -1169,11 +1210,45 @@ namespace QoL_Mods
             if (((BasicSkillEnum)refe.SkillID == BasicSkillEnum.BFALL4 || (BasicSkillEnum)refe.SkillID == BasicSkillEnum.FFALL4)
                 && GlobalWork.GetInst().MatchSetting.VictoryCondition != global::VictoryConditionEnum.Count2)
             {
-                MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
-                return true;
+                try
+                {
+                    if (voiceTimer == null)
+                    {
+                        voiceTimer = new System.Timers.Timer
+                        {
+                            Interval = 700
+                        };
+                        voiceTimer.Elapsed += OnTimedEvent;
+                    }
+
+                    L.D("Preparing to play referee voice");
+                    voiceTimer.Start();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    L.D("Play29Sound Error: " + e);
+                }
+
             }
             return false;
         }
+
+        public static void OnTimedEvent(System.Object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                L.D("Playing referee voice");
+                MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
+                voiceTimer.Stop();
+            }
+            catch (Exception exception)
+            {
+                L.D("VoiceTimer_Tick Error: " + exception);
+            }
+
+        }
+
         #endregion
 
         #region Sell Submissions
@@ -1730,6 +1805,27 @@ namespace QoL_Mods
                 if (GlobalParam.TitleMatch_BeltData != null)
                     appeal += 2;
 
+                L.D("Audience Appeal: " + appeal);
+
+                //If the maximum average is greater than the final appeal, increase the final value
+                //Not valid for matches with only two edits
+                int maxAppeal = GetMaxCharisma() + GetMaxRank();
+
+                if (maxAppeal > appeal && GetPlayerList().Length > 2)
+                {
+                    L.D("Max Appeal: " + maxAppeal + "\n");
+                    double difference = appeal - maxAppeal;
+
+                    if (difference > 3)
+                    {
+                        appeal += 2;
+                    }
+                    else
+                    {
+                        appeal += 1;
+                    }
+                }
+
                 if (appeal < 0)
                 {
                     appeal = 0;
@@ -1738,8 +1834,6 @@ namespace QoL_Mods
                 {
                     appeal = 10;
                 }
-
-                L.D("Audience Appeal: " + appeal);
 
                 switch (appeal)
                 {
@@ -1820,6 +1914,52 @@ namespace QoL_Mods
             L.D("Average Charisma: " + charisma);
             return Math.Ceiling(charisma);
         }
+        public static int GetMaxRank()
+        {
+            int rank = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
+                if (!plObj.entry)
+                {
+                    continue;
+                }
+
+                if (!plObj.isIntruder)
+                {
+                    if ((int)plObj.param.wrestlerRank > rank)
+                    {
+                        rank = (int)plObj.param.wrestlerRank;
+                    }
+
+                }
+            }
+
+            return rank;
+        }
+        public static int GetMaxCharisma()
+        {
+            int charisma = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
+                if (!plObj.entry)
+                {
+                    continue;
+                }
+
+                if (!plObj.isIntruder)
+                {
+                    if ((int)plObj.param.charismaRank > charisma)
+                    {
+                        charisma = (int)plObj.param.charismaRank;
+                    }
+                }
+            }
+
+            return charisma;
+        }
+
         #endregion
 
         #region Automatic Match Configuration
@@ -1964,9 +2104,9 @@ namespace QoL_Mods
             Player attacker = PlayerMan.inst.GetPlObj(plIDx);
             Player defender = PlayerMan.inst.GetPlObj(attacker.TargetPlIdx);
 
-            //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
+            //Ensure standing moves don't trigger the code unless it's a signature; currently experiencing issues with missed strike attacks
             if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
-                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
+                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.SpecialMove)
             {
                 return;
             }
@@ -1981,9 +2121,11 @@ namespace QoL_Mods
                     sd.filteringType == SkillFilteringType.Submission_Neck
                     || sd.filteringType == SkillFilteringType.Submission_Complex)
                 {
+                    L.D("Increasing down time for " + DataBase.GetWrestlerFullName(defender.WresParam));
                     defender.DownTime += GetDownTime(attacker);
                 }
 
+                L.D("Increasing down time for " + DataBase.GetWrestlerFullName(defender.WresParam));
                 defender.DownTime += GetDownTime(attacker);
                 defender.isAddedDownTimeByPerformance = false;
                 if (defender.Zone == ZoneEnum.InRing)
@@ -2380,6 +2522,130 @@ namespace QoL_Mods
 
         #endregion
 
+        #region Enable Seconds
+        [Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "IsSecondSelectableMode", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "Enable Seconds")]
+        public static bool EnableSeconds(ref bool isEnabled)
+        {
+            isEnabled = true;
+            return true;
+
+        }
+
+        [Hook(TargetClass = "Menu_BattleSetting", TargetMethod = "IsSingleMatchOnly", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn, Group = "Enable Seconds")]
+        public static bool OverrideSingleMatchOnly(ref bool isSingle)
+        {
+            isSingle = false;
+            return true;
+
+        }
+        #endregion
+
+        #region Referee Ignores Submission
+
+        private static int ignoreChecksRemaining = 0;
+        private static int ignoreDC = 0;
+        private static bool ignoreFlag;
+        private static System.Timers.Timer ignoreTimer;
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
+            Group = "Submission Ignore")]
+        public static void SetRefereeIgnoreValues()
+        {
+
+            if (ignoreTimer == null)
+            {
+                ignoreTimer = new System.Timers.Timer
+                {
+                    Interval = 1200
+                };
+                ignoreTimer.Elapsed += ResetIgnoreCheck;
+            }
+
+            Referee mRef = RefereeMan.inst.GetRefereeObj();
+            ignoreChecksRemaining = 4 - mRef.RefePrm.interfereTime;
+            ignoreFlag = false;
+
+            if (ignoreChecksRemaining <= 2)
+            {
+                ignoreDC = 14;
+            }
+            else if (ignoreChecksRemaining == 3)
+            {
+                ignoreDC = 12;
+            }
+            else
+            {
+                ignoreDC = 10;
+            }
+            L.D("Ignore checks set to " + ignoreChecksRemaining);
+        }
+
+        [Hook(TargetClass = "Referee", TargetMethod = "Process_SubmissionCheck", InjectionLocation = 22,
+            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
+            Group = "Submission Ignore")]
+        public static bool OverrideGiveUp(Referee referee)
+        {
+            try
+            {
+                //Check for disturbing players first, based on the method's hook location.
+                //If a distrubing player exists, we need to return to the parent method for execution.
+                int disturbingPlayer = global::PlayerMan.inst.GetDisturbingPlayer();
+                if (disturbingPlayer >= 0)
+                {
+                    L.D("Disturbing player exists, go back to the main method for processing");
+                    return false;
+                }
+
+                global::Player plObj = global::PlayerMan.inst.GetPlObj(referee.TargetPlIdx);
+                if (plObj.isWannaGiveUp)
+                {
+                    if (ignoreFlag)
+                    {
+                        return true;
+                    }
+
+                    if (ignoreChecksRemaining > 0)
+                    {
+                        L.D("Rolling ignore check");
+
+                        int roll = UnityEngine.Random.Range(1, 20);
+                        if (roll >= ignoreDC)
+                        {
+                            ignoreDC += 2;
+                            ignoreChecksRemaining -= 1;
+                            ignoreFlag = true;
+
+                            L.D("Check passed, " + ignoreChecksRemaining + " checks remaining. DC is now " + ignoreDC +
+                                ".");
+                            DispNotification.inst.Show(referee.RefePrm.name + " is watching closely!");
+                            ignoreTimer.Start();
+                            return true;
+                        }
+                        else
+                        {
+                            L.D("Check failed: " + roll + " vs " + ignoreDC + ".");
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("OverrideGiveUpError: " + e);
+            }
+
+            return false;
+        }
+
+        public static void ResetIgnoreCheck(System.Object source, System.Timers.ElapsedEventArgs e)
+        {
+            L.D("Resetting ignore flag");
+            ignoreFlag = false;
+            ignoreTimer.Stop();
+        }
+
+        #endregion
+
         #region General Helper Methods
         private static bool CheckForMOTWMatch()
         {
@@ -2397,6 +2663,26 @@ namespace QoL_Mods
             {
                 return false;
             }
+        }
+        public static object GetField(object obj, string field, bool isStatic)
+        {
+            try
+            {
+                Type myType = obj.GetType();
+                FieldInfo myInfo = myType.GetField(field, isStatic ? (BindingFlags.Static | BindingFlags.NonPublic) : (BindingFlags.Instance | BindingFlags.NonPublic));
+                return myInfo.GetValue(isStatic ? null : obj);
+
+            }
+            catch
+            {
+                return null;
+            }
+        }
+        public static void SetField(object obj, string field, bool isStatic, object value)
+        {
+            Type myType = obj.GetType();
+            FieldInfo myInfo = myType.GetField(field, isStatic ? (BindingFlags.Static | BindingFlags.NonPublic) : (BindingFlags.Instance | BindingFlags.NonPublic));
+            myInfo.SetValue(isStatic ? null : obj, value);
         }
         #endregion
     }
