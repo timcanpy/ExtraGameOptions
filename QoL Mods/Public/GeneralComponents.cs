@@ -16,6 +16,7 @@ using Ace.AttireExtension;
 using QoL_Mods.Data_Classes.Facelock;
 using UnityEngine.Windows.Speech;
 using System.Reflection;
+using MoreMatchTypes;
 
 namespace QoL_Mods
 {
@@ -80,6 +81,7 @@ namespace QoL_Mods
 
     class GeneralComponents
     {
+        #region Forms
         [ControlPanel(Group = "Ring Config")]
         public static Form RingForm()
         {
@@ -167,6 +169,7 @@ namespace QoL_Mods
                 return TOSForm.form;
             }
         }
+        #endregion
 
         #region Force Preemptive Pinfall Count
 
@@ -668,25 +671,17 @@ namespace QoL_Mods
 
                 if (sprite != null && critImage != null)
                 {
-                    L.D("Success");
+                    L.D("Crit Image Position x: " + critImage.transform.position.x + "\nCrit Image Position y: " + critImage.transform.position.y);
+                    L.D("Crit Image Rotation x: " + critImage.transform.rotation.x + "\nCrit Image Rotation y: " + critImage.transform.rotation.y + "\nCrit Image Rotation w: " + critImage.transform.rotation.w);
+
                     Image img = critImage.GetComponent<Image>();
                     if (img == null)
                     {
                         L.D("gameObj_Critical<Image> = null");
                         return;
                     }
-                    //fightImage.transform.FindChild("Image_Fight").gameObject.GetComponent<Image>().sprite = sprite;
                     img.sprite = sprite;
                     MatchSEPlayer.inst.PlayMatchSE(MatchSEEnum.Critical, 1f, -1);
-                    //MatchUI.inst.gameObj_Fight = fightImage;
-                    //MatchUI.inst.gameObj_Fight.SetActive(true);
-
-                    //critImage.transform.eulerAngles = new Vector3(
-                    //    critImage.transform.eulerAngles.x + 180,
-                    //    critImage.transform.eulerAngles.y + 180,
-                    //    critImage.transform.eulerAngles.z
-                    //);
-                    //critImage.transform.Rotate(90f, 90f, 0f, Space.World);
                     critImage.SetActive(true);
                 }
             }
@@ -695,21 +690,6 @@ namespace QoL_Mods
                 L.D("CustomCritError: " + e.Message);
             }
 
-        }
-
-        public static int[] GetPlayerList()
-        {
-            List<int> players = new List<int>();
-            for (int i = 0; i < 8; i++)
-            {
-                Player plObj = PlayerMan.inst.GetPlObj(i);
-                if (plObj)
-                {
-                    players.Add(plObj.PlIdx);
-                }
-            }
-
-            return players.ToArray();
         }
 
         #endregion
@@ -2024,7 +2004,13 @@ namespace QoL_Mods
                         }
 
                         //Clock Speed
-                        if (GetWrestlerList().Length == 2)
+                        //ModPack Royal Rumbles should always use the fastest speed
+                        if(ModPack.ModPack.isExtendedRumble || MoreMatchTypes_Form.moreMatchTypesForm.cb_ttt.Checked)
+                        {
+                            //Double Speed
+                            ModPackForm.instance.comboBox8.SelectedIndex = 2;
+                        }
+                        else if (GetWrestlerList().Length == 2)
                         {
                             ModPackForm.instance.comboBox8.SelectedIndex = config.SinglesSpeed;
                         }
@@ -2557,7 +2543,7 @@ namespace QoL_Mods
             {
                 ignoreTimer = new System.Timers.Timer
                 {
-                    Interval = 1200
+                    Interval = 2000
                 };
                 ignoreTimer.Elapsed += ResetIgnoreCheck;
             }
@@ -2618,7 +2604,7 @@ namespace QoL_Mods
 
                             L.D("Check passed, " + ignoreChecksRemaining + " checks remaining. DC is now " + ignoreDC +
                                 ".");
-                            DispNotification.inst.Show(referee.RefePrm.name + " is watching closely!");
+                            ShowMessage(referee.RefePrm.name + " is watching closely!");
                             ignoreTimer.Start();
                             return true;
                         }
@@ -2684,6 +2670,26 @@ namespace QoL_Mods
             FieldInfo myInfo = myType.GetField(field, isStatic ? (BindingFlags.Static | BindingFlags.NonPublic) : (BindingFlags.Instance | BindingFlags.NonPublic));
             myInfo.SetValue(isStatic ? null : obj, value);
         }
+        public static int[] GetPlayerList()
+        {
+            List<int> players = new List<int>();
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+                if (plObj)
+                {
+                    players.Add(plObj.PlIdx);
+                }
+            }
+
+            return players.ToArray();
+        }
+        private static void ShowMessage(String message, int time = 360)
+        {
+            //DispNotification.inst.Show(message, time);
+            CutSceneMessage.GetInst().Show(message, time);
+        }
+
         #endregion
     }
 }

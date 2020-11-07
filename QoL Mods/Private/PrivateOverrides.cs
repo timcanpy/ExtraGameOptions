@@ -24,6 +24,8 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
+    [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNot that any change is permanent, use at your own risk.")]
+
     #endregion
 
     #region Field Access
@@ -82,18 +84,18 @@ namespace QoL_Mods.Private
             }
         }
 
-        //[ControlPanel(Group = "Dynamic Highlights")]
-        //public static Form HighlightForm()
-        //{
-        //    if (DynamicHighlightsForm.highlightsForm == null)
-        //    {
-        //        return new DynamicHighlightsForm();
-        //    }
-        //    {
-        //        return DynamicHighlightsForm.highlightsForm;
-        //    }
-        //}
-        
+        [ControlPanel(Group = "Easy Edit Resize")]
+        public static Form EEForm()
+        {
+            if (EasyResizeForm.eeForm == null)
+            {
+                return new EasyResizeForm();
+            }
+            {
+                return EasyResizeForm.eeForm;
+            }
+        }
+
         #endregion
 
         #region Face Lock override

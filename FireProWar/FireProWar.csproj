@@ -58,6 +58,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data Classes\Storage Objects\Owner.cs" />
     <Compile Include="Data Classes\Employee.cs" />
     <Compile Include="Helper Classes\GeneralManager.cs" />
     <Compile Include="Helper Classes\MatchEndFunctions.cs" />
@@ -87,5 +88,6 @@
       <DependentUpon>War_Form.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
