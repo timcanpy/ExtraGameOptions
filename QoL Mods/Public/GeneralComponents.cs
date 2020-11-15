@@ -2684,7 +2684,7 @@ namespace QoL_Mods
 
             return players.ToArray();
         }
-        private static void ShowMessage(String message, int time = 360)
+        private static void ShowMessage(String message, int time = 200)
         {
             //DispNotification.inst.Show(message, time);
             CutSceneMessage.GetInst().Show(message, time);

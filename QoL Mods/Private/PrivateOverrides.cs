@@ -691,7 +691,7 @@ namespace QoL_Mods.Private
                         global::DataBase.GetWrestlerParam(matchWrestlerInfo.wrestlerID);
                     bool isNickEmpty = wrestlerParam.nickName.Trim() == String.Empty;
 
-                    L.D("Checking # " +i + " - " + DataBase.GetWrestlerFullName(wrestlerParam));
+                    L.D("Checking # " + i + " - " + DataBase.GetWrestlerFullName(wrestlerParam));
 
                     //Add delimeters to the titles
                     if (i != 0)
@@ -1315,6 +1315,7 @@ namespace QoL_Mods.Private
         #region Variables
         public static int maxCFormNum = 99999;
         public static int maxCFormID = 100000 + maxCFormNum;
+        public static int maxPresetIdNum = 100000;
         #endregion
 
         [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
@@ -1349,13 +1350,15 @@ namespace QoL_Mods.Private
                 {
                     int index = craftSkill.mFileBank.GetSelecting();
                     var saveList = craftSkill.mData.WazaData[index].toolFormSaveList;
+                    int angleNumber = 0;
                     HashSet<int> usedCIds = new HashSet<Int32>();
 
                     SkillData[] skillData = SkillDataMan.inst.GetSkillData(skill_id);
                     L.D("Adding custom forms for " + DataBase.GetSkillName(skill_id));
+                    L.D("Number of WazaData.AnmData Items: " + craftSkill.mData.WazaData[index].anmData.Length);
                     foreach (var skill in skillData)
                     {
-                        L.D("Total animation indices: " + skill.anmNum);
+                        L.D("Total animation indices: " + skill.anmNum + " for Angle # " + angleNumber);
                         for (int i = 0; i < skill.anmNum; i++)
                         {
                             L.D("Checking Index " + i);
@@ -1365,23 +1368,22 @@ namespace QoL_Mods.Private
                                 var formDispList = anmData.formDispList[j];
 
                                 //Ensure that the Custom ID matches the Preset ID
-                                int formIdx = craftSkill.mData.WazaData[index].anmData[i].formDispList[j].formIdx;
-                             
+                                //We need to ensure that every angle is accounted for
+                                var currentAnm = craftSkill.mData.WazaData[index].anmData[i + (angleNumber * 4)];
+                                if (currentAnm == null)
+                                {
+                                    L.D("Animation at entry" + (i + (angleNumber * 3)) + " is null");
+                                    continue;
+                                }
+                                int formIdx = currentAnm.formDispList[j].formIdx;
+
                                 //Necessary to ensure that the upper limit for created custom forms is properly set.
                                 if (formIdx > craftSkill.mData.WazaData[index].formEditIdx)
                                 {
                                     craftSkill.mData.WazaData[index].formEditIdx = formIdx;
                                 }
 
-
-                                //All custom forms begin at 100000
-                                //Ensure that we are loading existing custom form indexes, where applicable
-                                if (formIdx < 100000)
-                                {
-                                    formIdx += 100000;
-                                }
-                                
-                                if (formIdx >= 100000)
+                                if (formIdx >= maxPresetIdNum)
                                 {
                                     //Determine if this ID has already been used
                                     while (usedCIds.Contains(formIdx))
@@ -1389,19 +1391,25 @@ namespace QoL_Mods.Private
                                         formIdx += 10;
                                     }
 
-                                    L.D("Row " + j + " is C" + (formIdx - 100000));
+                                    L.D("C" + (formIdx - maxPresetIdNum));
+                                    currentAnm.formDispList[j].formIdx = formIdx;
                                     usedCIds.Add(formIdx);
                                 }
                                 else
                                 {
-                                    L.D("Row " + j + " is P" + (formIdx - 100000));
+                                    L.D("P" + (formIdx - maxPresetIdNum));
                                 }
-                                
+
                                 ToolFormSaveData saveData =
                                     new ToolFormSaveData(formDispList.formPartsList, formIdx);
+
                                 saveList.Add(saveData);
                             }
                         }
+
+                        //Moving to the next angle
+                        angleNumber++;
+
                     }
 
                     if (craftSkill.mData.WazaData[index].formEditIdx + 5 <= maxCFormID)
@@ -1445,8 +1453,8 @@ namespace QoL_Mods.Private
                     int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= maxCFormNum) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : maxCFormID);
                     //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
                     //int max = (preForm < 100000) ? global::AnimListConst.FORMMax : ((animListData.dataAccessor.GetWazaData().formEditIdx <= 1540) ? (animListData.dataAccessor.GetWazaData().formEditIdx + 100000) : 101540);
-                    L.D("Max: " + max);
-                    L.D("Diff: " + diff);
+                    //L.D("Max: " + max);
+                    //L.D("Diff: " + diff);
 
                     //Get value for the _form calculation
                     string formValue = name.Substring(4);
@@ -1454,7 +1462,7 @@ namespace QoL_Mods.Private
 
                     int _form = global::AnimListData.CalcFormNo(preForm, diff * value, self, pad, max, ref animListData.mRepeatBlock, ref animListData.mRepeatClickBlock, ref repeatBlock);
 
-                    L.D("Form Number: " + _form);
+                    //L.D("Form Number: " + _form);
 
                     global::CommandManager.Instance.Do(new global::Command(delegate
                     {
@@ -1505,7 +1513,7 @@ namespace QoL_Mods.Private
                         }
                     }));
                 }
-         
+
                 if (check)
                 {
                     global::FormNumber.Instance.CheckAddEditIdx();
@@ -1530,7 +1538,7 @@ namespace QoL_Mods.Private
         #endregion
 
         #region Helper Methods
-            public static WresIDGroup GetWresIDGroup(String wrestlerName)
+        public static WresIDGroup GetWresIDGroup(String wrestlerName)
         {
             WresIDGroup wresID = null;
             foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
