@@ -23,8 +23,8 @@ namespace QoL_Mods.Private
     //[GroupDescription(Group = "Dynamic Highlights", Name = "Dynamic Wrestler Highlights", Description = "(PRIVATE) Changes base part highlight levels for wrestlers depending on different conditions.")]
     [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
-    [GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
-    [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNot that any change is permanent, use at your own risk.")]
+    //[GroupDescription(Group = "Waza Support", Name = "Waza Support", Description = "(PRIVATE) Support functionality for Waza")]
+    [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNote that any change is permanent, use at your own risk.")]
 
     #endregion
 
@@ -36,21 +36,21 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
     [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
 
-    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
-    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
-    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
-    [FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
-    [FieldAccess(Class = "Data", Field = "WazaData", Group = "Waza Support")]
-    [FieldAccess(Class = "ToolSettingInfo", Field = "mData", Group = "Waza Support")]
-    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
-    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
-    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
-    [FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
-    [FieldAccess(Class = "AnimListData", Field = "dataAccessor", Group = "Waza Support")]
-    [FieldAccess(Class = "AnimListData", Field = "mRepeatBlock", Group = "Waza Support")]
-    [FieldAccess(Class = "AnimListData", Field = "mRepeatClickBlock", Group = "Waza Support")]
-    [FieldAccess(Class = "AnimListData", Field = "m_form", Group = "Waza Support")]
-    [FieldAccess(Class = "AnimListData", Field = "_buildinOldForm", Group = "Waza Support")]
+    //[FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
+    //[FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
+    //[FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
+    //[FieldAccess(Class = "Menu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
+    //[FieldAccess(Class = "Data", Field = "WazaData", Group = "Waza Support")]
+    //[FieldAccess(Class = "ToolSettingInfo", Field = "mData", Group = "Waza Support")]
+    //[FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mWaza", Group = "Waza Support")]
+    //[FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mData", Group = "Waza Support")]
+    //[FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mFileBank", Group = "Waza Support")]
+    //[FieldAccess(Class = "WazaMenu_CraftLoadSkill", Field = "mPreview", Group = "Waza Support")]
+    //[FieldAccess(Class = "AnimListData", Field = "dataAccessor", Group = "Waza Support")]
+    //[FieldAccess(Class = "AnimListData", Field = "mRepeatBlock", Group = "Waza Support")]
+    //[FieldAccess(Class = "AnimListData", Field = "mRepeatClickBlock", Group = "Waza Support")]
+    //[FieldAccess(Class = "AnimListData", Field = "m_form", Group = "Waza Support")]
+    //[FieldAccess(Class = "AnimListData", Field = "_buildinOldForm", Group = "Waza Support")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
     //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
 
@@ -1315,12 +1315,13 @@ namespace QoL_Mods.Private
         #region Variables
         public static int maxCFormNum = 99999;
         public static int maxCFormID = 100000 + maxCFormNum;
-        public static int maxPresetIdNum = 100000;
+        public static int presetIDCeiling = 100000; //Includes the limit for ALL Preset forms
+        public static int maxBasePresetIdNum = 37000; //Includes the limit for non-DLC forms
         #endregion
 
-        [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Waza Support")]
+        //[Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "SetActiveBackObj", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn, Group = "Waza Support")]
         public static bool FixPreview(WazaMenu_CraftLoadSkill craftSkill)
         {
             if (craftSkill.mPreview == null)
@@ -1334,10 +1335,10 @@ namespace QoL_Mods.Private
 
         }
 
-        [Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
-            Group = "Waza Support")]
+        //[Hook(TargetClass = "WazaMenu_CraftLoadSkill", TargetMethod = "LoadSkillData", InjectionLocation = int.MaxValue,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.PassParametersVal,
+        //    Group = "Waza Support")]
         public static void AddCustomForms(WazaMenu_CraftLoadSkill craftSkill, SkillID skill_id)
         {
             try
@@ -1369,7 +1370,10 @@ namespace QoL_Mods.Private
 
                                 //Ensure that the Custom ID matches the Preset ID
                                 //We need to ensure that every angle is accounted for
-                                var currentAnm = craftSkill.mData.WazaData[index].anmData[i + (angleNumber * 4)];
+                                int totalBanks = AnimBankSetting.Instance.GetEnableBankNum();
+                                int banksPerAngle = totalBanks / skillData.Length;
+                                var currentAnm = craftSkill.mData.WazaData[index].anmData[i + (angleNumber * banksPerAngle)];
+                                //var currentAnm = craftSkill.mData.WazaData[index].anmData[i + (angleNumber * 4)];
                                 if (currentAnm == null)
                                 {
                                     L.D("Animation at entry" + (i + (angleNumber * 3)) + " is null");
@@ -1383,21 +1387,26 @@ namespace QoL_Mods.Private
                                     craftSkill.mData.WazaData[index].formEditIdx = formIdx;
                                 }
 
-                                if (formIdx >= maxPresetIdNum)
+                                if (formIdx >= maxBasePresetIdNum)
                                 {
+                                    if (formIdx < presetIDCeiling)
+                                    {
+                                        formIdx += presetIDCeiling;
+                                    }
+
                                     //Determine if this ID has already been used
                                     while (usedCIds.Contains(formIdx))
                                     {
                                         formIdx += 10;
                                     }
 
-                                    L.D("C" + (formIdx - maxPresetIdNum));
+                                    L.D("C" + (formIdx - presetIDCeiling));
                                     currentAnm.formDispList[j].formIdx = formIdx;
                                     usedCIds.Add(formIdx);
                                 }
                                 else
                                 {
-                                    L.D("P" + (formIdx - maxPresetIdNum));
+                                    L.D("P" + (formIdx - presetIDCeiling));
                                 }
 
                                 ToolFormSaveData saveData =
@@ -1425,10 +1434,10 @@ namespace QoL_Mods.Private
         }
 
         //Ensure that we can navigate beyond the hard-coded upper limit
-        [Hook(TargetClass = "AnimListData", TargetMethod = "AddValue", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn | HookInjectFlags.PassParametersVal,
-            Group = "Waza Support")]
+        //[Hook(TargetClass = "AnimListData", TargetMethod = "AddValue", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn | HookInjectFlags.PassParametersVal,
+        //    Group = "Waza Support")]
         public static bool IncreaseMaxCFormLimit(AnimListData animListData, out bool result, string name, int diff, bool pad, bool self, ref int repeatBlock)
         {
             result = false;
