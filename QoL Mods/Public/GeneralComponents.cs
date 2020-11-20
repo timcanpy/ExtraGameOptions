@@ -1618,7 +1618,7 @@ namespace QoL_Mods
                 }
 
                 //Determine whether action proceeds based on defender's current damage and showmanship
-                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 5) <
+                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 10) <
                     defender.WresParam.aiParam.personalTraits)
                 {
                     //Ensure the dive triggers
