@@ -65,10 +65,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data Classes\EnumCollection.cs" />
+    <Compile Include="Data Classes\Storage Objects\Employee.cs" />
+    <Compile Include="Data Classes\Storage Objects\History.cs" />
+    <Compile Include="Data Classes\Storage Objects\MoraleRank.cs" />
     <Compile Include="Data Classes\Storage Objects\Owner.cs" />
     <Compile Include="Data Classes\Employee.cs" />
     <Compile Include="Data Classes\Storage Objects\Promotion.cs" />
     <Compile Include="Data Classes\Storage Objects\Region.cs" />
+    <Compile Include="Data Classes\Storage Objects\Result.cs" />
+    <Compile Include="Data Classes\Storage Objects\Ring.cs" />
+    <Compile Include="Data Classes\Storage Objects\Roster.cs" />
+    <Compile Include="Data Classes\Storage Objects\Style.cs" />
+    <Compile Include="Data Classes\Storage Objects\Title.cs" />
     <Compile Include="Helper Classes\GeneralManager.cs" />
     <Compile Include="Helper Classes\MatchEndFunctions.cs" />
     <Compile Include="Data Classes\Promotion.cs" />
