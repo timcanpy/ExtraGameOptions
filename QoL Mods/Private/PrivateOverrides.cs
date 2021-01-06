@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Common_Classes.EnumLibrary;
 using WresIDGroup = ModPack.WresIDGroup;
+using MoveLists;
 
 namespace QoL_Mods.Private
 {
@@ -723,7 +724,8 @@ namespace QoL_Mods.Private
                                     }
                                 }
 
-                                if (name != String.Empty)
+                                //Four players per team max, add commas for the first few players then an ampersand before the last
+                                if (name != String.Empty && es.plNum > 2 && i < es.plNum - 2)
                                 {
                                     name += ", ";
                                 }
@@ -731,6 +733,7 @@ namespace QoL_Mods.Private
                         }
                     }
 
+                    L.D("Wrestler Nickname: " + wrestlerParam.nickName);
                     if (!isNickEmpty && !matchWrestlerInfo.isSecond)
                     {
                         title += wrestlerParam.nickName;
@@ -763,7 +766,7 @@ namespace QoL_Mods.Private
                     GetTeamName(teamMembers, out dbTeamName);
                     if (dbTeamName == String.Empty)
                     {
-                        L.D("Team name is empty");
+                        L.D("Team name is empty: " + name);
                         gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
                         //If title information exists, avoid over-writing it.
@@ -1821,6 +1824,24 @@ namespace QoL_Mods.Private
             }
             result = true;
             return result;
+        }
+        public static void GetMoveList(Player player)
+        {
+            if (player is null)
+            {
+                return;
+            }
+
+            WrestlerDataManager wdt;
+            if (!WrestlerDataManager.GetWDM(player, out wdt))
+            {
+                return;
+            }
+            if (!wdt.WillNotBeNull<MoveList>("moveList"))
+            {
+                return;
+            }
+            MoveLists.MoveList moveList = wdt.GetTrackedData<MoveLists.MoveList>("moveList");
         }
 
         #endregion

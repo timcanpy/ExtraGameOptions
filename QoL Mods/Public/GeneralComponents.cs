@@ -75,7 +75,7 @@ namespace QoL_Mods
 
     #region Recovery Taunt Fields
     [FieldAccess(Class = "FormAnimator", Field = "plObj", Group = "Recovery Taunts")]
-    [FieldAccess(Class = "FormAnimator", Field = "InitAnimation", Group = "Recovery Taunts")]
+    //[FieldAccess(Class = "FormAnimator", Field = "InitAnimation", Group = "Recovery Taunts")]
     #endregion
     #endregion
 
@@ -962,8 +962,8 @@ namespace QoL_Mods
                 player.TargetPlIdx = FindAnOpponent(player.PlIdx);
             }
 
-            player.animator.InitAnimation();
-
+            //player.animator.InitAnimation();
+            ModPack.ModPack.InvokeMethod(player.animator, "InitAnimation", false, null);
             //Ensure recovery taunts are subtracted
             recoveryTauntCount[player.PlIdx] -= 1;
 
