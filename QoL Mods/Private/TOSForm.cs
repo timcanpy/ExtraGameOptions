@@ -1,4 +1,5 @@
 ﻿using DG;
+using MatchConfig;
 using QoL_Mods.Data_Classes;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace QoL_Mods.Private
     {
         #region Variables
         private static List<Skill> moves = new List<Skill>();
+        public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String saveFolderName = "./EGOData/";
         private static String wrestlerFile = "WrestlerTOS.dat";
         private static String styleFile = "StyleTOS.dat";
@@ -26,8 +28,70 @@ namespace QoL_Mods.Private
             InitializeComponent();
             form = this;
             tos_moveSearch.LostFocus += tos_moveSearch_LostFocus;
+            tos_wrestlerSearch.LostFocus += tos_wrestlerSearch_LostFocus;
             FormClosing += TOSForm_FormClosing;
             LoadStyles();
+        }
+
+        private void LoadSubs()
+        {
+            try
+            {
+                this.tos_wrestlers.Items.Clear();
+                wrestlerList = new List<WresIDGroup>();
+
+                foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
+                {
+                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
+                    wresIDGroup.ID = (Int32)current.editWrestlerID;
+
+                    wrestlerList.Add(wresIDGroup);
+                    this.tos_wrestlers.Items.Add(wresIDGroup);
+                }
+
+                if (tos_wrestlers.Items.Count > 0)
+                {
+                    this.tos_wrestlers.SelectedIndex = 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                L.D("Load Subs Exception: " + ex);
+            }
+
+        }
+
+        private void tos_wrestlerSearch_LostFocus(object sender, System.EventArgs e)
+        {
+            try
+            {
+                String query = tos_wrestlerSearch.Text;
+                tos_wrestlerResults.Items.Clear();
+
+                if (!query.TrimStart().TrimEnd().Equals(""))
+                {
+                    foreach (WresIDGroup wrestler in wrestlerList)
+                    {
+                        if (query.ToLower().Equals(wrestler.Name.ToLower()) ||
+                            wrestler.Name.ToLower().Contains(query.ToLower()))
+                        {
+                            tos_wrestlerResults.Items.Add(wrestler);
+                        }
+                    }
+                }
+
+                if (tos_wrestlerResults.Items.Count > 0)
+                {
+                    tos_wrestlerResults.SelectedIndex = 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                L.D("Search Error: " + ex.Message);
+            }
         }
 
         private void TOSForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -203,12 +267,47 @@ namespace QoL_Mods.Private
         #region Wrestler Management
         private void tos_addWrestler_Click(object sender, EventArgs e)
         {
+            if (tos_wrestlerResults.SelectedItem == null)
+            {
+                return;
+            }
 
+            try
+            {
+                String wrestler = ((WresIDGroup)tos_wrestlerResults.SelectedItem).Name;
+                TOSMoves moves = new TOSMoves(wrestler);
+                tos_wrestlers.Items.Add(moves);
+                if (tos_wrestlers.Items.Count > 0)
+                {
+                    tos_wrestlers.SelectedIndex = tos_wrestlers.Items.Count - 1;
+                }
+
+                tos_wrestlers_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                L.D("Add Wrestler Error: " + ex);
+            }
         }
 
         private void tos_removeWrestler_Click(object sender, EventArgs e)
         {
+            if (tos_wrestlers.SelectedItem == null)
+            {
+                return;
+            }
 
+            tos_wrestlers.Items.Remove(tos_wrestlers.SelectedItem);
+
+            if (tos_wrestlers.Items.Count > 0)
+            {
+                tos_wrestlers.SelectedIndex = 0;
+                tos_wrestlers_SelectedIndexChanged(null, null);
+            }
+            else
+            {
+                ClearWrestlerMoves();
+            }
         }
 
         private void tos_wrestlers_SelectedIndexChanged(object sender, EventArgs e)
@@ -261,6 +360,10 @@ namespace QoL_Mods.Private
             {
                 L.D("LoadMovesError: " + e);
             }
+        }
+        private void ClearWrestlerMoves()
+        {
+            tos_wrestlerMoves.Items.Clear();
         }
         #endregion
         

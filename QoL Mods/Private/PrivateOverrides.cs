@@ -287,7 +287,7 @@ namespace QoL_Mods.Private
                     //Determine the direction to press
                     if (attacker.plController.kind == PlayerControllerKind.AI)
                     {
-                        int direction = UnityEngine.Random.Range(1, 2);
+                        float direction = UnityEngine.Random.Range(1f, 2f);
                         if (moveset.BasicSkills[damageLevel].SkillName.Equals("Irish Whip (Horizontal)"))
                         {
                             if (attacker.PlDir == PlDirEnum.Right)
@@ -574,7 +574,7 @@ namespace QoL_Mods.Private
 
                 //Determine whether we should play the cheer
                 int damageLevel = GetDamageLevel(plObj);
-                if (damageLevel < UnityEngine.Random.Range(0, 4) || (int)plObj.WresParam.wrestlerRank < 2)
+                if (damageLevel < UnityEngine.Random.Range(0f, 4f) || (int)plObj.WresParam.wrestlerRank < 2)
                 {
                     return;
                 }
@@ -627,7 +627,7 @@ namespace QoL_Mods.Private
             //Ensure that we flag the attempt after the initial check
             stageTaunt[player.PlIdx] = true;
 
-            if (UnityEngine.Random.Range(1, 100) <= player.WresParam.aiParam.personalTraits)
+            if (UnityEngine.Random.Range(0f, 100f) <= player.WresParam.aiParam.personalTraits)
             {
                 //Play taunt for every player on the team
                 int start = 0;
@@ -1628,7 +1628,7 @@ namespace QoL_Mods.Private
                 reversalChance = maxReversalChance;
             }
 
-            if (UnityEngine.Random.Range(0, 100) <= reversalChance)
+            if (UnityEngine.Random.Range(0f, 100f) <= reversalChance)
             {
                 isReversal = true;
             }
@@ -1712,7 +1712,7 @@ namespace QoL_Mods.Private
         }
         private static void ExecuteTaunt(Player plObj)
         {
-            int randomNum = UnityEngine.Random.Range(1, 5);
+            int randomNum = (int)UnityEngine.Random.Range(1f, 4f);
             if (randomNum == 1)
             {
                 plObj.animator.StartSlotAnm_Immediately(SkillSlotEnum.Performance_1, 0, true, plObj.PlIdx);

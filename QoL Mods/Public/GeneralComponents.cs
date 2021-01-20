@@ -466,7 +466,7 @@ namespace QoL_Mods
                 }
 
                 //If the check fails, do nothing
-                if (UnityEngine.Random.Range(0, 10 + (resilience * 5)) < 10)
+                if (UnityEngine.Random.Range(0f, 10f + (resilience * 5)) < 11)
                 {
                     L.D("Resilient Critical Check failed");
                     return;
@@ -700,8 +700,8 @@ namespace QoL_Mods
         public static SkillData[] tauntData;
         public static int[] recoveryTauntCount;
         public static TauntExecution[] tauntStatus;
-        public static Dictionary<String, WakeUpTaunt> styleTaunts = new Dictionary<String, WakeUpTaunt>();
-        public static Dictionary<String, WakeUpTaunt> wrestlerTaunts = new Dictionary<String, WakeUpTaunt>();
+        public static Dictionary<String, WakeUpGroup> styleTaunts = new Dictionary<String, WakeUpGroup>();
+        public static Dictionary<String, WakeUpGroup> wrestlerTaunts = new Dictionary<String, WakeUpGroup>();
         #endregion
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
@@ -733,21 +733,21 @@ namespace QoL_Mods
                 }
             }
 
-            foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_styles.Items)
+            foreach (WakeUpGroup group in RecoveryTauntForm.form.wu_styles.Items)
             {
                 //Ensure that we aren't adding duplicates.
-                if (!styleTaunts.ContainsKey(taunt.StyleItem.Name))
+                if (!styleTaunts.ContainsKey(group.Name))
                 {
-                    styleTaunts.Add(taunt.StyleItem.Name, taunt);
+                    styleTaunts.Add(group.Name, group);
                 }
             }
 
-            foreach (WakeUpTaunt taunt in RecoveryTauntForm.form.wu_wrestlers.Items)
+            foreach (WakeUpGroup group in RecoveryTauntForm.form.wu_wrestlers.Items)
             {
                 //Ensure that we aren't adding duplicates.
-                if (!wrestlerTaunts.ContainsKey(taunt.StyleItem.Name))
+                if (!wrestlerTaunts.ContainsKey(group.Name))
                 {
-                    wrestlerTaunts.Add(taunt.StyleItem.Name, taunt);
+                    wrestlerTaunts.Add(group.Name, group);
                 }
             }
         }
@@ -800,18 +800,30 @@ namespace QoL_Mods
                 }
 
                 //Return WakeUp Taunt
-                if (!wrestlerTaunts.TryGetValue(wrestler, out WakeUpTaunt taunt))
+                if (!wrestlerTaunts.TryGetValue(wrestler, out WakeUpGroup group))
                 {
-                    taunt = styleTaunts[player.WresParam.fightStyle.ToString()];
+                    group = styleTaunts[player.WresParam.fightStyle.ToString()];
                 }
 
-                if (taunt == null)
+                List<WakeUpTaunt> tauntList = new List<WakeUpTaunt>();
+                if (group == null)
                 {
                     return false;
                 }
-                else if (taunt.WakeupMoves[damageLevel] == null)
+                else
                 {
-                    return false;
+                    foreach(WakeUpTaunt taunt in group.WakeUpTaunts)
+                    {
+                        if(taunt.WakeupMoves[damageLevel] != null)
+                        {
+                            tauntList.Add(taunt);
+                        }
+                    }
+
+                    if(tauntList.Count == 0)
+                    {
+                        return false;
+                    }
                 }
 
                 //Humans can taunt on demand
@@ -836,7 +848,7 @@ namespace QoL_Mods
                         //Modifier : 4 * Number of Taunts remaining
                         int showmanship = (player.WresParam.aiParam.personalTraits / 2) + (4 * recoveryTauntCount[player.PlIdx]);
                         int tauntCeiling = 100 - (10 * damageLevel);
-                        int checkValue = UnityEngine.Random.Range(showmanship, 100);
+                        int checkValue = (int)UnityEngine.Random.Range(showmanship, 100f);
                         if (checkValue >= tauntCeiling || tauntStatus[player.PlIdx] == TauntExecution.Force)
                         {
                             executeTaunt = true;
@@ -850,7 +862,9 @@ namespace QoL_Mods
 
                 if (executeTaunt)
                 {
-                    CheckWakeUpTauntConditions(player, taunt, damageLevel);
+                    WakeUpTaunt randomTaunt = GetRandomTaunt(tauntList);
+                    L.D("Processing " + randomTaunt + " for Damage Level #" + damageLevel);
+                    CheckWakeUpTauntConditions(player, randomTaunt, damageLevel);
                     return true;
                 }
                 else
@@ -1068,6 +1082,12 @@ namespace QoL_Mods
                 return 0;
             }
         }
+
+        public static WakeUpTaunt GetRandomTaunt(List<WakeUpTaunt> tauntList)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, tauntList.Count);
+            return tauntList[randomIndex];
+        }
         #endregion
         #endregion
 
@@ -1107,7 +1127,7 @@ namespace QoL_Mods
                     }
                 }
                 int num2 = nLevel * 2;
-                num2 += UnityEngine.Random.Range(-2, 3);
+                num2 += (int)UnityEngine.Random.Range(-2f, 4f);
                 if (num2 < 0)
                 {
                     num2 = 0;
@@ -1304,7 +1324,7 @@ namespace QoL_Mods
             {
                 tauntCeiling -= 20;
             }
-            int checkValue = UnityEngine.Random.Range(showmanship, 100);
+            int checkValue = (int)UnityEngine.Random.Range(showmanship, 100f);
             if (checkValue >= tauntCeiling || player.SP == 0f)
             {
                 PlayGrunt(voiceType[player.PlIdx], damageLevel);
@@ -1565,7 +1585,7 @@ namespace QoL_Mods
             {
                 if (sd.bleedingRate > 0)
                 {
-                    int rngValue = UnityEngine.Random.Range(0, 100);
+                    int rngValue = (int)UnityEngine.Random.Range(0, 100f);
                     if (rngValue <= sd.bleedingRate)
                     {
                         PlayerMan.inst.GetPlObj(plIDx).Bleeding();
@@ -1618,7 +1638,7 @@ namespace QoL_Mods
                 }
 
                 //Determine whether action proceeds based on defender's current damage and showmanship
-                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 10) <
+                if (UnityEngine.Random.Range(1f, 50f) - (GetDamageLevel(defender) * 10) <
                     defender.WresParam.aiParam.personalTraits)
                 {
                     //Ensure the dive triggers
@@ -1663,7 +1683,7 @@ namespace QoL_Mods
                 }
 
                 //Determine whether action proceeds based on defender's current damage and showmanship
-                if (UnityEngine.Random.Range(1, 50) - (GetDamageLevel(defender) * 5) <
+                if (UnityEngine.Random.Range(1f, 50f) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
                 {
                     if (defender.StunTime <= 48)
@@ -2370,7 +2390,7 @@ namespace QoL_Mods
                 }
 
                 //Ensure that the replacement is randomized
-                int rngValue = UnityEngine.Random.Range(1, 11);
+                int rngValue = (int)UnityEngine.Random.Range(1f, 10f);
                 if (rngValue > 8)
                 {
                     L.D("Failed TOS replacement attempt: " + rngValue);
@@ -2595,7 +2615,7 @@ namespace QoL_Mods
                     {
                         L.D("Rolling ignore check");
 
-                        int roll = UnityEngine.Random.Range(1, 20);
+                        int roll = (int)UnityEngine.Random.Range(1f, 20f);
                         if (roll >= ignoreDC)
                         {
                             ignoreDC += 2;
@@ -2604,7 +2624,7 @@ namespace QoL_Mods
 
                             L.D("Check passed, " + ignoreChecksRemaining + " checks remaining. DC is now " + ignoreDC +
                                 ".");
-                            ShowMessage(referee.RefePrm.name + " is watching closely!");
+                            ShowMessage(CleanUpName(referee.RefePrm.name) + " is watching closely!");
                             ignoreTimer.Start();
                             return true;
                         }
@@ -2633,6 +2653,18 @@ namespace QoL_Mods
         #endregion
 
         #region General Helper Methods
+        public static String CleanUpName(String name)
+        {
+            int length = name.IndexOf("(");
+            if (length < 0)
+            {
+                return name;
+            }
+            else
+            {
+                return name.Substring(0, length);
+            }
+        }
         private static bool CheckForMOTWMatch()
         {
             var value = MotW.PromotionMenuForm.instance;

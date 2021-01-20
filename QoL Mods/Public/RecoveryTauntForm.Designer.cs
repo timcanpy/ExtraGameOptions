@@ -35,16 +35,11 @@
             this.wu_heavyRemove = new System.Windows.Forms.Button();
             this.wu_heavyAdd = new System.Windows.Forms.Button();
             this.wu_lightRemove = new System.Windows.Forms.Button();
-            this.wu_lightAdd = new System.Windows.Forms.Button();
             this.wu_mediumRemove = new System.Windows.Forms.Button();
             this.wu_mediumAdd = new System.Windows.Forms.Button();
             this.panel9 = new System.Windows.Forms.Panel();
             this.wu_styles = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.wu_styleMiddle = new System.Windows.Forms.TextBox();
-            this.wu_styleHeavy = new System.Windows.Forms.TextBox();
-            this.wu_styleCritical = new System.Windows.Forms.TextBox();
-            this.wu_styleLight = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -60,10 +55,6 @@
             this.wu_wrestlerLightAdd = new System.Windows.Forms.Button();
             this.wu_wrestlers = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
-            this.wu_wrestlerMedium = new System.Windows.Forms.TextBox();
-            this.wu_wrestlerHeavy = new System.Windows.Forms.TextBox();
-            this.wu_wrestlerCritical = new System.Windows.Forms.TextBox();
-            this.wu_wrestlerLight = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
             this.label58 = new System.Windows.Forms.Label();
@@ -76,12 +67,21 @@
             this.label61 = new System.Windows.Forms.Label();
             this.wu_wrestlerResults = new System.Windows.Forms.ComboBox();
             this.panel20 = new System.Windows.Forms.Panel();
+            this.wu_moveReload = new System.Windows.Forms.Button();
             this.wu_moveRefresh = new System.Windows.Forms.Button();
             this.wu_moveResults = new System.Windows.Forms.ComboBox();
             this.label63 = new System.Windows.Forms.Label();
             this.label64 = new System.Windows.Forms.Label();
             this.wu_moveSearch = new System.Windows.Forms.TextBox();
-            this.wu_moveReload = new System.Windows.Forms.Button();
+            this.wu_styleLight = new System.Windows.Forms.ComboBox();
+            this.wu_styleMiddle = new System.Windows.Forms.ComboBox();
+            this.wu_styleHeavy = new System.Windows.Forms.ComboBox();
+            this.wu_styleCritical = new System.Windows.Forms.ComboBox();
+            this.wu_lightAdd = new System.Windows.Forms.Button();
+            this.wu_wrestlerLight = new System.Windows.Forms.ComboBox();
+            this.wu_wrestlerHeavy = new System.Windows.Forms.ComboBox();
+            this.wu_wrestlerMedium = new System.Windows.Forms.ComboBox();
+            this.wu_wrestlerCritical = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage7.SuspendLayout();
             this.panel9.SuspendLayout();
@@ -97,12 +97,16 @@
             this.tabControl1.Location = new System.Drawing.Point(215, 15);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(671, 253);
+            this.tabControl1.Size = new System.Drawing.Size(591, 253);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage7
             // 
             this.tabPage7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tabPage7.Controls.Add(this.wu_styleCritical);
+            this.tabPage7.Controls.Add(this.wu_styleHeavy);
+            this.tabPage7.Controls.Add(this.wu_styleMiddle);
+            this.tabPage7.Controls.Add(this.wu_styleLight);
             this.tabPage7.Controls.Add(this.wu_criticalRemove);
             this.tabPage7.Controls.Add(this.wu_criticalAdd);
             this.tabPage7.Controls.Add(this.wu_heavyRemove);
@@ -112,10 +116,6 @@
             this.tabPage7.Controls.Add(this.wu_mediumRemove);
             this.tabPage7.Controls.Add(this.wu_mediumAdd);
             this.tabPage7.Controls.Add(this.panel9);
-            this.tabPage7.Controls.Add(this.wu_styleMiddle);
-            this.tabPage7.Controls.Add(this.wu_styleHeavy);
-            this.tabPage7.Controls.Add(this.wu_styleCritical);
-            this.tabPage7.Controls.Add(this.wu_styleLight);
             this.tabPage7.Controls.Add(this.label19);
             this.tabPage7.Controls.Add(this.label20);
             this.tabPage7.Controls.Add(this.label21);
@@ -123,7 +123,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 22);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(663, 227);
+            this.tabPage7.Size = new System.Drawing.Size(583, 227);
             this.tabPage7.TabIndex = 0;
             this.tabPage7.Text = "Styles";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -191,18 +191,6 @@
             this.wu_lightRemove.UseVisualStyleBackColor = false;
             this.wu_lightRemove.Click += new System.EventHandler(this.wu_lightRemove_Click);
             // 
-            // wu_lightAdd
-            // 
-            this.wu_lightAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.wu_lightAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_lightAdd.Location = new System.Drawing.Point(221, 65);
-            this.wu_lightAdd.Name = "wu_lightAdd";
-            this.wu_lightAdd.Size = new System.Drawing.Size(42, 23);
-            this.wu_lightAdd.TabIndex = 43;
-            this.wu_lightAdd.Text = "+";
-            this.wu_lightAdd.UseVisualStyleBackColor = false;
-            this.wu_lightAdd.Click += new System.EventHandler(this.wu_lightAdd_Click);
-            // 
             // wu_mediumRemove
             // 
             this.wu_mediumRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -259,42 +247,6 @@
             this.label3.TabIndex = 34;
             this.label3.Text = "Styles";
             // 
-            // wu_styleMiddle
-            // 
-            this.wu_styleMiddle.Location = new System.Drawing.Point(173, 128);
-            this.wu_styleMiddle.Name = "wu_styleMiddle";
-            this.wu_styleMiddle.ReadOnly = true;
-            this.wu_styleMiddle.Size = new System.Drawing.Size(184, 20);
-            this.wu_styleMiddle.TabIndex = 26;
-            this.wu_styleMiddle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_styleHeavy
-            // 
-            this.wu_styleHeavy.Location = new System.Drawing.Point(363, 39);
-            this.wu_styleHeavy.Name = "wu_styleHeavy";
-            this.wu_styleHeavy.ReadOnly = true;
-            this.wu_styleHeavy.Size = new System.Drawing.Size(213, 20);
-            this.wu_styleHeavy.TabIndex = 25;
-            this.wu_styleHeavy.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_styleCritical
-            // 
-            this.wu_styleCritical.Location = new System.Drawing.Point(363, 128);
-            this.wu_styleCritical.Name = "wu_styleCritical";
-            this.wu_styleCritical.ReadOnly = true;
-            this.wu_styleCritical.Size = new System.Drawing.Size(213, 20);
-            this.wu_styleCritical.TabIndex = 24;
-            this.wu_styleCritical.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_styleLight
-            // 
-            this.wu_styleLight.Location = new System.Drawing.Point(173, 39);
-            this.wu_styleLight.Name = "wu_styleLight";
-            this.wu_styleLight.ReadOnly = true;
-            this.wu_styleLight.Size = new System.Drawing.Size(184, 20);
-            this.wu_styleLight.TabIndex = 23;
-            this.wu_styleLight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // label19
             // 
             this.label19.AutoSize = true;
@@ -337,6 +289,10 @@
             // 
             // tabPage13
             // 
+            this.tabPage13.Controls.Add(this.wu_wrestlerCritical);
+            this.tabPage13.Controls.Add(this.wu_wrestlerMedium);
+            this.tabPage13.Controls.Add(this.wu_wrestlerHeavy);
+            this.tabPage13.Controls.Add(this.wu_wrestlerLight);
             this.tabPage13.Controls.Add(this.wu_wrestlerCriticalRemove);
             this.tabPage13.Controls.Add(this.wu_wrestlerCriticalAdd);
             this.tabPage13.Controls.Add(this.wu_wrestlerHeavyRemove);
@@ -347,10 +303,6 @@
             this.tabPage13.Controls.Add(this.wu_wrestlerLightAdd);
             this.tabPage13.Controls.Add(this.wu_wrestlers);
             this.tabPage13.Controls.Add(this.label23);
-            this.tabPage13.Controls.Add(this.wu_wrestlerMedium);
-            this.tabPage13.Controls.Add(this.wu_wrestlerHeavy);
-            this.tabPage13.Controls.Add(this.wu_wrestlerCritical);
-            this.tabPage13.Controls.Add(this.wu_wrestlerLight);
             this.tabPage13.Controls.Add(this.label24);
             this.tabPage13.Controls.Add(this.label57);
             this.tabPage13.Controls.Add(this.label58);
@@ -359,7 +311,7 @@
             this.tabPage13.Location = new System.Drawing.Point(4, 22);
             this.tabPage13.Name = "tabPage13";
             this.tabPage13.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage13.Size = new System.Drawing.Size(663, 227);
+            this.tabPage13.Size = new System.Drawing.Size(583, 227);
             this.tabPage13.TabIndex = 1;
             this.tabPage13.Text = "Wrestlers";
             this.tabPage13.UseVisualStyleBackColor = true;
@@ -369,7 +321,7 @@
             this.wu_wrestlerCriticalRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.wu_wrestlerCriticalRemove.FlatAppearance.BorderSize = 0;
             this.wu_wrestlerCriticalRemove.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerCriticalRemove.Location = new System.Drawing.Point(466, 183);
+            this.wu_wrestlerCriticalRemove.Location = new System.Drawing.Point(480, 179);
             this.wu_wrestlerCriticalRemove.Name = "wu_wrestlerCriticalRemove";
             this.wu_wrestlerCriticalRemove.Size = new System.Drawing.Size(40, 23);
             this.wu_wrestlerCriticalRemove.TabIndex = 67;
@@ -381,7 +333,7 @@
             // 
             this.wu_wrestlerCriticalAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.wu_wrestlerCriticalAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerCriticalAdd.Location = new System.Drawing.Point(411, 183);
+            this.wu_wrestlerCriticalAdd.Location = new System.Drawing.Point(432, 179);
             this.wu_wrestlerCriticalAdd.Name = "wu_wrestlerCriticalAdd";
             this.wu_wrestlerCriticalAdd.Size = new System.Drawing.Size(42, 23);
             this.wu_wrestlerCriticalAdd.TabIndex = 66;
@@ -394,7 +346,7 @@
             this.wu_wrestlerHeavyRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.wu_wrestlerHeavyRemove.FlatAppearance.BorderSize = 0;
             this.wu_wrestlerHeavyRemove.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerHeavyRemove.Location = new System.Drawing.Point(466, 97);
+            this.wu_wrestlerHeavyRemove.Location = new System.Drawing.Point(480, 97);
             this.wu_wrestlerHeavyRemove.Name = "wu_wrestlerHeavyRemove";
             this.wu_wrestlerHeavyRemove.Size = new System.Drawing.Size(40, 23);
             this.wu_wrestlerHeavyRemove.TabIndex = 65;
@@ -406,7 +358,7 @@
             // 
             this.wu_wrestlerHeavyAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.wu_wrestlerHeavyAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerHeavyAdd.Location = new System.Drawing.Point(411, 97);
+            this.wu_wrestlerHeavyAdd.Location = new System.Drawing.Point(432, 97);
             this.wu_wrestlerHeavyAdd.Name = "wu_wrestlerHeavyAdd";
             this.wu_wrestlerHeavyAdd.Size = new System.Drawing.Size(42, 23);
             this.wu_wrestlerHeavyAdd.TabIndex = 64;
@@ -419,7 +371,7 @@
             this.wu_wrestlerMediumRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.wu_wrestlerMediumRemove.FlatAppearance.BorderSize = 0;
             this.wu_wrestlerMediumRemove.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerMediumRemove.Location = new System.Drawing.Point(283, 182);
+            this.wu_wrestlerMediumRemove.Location = new System.Drawing.Point(292, 178);
             this.wu_wrestlerMediumRemove.Name = "wu_wrestlerMediumRemove";
             this.wu_wrestlerMediumRemove.Size = new System.Drawing.Size(40, 23);
             this.wu_wrestlerMediumRemove.TabIndex = 63;
@@ -431,7 +383,7 @@
             // 
             this.wu_wrestlerMediumAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.wu_wrestlerMediumAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerMediumAdd.Location = new System.Drawing.Point(228, 182);
+            this.wu_wrestlerMediumAdd.Location = new System.Drawing.Point(242, 178);
             this.wu_wrestlerMediumAdd.Name = "wu_wrestlerMediumAdd";
             this.wu_wrestlerMediumAdd.Size = new System.Drawing.Size(42, 23);
             this.wu_wrestlerMediumAdd.TabIndex = 62;
@@ -444,7 +396,7 @@
             this.wu_wrestlerLightRemove.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.wu_wrestlerLightRemove.FlatAppearance.BorderSize = 0;
             this.wu_wrestlerLightRemove.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerLightRemove.Location = new System.Drawing.Point(283, 99);
+            this.wu_wrestlerLightRemove.Location = new System.Drawing.Point(292, 99);
             this.wu_wrestlerLightRemove.Name = "wu_wrestlerLightRemove";
             this.wu_wrestlerLightRemove.Size = new System.Drawing.Size(40, 23);
             this.wu_wrestlerLightRemove.TabIndex = 61;
@@ -456,7 +408,7 @@
             // 
             this.wu_wrestlerLightAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
             this.wu_wrestlerLightAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_wrestlerLightAdd.Location = new System.Drawing.Point(228, 99);
+            this.wu_wrestlerLightAdd.Location = new System.Drawing.Point(242, 99);
             this.wu_wrestlerLightAdd.Name = "wu_wrestlerLightAdd";
             this.wu_wrestlerLightAdd.Size = new System.Drawing.Size(42, 23);
             this.wu_wrestlerLightAdd.TabIndex = 60;
@@ -483,42 +435,6 @@
             this.label23.Size = new System.Drawing.Size(62, 15);
             this.label23.TabIndex = 59;
             this.label23.Text = "Wrestlers";
-            // 
-            // wu_wrestlerMedium
-            // 
-            this.wu_wrestlerMedium.Location = new System.Drawing.Point(197, 154);
-            this.wu_wrestlerMedium.Name = "wu_wrestlerMedium";
-            this.wu_wrestlerMedium.ReadOnly = true;
-            this.wu_wrestlerMedium.Size = new System.Drawing.Size(153, 20);
-            this.wu_wrestlerMedium.TabIndex = 50;
-            this.wu_wrestlerMedium.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_wrestlerHeavy
-            // 
-            this.wu_wrestlerHeavy.Location = new System.Drawing.Point(356, 71);
-            this.wu_wrestlerHeavy.Name = "wu_wrestlerHeavy";
-            this.wu_wrestlerHeavy.ReadOnly = true;
-            this.wu_wrestlerHeavy.Size = new System.Drawing.Size(212, 20);
-            this.wu_wrestlerHeavy.TabIndex = 49;
-            this.wu_wrestlerHeavy.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_wrestlerCritical
-            // 
-            this.wu_wrestlerCritical.Location = new System.Drawing.Point(356, 154);
-            this.wu_wrestlerCritical.Name = "wu_wrestlerCritical";
-            this.wu_wrestlerCritical.ReadOnly = true;
-            this.wu_wrestlerCritical.Size = new System.Drawing.Size(212, 20);
-            this.wu_wrestlerCritical.TabIndex = 48;
-            this.wu_wrestlerCritical.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // wu_wrestlerLight
-            // 
-            this.wu_wrestlerLight.Location = new System.Drawing.Point(197, 71);
-            this.wu_wrestlerLight.Name = "wu_wrestlerLight";
-            this.wu_wrestlerLight.ReadOnly = true;
-            this.wu_wrestlerLight.Size = new System.Drawing.Size(153, 20);
-            this.wu_wrestlerLight.TabIndex = 47;
-            this.wu_wrestlerLight.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label24
             // 
@@ -554,7 +470,7 @@
             // 
             this.label59.AutoSize = true;
             this.label59.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label59.Location = new System.Drawing.Point(237, 51);
+            this.label59.Location = new System.Drawing.Point(248, 51);
             this.label59.Name = "label59";
             this.label59.Size = new System.Drawing.Size(86, 15);
             this.label59.TabIndex = 43;
@@ -649,10 +565,21 @@
             this.panel20.Size = new System.Drawing.Size(197, 247);
             this.panel20.TabIndex = 4;
             // 
+            // wu_moveReload
+            // 
+            this.wu_moveReload.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wu_moveReload.Location = new System.Drawing.Point(50, 154);
+            this.wu_moveReload.Name = "wu_moveReload";
+            this.wu_moveReload.Size = new System.Drawing.Size(99, 23);
+            this.wu_moveReload.TabIndex = 16;
+            this.wu_moveReload.Text = "Reload Data";
+            this.wu_moveReload.UseVisualStyleBackColor = true;
+            this.wu_moveReload.Click += new System.EventHandler(this.wu_moveReload_Click);
+            // 
             // wu_moveRefresh
             // 
             this.wu_moveRefresh.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_moveRefresh.Location = new System.Drawing.Point(40, 125);
+            this.wu_moveRefresh.Location = new System.Drawing.Point(50, 125);
             this.wu_moveRefresh.Name = "wu_moveRefresh";
             this.wu_moveRefresh.Size = new System.Drawing.Size(99, 23);
             this.wu_moveRefresh.TabIndex = 15;
@@ -664,9 +591,9 @@
             // 
             this.wu_moveResults.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.wu_moveResults.FormattingEnabled = true;
-            this.wu_moveResults.Location = new System.Drawing.Point(3, 81);
+            this.wu_moveResults.Location = new System.Drawing.Point(3, 83);
             this.wu_moveResults.Name = "wu_moveResults";
-            this.wu_moveResults.Size = new System.Drawing.Size(187, 21);
+            this.wu_moveResults.Size = new System.Drawing.Size(184, 21);
             this.wu_moveResults.Sorted = true;
             this.wu_moveResults.TabIndex = 11;
             // 
@@ -694,25 +621,98 @@
             // 
             this.wu_moveSearch.Location = new System.Drawing.Point(3, 26);
             this.wu_moveSearch.Name = "wu_moveSearch";
-            this.wu_moveSearch.Size = new System.Drawing.Size(187, 20);
+            this.wu_moveSearch.Size = new System.Drawing.Size(184, 20);
             this.wu_moveSearch.TabIndex = 1;
             // 
-            // wu_moveReload
+            // wu_styleLight
             // 
-            this.wu_moveReload.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.wu_moveReload.Location = new System.Drawing.Point(40, 154);
-            this.wu_moveReload.Name = "wu_moveReload";
-            this.wu_moveReload.Size = new System.Drawing.Size(99, 23);
-            this.wu_moveReload.TabIndex = 16;
-            this.wu_moveReload.Text = "Reload Data";
-            this.wu_moveReload.UseVisualStyleBackColor = true;
-            this.wu_moveReload.Click += new System.EventHandler(this.wu_moveReload_Click);
+            this.wu_styleLight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_styleLight.FormattingEnabled = true;
+            this.wu_styleLight.Location = new System.Drawing.Point(173, 38);
+            this.wu_styleLight.Name = "wu_styleLight";
+            this.wu_styleLight.Size = new System.Drawing.Size(184, 21);
+            this.wu_styleLight.TabIndex = 49;
+            // 
+            // wu_styleMiddle
+            // 
+            this.wu_styleMiddle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_styleMiddle.FormattingEnabled = true;
+            this.wu_styleMiddle.Location = new System.Drawing.Point(173, 127);
+            this.wu_styleMiddle.Name = "wu_styleMiddle";
+            this.wu_styleMiddle.Size = new System.Drawing.Size(184, 21);
+            this.wu_styleMiddle.TabIndex = 50;
+            // 
+            // wu_styleHeavy
+            // 
+            this.wu_styleHeavy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_styleHeavy.FormattingEnabled = true;
+            this.wu_styleHeavy.Location = new System.Drawing.Point(363, 38);
+            this.wu_styleHeavy.Name = "wu_styleHeavy";
+            this.wu_styleHeavy.Size = new System.Drawing.Size(184, 21);
+            this.wu_styleHeavy.TabIndex = 51;
+            // 
+            // wu_styleCritical
+            // 
+            this.wu_styleCritical.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_styleCritical.FormattingEnabled = true;
+            this.wu_styleCritical.Location = new System.Drawing.Point(363, 127);
+            this.wu_styleCritical.Name = "wu_styleCritical";
+            this.wu_styleCritical.Size = new System.Drawing.Size(184, 21);
+            this.wu_styleCritical.TabIndex = 52;
+            // 
+            // wu_lightAdd
+            // 
+            this.wu_lightAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.wu_lightAdd.Font = new System.Drawing.Font("OPTIEdgarBold-Extended", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.wu_lightAdd.Location = new System.Drawing.Point(221, 65);
+            this.wu_lightAdd.Name = "wu_lightAdd";
+            this.wu_lightAdd.Size = new System.Drawing.Size(42, 23);
+            this.wu_lightAdd.TabIndex = 43;
+            this.wu_lightAdd.Text = "+";
+            this.wu_lightAdd.UseVisualStyleBackColor = false;
+            this.wu_lightAdd.Click += new System.EventHandler(this.wu_lightAdd_Click);
+            // 
+            // wu_wrestlerLight
+            // 
+            this.wu_wrestlerLight.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_wrestlerLight.FormattingEnabled = true;
+            this.wu_wrestlerLight.Location = new System.Drawing.Point(193, 71);
+            this.wu_wrestlerLight.Name = "wu_wrestlerLight";
+            this.wu_wrestlerLight.Size = new System.Drawing.Size(184, 21);
+            this.wu_wrestlerLight.TabIndex = 68;
+            // 
+            // wu_wrestlerHeavy
+            // 
+            this.wu_wrestlerHeavy.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_wrestlerHeavy.FormattingEnabled = true;
+            this.wu_wrestlerHeavy.Location = new System.Drawing.Point(384, 71);
+            this.wu_wrestlerHeavy.Name = "wu_wrestlerHeavy";
+            this.wu_wrestlerHeavy.Size = new System.Drawing.Size(184, 21);
+            this.wu_wrestlerHeavy.TabIndex = 69;
+            // 
+            // wu_wrestlerMedium
+            // 
+            this.wu_wrestlerMedium.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_wrestlerMedium.FormattingEnabled = true;
+            this.wu_wrestlerMedium.Location = new System.Drawing.Point(193, 152);
+            this.wu_wrestlerMedium.Name = "wu_wrestlerMedium";
+            this.wu_wrestlerMedium.Size = new System.Drawing.Size(184, 21);
+            this.wu_wrestlerMedium.TabIndex = 70;
+            // 
+            // wu_wrestlerCritical
+            // 
+            this.wu_wrestlerCritical.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.wu_wrestlerCritical.FormattingEnabled = true;
+            this.wu_wrestlerCritical.Location = new System.Drawing.Point(384, 152);
+            this.wu_wrestlerCritical.Name = "wu_wrestlerCritical";
+            this.wu_wrestlerCritical.Size = new System.Drawing.Size(184, 21);
+            this.wu_wrestlerCritical.TabIndex = 71;
             // 
             // RecoveryTauntForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(891, 272);
+            this.ClientSize = new System.Drawing.Size(810, 272);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.panel20);
             this.Name = "RecoveryTauntForm";
@@ -741,16 +741,11 @@
         private System.Windows.Forms.Button wu_heavyRemove;
         private System.Windows.Forms.Button wu_heavyAdd;
         private System.Windows.Forms.Button wu_lightRemove;
-        private System.Windows.Forms.Button wu_lightAdd;
         private System.Windows.Forms.Button wu_mediumRemove;
         private System.Windows.Forms.Button wu_mediumAdd;
         private System.Windows.Forms.Panel panel9;
         public System.Windows.Forms.ComboBox wu_styles;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox wu_styleMiddle;
-        private System.Windows.Forms.TextBox wu_styleHeavy;
-        private System.Windows.Forms.TextBox wu_styleCritical;
-        private System.Windows.Forms.TextBox wu_styleLight;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label21;
@@ -766,10 +761,6 @@
         private System.Windows.Forms.Button wu_wrestlerLightAdd;
         public System.Windows.Forms.ComboBox wu_wrestlers;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.TextBox wu_wrestlerMedium;
-        private System.Windows.Forms.TextBox wu_wrestlerHeavy;
-        private System.Windows.Forms.TextBox wu_wrestlerCritical;
-        private System.Windows.Forms.TextBox wu_wrestlerLight;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label label58;
@@ -788,5 +779,14 @@
         private System.Windows.Forms.Label label64;
         private System.Windows.Forms.TextBox wu_moveSearch;
         private System.Windows.Forms.Button wu_moveReload;
+        private System.Windows.Forms.ComboBox wu_styleHeavy;
+        private System.Windows.Forms.ComboBox wu_styleMiddle;
+        private System.Windows.Forms.ComboBox wu_styleLight;
+        private System.Windows.Forms.ComboBox wu_styleCritical;
+        private System.Windows.Forms.Button wu_lightAdd;
+        private System.Windows.Forms.ComboBox wu_wrestlerCritical;
+        private System.Windows.Forms.ComboBox wu_wrestlerMedium;
+        private System.Windows.Forms.ComboBox wu_wrestlerHeavy;
+        private System.Windows.Forms.ComboBox wu_wrestlerLight;
     }
 }

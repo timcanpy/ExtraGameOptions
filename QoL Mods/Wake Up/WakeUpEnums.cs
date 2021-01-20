@@ -24,4 +24,18 @@ namespace QoL_Mods.Data_Classes
         Force,
         Executed
     }
+
+    public enum DamageState
+    {
+        Low,
+        Medium,
+        Heavy,
+        Critical
+    }
+
+    public enum Modversion
+    {
+        v1,
+        v2
+    }
 }

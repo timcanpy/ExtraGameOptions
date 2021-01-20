@@ -46,6 +46,7 @@ namespace QoL_Mods
         public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
+        private static Modversion modVersion = Modversion.v2;
         #endregion
 
         #region Wake Up Taunts
@@ -57,13 +58,33 @@ namespace QoL_Mods
                 using (StreamReader sr = new StreamReader(filePath))
                 {
                     var lines = File.ReadAllLines(filePath);
-                    foreach (String style in lines)
+                    List<string> existingGroups = new List<string>();
+                    foreach (String tauntData in lines)
                     {
-                        WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
                         try
                         {
-                            taunt.LoadWakeUpData(style, validTaunts);
-                            wu_styles.Items.Add(taunt);
+                            WakeUpGroup newGroup = new WakeUpGroup("");
+                            String groupName = newGroup.GetTauntDataName(tauntData);
+
+                            if (existingGroups.Contains(groupName))
+                            {
+                                L.D(groupName + " already exists!");
+                                foreach (WakeUpGroup styleGroup in wu_styles.Items)
+                                {
+                                    if (styleGroup.Name.Equals(groupName))
+                                    {
+                                        styleGroup.LoadWakeUpData(tauntData, validTaunts, modVersion);
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                L.D(groupName + " is a new WakeUpGroup!");
+                                newGroup.LoadWakeUpData(tauntData, validTaunts, modVersion);
+                                wu_styles.Items.Add(newGroup);
+                                existingGroups.Add(groupName);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -86,20 +107,40 @@ namespace QoL_Mods
             if (File.Exists(filePath))
             {
                 var lines = File.ReadAllLines(filePath);
-                foreach (String style in lines)
+                List<string> existingGroups = new List<string>();
+                foreach (String tauntData in lines)
                 {
-                    WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("", FightStyleEnum.American));
-
                     try
                     {
-                        taunt.LoadWakeUpData(style, validTaunts);
-                        wu_wrestlers.Items.Add(taunt);
+                        WakeUpGroup newGroup = new WakeUpGroup("");
+                        String groupName = newGroup.GetTauntDataName(tauntData);
+
+                        if (existingGroups.Contains(groupName))
+                        {
+                            L.D(groupName + " already exists!");
+                            foreach (WakeUpGroup wrestlerGroup in wu_wrestlers.Items)
+                            {
+                                if (wrestlerGroup.Name.Equals(groupName))
+                                {
+                                    wrestlerGroup.LoadWakeUpData(tauntData, validTaunts, modVersion);
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            L.D(groupName + " is a new WakeUpGroup!");
+                            newGroup.LoadWakeUpData(tauntData, validTaunts, modVersion);
+                            wu_wrestlers.Items.Add(newGroup);
+                            existingGroups.Add(groupName);
+                        }
                     }
                     catch (Exception ex)
                     {
                         L.D("WakeUpTaunt Load Error:" + ex);
                     }
                 }
+
 
                 if (wu_wrestlers.Items.Count > 0)
                 {
@@ -122,10 +163,14 @@ namespace QoL_Mods
 
             using (StreamWriter sw = File.AppendText(filePath))
             {
-                foreach (WakeUpTaunt taunt in wu_styles.Items)
+                foreach (WakeUpGroup group in wu_styles.Items)
                 {
-                    sw.WriteLine(taunt.SaveWakeUpData());
+                    foreach (WakeUpTaunt taunt in group.WakeUpTaunts)
+                    {
+                        sw.WriteLine(taunt.SaveWakeUpData());
+                    }
                 }
+
             }
 
             //Save Wrestler WakeUpTaunts
@@ -137,9 +182,12 @@ namespace QoL_Mods
 
             using (StreamWriter sw = File.AppendText(filePath))
             {
-                foreach (WakeUpTaunt taunt in wu_wrestlers.Items)
+                foreach (WakeUpGroup group in wu_wrestlers.Items)
                 {
-                    sw.WriteLine(taunt.SaveWakeUpData());
+                    foreach (WakeUpTaunt taunt in group.WakeUpTaunts)
+                    {
+                        sw.WriteLine(taunt.SaveWakeUpData());
+                    }
                 }
             }
         }
@@ -216,6 +264,14 @@ namespace QoL_Mods
         #endregion
 
         #region Update Display
+        private void RefreshStyleView()
+        {
+            wu_styles_SelectedIndexChanged(null, null);
+        }
+        private void RefreshWrestlerView()
+        {
+            wu_wrestlers_SelectedIndexChanged(null, null);
+        }
         private void wu_moveRefresh_Click_1(object sender, EventArgs e)
         {
             SetValidMoves();
@@ -225,31 +281,59 @@ namespace QoL_Mods
         {
             try
             {
+                if (wu_styles.Items.Count == 0)
+                {
+                    return;
+                }
+
                 ClearStyleMoves();
-                WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-                if (IsValidTaunt(styleTaunt.WakeupMoves[0]))
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                foreach (WakeUpTaunt taunt in currentGroup.WakeUpTaunts)
                 {
-                    wu_styleLight.Text = styleTaunt.WakeupMoves[0].SkillName;
+                    Skill lowSkill = taunt.GetSkill(DamageState.Low);
+                    Skill mediumSkill = taunt.GetSkill(DamageState.Medium);
+                    Skill heavySkill = taunt.GetSkill(DamageState.Heavy);
+                    Skill criticalSkill = taunt.GetSkill(DamageState.Critical);
+
+                    if (lowSkill != null)
+                    {
+                        wu_styleLight.Items.Add(lowSkill);
+                    }
+                    if (mediumSkill != null)
+                    {
+                        wu_styleMiddle.Items.Add(mediumSkill);
+                    }
+                    if (heavySkill != null)
+                    {
+                        wu_styleHeavy.Items.Add(heavySkill);
+                    }
+                    if (criticalSkill != null)
+                    {
+                        wu_styleCritical.Items.Add(criticalSkill);
+                    }
+
                 }
 
-                if (IsValidTaunt(styleTaunt.WakeupMoves[1]))
+                if (wu_styleLight.Items.Count > 0)
                 {
-                    wu_styleMiddle.Text = styleTaunt.WakeupMoves[1].SkillName;
+                    wu_styleLight.SelectedIndex = 0;
                 }
-
-                if (IsValidTaunt(styleTaunt.WakeupMoves[2]))
+                if (wu_styleMiddle.Items.Count > 0)
                 {
-                    wu_styleHeavy.Text = styleTaunt.WakeupMoves[2].SkillName;
+                    wu_styleMiddle.SelectedIndex = 0;
                 }
-
-                if (IsValidTaunt(styleTaunt.WakeupMoves[3]))
+                if (wu_styleHeavy.Items.Count > 0)
                 {
-                    wu_styleCritical.Text = styleTaunt.WakeupMoves[3].SkillName;
+                    wu_styleHeavy.SelectedIndex = 0;
+                }
+                if (wu_styleCritical.Items.Count > 0)
+                {
+                    wu_styleCritical.SelectedIndex = 0;
                 }
             }
             catch (Exception ex)
             {
-                L.D("TESTEXCEPTION:" + ex);
+                L.D("wu_styles_SelectedIndexChanged Error:" + ex);
             }
 
         }
@@ -261,31 +345,64 @@ namespace QoL_Mods
 
         private void wu_wrestlers_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (wu_wrestlers.SelectedItem == null)
+            try
             {
-                return;
-            }
-            ClearWrestlerMoves();
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
+                if (wu_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+                if (wu_wrestlers.Items.Count == 0)
+                {
+                    return;
+                }
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[0]))
-            {
-                wu_wrestlerLight.Text = styleTaunt.WakeupMoves[0].SkillName;
-            }
+                ClearWrestlerMoves();
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                foreach (WakeUpTaunt taunt in currentGroup.WakeUpTaunts)
+                {
+                    Skill lowSkill = taunt.GetSkill(DamageState.Low);
+                    Skill mediumSkill = taunt.GetSkill(DamageState.Medium);
+                    Skill heavySkill = taunt.GetSkill(DamageState.Heavy);
+                    Skill criticalSkill = taunt.GetSkill(DamageState.Critical);
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[1]))
-            {
-                wu_wrestlerMedium.Text = styleTaunt.WakeupMoves[1].SkillName;
-            }
+                    if (lowSkill != null)
+                    {
+                        wu_wrestlerLight.Items.Add(lowSkill);
+                    }
+                    if (mediumSkill != null)
+                    {
+                        wu_wrestlerMedium.Items.Add(mediumSkill);
+                    }
+                    if (heavySkill != null)
+                    {
+                        wu_wrestlerHeavy.Items.Add(heavySkill);
+                    }
+                    if (criticalSkill != null)
+                    {
+                        wu_wrestlerCritical.Items.Add(criticalSkill);
+                    }
+                }
 
-            if (IsValidTaunt(styleTaunt.WakeupMoves[2]))
-            {
-                wu_wrestlerHeavy.Text = styleTaunt.WakeupMoves[2].SkillName;
+                if (wu_wrestlerLight.Items.Count > 0)
+                {
+                    wu_wrestlerLight.SelectedIndex = 0;
+                }
+                if (wu_wrestlerMedium.Items.Count > 0)
+                {
+                    wu_wrestlerMedium.SelectedIndex = 0;
+                }
+                if (wu_wrestlerHeavy.Items.Count > 0)
+                {
+                    wu_wrestlerHeavy.SelectedIndex = 0;
+                }
+                if (wu_wrestlerCritical.Items.Count > 0)
+                {
+                    wu_wrestlerCritical.SelectedIndex = 0;
+                }
             }
-
-            if (IsValidTaunt(styleTaunt.WakeupMoves[3]))
+            catch (Exception ex)
             {
-                wu_wrestlerCritical.Text = styleTaunt.WakeupMoves[3].SkillName;
+                L.D("wu_wrestlers_SelectedIndexChanged error: " + ex);
             }
         }
 
@@ -299,205 +416,332 @@ namespace QoL_Mods
         #region Style
         private void wu_lightAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Low);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
             }
 
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            wu_styleLight.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 0);
-            wu_styles.SelectedItem = styleTaunt;
         }
 
         private void wu_heavyAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Heavy);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
             }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-
-            wu_styleHeavy.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 2);
-            wu_styles.SelectedItem = styleTaunt;
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
+            } 
         }
 
         private void wu_mediumAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Medium);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
             }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-
-            wu_styleMiddle.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 1);
-            wu_styles.SelectedItem = styleTaunt;
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
+            }     
         }
 
         private void wu_criticalAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Critical);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
             }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-
-            wu_styleCritical.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 3);
-            wu_styles.SelectedItem = styleTaunt;
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
+            }
         }
 
         private void wu_lightRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(0);
-            wu_styleLight.Clear();
-            wu_styles.SelectedItem = styleTaunt;
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                Skill skill = (Skill)wu_styleLight.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Low);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
         }
 
         private void wu_heavyRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(2);
-            wu_styleHeavy.Clear();
-            wu_styles.SelectedItem = styleTaunt;
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                Skill skill = (Skill)wu_styleHeavy.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Heavy);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
         }
 
         private void wu_mediumRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(1);
-            wu_styleMiddle.Clear();
-            wu_styles.SelectedItem = styleTaunt;
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                Skill skill = (Skill)wu_styleMiddle.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Medium);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
         }
 
         private void wu_criticalRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_styles.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(3);
-            wu_styleCritical.Clear();
-            wu_styles.SelectedItem = styleTaunt;
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_styles.SelectedItem;
+                Skill skill = (Skill)wu_styleCritical.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Critical);
+                wu_styles.SelectedItem = currentGroup;
+                RefreshStyleView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            } 
         }
         #endregion
 
         #region Wrestlers
         private void wu_wrestlerLightAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                if (wu_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Low);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
             }
 
-            if (wu_wrestlers.SelectedItem == null)
-            {
-                return;
-            }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-
-            wu_wrestlerLight.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 0);
-            wu_wrestlers.SelectedItem = styleTaunt;
         }
 
         private void wu_wrestlerHeavyAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                if (wu_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Heavy);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
             }
 
-            if (wu_wrestlers.SelectedItem == null)
-            {
-                return;
-            }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-
-            wu_wrestlerHeavy.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 2);
-            wu_wrestlers.SelectedItem = styleTaunt;
         }
 
         private void wu_wrestlerMediumAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                if (wu_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Medium);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
             }
 
-            if (wu_wrestlers.SelectedItem == null)
-            {
-                return;
-            }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-
-            //wu_styleMedium.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 1);
-            wu_wrestlerMedium.Text = skill.SkillName;
-            wu_wrestlers.SelectedItem = styleTaunt;
         }
 
         private void wu_wrestlerCriticalAdd_Click(object sender, EventArgs e)
         {
-            if (wu_moveResults.Items.Count == 0)
+            try
             {
-                return;
+                if (wu_moveResults.Items.Count == 0)
+                {
+                    return;
+                }
+
+                if (wu_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+
+                Skill skill = (Skill)wu_moveResults.SelectedItem;
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                currentGroup.AddWakeUpMove(skill, DamageState.Critical);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Adding Error: " + ex);
             }
 
-            if (wu_wrestlers.SelectedItem == null)
-            {
-                return;
-            }
-
-            Skill skill = (Skill)wu_moveResults.SelectedItem;
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-
-            //wu_styleMedium.Text = skill.SkillName;
-            styleTaunt.AddWakeUpMove(skill, 3);
-            wu_wrestlerCritical.Text = skill.SkillName;
-            wu_wrestlers.SelectedItem = styleTaunt;
         }
 
         private void wu_wrestlerLightRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(0);
-            wu_wrestlerLight.Clear();
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+
+                Skill skill = (Skill)wu_wrestlerLight.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Low);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
+
         }
 
         private void wu_wrestlerHeavyRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(2);
-            wu_wrestlerHeavy.Clear();
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+
+                Skill skill = (Skill)wu_wrestlerHeavy.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Heavy);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
+
         }
 
         private void wu_wrestlerMediumRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(1);
-            wu_wrestlerMedium.Clear();
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+
+                Skill skill = (Skill)wu_wrestlerMedium.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Medium);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
+
         }
 
         private void wu_wrestlerCriticalRemove_Click(object sender, EventArgs e)
         {
-            WakeUpTaunt styleTaunt = (WakeUpTaunt)wu_wrestlers.SelectedItem;
-            styleTaunt.RemoveWakeUpMove(3);
-            wu_wrestlerCritical.Clear();
+            try
+            {
+                WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+
+                Skill skill = (Skill)wu_wrestlerCritical.SelectedItem;
+                currentGroup.RemoveWakeUpMove(skill, DamageState.Critical);
+                wu_wrestlers.SelectedItem = currentGroup;
+                RefreshWrestlerView();
+            }
+            catch (Exception ex)
+            {
+                L.D("Removing Error: " + ex);
+            }
         }
         #endregion
 
@@ -507,17 +751,17 @@ namespace QoL_Mods
 
         private void ClearStyleMoves()
         {
-            wu_styleLight.Clear();
-            wu_styleMiddle.Clear();
-            wu_styleHeavy.Clear();
-            wu_styleCritical.Clear();
+            wu_styleLight.Items.Clear();
+            wu_styleMiddle.Items.Clear();
+            wu_styleHeavy.Items.Clear();
+            wu_styleCritical.Items.Clear();
         }
         private void ClearWrestlerMoves()
         {
-            wu_wrestlerLight.Clear();
-            wu_wrestlerMedium.Clear();
-            wu_wrestlerHeavy.Clear();
-            wu_wrestlerCritical.Clear();
+            wu_wrestlerLight.Items.Clear();
+            wu_wrestlerMedium.Items.Clear();
+            wu_wrestlerHeavy.Items.Clear();
+            wu_wrestlerCritical.Items.Clear();
         }
         private bool IsValidTaunt(Skill taunt)
         {

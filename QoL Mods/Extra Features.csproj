@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Wake Up\WakeUpEnums.cs" />
     <Compile Include="Wake Up\WakeUpTaunt.cs" />
+    <Compile Include="Wake Up\WakeUpGroup.cs" />
     <Compile Include="Helper Classes\IDObject.cs" />
     <Compile Include="Helper Classes\MatchConfiguration.cs" />
     <Compile Include="Helper Classes\WresIDGroup.cs" />
