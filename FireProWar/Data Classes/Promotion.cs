@@ -1,4 +1,5 @@
 ﻿using DG;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,7 +64,8 @@ namespace Data_Classes
         }
 
         private String history;
-
+        
+        [JsonIgnore]
         public String History
         {
             get { return history; }
@@ -82,6 +84,7 @@ namespace Data_Classes
 
         private List<String> matchDetails;
 
+        [JsonIgnore]
         public List<String> MatchDetails
         {
             get { return matchDetails; }

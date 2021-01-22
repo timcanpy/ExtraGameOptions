@@ -147,6 +147,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.sendJSONButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -1332,6 +1333,7 @@
             // fpw_reports
             // 
             this.fpw_reports.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_reports.Controls.Add(this.sendJSONButton);
             this.fpw_reports.Controls.Add(this.rpt_employees);
             this.fpw_reports.Controls.Add(this.rpt_promotions);
             this.fpw_reports.Location = new System.Drawing.Point(4, 22);
@@ -1658,6 +1660,16 @@
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
             // 
+            // sendJSONButton
+            // 
+            this.sendJSONButton.Location = new System.Drawing.Point(270, 235);
+            this.sendJSONButton.Name = "sendJSONButton";
+            this.sendJSONButton.Size = new System.Drawing.Size(75, 23);
+            this.sendJSONButton.TabIndex = 2;
+            this.sendJSONButton.Text = "JSON Test";
+            this.sendJSONButton.UseVisualStyleBackColor = true;
+            this.sendJSONButton.Click += new System.EventHandler(this.sendJSONButton_Click);
+            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1814,5 +1826,6 @@
         private System.Windows.Forms.PictureBox rosterTitle;
         private System.Windows.Forms.Label rosterTitleInfo;
         public System.Windows.Forms.ComboBox fpw_promoList;
+        private System.Windows.Forms.Button sendJSONButton;
     }
 }

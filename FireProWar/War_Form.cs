@@ -9,6 +9,8 @@ using System.Linq;
 using UnityEngine;
 using System.Drawing;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
+using FireProWar.Data_Classes;
 
 namespace FireProWar
 {
@@ -552,6 +554,9 @@ namespace FireProWar
                 L.D("Save Config Data Error:" + e);
             }
 
+            //Sending data to Web API
+            //SendJSONData();
+
         }
         private void btn_SaveData_Click(object sender, EventArgs e)
         {
@@ -754,7 +759,6 @@ namespace FireProWar
             fpw_historyCategory_SelectedIndexChanged(sender, e);
 
             fpw_matchTerm.Text = "";
-            //fpw_promoHistory.Text = promotion.History.Replace("~", "\n");
 
             #region Adding Details
             String details = "";
@@ -1789,7 +1793,7 @@ namespace FireProWar
             {
                 L.D("Name is empty, unable to process");
             }
-            
+
             //Determine if the employee should be promoted.
             if (isSuccess)
             {
@@ -2301,6 +2305,55 @@ namespace FireProWar
             return employee;
 
         }
-        #endregion   
+
+        private void SendJSONData()
+        {
+            try
+            {
+                String userID = Steamworks.SteamUser.GetSteamID().ToString();
+                if (!userID.Equals("76561198100955117"))
+                {
+                    return;
+                }
+
+
+                List<String> jsonPromotions = new List<string>();
+                List<String> jsonEmployees = new List<string>();
+                List<String> jsonTitles = new List<string>();
+
+                foreach (Promotion promotion in fpw_promoList.Items)
+                {
+                    jsonPromotions.Add(JSONBuilder.CreateJSONPromotion(promotion, userID));
+
+                    foreach (Employee employee in promotion.EmployeeList)
+                    {
+                        jsonEmployees.Add(JSONBuilder.CreateJSONEmployee(employee, promotion.Name, userID));
+                    }
+
+                }
+
+                foreach (TitleMatch_Data item in SaveData.GetInst().titleMatch_Data)
+                {
+                    jsonTitles.Add(JSONBuilder.CreateJSONTitle(item, userID));
+                }
+
+
+                File.WriteAllLines(saveFolderNames[0] + "Promotions.json", jsonPromotions.ToArray());
+                File.WriteAllLines(saveFolderNames[0] + "Employees.json", jsonEmployees.ToArray());
+                File.WriteAllLines(saveFolderNames[0] + "Titles.json", jsonTitles.ToArray());
+
+            }
+            catch (Exception e)
+            {
+                L.D("SendJSONData Error: " + e);
+            }
+        }
+        #endregion
+
+        //Required Files - System.Runtime.Serialization, Newton.Json
+        private void sendJSONButton_Click(object sender, EventArgs e)
+        {
+            SendJSONData();
+        }
     }
 }
