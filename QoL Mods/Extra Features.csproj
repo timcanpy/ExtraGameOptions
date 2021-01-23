@@ -75,6 +75,7 @@
     <Compile Include="Private\Easy Edit Resize.Designer.cs">
       <DependentUpon>Easy Edit Resize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Private\PrivateOverrides.cs" />
     <Compile Include="Private\TOSForm.cs">
       <SubType>Form</SubType>
     </Compile>
