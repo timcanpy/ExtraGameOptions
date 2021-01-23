@@ -358,6 +358,8 @@ namespace QoL_Mods
 
                 ClearWrestlerMoves();
                 WakeUpGroup currentGroup = (WakeUpGroup)wu_wrestlers.SelectedItem;
+                L.D("Checking " + currentGroup.Name);
+
                 foreach (WakeUpTaunt taunt in currentGroup.WakeUpTaunts)
                 {
                     Skill lowSkill = taunt.GetSkill(DamageState.Low);
@@ -828,8 +830,8 @@ namespace QoL_Mods
             try
             {
                 String wrestler = ((WresIDGroup)wu_wrestlerResults.SelectedItem).Name;
-                WakeUpTaunt taunt = new WakeUpTaunt(new QoL_Mods.Data_Classes.Style(wrestler, FightStyleEnum.American));
-                wu_wrestlers.Items.Add(taunt);
+                WakeUpGroup group = new WakeUpGroup(wrestler);
+                wu_wrestlers.Items.Add(group);
                 if (wu_wrestlers.Items.Count > 0)
                 {
                     wu_wrestlers.SelectedIndex = wu_wrestlers.Items.Count - 1;

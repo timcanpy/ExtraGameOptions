@@ -863,7 +863,6 @@ namespace QoL_Mods
                 if (executeTaunt)
                 {
                     WakeUpTaunt randomTaunt = GetRandomTaunt(tauntList);
-                    L.D("Processing " + randomTaunt + " for Damage Level #" + damageLevel);
                     CheckWakeUpTauntConditions(player, randomTaunt, damageLevel);
                     return true;
                 }
@@ -878,31 +877,31 @@ namespace QoL_Mods
             }
         }
 
-        [Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Recovery Taunts")]
-        public static void ReplaceCurrentSkill(FormAnimator animator)
-        {
-            try
-            {
-                if (animator.plObj == null || animator.AnmReqType != AnmReqTypeEnum.SkillID || tauntData == null)
-                {
-                    return;
-                }
+        //[Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Recovery Taunts")]
+        //public static void ReplaceCurrentSkill(FormAnimator animator)
+        //{
+        //    try
+        //    {
+        //        if (animator.plObj == null || animator.AnmReqType != AnmReqTypeEnum.SkillID || tauntData == null)
+        //        {
+        //            return;
+        //        }
 
-                //Ensure that the priority chain is not broken
-                if (tauntData[animator.plObj.PlIdx] != null)
-                {
-                    animator.CurrentSkill = tauntData[animator.plObj.PlIdx];
-                    tauntData[animator.plObj.PlIdx] = null;
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("ReplaceCurrentSkillError: " + e);
-            }
+        //        //Ensure that the priority chain is not broken
+        //        if (tauntData[animator.plObj.PlIdx] != null)
+        //        {
+        //            animator.CurrentSkill = tauntData[animator.plObj.PlIdx];
+        //            tauntData[animator.plObj.PlIdx] = null;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("ReplaceCurrentSkillError: " + e);
+        //    }
 
-        }
+        //}
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Recovery Taunts")]
         public static void RefreshTauntSlots()
@@ -964,20 +963,24 @@ namespace QoL_Mods
             player.ChangeState(global::PlStateEnum.Performance);
 
             //Ensure we're handling skill data correctly
-            if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
-            {
-                player.lastSkill = SkillSlotEnum.Performance_1;
-            }
+            //if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
+            //{
+            //    player.lastSkill = SkillSlotEnum.Performance_1;
+            //}
 
-            //Resolve rare bug in some AI methods
-            Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
-            if (!defender)
-            {
-                player.TargetPlIdx = FindAnOpponent(player.PlIdx);
-            }
+            ////Resolve rare bug in some AI methods
+            //Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
+            //if (!defender)
+            //{
+            //    player.TargetPlIdx = FindAnOpponent(player.PlIdx);
+            //}
 
             //player.animator.InitAnimation();
-            ModPack.ModPack.InvokeMethod(player.animator, "InitAnimation", false, null);
+
+            //New method of executing recovery taunts
+            player.animator.ReqSkillAnm((SkillID)skillID);
+            //ModPack.ModPack.InvokeMethod(player.animator, "ReqSkillAnm", false, new object[]{skillID});
+
             //Ensure recovery taunts are subtracted
             recoveryTauntCount[player.PlIdx] -= 1;
 

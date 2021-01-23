@@ -127,11 +127,11 @@ namespace QoL_Mods.Data_Classes
         #region Helper Methods
         public Skill LocateSkill(Skill skill, DamageState damageState)
         {
-            if(WakeupMoves[(int)damageState] == null)
+            if (WakeupMoves[(int)damageState] == null)
             {
                 return null;
             }
-            
+
             if (WakeupMoves[(int)damageState].Equals(skill))
             {
                 return skill;
@@ -144,7 +144,14 @@ namespace QoL_Mods.Data_Classes
 
         public Skill GetSkill(DamageState damageState)
         {
-            return WakeupMoves[(int)damageState];
+            try
+            {
+                return WakeupMoves[(int)damageState];
+            }
+            catch(ArgumentOutOfRangeException)
+            {
+                return null;
+            }
         }
 
         public bool IsGroupEmpty()

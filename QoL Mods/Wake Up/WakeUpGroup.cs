@@ -9,19 +9,22 @@ namespace QoL_Mods.Data_Classes
         public List<WakeUpTaunt> WakeUpTaunts { get; set; }
         public String Name { get; set; }
 
+        private readonly Style defaultStyle;
+
         public WakeUpGroup(String name)
         {
             WakeUpTaunts = new List<WakeUpTaunt>();
             Name = name;
-        }
+            defaultStyle = new Style(Name, FightStyleEnum.American);
+    }
 
-        public void AddWakeUpMove(Skill skill, DamageState damageState)
+    public void AddWakeUpMove(Skill skill, DamageState damageState)
         {
             //If the skill already exists under this damage state, do nothing
             foreach (WakeUpTaunt group in WakeUpTaunts)
             {
                 var currentSkill = group.GetSkill(damageState);
-                if(currentSkill == null)
+                if (currentSkill == null)
                 {
                     continue;
                 }
@@ -36,7 +39,15 @@ namespace QoL_Mods.Data_Classes
             }
 
             //Skill is not a duplicate, add it to the last group. Else, we need to make a new group
-            WakeUpTaunt lastTaunt = WakeUpTaunts[WakeUpTaunts.Count - 1];
+            WakeUpTaunt lastTaunt;
+
+            if (WakeUpTaunts.Count == 0)
+            {
+                WakeUpTaunts.Add(new WakeUpTaunt(defaultStyle));
+            }
+
+            lastTaunt = WakeUpTaunts[WakeUpTaunts.Count - 1];
+
             if (lastTaunt.GetSkill(damageState) == null)
             {
                 L.D("Append Wakeup Move");
@@ -79,7 +90,7 @@ namespace QoL_Mods.Data_Classes
 
         public void LoadWakeUpData(String data, HashSet<Skill> validSkills = null, Modversion version = Modversion.v1)
         {
-            Style style = new Style(Name, FightStyleEnum.American);
+            Style style = defaultStyle;
             WakeUpTaunt newTaunt = new WakeUpTaunt(style);
             Name = newTaunt.LoadWakeUpData(data, validSkills);
             WakeUpTaunts.Add(newTaunt);
