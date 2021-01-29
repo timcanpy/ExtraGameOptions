@@ -865,6 +865,8 @@ namespace FireProWar
                     promo.MatchCount = promotion.MatchCount;
                     promo.MatchDetails = promotion.MatchDetails;
                     promo.History = promotion.History;
+
+                    AddUpdatedPromotion(promotion.Name);
                     break;
                 }
             }
@@ -2306,6 +2308,85 @@ namespace FireProWar
 
         }
 
+        #endregion
+
+        #region Data Transfer
+        //Required Files - System.Runtime.Serialization, Newton.Json
+        private void sendJSONButton_Click(object sender, EventArgs e)
+        {
+            SendJSONData();
+        }
+        private void addCurrent_Click(object sender, EventArgs e)
+        {
+            if (fpw_promoList.Items.Count == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                var currentPromotion = (Promotion)fpw_promoList.SelectedItem;
+                if (currentPromotion == null)
+                {
+                    return;
+                }
+
+                string promotionName = currentPromotion.Name;
+                AddUpdatedPromotion(promotionName);
+            }
+            catch (Exception ex)
+            {
+                L.D("addCurrent Exception: " + ex);
+            }
+        }
+        private void removeCurrent_Click(object sender, EventArgs e)
+        {
+            if (fpw_updatedPromotions.Items.Count == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                if (fpw_updatedPromotions.SelectedIndex < 0)
+                {
+                    return;
+                }
+
+                fpw_updatedPromotions.Items.RemoveAt(fpw_updatedPromotions.SelectedIndex);
+            }
+            catch (Exception ex)
+            {
+                L.D("removeCurrent Exception: " + ex);
+            }
+        }
+        private void addAll_Click(object sender, EventArgs e)
+        {
+            if (fpw_promoList.Items.Count == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                foreach (Promotion promotion in fpw_promoList.Items)
+                {
+                    AddUpdatedPromotion(promotion.Name);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                L.D("addCurrent Exception: " + ex);
+            }
+        }
+        private void AddUpdatedPromotion(String promotionName)
+        {
+            if (!fpw_updatedPromotions.Items.Contains(promotionName))
+            {
+                fpw_updatedPromotions.Items.Add(promotionName);
+            }
+        }
         private void SendJSONData()
         {
             try
@@ -2323,13 +2404,15 @@ namespace FireProWar
 
                 foreach (Promotion promotion in fpw_promoList.Items)
                 {
-                    jsonPromotions.Add(JSONBuilder.CreateJSONPromotion(promotion, userID));
-
-                    foreach (Employee employee in promotion.EmployeeList)
+                    if (fpw_updatedPromotions.Items.Contains(promotion.Name))
                     {
-                        jsonEmployees.Add(JSONBuilder.CreateJSONEmployee(employee, promotion.Name, userID));
-                    }
+                        jsonPromotions.Add(JSONBuilder.CreateJSONPromotion(promotion, userID));
 
+                        foreach (Employee employee in promotion.EmployeeList)
+                        {
+                            jsonEmployees.Add(JSONBuilder.CreateJSONEmployee(employee, promotion.Name, userID));
+                        }
+                    }
                 }
 
                 foreach (TitleMatch_Data item in SaveData.GetInst().titleMatch_Data)
@@ -2350,10 +2433,5 @@ namespace FireProWar
         }
         #endregion
 
-        //Required Files - System.Runtime.Serialization, Newton.Json
-        private void sendJSONButton_Click(object sender, EventArgs e)
-        {
-            SendJSONData();
-        }
     }
 }

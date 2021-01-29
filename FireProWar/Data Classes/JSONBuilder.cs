@@ -130,7 +130,7 @@ namespace FireProWar.Data_Classes
             writer.WriteValue(title.titleName);
 
             writer.WritePropertyName("type");
-            writer.WriteValue(title.matchType);
+            writer.WriteValue(Enum.GetName(typeof(MatchType), title.matchType));
 
             writer.WritePropertyName("currentChamp");
             writer.WriteValue(title.GetCurrentTitleHolderName());

@@ -2009,10 +2009,13 @@ namespace QoL_Mods
                 String ringName = global::SaveData.inst.GetEditRingData(settings.ringID).name;
                 configRingName = "";
 
-                foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                //foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
+                for(int i = 0; i < RingConfigForm.ringForm.rc_ringList.Items.Count; i ++)
                 {
+                    RingConfiguration config = (RingConfiguration)RingConfigForm.ringForm.rc_ringList.Items[i];
                     if (config.RingName.Equals(ringName))
                     {
+                        RingConfigForm.ringForm.rc_ringList.SelectedIndex = i;
                         configRingName = ringName;
 
                         //Grapple Settings
@@ -2023,6 +2026,7 @@ namespace QoL_Mods
                         //Check for ModPack, ensure that we aren't over-riding any options.
                         if (CheckForMOTWMatch())
                         {
+                            L.D("This is a MOTWMatch");
                             return;
                         }
 
@@ -2092,12 +2096,13 @@ namespace QoL_Mods
             List<int> players = new List<int>();
             for (int i = 0; i < 8; i++)
             {
-                Player plObj = PlayerMan.inst.GetPlObj(i);
-                if (plObj)
+                MatchWrestlerInfo plObj = GlobalWork.inst.MatchSetting.matchWrestlerInfo[i];
+                if (plObj.entry)
                 {
-                    if (!plObj.isIntruder && !plObj.isSecond)
+                    if (!plObj.isIntruder && !plObj.isSecond && !ModPack.ModPack.isSecond[i])
                     {
-                        players.Add(plObj.PlIdx);
+                        L.D(DataBase.GetWrestlerFullName(plObj.param));
+                        players.Add(i);
                     }
                 }
             }

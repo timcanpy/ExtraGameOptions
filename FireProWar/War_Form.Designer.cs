@@ -122,6 +122,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.ms_rosterList = new System.Windows.Forms.ListBox();
             this.fpw_reports = new System.Windows.Forms.TabPage();
+            this.sendJSONButton = new System.Windows.Forms.Button();
             this.rpt_employees = new System.Windows.Forms.Button();
             this.rpt_promotions = new System.Windows.Forms.Button();
             this.fpw_injuries = new System.Windows.Forms.TabPage();
@@ -147,7 +148,12 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.sendJSONButton = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
+            this.fpw_updatedPromotions = new System.Windows.Forms.ListBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.addCurrent = new System.Windows.Forms.Button();
+            this.removeCurrent = new System.Windows.Forms.Button();
+            this.addAll = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -1333,6 +1339,12 @@
             // fpw_reports
             // 
             this.fpw_reports.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.fpw_reports.Controls.Add(this.addAll);
+            this.fpw_reports.Controls.Add(this.removeCurrent);
+            this.fpw_reports.Controls.Add(this.addCurrent);
+            this.fpw_reports.Controls.Add(this.label29);
+            this.fpw_reports.Controls.Add(this.fpw_updatedPromotions);
+            this.fpw_reports.Controls.Add(this.label28);
             this.fpw_reports.Controls.Add(this.sendJSONButton);
             this.fpw_reports.Controls.Add(this.rpt_employees);
             this.fpw_reports.Controls.Add(this.rpt_promotions);
@@ -1343,10 +1355,21 @@
             this.fpw_reports.TabIndex = 4;
             this.fpw_reports.Text = "Reports";
             // 
+            // sendJSONButton
+            // 
+            this.sendJSONButton.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold);
+            this.sendJSONButton.Location = new System.Drawing.Point(475, 137);
+            this.sendJSONButton.Name = "sendJSONButton";
+            this.sendJSONButton.Size = new System.Drawing.Size(87, 37);
+            this.sendJSONButton.TabIndex = 2;
+            this.sendJSONButton.Text = "JSON Test";
+            this.sendJSONButton.UseVisualStyleBackColor = true;
+            this.sendJSONButton.Click += new System.EventHandler(this.sendJSONButton_Click);
+            // 
             // rpt_employees
             // 
             this.rpt_employees.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rpt_employees.Location = new System.Drawing.Point(270, 158);
+            this.rpt_employees.Location = new System.Drawing.Point(475, 87);
             this.rpt_employees.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_employees.Name = "rpt_employees";
             this.rpt_employees.Size = new System.Drawing.Size(87, 31);
@@ -1358,7 +1381,7 @@
             // rpt_promotions
             // 
             this.rpt_promotions.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rpt_promotions.Location = new System.Drawing.Point(270, 71);
+            this.rpt_promotions.Location = new System.Drawing.Point(475, 45);
             this.rpt_promotions.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.rpt_promotions.Name = "rpt_promotions";
             this.rpt_promotions.Size = new System.Drawing.Size(87, 31);
@@ -1660,15 +1683,75 @@
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
             // 
-            // sendJSONButton
+            // label28
             // 
-            this.sendJSONButton.Location = new System.Drawing.Point(270, 235);
-            this.sendJSONButton.Name = "sendJSONButton";
-            this.sendJSONButton.Size = new System.Drawing.Size(75, 23);
-            this.sendJSONButton.TabIndex = 2;
-            this.sendJSONButton.Text = "JSON Test";
-            this.sendJSONButton.UseVisualStyleBackColor = true;
-            this.sendJSONButton.Click += new System.EventHandler(this.sendJSONButton_Click);
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(462, 21);
+            this.label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(114, 15);
+            this.label28.TabIndex = 29;
+            this.label28.Text = "Report Generation";
+            // 
+            // fpw_updatedPromotions
+            // 
+            this.fpw_updatedPromotions.FormattingEnabled = true;
+            this.fpw_updatedPromotions.Location = new System.Drawing.Point(15, 64);
+            this.fpw_updatedPromotions.Name = "fpw_updatedPromotions";
+            this.fpw_updatedPromotions.Size = new System.Drawing.Size(289, 95);
+            this.fpw_updatedPromotions.Sorted = true;
+            this.fpw_updatedPromotions.TabIndex = 30;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(101, 23);
+            this.label29.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(125, 15);
+            this.label29.TabIndex = 31;
+            this.label29.Text = "Updated Promotions";
+            // 
+            // addCurrent
+            // 
+            this.addCurrent.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addCurrent.Location = new System.Drawing.Point(15, 175);
+            this.addCurrent.Margin = new System.Windows.Forms.Padding(4);
+            this.addCurrent.Name = "addCurrent";
+            this.addCurrent.Size = new System.Drawing.Size(80, 26);
+            this.addCurrent.TabIndex = 42;
+            this.addCurrent.Text = "Add";
+            this.addCurrent.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.addCurrent.UseVisualStyleBackColor = true;
+            this.addCurrent.Click += new System.EventHandler(this.addCurrent_Click);
+            // 
+            // removeCurrent
+            // 
+            this.removeCurrent.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.removeCurrent.Location = new System.Drawing.Point(103, 175);
+            this.removeCurrent.Margin = new System.Windows.Forms.Padding(4);
+            this.removeCurrent.Name = "removeCurrent";
+            this.removeCurrent.Size = new System.Drawing.Size(80, 26);
+            this.removeCurrent.TabIndex = 43;
+            this.removeCurrent.Text = "Remove";
+            this.removeCurrent.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.removeCurrent.UseVisualStyleBackColor = true;
+            this.removeCurrent.Click += new System.EventHandler(this.removeCurrent_Click);
+            // 
+            // addAll
+            // 
+            this.addAll.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.addAll.Location = new System.Drawing.Point(191, 175);
+            this.addAll.Margin = new System.Windows.Forms.Padding(4);
+            this.addAll.Name = "addAll";
+            this.addAll.Size = new System.Drawing.Size(113, 26);
+            this.addAll.TabIndex = 44;
+            this.addAll.Text = "Mass Add";
+            this.addAll.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.addAll.UseVisualStyleBackColor = true;
+            this.addAll.Click += new System.EventHandler(this.addAll_Click);
             // 
             // War_Form
             // 
@@ -1699,6 +1782,7 @@
             this.fpw_details.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.titleBox)).EndInit();
             this.fpw_reports.ResumeLayout(false);
+            this.fpw_reports.PerformLayout();
             this.fpw_injuries.ResumeLayout(false);
             this.fpw_injuries.PerformLayout();
             this.ResumeLayout(false);
@@ -1827,5 +1911,11 @@
         private System.Windows.Forms.Label rosterTitleInfo;
         public System.Windows.Forms.ComboBox fpw_promoList;
         private System.Windows.Forms.Button sendJSONButton;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.ListBox fpw_updatedPromotions;
+        private System.Windows.Forms.Button addAll;
+        private System.Windows.Forms.Button removeCurrent;
+        private System.Windows.Forms.Button addCurrent;
     }
 }
