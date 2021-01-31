@@ -343,6 +343,10 @@ namespace FireProWar
                                 Boolean.TryParse(elements[1], out value);
                                 fpw_showRecord.Checked = value;
                                 break;
+                            case "fpw_autoJSON":
+                                Boolean.TryParse(elements[1], out value);
+                                fpw_autoJSON.Checked = value;
+                                break;
                         }
 
                         elements = line.Split('-');
@@ -509,6 +513,7 @@ namespace FireProWar
                 {
                     sw.WriteLine("fpw_Enable: " + fpw_Enable.Checked);
                     sw.WriteLine("fpw_showRecord: " + fpw_showRecord.Checked);
+                    sw.WriteLine("fpw_autoJSON: " + fpw_autoJSON.Checked);
 
                     //Save Neck Injuries
                     String injuries = "";
@@ -555,7 +560,10 @@ namespace FireProWar
             }
 
             //Sending data to Web API
-            //SendJSONData();
+            if(fpw_autoJSON.Checked)
+            {
+                SendJSONData();
+            }
 
         }
         private void btn_SaveData_Click(object sender, EventArgs e)
