@@ -505,7 +505,11 @@ namespace QoL_Mods
         public static String imageFolder = "Images";
         public static String _noImageValue = "None";
         public static Dictionary<int, String> critImages = new Dictionary<int, String>();
-        public static GameObject critImage;
+        public static string critBundleName = "critical.obj";
+        public static GameObject critObject = null;
+        public static AssetBundle critImageBundle;
+        public static UnityEngine.Object currentObject;
+
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
@@ -518,9 +522,49 @@ namespace QoL_Mods
                 return;
             }
 
-            //Get files in the image folder
             String currentPath = System.IO.Directory.GetCurrentDirectory();
+            //String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
+            //L.D("CritBundlePath: " + critBundlePath);
 
+            //Ensure the Assetbundle is loaded
+            //if (!File.Exists(critBundlePath))
+            //{
+            //    return;
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        if (critImageBundle == null)
+            //        {
+            //            critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
+
+            //            if (critImageBundle != null)
+            //            {
+            //                foreach (string asset in critImageBundle.GetAllAssetNames())
+            //                {
+            //                    L.D("Asset: " + asset);
+            //                }
+            //            }
+            //            critObject = critImageBundle.LoadAsset<GameObject>("Critical");
+            //            critImageBundle.Unload(false);
+            //            if (critObject == null)
+            //            {
+            //                L.D("Crit Object Is Null");
+            //            }
+            //            else
+            //            {
+            //                L.D("Crit Object is " + critObject.name);
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        L.D("LoadingAssetException: " + ex);
+            //    }
+            //}
+
+            //Get files in the image folder
             String ringName = "";
             MatchSetting settings = GlobalWork.GetInst().MatchSetting;
             if ((int)settings.ringID < (int)RingID.EditRingIDTop)
@@ -595,6 +639,7 @@ namespace QoL_Mods
                 }
             }
 
+
         }
 
         [Hook(TargetClass = "Player", TargetMethod = "ProcessCritical", InjectionLocation = int.MaxValue,
@@ -634,19 +679,22 @@ namespace QoL_Mods
             Group = "ChangeCritImage")]
         public static void SetFightImageCopy()
         {
+            //if (critObject != null)
+            //{
+            //    return;
+            //}
             try
             {
                 //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
-                critImage = MatchUI.inst.gameObj_Critical;
+                critObject = MatchUI.inst.gameObj_Critical;
             }
             catch (Exception e)
             {
                 L.D("Error Setting Up Custom Critical Image: " + e);
-                critImage = null;
+                critObject = null;
             }
         }
 
-        //Prevent default critical image from being displayed
         [Hook(TargetClass = "MatchUI", TargetMethod = "Show_Critical", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
             Group = "ChangeCritImage")]
@@ -659,30 +707,47 @@ namespace QoL_Mods
         {
             try
             {
-                L.D("Replacing Critical Image with " + imageName);
+
+                //if(critObject == null)
+                //{
+                //    L.D("Crit Object is Null");
+                //    return;
+                //}
+
+                //if(currentObject == null)
+                //{
+                //    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
+                //}
+
+                //GameObject criticalImage = GameObject.Find(currentObject.name);
+                GameObject criticalImage = MatchUI.inst.gameObj_Critical;
+                if (criticalImage == null)
+                {
+                    L.D("Can't Find Critical GameObject");
+                    return;
+                }
+
                 Sprite sprite = null;
                 String imagePath = imageName;
 
                 byte[] data = File.ReadAllBytes(imageName);
                 Texture2D texture = new Texture2D(2, 2);
                 texture.LoadImage(data);
-                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), new Vector2(90f, 90f));
-                MatchUI.inst.animator_Critical.speed = .5f;
+                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), Vector2.zero, 100f);
 
-                if (sprite != null && critImage != null)
+                if (sprite != null && criticalImage != null)
                 {
-                    L.D("Crit Image Position x: " + critImage.transform.position.x + "\nCrit Image Position y: " + critImage.transform.position.y);
-                    L.D("Crit Image Rotation x: " + critImage.transform.rotation.x + "\nCrit Image Rotation y: " + critImage.transform.rotation.y + "\nCrit Image Rotation w: " + critImage.transform.rotation.w);
-
-                    Image img = critImage.GetComponent<Image>();
+                    Image img = criticalImage.GetComponent<Image>();
                     if (img == null)
                     {
-                        L.D("gameObj_Critical<Image> = null");
+                        L.D("Can't find image component");
                         return;
                     }
                     img.sprite = sprite;
+
                     MatchSEPlayer.inst.PlayMatchSE(MatchSEEnum.Critical, 1f, -1);
-                    critImage.SetActive(true);
+                    criticalImage.SetActive(true);
+                    L.D("Replacing Critical Image with " + imageName);
                 }
             }
             catch (Exception e)
@@ -690,6 +755,20 @@ namespace QoL_Mods
                 L.D("CustomCritError: " + e.Message);
             }
 
+        }
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
+        public static void tvLogo_Destroy()
+        {
+            foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
+            {
+                if (obj.name == critObject.name)
+                {
+                    GameObject.Destroy(obj);
+                    currentObject = null;
+                    break;
+                }
+            }
         }
 
         #endregion
@@ -812,15 +891,15 @@ namespace QoL_Mods
                 }
                 else
                 {
-                    foreach(WakeUpTaunt taunt in group.WakeUpTaunts)
+                    foreach (WakeUpTaunt taunt in group.WakeUpTaunts)
                     {
-                        if(taunt.WakeupMoves[damageLevel] != null)
+                        if (taunt.WakeupMoves[damageLevel] != null)
                         {
                             tauntList.Add(taunt);
                         }
                     }
 
-                    if(tauntList.Count == 0)
+                    if (tauntList.Count == 0)
                     {
                         return false;
                     }
@@ -1283,6 +1362,10 @@ namespace QoL_Mods
                                 && (plObj.WresParam.country == CountryEnum.Japan || plObj.WresParam.country == CountryEnum.NorthKorea || plObj.WresParam.country == CountryEnum.SouthKorea))
                             {
                                 voiceType[i] = WrestlerVoiceTypeEnum.Japanease_F_0;
+                            } 
+                            else if (plObj.WresParam.sex == SexEnum.Female || plObj.WresParam.sex == SexEnum.MaybeFemale)
+                            {
+                                voiceType[i] = WrestlerVoiceTypeEnum.American_F_0;
                             }
                         }
                     }
@@ -2010,7 +2093,7 @@ namespace QoL_Mods
                 configRingName = "";
 
                 //foreach (RingConfiguration config in RingConfigForm.ringForm.rc_ringList.Items)
-                for(int i = 0; i < RingConfigForm.ringForm.rc_ringList.Items.Count; i ++)
+                for (int i = 0; i < RingConfigForm.ringForm.rc_ringList.Items.Count; i++)
                 {
                     RingConfiguration config = (RingConfiguration)RingConfigForm.ringForm.rc_ringList.Items[i];
                     if (config.RingName.Equals(ringName))
@@ -2032,7 +2115,7 @@ namespace QoL_Mods
 
                         //Clock Speed
                         //ModPack Royal Rumbles should always use the fastest speed
-                        if(ModPack.ModPack.isExtendedRumble || MoreMatchTypes_Form.moreMatchTypesForm.cb_ttt.Checked)
+                        if (ModPack.ModPack.isExtendedRumble || MoreMatchTypes_Form.moreMatchTypesForm.cb_ttt.Checked)
                         {
                             //Double Speed
                             ModPackForm.instance.comboBox8.SelectedIndex = 2;

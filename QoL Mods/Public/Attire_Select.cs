@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using QoL_Mods;
 using QoL_Mods.Private;
+using DG;
 
 namespace Ace.AttireExtension
 {
@@ -32,6 +33,8 @@ namespace Ace.AttireExtension
 
         public ComboBox comboBox1;
 
+        private Timer timer1;
+
         public Attire_Select(FileInfo[] list, int pl, string type)
         {
             this.extraCostumes = list;
@@ -40,37 +43,13 @@ namespace Ace.AttireExtension
             this.InitializeComponent();
         }
 
-        private void Attire_Select_Load(object sender, EventArgs e)
-        {
-        }
-
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            bool flag = this.comboBox1.SelectedIndex != -1;
-            if (flag)
-            {
-                bool flag2 = this.charType == "edit";
-                if (flag2)
-                {
-                    //string oldValue = AttireExtensionForm.RemoveSpecialCharacters(DataBase.GetWrestlerFullName(PrivateOverrides.plObj.WresParam));
-                    //this.chosenAttire = this.comboBox1.SelectedItem.ToString().Replace(oldValue, "");
-                }
-                else
-                {
-                    bool flag3 = this.charType == "ref";
-                    if (flag3)
-                    {
-                        string oldValue2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
-                        this.chosenAttire = this.comboBox1.SelectedItem.ToString().Replace(oldValue2, "");
-                    }
-                }
-            }
-
-            ButtonSound(0);
+            SetAttire();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -116,11 +95,13 @@ namespace Ace.AttireExtension
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label2 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // label2
@@ -198,6 +179,12 @@ namespace Ace.AttireExtension
             this.comboBox1.Size = new System.Drawing.Size(195, 21);
             this.comboBox1.TabIndex = 5;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // timer1
+            // 
+            this.timer1.Enabled = true;
+            this.timer1.Interval = 10000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Attire_Select
             // 
@@ -277,6 +264,38 @@ namespace Ace.AttireExtension
                     FailSound();
                     break;
             }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            comboBox1.SelectedIndex = UnityEngine.Random.Range(0, comboBox1.Items.Count);
+            SetAttire();
+            base.Close();
+        }
+
+        private void SetAttire()
+        {
+            bool flag = this.comboBox1.SelectedIndex != -1;
+            if (flag)
+            {
+                bool flag2 = this.charType == "edit";
+                if (flag2)
+                {
+                    //string oldValue = AttireExtensionForm.RemoveSpecialCharacters(DataBase.GetWrestlerFullName(PrivateOverrides.plObj.WresParam));
+                    //this.chosenAttire = this.comboBox1.SelectedItem.ToString().Replace(oldValue, "");
+                }
+                else
+                {
+                    bool flag3 = this.charType == "ref";
+                    if (flag3)
+                    {
+                        string oldValue2 = AttireExtensionForm.RemoveSpecialCharacters(GeneralComponents.refObj.RefePrm.name);
+                        this.chosenAttire = this.comboBox1.SelectedItem.ToString().Replace(oldValue2, "");
+                    }
+                }
+            }
+
+            ButtonSound(0);
         }
     }
 }
