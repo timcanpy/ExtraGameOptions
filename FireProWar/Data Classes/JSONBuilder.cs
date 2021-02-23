@@ -34,17 +34,36 @@ namespace FireProWar.Data_Classes
 
             writer.WritePropertyName("history");
             writer.WriteStartArray();
-            foreach (String item in promotion.History.Split('~'))
+
+            //Ensure that at least one item is written
+            var historyItems = promotion.History.Split('~');
+            if (historyItems.Length > 0)
             {
-                writer.WriteValue(item);
+                foreach (String item in promotion.History.Split('~'))
+                {
+                    writer.WriteValue(item);
+                }
+            }
+            else
+            {
+                writer.WriteValue(String.Empty);
             }
             writer.WriteEndArray();
 
             writer.WritePropertyName("details");
             writer.WriteStartArray();
-            foreach (String detail in promotion.MatchDetails)
+
+            //Ensure that at least one item is written
+            if (promotion.MatchDetails.Count > 0)
             {
-                writer.WriteValue(detail);
+                foreach (String detail in promotion.MatchDetails)
+                {
+                    writer.WriteValue(detail);
+                }
+            }
+            else
+            {
+                writer.WriteValue(String.Empty);
             }
             writer.WriteEndArray();
 
@@ -145,12 +164,16 @@ namespace FireProWar.Data_Classes
             {
                 writer.WriteValue(latestMatchRecord.DefenseCount);
             }
-           
+
             writer.WritePropertyName("previousChamps");
             writer.WriteStartArray();
-            foreach(var record in title.titleMatch_Record_Data)
+            foreach (var record in title.titleMatch_Record_Data)
             {
                 writer.WriteValue(record.Champion + ":" + record.DefenseCount);
+            }
+            if(title.titleMatch_Record_Data.Count == 0)
+            {
+                writer.WriteValue(":0");
             }
             writer.WriteEndArray();
 

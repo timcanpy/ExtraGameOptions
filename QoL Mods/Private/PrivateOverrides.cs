@@ -1572,24 +1572,24 @@ namespace QoL_Mods.Private
             result = true;
             return result;
         }
-        public static void GetMoveList(Player player)
-        {
-            if (player is null)
-            {
-                return;
-            }
+        //public static void GetMoveList(Player player)
+        //{
+        //    if (player is null)
+        //    {
+        //        return;
+        //    }
 
-            WrestlerDataManager wdt;
-            if (!WrestlerDataManager.GetWDM(player, out wdt))
-            {
-                return;
-            }
-            if (!wdt.WillNotBeNull<MoveList>("moveList"))
-            {
-                return;
-            }
-            MoveLists.MoveList moveList = wdt.GetTrackedData<MoveLists.MoveList>("moveList");
-        }
+        //    WrestlerDataManager wdt;
+        //    if (!WrestlerDataManager.GetWDM(player, out wdt))
+        //    {
+        //        return;
+        //    }
+        //    if (!wdt.WillNotBeNull<MoveList>("moveList"))
+        //    {
+        //        return;
+        //    }
+        //    MoveLists.MoveList moveList = wdt.GetTrackedData<MoveLists.MoveList>("moveList");
+        //}
 
         #endregion
     }
