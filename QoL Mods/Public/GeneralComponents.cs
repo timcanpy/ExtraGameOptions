@@ -506,9 +506,9 @@ namespace QoL_Mods
         public static String _noImageValue = "None";
         public static Dictionary<int, String> critImages = new Dictionary<int, String>();
         public static string critBundleName = "critical.obj";
-        public static GameObject critObject = null;
-        public static AssetBundle critImageBundle;
-        public static UnityEngine.Object currentObject;
+        //public static GameObject critObject = null;
+        //public static AssetBundle critImageBundle;
+        //public static UnityEngine.Object currentObject;
 
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
@@ -523,46 +523,46 @@ namespace QoL_Mods
             }
 
             String currentPath = System.IO.Directory.GetCurrentDirectory();
-            String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
-            L.D("CritBundlePath: " + critBundlePath);
+            //String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
+            //L.D("CritBundlePath: " + critBundlePath);
 
             //Ensure the Assetbundle is loaded
-            if (!File.Exists(critBundlePath))
-            {
-                return;
-            }
-            else
-            {
-                try
-                {
-                    if (critImageBundle == null)
-                    {
-                        critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
+            //if (!File.Exists(critBundlePath))
+            //{
+            //    return;
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        if (critImageBundle == null)
+            //        {
+            //            critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
 
-                        if (critImageBundle != null)
-                        {
-                            foreach (string asset in critImageBundle.GetAllAssetNames())
-                            {
-                                L.D("Asset: " + asset);
-                            }
-                        }
-                        critObject = critImageBundle.LoadAsset<GameObject>("Critical");
-                        critImageBundle.Unload(false);
-                        if (critObject == null)
-                        {
-                            L.D("Crit Object Is Null");
-                        }
-                        else
-                        {
-                            L.D("Crit Object is " + critObject.name);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    L.D("LoadingAssetException: " + ex);
-                }
-            }
+            //            if (critImageBundle != null)
+            //            {
+            //                foreach (string asset in critImageBundle.GetAllAssetNames())
+            //                {
+            //                    L.D("Asset: " + asset);
+            //                }
+            //            }
+            //            critObject = critImageBundle.LoadAsset<GameObject>("Critical");
+            //            critImageBundle.Unload(false);
+            //            if (critObject == null)
+            //            {
+            //                L.D("Crit Object Is Null");
+            //            }
+            //            else
+            //            {
+            //                L.D("Crit Object is " + critObject.name);
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        L.D("LoadingAssetException: " + ex);
+            //    }
+            //}
 
             //Get files in the image folder
             String ringName = "";
@@ -673,27 +673,27 @@ namespace QoL_Mods
         }
 
 
-        [Hook(TargetClass = "Referee", TargetMethod = "CallFight", InjectionLocation = 0,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.None,
-            Group = "ChangeCritImage")]
-        public static void SetFightImageCopy()
-        {
-            if (critObject != null)
-            {
-                return;
-            }
-            try
-            {
-                //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
-                critObject = MatchUI.inst.gameObj_Critical;
-            }
-            catch (Exception e)
-            {
-                L.D("Error Setting Up Custom Critical Image: " + e);
-                critObject = null;
-            }
-        }
+        //[Hook(TargetClass = "Referee", TargetMethod = "CallFight", InjectionLocation = 0,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.None,
+        //    Group = "ChangeCritImage")]
+        //public static void SetFightImageCopy()
+        //{
+        //    if (critObject != null)
+        //    {
+        //        return;
+        //    }
+        //    try
+        //    {
+        //        //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
+        //        critObject = MatchUI.inst.gameObj_Critical;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("Error Setting Up Custom Critical Image: " + e);
+        //        critObject = null;
+        //    }
+        //}
 
         [Hook(TargetClass = "MatchUI", TargetMethod = "Show_Critical", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
@@ -708,19 +708,19 @@ namespace QoL_Mods
             try
             {
 
-                if (critObject == null)
-                {
-                    L.D("Crit Object is Null");
-                    return;
-                }
+                //if (critObject == null)
+                //{
+                //    L.D("Crit Object is Null");
+                //    return;
+                //}
 
-                if (currentObject == null)
-                {
-                    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
-                }
+                //if (currentObject == null)
+                //{
+                //    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
+                //}
 
-                GameObject criticalImage = GameObject.Find(currentObject.name);
-                //GameObject criticalImage = MatchUI.inst.gameObj_Critical;
+                //GameObject criticalImage = GameObject.Find(currentObject.name);
+                GameObject criticalImage = MatchUI.inst.gameObj_Critical;
                 if (criticalImage == null)
                 {
                     L.D("Can't Find Critical GameObject");
@@ -757,19 +757,19 @@ namespace QoL_Mods
 
         }
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
-        public static void tvLogo_Destroy()
-        {
-            foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
-            {
-                if (obj.name == critObject.name)
-                {
-                    GameObject.Destroy(obj);
-                    currentObject = null;
-                    break;
-                }
-            }
-        }
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
+        //public static void CustomCrit_Destroy()
+        //{
+        //    foreach (GameObject obj in UnityEngine.Object.FindObjectsOfType<GameObject>())
+        //    {
+        //        if (obj.name == critObject.name)
+        //        {
+        //            GameObject.Destroy(obj);
+        //            currentObject = null;
+        //            break;
+        //        }
+        //    }
+        //}
 
         #endregion
 
