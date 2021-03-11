@@ -63,6 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper Classes\ArenaEditItems.cs" />
     <Compile Include="Helper Classes\GrappleSetting.cs" />
     <Compile Include="Helper Classes\RingConfiguration.cs" />
     <Compile Include="Helper Classes\RingInfo.cs" />

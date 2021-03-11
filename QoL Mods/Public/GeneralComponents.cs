@@ -523,46 +523,46 @@ namespace QoL_Mods
             }
 
             String currentPath = System.IO.Directory.GetCurrentDirectory();
-            //String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
-            //L.D("CritBundlePath: " + critBundlePath);
+            String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
+            L.D("CritBundlePath: " + critBundlePath);
 
             //Ensure the Assetbundle is loaded
-            //if (!File.Exists(critBundlePath))
-            //{
-            //    return;
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        if (critImageBundle == null)
-            //        {
-            //            critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
+            if (!File.Exists(critBundlePath))
+            {
+                return;
+            }
+            else
+            {
+                try
+                {
+                    if (critImageBundle == null)
+                    {
+                        critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
 
-            //            if (critImageBundle != null)
-            //            {
-            //                foreach (string asset in critImageBundle.GetAllAssetNames())
-            //                {
-            //                    L.D("Asset: " + asset);
-            //                }
-            //            }
-            //            critObject = critImageBundle.LoadAsset<GameObject>("Critical");
-            //            critImageBundle.Unload(false);
-            //            if (critObject == null)
-            //            {
-            //                L.D("Crit Object Is Null");
-            //            }
-            //            else
-            //            {
-            //                L.D("Crit Object is " + critObject.name);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        L.D("LoadingAssetException: " + ex);
-            //    }
-            //}
+                        if (critImageBundle != null)
+                        {
+                            foreach (string asset in critImageBundle.GetAllAssetNames())
+                            {
+                                L.D("Asset: " + asset);
+                            }
+                        }
+                        critObject = critImageBundle.LoadAsset<GameObject>("Critical");
+                        critImageBundle.Unload(false);
+                        if (critObject == null)
+                        {
+                            L.D("Crit Object Is Null");
+                        }
+                        else
+                        {
+                            L.D("Crit Object is " + critObject.name);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    L.D("LoadingAssetException: " + ex);
+                }
+            }
 
             //Get files in the image folder
             String ringName = "";
@@ -679,10 +679,10 @@ namespace QoL_Mods
             Group = "ChangeCritImage")]
         public static void SetFightImageCopy()
         {
-            //if (critObject != null)
-            //{
-            //    return;
-            //}
+            if (critObject != null)
+            {
+                return;
+            }
             try
             {
                 //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
@@ -708,19 +708,19 @@ namespace QoL_Mods
             try
             {
 
-                //if(critObject == null)
-                //{
-                //    L.D("Crit Object is Null");
-                //    return;
-                //}
+                if (critObject == null)
+                {
+                    L.D("Crit Object is Null");
+                    return;
+                }
 
-                //if(currentObject == null)
-                //{
-                //    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
-                //}
+                if (currentObject == null)
+                {
+                    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
+                }
 
-                //GameObject criticalImage = GameObject.Find(currentObject.name);
-                GameObject criticalImage = MatchUI.inst.gameObj_Critical;
+                GameObject criticalImage = GameObject.Find(currentObject.name);
+                //GameObject criticalImage = MatchUI.inst.gameObj_Critical;
                 if (criticalImage == null)
                 {
                     L.D("Can't Find Critical GameObject");

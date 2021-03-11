@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Threading.Tasks;
 using FirePro_API.Models;
 using Newtonsoft.Json;
@@ -93,6 +95,7 @@ namespace Fire_Pro_API_Client
                     {
                         Promotion promotion = JsonConvert.DeserializeObject<Promotion>(line);
                         promotions.Add(promotion);
+                        promotion.Name = RemoveDiacritics(promotion.Name);
                         Console.WriteLine("Adding " + promotion.Name);
                     }
                     catch (JsonSerializationException ex)
@@ -130,6 +133,7 @@ namespace Fire_Pro_API_Client
                     {
                         Wrestler wrestler = JsonConvert.DeserializeObject<Wrestler>(line);
                         wrestlers.Add(wrestler);
+                        wrestler.Name = RemoveDiacritics(wrestler.Name);
                         Console.WriteLine("Adding " + wrestler.Name);
                     }
                     catch (JsonSerializationException ex)
@@ -171,6 +175,8 @@ namespace Fire_Pro_API_Client
                             title.CurrentChamp = "None";
                         }
                         titles.Add(title);
+                        title.CurrentChamp = RemoveDiacritics(title.CurrentChamp);
+                        title.Name = RemoveDiacritics(title.Name);
                         Console.WriteLine("Adding " + title.Name);
                     }
                     catch (JsonSerializationException ex)
@@ -212,6 +218,23 @@ namespace Fire_Pro_API_Client
         private static async Task<HttpResponseMessage> SendTitlesAsync(List<Title> titles)
         {
             return await client.PostAsJsonAsync("AddTitles", titles);
+        }
+
+        private static string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
