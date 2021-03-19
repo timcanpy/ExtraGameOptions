@@ -9,13 +9,13 @@ namespace QoL_Mods.Data_Classes
         public List<WakeUpTaunt> WakeUpTaunts { get; set; }
         public String Name { get; set; }
 
-        private readonly Style defaultStyle;
+        public Style DefaultStyle { get; set; }
 
         public WakeUpGroup(String name)
         {
             WakeUpTaunts = new List<WakeUpTaunt>();
             Name = name;
-            defaultStyle = new Style(Name, FightStyleEnum.American);
+            DefaultStyle = new Style(Name, FightStyleEnum.American);
     }
 
     public void AddWakeUpMove(Skill skill, DamageState damageState)
@@ -43,7 +43,7 @@ namespace QoL_Mods.Data_Classes
 
             if (WakeUpTaunts.Count == 0)
             {
-                WakeUpTaunts.Add(new WakeUpTaunt(defaultStyle));
+                WakeUpTaunts.Add(new WakeUpTaunt(DefaultStyle));
             }
 
             lastTaunt = WakeUpTaunts[WakeUpTaunts.Count - 1];
@@ -90,7 +90,7 @@ namespace QoL_Mods.Data_Classes
 
         public void LoadWakeUpData(String data, HashSet<Skill> validSkills = null, Modversion version = Modversion.v1)
         {
-            Style style = defaultStyle;
+            Style style = DefaultStyle;
             WakeUpTaunt newTaunt = new WakeUpTaunt(style);
             Name = newTaunt.LoadWakeUpData(data, validSkills);
             WakeUpTaunts.Add(newTaunt);

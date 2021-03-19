@@ -77,10 +77,10 @@
       <DependentUpon>Easy Edit Resize.cs</DependentUpon>
     </Compile>
     <Compile Include="Private\PrivateOverrides.cs" />
-    <Compile Include="Private\TOSForm.cs">
+    <Compile Include="Public\TOSForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Private\TOSForm.Designer.cs">
+    <Compile Include="Public\TOSForm.Designer.cs">
       <DependentUpon>TOSForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Private\TOS\TOSMoves.cs" />
@@ -171,7 +171,7 @@
     <EmbeddedResource Include="Private\Easy Edit Resize.resx">
       <DependentUpon>Easy Edit Resize.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Private\TOSForm.resx">
+    <EmbeddedResource Include="Public\TOSForm.resx">
       <DependentUpon>TOSForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\AttireExtension.resx">

@@ -1667,18 +1667,28 @@ namespace QoL_Mods
         [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Bleeding Headbutts")]
         public static void CheckHeadbutt(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
         {
-            if (sd.skillName[1].ToLower().Contains("headbutt") && sd.anmType != SkillAnmTypeEnum.HitBranch_Single && sd.anmType != SkillAnmTypeEnum.HitBranch_Pair)
+            if(sd == null)
             {
-                if (sd.bleedingRate > 0)
+                return;
+            }
+            try
+            {
+                if (sd.filteringType == SkillFilteringType.Headbutt && sd.anmType == SkillAnmTypeEnum.Pair)
                 {
-                    int rngValue = (int)UnityEngine.Random.Range(0, 100f);
-                    if (rngValue <= sd.bleedingRate)
+                    L.D("Checking bleed chance on user for " + sd.skillName[1]);
+                    if (sd.bleedingRate > 0)
                     {
-                        PlayerMan.inst.GetPlObj(plIDx).Bleeding();
+                        int rngValue = (int)UnityEngine.Random.Range(0, 100f);
+                        if (rngValue <= sd.bleedingRate)
+                        {
+                            PlayerMan.inst.GetPlObj(plIDx).Bleeding();
+                        }
                     }
                 }
-            }
 
+            }
+            catch(NullReferenceException)
+            {}
         }
         #endregion
 

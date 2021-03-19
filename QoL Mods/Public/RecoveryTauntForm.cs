@@ -96,6 +96,10 @@ namespace QoL_Mods
                     {
                         wu_styles.SelectedIndex = 0;
                     }
+                    else
+                    {
+                        LoadWakeUp();
+                    }
                 }
             }
             else
@@ -197,24 +201,19 @@ namespace QoL_Mods
         #region Setup
         private void LoadWakeUp()
         {
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Orthodox", FightStyleEnum.Orthodox)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Technician", FightStyleEnum.Technician)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Wrestling", FightStyleEnum.Wrestling)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Ground", FightStyleEnum.Ground)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Power", FightStyleEnum.Power)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("American", FightStyleEnum.American)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Junior", FightStyleEnum.Junior)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Luchador", FightStyleEnum.Luchador)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Heel", FightStyleEnum.Heel)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Mysterious", FightStyleEnum.Mysterious)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Shooter", FightStyleEnum.Shooter)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Fighter", FightStyleEnum.Fighter)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Grappler", FightStyleEnum.Grappler)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Panther", FightStyleEnum.Panther)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Giant", FightStyleEnum.Giant)));
-            wu_styles.Items.Add(new WakeUpTaunt(new QoL_Mods.Data_Classes.Style("Devilism", FightStyleEnum.Devilism)));
+            FightStyleEnum[] values = (FightStyleEnum[])Enum.GetValues(typeof(FightStyleEnum));
 
-            wu_styles.SelectedIndex = 0;
+            foreach(var value in values)
+            {
+                WakeUpGroup group = new WakeUpGroup(value.ToString());
+                group.DefaultStyle = new Style(value.ToString(), value);
+                wu_styles.Items.Add(group);
+            }
+
+            if(wu_styles.Items.Count > 0)
+            {
+                wu_styles.SelectedIndex = 0;
+            }
         }
         private void SetValidMoves()
         {
@@ -456,7 +455,7 @@ namespace QoL_Mods
             catch (Exception ex)
             {
                 L.D("Adding Error: " + ex);
-            } 
+            }
         }
 
         private void wu_mediumAdd_Click(object sender, EventArgs e)
@@ -477,7 +476,7 @@ namespace QoL_Mods
             catch (Exception ex)
             {
                 L.D("Adding Error: " + ex);
-            }     
+            }
         }
 
         private void wu_criticalAdd_Click(object sender, EventArgs e)
@@ -562,7 +561,7 @@ namespace QoL_Mods
             catch (Exception ex)
             {
                 L.D("Removing Error: " + ex);
-            } 
+            }
         }
         #endregion
 

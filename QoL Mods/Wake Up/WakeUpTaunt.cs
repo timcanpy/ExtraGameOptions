@@ -222,6 +222,11 @@ namespace QoL_Mods.Data_Classes
                 return TauntEndPosition.Grounded;
             }
         }
+
+        public override string ToString()
+        {
+            return StyleItem.Name;
+        }
         #endregion
 
     }

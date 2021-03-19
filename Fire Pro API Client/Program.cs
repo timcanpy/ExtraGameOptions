@@ -14,7 +14,7 @@ namespace Fire_Pro_API_Client
     class Program
     {
         private static List<string> menuOptions = new List<string> { "Fire Pro Tracking API" };
-        private static List<string> apiUrls = new List<string> { "https://localhost:44340/api/FireProTracking/" };
+        private static List<string> apiUrls = new List<string> { "http://fireprotrackingapi.us-east-1.elasticbeanstalk.com/api/FireProTracking/" };
         private static HttpClient client = new HttpClient();
 
         static async Task Main(string[] args)

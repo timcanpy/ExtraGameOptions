@@ -30,14 +30,17 @@ namespace QoL_Mods.Private
             tos_moveSearch.LostFocus += tos_moveSearch_LostFocus;
             tos_wrestlerSearch.LostFocus += tos_wrestlerSearch_LostFocus;
             FormClosing += TOSForm_FormClosing;
+            LoadMoves();
+            LoadSubs();
             LoadStyles();
+            LoadWrestlers();
         }
 
         private void LoadSubs()
         {
             try
             {
-                this.tos_wrestlers.Items.Clear();
+                this.tos_wrestlerResults.Items.Clear();
                 wrestlerList = new List<WresIDGroup>();
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
@@ -47,12 +50,12 @@ namespace QoL_Mods.Private
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
 
                     wrestlerList.Add(wresIDGroup);
-                    this.tos_wrestlers.Items.Add(wresIDGroup);
+                    this.tos_wrestlerResults.Items.Add(wresIDGroup);
                 }
 
-                if (tos_wrestlers.Items.Count > 0)
+                if (tos_wrestlerResults.Items.Count > 0)
                 {
-                    this.tos_wrestlers.SelectedIndex = 0;
+                    this.tos_wrestlerResults.SelectedIndex = 0;
                 }
 
             }
@@ -97,6 +100,7 @@ namespace QoL_Mods.Private
         private void TOSForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveStyles();
+            SaveWrestlers();
         }
 
         #region Move Search
@@ -108,10 +112,12 @@ namespace QoL_Mods.Private
         private void tos_moveReload_Click(object sender, EventArgs e)
         {
             LoadStyles();
+            LoadWrestlers();
         }
         private void tos_moveSave_Click(object sender, EventArgs e)
         {
             SaveStyles();
+            SaveWrestlers();
         }
 
         private void tos_moveSearch_LostFocus(object sender, System.EventArgs e)
@@ -220,7 +226,7 @@ namespace QoL_Mods.Private
                 return;
             }
 
-            TOSMoves moves = (TOSMoves) tos_styles.SelectedItem;
+            TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
             tos_styleMoves.Items.Clear();
 
             foreach (Skill skill in moves.Moves.Skills)
@@ -236,35 +242,101 @@ namespace QoL_Mods.Private
 
         private void tos_addStyleMove_Click(object sender, EventArgs e)
         {
-            if (tos_styles.SelectedItem == null || tos_moveResults.SelectedItem == null)
+            try
             {
-                return;
-            }
+                if (tos_styles.SelectedItem == null || tos_moveResults.SelectedItem == null)
+                {
+                    return;
+                }
 
-            TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
-            moves.AddMove((Skill) tos_moveResults.SelectedItem);
-            tos_styles.SelectedItem = moves;
-            tos_styles_SelectedIndexChanged(null, null);
+                TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
+                moves.AddMove((Skill)tos_moveResults.SelectedItem);
+
+                tos_styles_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                L.D("tos_addStyleMove_Click: " + ex);
+            }
         }
 
         private void tos_removeStyleMove_Click(object sender, EventArgs e)
         {
-
-            if (tos_styles.SelectedItem == null || tos_styleMoves.SelectedItem == null)
+            try
             {
-                return;
-            }
+                if (tos_styles.SelectedItem == null || tos_styleMoves.SelectedItem == null)
+                {
+                    return;
+                }
 
-            TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
-            Skill skill = (Skill) tos_styleMoves.SelectedItem;
-            moves.RemoveMove(skill);
-            tos_styles.SelectedItem = moves;
-            tos_styles_SelectedIndexChanged(null, null);
+                TOSMoves moves = (TOSMoves)tos_styles.SelectedItem;
+                Skill skill = (Skill)tos_styleMoves.SelectedItem;
+                moves.RemoveMove(skill);
+
+                tos_styles_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                L.D("tos_removeStyleMove_Click: " + ex);
+            }
         }
 
         #endregion
 
         #region Wrestler Management
+        private void LoadWrestlers()
+        {
+            try
+            {
+                tos_wrestlers.Items.Clear();
+
+                System.String filePath = Path.Combine(saveFolderName, wrestlerFile);
+                if (File.Exists(filePath))
+                {
+                    var lines = File.ReadAllLines(filePath);
+                    foreach (var line in lines)
+                    {
+                        TOSMoves move = new TOSMoves("");
+                        move.LoadMoves(line);
+                        tos_wrestlers.Items.Add(move);
+                    }
+                }
+                if (tos_wrestlers.Items.Count > 0)
+                {
+                    tos_wrestlers.SelectedIndex = 0;
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("LoadwrestlersError: " + e);
+            }
+        }
+
+        private void SaveWrestlers()
+        {
+            try
+            {
+                System.String filePath = Path.Combine(saveFolderName, wrestlerFile);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                using (StreamWriter sw = File.AppendText(filePath))
+                {
+                    foreach (TOSMoves move in tos_wrestlers.Items)
+                    {
+                        sw.WriteLine(move.SaveMoves());
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                L.D("SavewrestlersError: " + e);
+            }
+
+        }
+
         private void tos_addWrestler_Click(object sender, EventArgs e)
         {
             if (tos_wrestlerResults.SelectedItem == null)
@@ -277,6 +349,7 @@ namespace QoL_Mods.Private
                 String wrestler = ((WresIDGroup)tos_wrestlerResults.SelectedItem).Name;
                 TOSMoves moves = new TOSMoves(wrestler);
                 tos_wrestlers.Items.Add(moves);
+
                 if (tos_wrestlers.Items.Count > 0)
                 {
                     tos_wrestlers.SelectedIndex = tos_wrestlers.Items.Count - 1;
@@ -312,17 +385,73 @@ namespace QoL_Mods.Private
 
         private void tos_wrestlers_SelectedIndexChanged(object sender, EventArgs e)
         {
+            try
+            {
+                if (tos_wrestlers.Items.Count == 0 || tos_wrestlers.SelectedItem == null)
+                {
+                    return;
+                }
+
+                TOSMoves moves = (TOSMoves)tos_wrestlers.SelectedItem;
+                tos_wrestlerMoves.Items.Clear();
+
+                foreach (Skill skill in moves.Moves.Skills)
+                {
+                    tos_wrestlerMoves.Items.Add(skill);
+                }
+
+                if (tos_wrestlerMoves.Items.Count > 0)
+                {
+                    tos_wrestlerMoves.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("tos_wrestlers_SelectedIndexChanged: " + ex);
+            }
 
         }
 
         private void tos_addWrestlerMove_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (tos_wrestlers.SelectedItem == null || tos_moveResults.SelectedItem == null)
+                {
+                    return;
+                }
+
+                TOSMoves moves = (TOSMoves)tos_wrestlers.SelectedItem;
+                moves.AddMove((Skill)tos_moveResults.SelectedItem);
+
+                tos_wrestlers_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                L.D("tos_addWrestlerMove_Click: " + ex);
+            }
 
         }
 
         private void tos_removeWrestlerMove_Click(object sender, EventArgs e)
         {
+            try
+            {
+                if (tos_wrestlers.SelectedItem == null || tos_wrestlerMoves.SelectedItem == null)
+                {
+                    return;
+                }
 
+                TOSMoves moves = (TOSMoves)tos_wrestlers.SelectedItem;
+                Skill skill = (Skill)tos_wrestlerMoves.SelectedItem;
+                moves.RemoveMove(skill);
+
+                tos_wrestlers_SelectedIndexChanged(null, null);
+            }
+            catch (Exception ex)
+            {
+                L.D("tos_removeWrestlerMove_Click: " + ex);
+            }
         }
         #endregion
 
@@ -366,6 +495,6 @@ namespace QoL_Mods.Private
             tos_wrestlerMoves.Items.Clear();
         }
         #endregion
-        
+
     }
 }
