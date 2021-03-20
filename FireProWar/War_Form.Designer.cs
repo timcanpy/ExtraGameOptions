@@ -122,6 +122,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.ms_rosterList = new System.Windows.Forms.ListBox();
             this.fpw_reports = new System.Windows.Forms.TabPage();
+            this.fpw_autoJSON = new System.Windows.Forms.CheckBox();
             this.addAll = new System.Windows.Forms.Button();
             this.removeCurrent = new System.Windows.Forms.Button();
             this.addCurrent = new System.Windows.Forms.Button();
@@ -154,7 +155,6 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.fpw_autoJSON = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -1357,6 +1357,19 @@
             this.fpw_reports.TabIndex = 4;
             this.fpw_reports.Text = "Reports";
             // 
+            // fpw_autoJSON
+            // 
+            this.fpw_autoJSON.AutoSize = true;
+            this.fpw_autoJSON.Checked = true;
+            this.fpw_autoJSON.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_autoJSON.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F);
+            this.fpw_autoJSON.Location = new System.Drawing.Point(15, 8);
+            this.fpw_autoJSON.Name = "fpw_autoJSON";
+            this.fpw_autoJSON.Size = new System.Drawing.Size(144, 19);
+            this.fpw_autoJSON.TabIndex = 45;
+            this.fpw_autoJSON.Text = "Automatic Data Transfer";
+            this.fpw_autoJSON.UseVisualStyleBackColor = true;
+            // 
             // addAll
             // 
             this.addAll.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1434,7 +1447,7 @@
             this.sendJSONButton.Name = "sendJSONButton";
             this.sendJSONButton.Size = new System.Drawing.Size(87, 37);
             this.sendJSONButton.TabIndex = 2;
-            this.sendJSONButton.Text = "JSON Test";
+            this.sendJSONButton.Text = "Data Prep";
             this.sendJSONButton.UseVisualStyleBackColor = true;
             this.sendJSONButton.Click += new System.EventHandler(this.sendJSONButton_Click);
             // 
@@ -1754,17 +1767,6 @@
             this.label5.Size = new System.Drawing.Size(38, 17);
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
-            // 
-            // fpw_autoJSON
-            // 
-            this.fpw_autoJSON.AutoSize = true;
-            this.fpw_autoJSON.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F);
-            this.fpw_autoJSON.Location = new System.Drawing.Point(15, 8);
-            this.fpw_autoJSON.Name = "fpw_autoJSON";
-            this.fpw_autoJSON.Size = new System.Drawing.Size(144, 19);
-            this.fpw_autoJSON.TabIndex = 45;
-            this.fpw_autoJSON.Text = "Automatic Data Transfer";
-            this.fpw_autoJSON.UseVisualStyleBackColor = true;
             // 
             // War_Form
             // 

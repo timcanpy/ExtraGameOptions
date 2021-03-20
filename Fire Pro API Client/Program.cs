@@ -16,9 +16,41 @@ namespace Fire_Pro_API_Client
         private static List<string> menuOptions = new List<string> { "Fire Pro Tracking API" };
         private static List<string> apiUrls = new List<string> { "http://fireprotrackingapi.us-east-1.elasticbeanstalk.com/api/FireProTracking/" };
         private static HttpClient client = new HttpClient();
+        private static string configPath = Path.Combine(Directory.GetCurrentDirectory(), "config.txt");
+        private static string folderName;
 
         static async Task Main(string[] args)
         {
+            if (File.Exists(configPath))
+            {
+                var lines = File.ReadAllLines(configPath);
+                foreach (string line in lines)
+                {
+                    if (line.Split('~')[0].Equals("datapath"))
+                    {
+                        folderName = line.Split('~')[1];
+                    }
+                }
+            }
+            else
+            {
+                string filePath = "";
+                while (!Directory.Exists(filePath))
+                {
+                    Console.WriteLine("Enter the path to your FirePro wrestling directory (example - C:\\Program Files(x86)\\Steam\\SteamApps\\common\\Fire Prowrestling World");
+                    filePath = Console.ReadLine();
+                }
+
+                //File.Create(configPath);
+                using (StreamWriter sw = File.AppendText(configPath))
+                {
+                    sw.WriteLine("datapath~" + filePath);
+                }
+                folderName = filePath;
+            }
+
+            folderName = Path.Combine(new string[]{ folderName, "EGOData"});
+            Console.Clear();
             Console.WriteLine("Welcome to the Fire Pro API Client! This program is meant as a tool for transfering data to various Web APIs related to Fire Pro Wrestling World.");
             string option = GetMenuAction();
 
@@ -76,16 +108,16 @@ namespace Fire_Pro_API_Client
         {
             bool success = true;
 
-            string folderName = "C:\\Program Files (x86)\\Steam\\SteamApps\\common\\Fire Prowrestling World\\EGOData\\";
             string promotionFile = "Promotions.json";
             string wrestlerFile = "Employees.json";
             string titleFile = "Titles.json";
 
+            Console.WriteLine("Checking " + folderName);
 
             //Creating the necessary objects for API transfer
-            if (File.Exists(String.Concat(folderName, promotionFile)))
+            if (File.Exists(Path.Combine(folderName, promotionFile)))
             {
-                var promotionData = File.ReadAllLines(String.Concat(folderName, promotionFile));
+                var promotionData = File.ReadAllLines(Path.Combine(folderName, promotionFile));
                 List<Promotion> promotions = new List<Promotion>();
 
                 Console.WriteLine("Promotions");
@@ -121,9 +153,9 @@ namespace Fire_Pro_API_Client
                 }
             }
 
-            if (File.Exists(String.Concat(folderName, wrestlerFile)))
+            if (File.Exists(Path.Combine(folderName, wrestlerFile)))
             {
-                var wrestlerData = File.ReadAllLines(String.Concat(folderName, wrestlerFile));
+                var wrestlerData = File.ReadAllLines(Path.Combine(folderName, wrestlerFile));
                 List<Wrestler> wrestlers = new List<Wrestler>();
 
                 Console.WriteLine("wrestlers");
@@ -159,9 +191,9 @@ namespace Fire_Pro_API_Client
                 }
             }
 
-            if (File.Exists(String.Concat(folderName, titleFile)))
+            if (File.Exists(Path.Combine(folderName, titleFile)))
             {
-                var titleData = File.ReadAllLines(String.Concat(folderName, titleFile));
+                var titleData = File.ReadAllLines(Path.Combine(folderName, titleFile));
                 List<Title> titles = new List<Title>();
 
                 Console.WriteLine("titles");
@@ -170,7 +202,7 @@ namespace Fire_Pro_API_Client
                     try
                     {
                         Title title = JsonConvert.DeserializeObject<Title>(line);
-                        if(title.CurrentChamp.Equals(String.Empty))
+                        if (title.CurrentChamp.Equals(String.Empty))
                         {
                             title.CurrentChamp = "None";
                         }
@@ -210,9 +242,9 @@ namespace Fire_Pro_API_Client
             return await client.PostAsJsonAsync("AddPromotions", promotions);
         }
 
-        private static async Task<HttpResponseMessage> SendWrestlersAsync (List<Wrestler> wrestlers)
+        private static async Task<HttpResponseMessage> SendWrestlersAsync(List<Wrestler> wrestlers)
         {
-           return await client.PostAsJsonAsync("AddWrestlers", wrestlers);
+            return await client.PostAsJsonAsync("AddWrestlers", wrestlers);
         }
 
         private static async Task<HttpResponseMessage> SendTitlesAsync(List<Title> titles)
