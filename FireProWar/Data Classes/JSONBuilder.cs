@@ -1,4 +1,5 @@
 ﻿using Data_Classes;
+using DG;
 using ModPack;
 using Newtonsoft.Json;
 using System;
@@ -153,7 +154,7 @@ namespace FireProWar.Data_Classes
             writer.WriteValue(Enum.GetName(typeof(MatchType), title.matchType));
 
             writer.WritePropertyName("currentChamp");
-            writer.WriteValue(CheckName(title.GetCurrentTitleHolderName()));
+            writer.WriteValue(CheckName(title.GetCurrentTitleHolderName(), title));
 
             writer.WritePropertyName("currentDefenses");
             global::TitleMatch_Record_Data latestMatchRecord = title.GetLatestMatchRecord();
@@ -170,7 +171,7 @@ namespace FireProWar.Data_Classes
             writer.WriteStartArray();
             foreach (var record in title.titleMatch_Record_Data)
             {
-                writer.WriteValue(CheckName(record.Champion) + ":" + record.DefenseCount);
+                writer.WriteValue(CheckName(record.Champion, title) + ":" + record.DefenseCount);
             }
             if (title.titleMatch_Record_Data.Count == 0)
             {
@@ -183,21 +184,42 @@ namespace FireProWar.Data_Classes
             return stringWriter.ToString();
         }
 
-        private static String CheckName(String name)
+        private static String CheckName(String name, TitleMatch_Data title)
         {
-            foreach (Team currentTeam in ModPack.ModPack.Teams)
+            if (title.playerNum == TagType.Single || name == String.Empty)
             {
-                if (currentTeam.Name.Equals(name) || currentTeam.Nickname.Equals(name))
-                {
-                    string members = "";
-                    foreach (string member in currentTeam.Members)
-                    {
-                        members = string.Concat(members, ", " + member);
-                    }
+                return name;
+            }
 
-                    name = name + " (" + members + ")";
+            String members = String.Empty;
+            Team champTeam = null;
+            foreach (Team team in ModPack.ModPack.Teams)
+            {
+                if (team.Name.Equals(name) || team.Nickname.Equals(name))
+                {
+                    champTeam = team;
+                    break;
                 }
             }
+
+            if(champTeam == null)
+            {
+                return name;
+            }
+
+            foreach (string item in champTeam.Members)
+            {
+                if (members == String.Empty)
+                {
+                    members = item;
+                }
+                else
+                {
+                    members = members + ", " + item;
+                }
+            }
+
+            name = name + " (" + members + ")";
 
             return name;
         }
