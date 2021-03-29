@@ -245,8 +245,13 @@ namespace FireProWar
                                 promotion.LoadRings(lines[i + 2]);
                                 promotion.Type = lines[i + 3];
                                 promotion.Region = lines[i + 4];
-                                promotion.MatchCount = int.Parse(lines[i + 5]);
-                                promotion.AverageRating = float.Parse(lines[i + 6]);
+
+                                int.TryParse(lines[i + 5], out int matchCount);
+                                promotion.MatchCount = matchCount;
+
+                                float.TryParse(lines[i + 6], out float average);
+                                promotion.AverageRating = average;
+
                                 promotion.History = lines[i + 7];
 
                                 if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
@@ -287,8 +292,13 @@ namespace FireProWar
                                 promotion.Rings.Add(lines[i + 2]);
                                 promotion.Type = lines[i + 3];
                                 promotion.Region = lines[i + 4];
-                                promotion.MatchCount = int.Parse(lines[i + 5]);
-                                promotion.AverageRating = float.Parse(lines[i + 6]);
+
+                                int.TryParse(lines[i + 5], out int matchCount);
+                                promotion.MatchCount = matchCount;
+
+                                float.TryParse(lines[i + 6], out float average);
+                                promotion.AverageRating = average;
+
                                 promotion.History = lines[i + 7];
 
                                 if (lines[i + 9].Equals(promotionDivider) || i + 9 >= lines.Length)
@@ -560,7 +570,7 @@ namespace FireProWar
             }
 
             //Sending data to Web API
-            if(fpw_autoJSON.Checked)
+            if (fpw_autoJSON.Checked)
             {
                 SendJSONData();
             }
@@ -1284,7 +1294,6 @@ namespace FireProWar
                         if (!DoesWrestlerExist(employee.Name))
                         {
                             promotion.RemoveEmployee(employee.Name);
-                            L.D("Removing " + employee.Name + " from " + promotion.Name);
                         }
                     }
 
@@ -1704,7 +1713,7 @@ namespace FireProWar
             switch (style)
             {
                 case FightStyleEnum.Devilism:
-                    styleName = "Inokism";
+                    styleName = "Vicious";
                     break;
                 case FightStyleEnum.Wrestling:
                     styleName = "Amateur Wrestling";
@@ -1801,7 +1810,7 @@ namespace FireProWar
 
             if (employee.Name.Equals(String.Empty))
             {
-                L.D("Name is empty, unable to process");
+                return;
             }
 
             //Determine if the employee should be promoted.
@@ -1896,15 +1905,12 @@ namespace FireProWar
             }
             if (employee.MoralePoints >= (employee.MoraleRank * promotionFactor))
             {
-                L.D("Attempting Promotion For " + employee.Name);
                 int value = rnd.Next(1, employee.MoralePoints);
                 if (value >= (employee.MoraleRank) * promotionFactor)
                 {
                     L.D("Promotion success: " + value + " vs " + employee.MoraleRank * promotionFactor);
                     return true;
                 }
-
-                L.D("Promotion failure: " + value + " vs " + employee.MoraleRank * promotionFactor);
             }
             return false;
         }
@@ -1912,14 +1918,12 @@ namespace FireProWar
         {
             if (employee.MoralePoints < (employee.MoraleRank * demotionFactor))
             {
-                L.D("Attempting Demotion For " + employee.Name);
                 int value = rnd.Next(employee.MoralePoints, 1);
                 if (value < (employee.MoraleRank * demotionFactor))
                 {
                     L.D("Demotion success: " + value + " vs " + employee.MoraleRank * demotionFactor);
                     return true;
                 }
-
                 L.D("Demotion failure: " + value + " vs " + employee.MoraleRank * demotionFactor);
             }
             return false;
@@ -2400,11 +2404,6 @@ namespace FireProWar
             try
             {
                 String userID = Steamworks.SteamUser.GetSteamID().ToString();
-                if (!userID.Equals("76561198100955117"))
-                {
-                    return;
-                }
-
 
                 List<String> jsonPromotions = new List<string>();
                 List<String> jsonEmployees = new List<string>();

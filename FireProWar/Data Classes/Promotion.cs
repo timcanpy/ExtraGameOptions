@@ -64,7 +64,7 @@ namespace Data_Classes
         }
 
         private String history;
-        
+
         [JsonIgnore]
         public String History
         {
@@ -198,7 +198,7 @@ namespace Data_Classes
                     String[] employeeDetails = employeeInfo.Split(':');
                     Employee employee = new Employee();
                     employee.Name = employeeDetails[0];
-                    employee.Type = employeeDetails[1];
+                    employee.Type = CorrectEmployeeType(employeeDetails[1]);
                     employee.Region = employeeDetails[2];
                     employee.MatchCount = int.Parse(employeeDetails[3]);
                     employee.AverageRating = float.Parse(employeeDetails[4]);
@@ -302,7 +302,21 @@ namespace Data_Classes
                 rings.Add(item);
             }
         }
-        #endregion
 
-    }
+        public string CorrectEmployeeType(string originalType)
+        {
+            string newType = originalType;
+
+            switch (originalType)
+            {
+                case "Inokism":
+                    newType = "Vicious";
+                break;
+            }
+
+            return newType;
+        }
+    #endregion
+
+}
 }

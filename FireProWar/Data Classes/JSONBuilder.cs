@@ -1,4 +1,5 @@
 ﻿using Data_Classes;
+using ModPack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -152,7 +153,7 @@ namespace FireProWar.Data_Classes
             writer.WriteValue(Enum.GetName(typeof(MatchType), title.matchType));
 
             writer.WritePropertyName("currentChamp");
-            writer.WriteValue(title.GetCurrentTitleHolderName());
+            writer.WriteValue(CheckName(title.GetCurrentTitleHolderName()));
 
             writer.WritePropertyName("currentDefenses");
             global::TitleMatch_Record_Data latestMatchRecord = title.GetLatestMatchRecord();
@@ -169,7 +170,7 @@ namespace FireProWar.Data_Classes
             writer.WriteStartArray();
             foreach (var record in title.titleMatch_Record_Data)
             {
-                writer.WriteValue(record.Champion + ":" + record.DefenseCount);
+                writer.WriteValue(CheckName(record.Champion) + ":" + record.DefenseCount);
             }
             if(title.titleMatch_Record_Data.Count == 0)
             {
@@ -180,6 +181,25 @@ namespace FireProWar.Data_Classes
             writer.WriteEndObject();
 
             return stringWriter.ToString();
+        }
+
+        private static String CheckName(String name)
+        {
+            foreach (Team currentTeam in ModPack.ModPack.Teams)
+            {
+                if(currentTeam.Name.Equals(name) || currentTeam.Nickname.Equals(name))
+                {
+                    string members = "";
+                    foreach(string member in currentTeam.Members)
+                    {
+                        members = string.Concat(members, member);
+                    }
+
+                    name = " (" + members + ")";
+                }
+            }
+
+            return name;
         }
     }
 }
