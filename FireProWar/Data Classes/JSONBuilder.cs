@@ -172,7 +172,7 @@ namespace FireProWar.Data_Classes
             {
                 writer.WriteValue(CheckName(record.Champion) + ":" + record.DefenseCount);
             }
-            if(title.titleMatch_Record_Data.Count == 0)
+            if (title.titleMatch_Record_Data.Count == 0)
             {
                 writer.WriteValue(":0");
             }
@@ -187,15 +187,15 @@ namespace FireProWar.Data_Classes
         {
             foreach (Team currentTeam in ModPack.ModPack.Teams)
             {
-                if(currentTeam.Name.Equals(name) || currentTeam.Nickname.Equals(name))
+                if (currentTeam.Name.Equals(name) || currentTeam.Nickname.Equals(name))
                 {
                     string members = "";
-                    foreach(string member in currentTeam.Members)
+                    foreach (string member in currentTeam.Members)
                     {
-                        members = string.Concat(members, member);
+                        members = string.Concat(members, ", " + member);
                     }
 
-                    name = " (" + members + ")";
+                    name = name + " (" + members + ")";
                 }
             }
 
