@@ -49,7 +49,7 @@ namespace Fire_Pro_API_Client
                 folderName = filePath;
             }
 
-            folderName = Path.Combine(new string[]{ folderName, "EGOData"});
+            folderName = Path.Combine(new string[] { folderName, "EGOData" });
             Console.Clear();
             Console.WriteLine("Welcome to the Fire Pro API Client! This program is meant as a tool for transfering data to various Web APIs related to Fire Pro Wrestling World.");
             string option = GetMenuAction();
@@ -58,13 +58,31 @@ namespace Fire_Pro_API_Client
             {
                 case "Fire Pro Tracking API":
                     client.BaseAddress = new Uri(apiUrls[0]);
-                    await SendWarDataAsync();
+                    await ProcessFPTOptionsAsync();
                     break;
             }
 
             Console.WriteLine("Action has been completed successfully!");
             Console.ReadKey();
 
+        }
+
+        private static async Task ProcessFPTOptionsAsync()
+        {
+            Console.Clear();
+            menuOptions = new List<String> { "Upload Data", "Delete Existing Data" };
+
+            string option = GetMenuAction();
+
+            switch (option)
+            {
+                case "Upload Data":
+                    await SendWarDataAsync();
+                    break;
+                case "Delete Existing Data":
+                    await RemoveWarDataAsync();
+                    break;
+            }
         }
 
         private static string GetMenuAction()
@@ -104,6 +122,86 @@ namespace Fire_Pro_API_Client
             return true;
         }
 
+        private static async Task<bool> RemoveWarDataAsync()
+        {
+            bool success = true;
+
+            string promotionFile = "Promotions.json";
+            string wrestlerFile = "Employees.json";
+            string titleFile = "Titles.json";
+            if (File.Exists(Path.Combine(folderName, promotionFile)))
+            {
+                //We only need one record
+                var promotionData = File.ReadAllLines(Path.Combine(folderName, promotionFile));
+                if (promotionData.Length > 0)
+                {
+                    Promotion promotion;
+                    try
+                    {
+                        promotion = JsonConvert.DeserializeObject<Promotion>(promotionData[0]);
+                    }
+                    catch
+                    {
+                        promotion = null;
+                    }
+
+                    if (promotion != null)
+                    {
+                        await RemoveDataAsync(promotion.OwnerID);
+                    }
+
+                    return true;
+                }
+
+            }
+            if (File.Exists(Path.Combine(folderName, wrestlerFile)))
+            {
+                //We only need one record
+                var wrestlerData = File.ReadAllLines(Path.Combine(folderName, wrestlerFile));
+                if (wrestlerData.Length > 0)
+                {
+                    Wrestler wrestler;
+                    try
+                    {
+                        wrestler = JsonConvert.DeserializeObject<Wrestler>(wrestlerData[0]);
+                    }
+                    catch
+                    {
+                        wrestler = null;
+                    }
+
+                    if (wrestler != null)
+                    {
+                        await RemoveDataAsync(wrestler.OwnerID);
+                    }
+
+                    return true;
+                }
+            }
+            if (File.Exists(Path.Combine(folderName, titleFile)))
+            {
+                var titleData = File.ReadAllLines(Path.Combine(folderName, titleFile));
+                Title title;
+                if(titleData.Length > 0)
+                {
+                    try
+                    {
+                        title = JsonConvert.DeserializeObject<Title>(titleData[0]);
+                    }
+                    catch
+                    {
+                        title = null;
+                    }
+
+                    if(title != null)
+                    {
+                        await RemoveDataAsync(title.OwnerID);
+                    }
+                }
+            }
+
+            return success;
+        }
         private static async Task<bool> SendWarDataAsync()
         {
             bool success = true;
@@ -111,8 +209,6 @@ namespace Fire_Pro_API_Client
             string promotionFile = "Promotions.json";
             string wrestlerFile = "Employees.json";
             string titleFile = "Titles.json";
-
-            Console.WriteLine("Checking " + folderName);
 
             //Creating the necessary objects for API transfer
             if (File.Exists(Path.Combine(folderName, promotionFile)))
@@ -235,6 +331,11 @@ namespace Fire_Pro_API_Client
             }
 
             return success;
+        }
+
+        private static async Task<HttpResponseMessage> RemoveDataAsync(string ownerID)
+        {
+            return await client.DeleteAsync("RemoveRecords?ownerID=" + ownerID);
         }
 
         private static async Task<HttpResponseMessage> SendPromotionsAsync(List<Promotion> promotions)
