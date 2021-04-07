@@ -220,7 +220,6 @@ namespace FireProWar.Data_Classes
             }
 
             name = name + " (" + members + ")";
-
             return name;
         }
     }

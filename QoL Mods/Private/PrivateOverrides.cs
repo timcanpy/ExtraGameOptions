@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using static Common_Classes.EnumLibrary;
 using WresIDGroup = ModPack.WresIDGroup;
 using MoveLists;
+using MatchConfig;
 
 namespace QoL_Mods.Private
 {
@@ -22,7 +23,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
     [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
     [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
-    //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
+    [GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNote that any change is permanent, use at your own risk.")]
 
     #endregion
@@ -35,8 +36,8 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
     [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
 
-    //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
-    //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
+    [FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
+    [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
 
     #endregion
 
@@ -459,18 +460,9 @@ namespace QoL_Mods.Private
 
                 if (skill_slot >= SkillSlotEnum.Grapple_X && skill_slot <= SkillSlotEnum.Grapple_XA)
                 {
-                    L.D("Verifying FaceLock Replacement for " + DataBase.GetWrestlerFullName(plObj.WresParam));
-                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
-                    L.D("Replacemtn Skill: " + DataBase.GetSkillName(faceLockSkill));
-
                     if (faceLockSkill != plObj.WresParam.skillSlot[(int)skill_slot])
                     {
-                        L.D("Skills do not match.");
                         plObj.WresParam.skillSlot[(int)skill_slot] = faceLockSkill;
-                    }
-                    else
-                    {
-                        L.D("Skills match");
                     }
 
                     faceLockSkill = 0;
@@ -803,245 +795,166 @@ namespace QoL_Mods.Private
 
         #endregion
 
-        #region Dynamic Highlights
+        #region Opponent pins during knock-out
+        public static List<bool> pinAttempted;
+        public static int playerCount;
 
-        //public static WrestlerAppearanceData[] origAppear = new WrestlerAppearanceData[8]
-        //    {null, null, null, null, null, null, null, null};
-
-        //public static int[] timeInMatch = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        //public static int[] SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        //public static int SweatSpeed = 30;
-        //public static int SweatLvl = 1;
-        //public static bool EnableSweat;
-
-        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None,
-        //    Group = "Dynamic Highlights")]
-        //public static void StoreOriginalWAD()
+        //[Hook(TargetClass = "Player", TargetMethod = "DecideTargetEnemy", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "Pin Critical Opponent")]
+        //public static bool SetTargetForPinfall(Player p)
         //{
         //    try
         //    {
-        //        try
+        //        if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
         //        {
-        //            EnableSweat = DynamicHighlightsForm.highlightsForm.eh_enableSweat.Checked;
-        //        }
-        //        catch
-        //        {
-        //            EnableSweat = false;
-        //            L.D("Failed to check enable sweat");
+        //            return false;
         //        }
 
-        //        origAppear = new WrestlerAppearanceData[8] { null, null, null, null, null, null, null, null };
-        //        SweatLevel = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-        //        try
+        //        if (p.PlIdx > 3)
         //        {
-        //            int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatSpeed.SelectedItem, out SweatSpeed);
-        //            int.TryParse((String)DynamicHighlightsForm.highlightsForm.eh_sweatLevel.SelectedItem, out SweatLvl);
-
-        //        }
-        //        catch (NullReferenceException)
-        //        {
-        //            L.D("Error when attempting to parse the form fields");
-        //        }
-
-        //        if (SweatSpeed <= 0)
-        //        {
-        //            SweatSpeed = 1;
-        //        }
-
-        //        MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
-        //        for (int i = 0; i < 8; i++)
-        //        {
-        //            if (mwi[i] == null)
+        //            if (pinAttempted[1])
         //            {
-        //                continue;
+        //                return false;
         //            }
-        //            if (mwi[i].entry)
-        //            {
-        //                origAppear[i] = DataBase.GetAppearanceData(mwi[i].wrestlerID);
-
-        //                //Determine if a default highlight should be set for all edits
-        //                if (DynamicHighlightsForm.highlightsForm.eh_isDefaultLevel.Checked)
-        //                {
-        //                    CostumeData cd = new CostumeData();
-        //                    if (cd == null)
-        //                    {
-        //                        continue;
-        //                    }
-        //                    cd.Set(DataBase.GetCostumeData(mwi[i].wrestlerID, mwi[i].costume_no));
-        //                    for (int p = 0; p < 9; p++)
-        //                    {
-        //                        cd.highlightIntensity[p, 0] = SweatLvl / 100;
-        //                        try
-        //                        {
-        //                            var plObj = PlayerMan.inst.GetPlObj(i);
-        //                            if (plObj == null)
-        //                            {
-        //                                continue;
-        //                            }
-        //                            plObj.FormRen.DestroySprite();
-        //                            plObj.FormRen.InitTexture(cd);
-        //                            plObj.FormRen.InitSprite();
-        //                        }
-        //                        catch (Exception e)
-        //                        {
-        //                            L.D("Error updating initial highlights: " + e);
-        //                        }
-
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        L.D("StoreOriginalWAD: " + e);
-        //    }
-
-        //}
-
-        //[Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
-        //    Group = "Dynamic Highlights")]
-        //public static void TimeInMatch(Player plObj)
-        //{
-        //    if (!EnableSweat)
-        //    {
-        //        return;
-        //    }
-
-        //    if (MatchMain.inst == null)
-        //    {
-        //        return;
-        //    }
-
-        //    if (MatchMain.inst.Pause)
-        //    {
-        //        return;
-        //    }
-
-        //    if (plObj.hasRight || plObj.isSallying)
-        //    {
-        //        float bpct = MatchMisc.GetParamRate(plObj.BP);
-        //        int sp = 0;
-        //        if (bpct < 90)
-        //        {
-        //            sp += SweatSpeed;
-        //        }
-
-        //        if (bpct < 70)
-        //        {
-        //            sp += SweatSpeed;
-        //        }
-
-        //        if (bpct < 50)
-        //        {
-        //            sp += SweatSpeed;
-        //        }
-
-        //        if (bpct < 30)
-        //        {
-        //            sp += SweatSpeed;
-        //        }
-
-        //        if (bpct < 10)
-        //        {
-        //            sp += SweatSpeed;
-        //        }
-
-        //        timeInMatch[plObj.PlIdx] += sp;
-        //    }
-
-        //    if (plObj.isTagPartnerStandby && MatchMain.inst.matchTime.frm % (5) == 0)
-        //    {
-        //        timeInMatch[plObj.PlIdx]--;
-        //    }
-
-        //    int minsInMatch = GetMins(timeInMatch[plObj.PlIdx]);
-        //    int[] sweatLevelTbl = new int[10] { 7, 14, 20, 22, 27, 30, 35, 45, 50, 60 };
-
-        //    int sweatLevel = 0;
-        //    for (int i = 0; i < 10; i++)
-        //    {
-        //        if (minsInMatch >= sweatLevelTbl[i])
-        //        {
-        //            sweatLevel++;
         //        }
         //        else
         //        {
-        //            break;
-        //        }
-        //    }
-
-        //    if (sweatLevel > SweatLevel[plObj.PlIdx])
-        //    {
-        //        MatchWrestlerInfo mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo[plObj.PlIdx];
-        //        CostumeData cd = new CostumeData();
-        //        cd.Set(DataBase.GetCostumeData(mwi.wrestlerID, mwi.costume_no));
-
-        //        SweatLevel[plObj.PlIdx] = sweatLevel;
-
-        //        for (int p = 0; p < 9; p++)
-        //        {
-        //            cd.highlightIntensity[p, 0] += 0.1f;
-        //            if (cd.highlightIntensity[p, 0] > 1f)
+        //            if (pinAttempted[0])
         //            {
-        //                cd.highlightIntensity[p, 0] = 1f;
+        //                return false;
         //            }
         //        }
 
-        //        plObj.FormRen.DestroySprite();
-        //        plObj.FormRen.InitTexture(cd);
-        //        plObj.FormRen.InitSprite();
-        //    }
-        //}
-
-        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitRound", InjectionLocation = int.MaxValue,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal,
-        //    Group = "Dynamic Highlights")]
-        //public static void TowelOff(int round)
-        //{
-        //    if (round == 0)
-        //    {
-        //        return;
-        //    }
-
-        //    for (int i = 0; i < 8; i++)
-        //    {
-        //        if (timeInMatch[i] > 0)
+        //        //Determine if target is knocked out
+        //        if (p.PlIdx == 0)
         //        {
-        //            timeInMatch[i] /= 2;
+        //            p.TargetPlIdx = 4;
+        //        }
+        //        else
+        //        {
+        //            p.TargetPlIdx = 0;
+        //        }
+
+        //        Player plObj = PlayerMan.inst.GetPlObj(p.TargetPlIdx);
+        //        if (!plObj)
+        //        {
+        //            return false;
+        //        }
+
+        //        if (!plObj.isKO)
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            Type typeFromHandle = typeof(Player);
+        //            FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
+        //            float[] array = (float[])field.GetValue(p);
+
+        //            p.DistanceToTarget = Mathf.Sqrt(array[p.TargetPlIdx]);
+        //            return true;
         //        }
         //    }
-        //}
-
-        //[Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Dynamic Highlights")]
-        //public static void RestoreAppearanceData()
-        //{
-        //    MatchWrestlerInfo[] mwi = GlobalWork.inst.MatchSetting.matchWrestlerInfo;
-        //    for (int i = 0; i < 8; i++)
+        //    catch (Exception ex)
         //    {
-        //        if (origAppear[i] != null)
-        //        {
-        //            if (mwi[i] != null)
-        //            {
-        //                if (mwi[i].wrestlerID < WrestlerID.EditWrestlerIDTop)
-        //                {
-        //                    PresetWrestlerData preset =
-        //                        PresetWrestlerDataMan.inst.GetPresetWrestlerData(mwi[i].wrestlerID);
-        //                    preset.appearance.Set(origAppear[i]);
-        //                }
-        //                else
-        //                {
-        //                    EditWrestlerData edit = SaveData.inst.GetEditWrestlerData(mwi[i].wrestlerID);
-        //                    edit.appearanceData.Set(origAppear[i]);
-        //                }
-        //            }
-        //        }
+        //        L.D("SetTargetForPinfall Exception: " + ex);
+        //        return false;
         //    }
-        //}
+        
 
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Pin Critical Opponent")]
+        public static void ResetPinAttempts()
+        {
+            playerCount = MatchConfiguration.GetPlayerCount();
+            pinAttempted = new List<bool> { false, false };
+            L.D("Player Count (PCO) - " + playerCount);
+        }
+
+        [Hook(TargetClass = "PlayerController_AI", TargetMethod = "Update", InjectionLocation = int.MaxValue,
+            InjectDirection = HookInjectDirection.Before,
+            InjectFlags = HookInjectFlags.PassInvokingInstance,
+            Group = "Pin Critical Opponent")]
+        public static void CheckKnockOut(PlayerController_AI ai)
+        {
+            //Starting with the simplest scenario, a 1v1 matchup.
+            //We will consider tag matches (non-tornado) at a later date.
+            if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
+            {
+                return;
+            }
+
+            if (ai.plIdx > 3)
+            {
+                if (pinAttempted[1])
+                {
+                    return;
+                }
+            }
+            else
+            {
+                if (pinAttempted[0])
+                {
+                    return;
+                }
+            }
+            try
+            {
+                if (ai.PlObj.State != PlStateEnum.S_GO_POST && ai.PlObj.State != PlStateEnum.S_GO_POST2 &&
+                            ai.PlObj.State != PlStateEnum.OnCornerPost && ai.aiAct == AIActEnum.DoNothing)
+                {
+                    Player plObj = PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
+                    if (!plObj)
+                    {
+                        return;
+                    }
+
+                    if (plObj.State == PlStateEnum.Down_FaceUp || plObj.State == PlStateEnum.Down_FaceDown)
+                    {
+                        if (plObj.isKO)
+                        {
+                            if (ai.plIdx > 3)
+                            {
+                                pinAttempted[1] = true;
+                            }
+                            else
+                            {
+                                pinAttempted[0] = true;
+                            }
+                            //Type typeFromHandle = typeof(Player);
+                            //FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
+                            //float[] array = (float[])field.GetValue(ai.PlObj);
+
+                            //ai.PlObj.DistanceToTarget = Mathf.Sqrt(array[plObj.PlIdx]);
+
+                            L.D("Preparing to pin knocked out opponent: " + DataBase.GetWrestlerFullName(plObj.WresParam));
+
+                            //Determine if edit should attempt pin fall
+                            //High Showmanship and High Flexibility should give a greater chance for pinfalls
+                            int baseChance = (ai.PlObj.WresParam.aiParam.personalTraits + ai.PlObj.WresParam.aiParam.flexibility) / 2;
+                            int randomValue = UnityEngine.Random.Range(0, 100);
+                            L.D("Random vs baseChance: " + randomValue + " vs " + baseChance);
+
+                            if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
+                            {
+                                if (ai.IsEffectiveFall())
+                                {
+                                    int value = UnityEngine.Random.Range(6, 8);
+                                    ai.SetAIAct_DownAtk((AIOpt_Down)value, 240, false);
+                                }
+                            }
+                            else
+                            {
+                                ai.AIActFunc_DragDownOpponent();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("CheckKnockOut Exception (Does not cause crashing): " + ex);
+            }
+
+        }
         #endregion
 
         #region Implement Fake Reversal Moves
@@ -1183,26 +1096,21 @@ namespace QoL_Mods.Private
                 {
                     int skillID = move.ID;
                     SkillData skillData = global::SkillDataMan.inst.GetSkillData((SkillID)skillID)[0];
-                    L.D("Replaced " + skillName + " with " + DataBase.GetSkillName((SkillID)skillID));
                     reversalSkill = (SkillID)skillID;
 
                     skillSlotEnum = ChooseSkillSlot(skillSlotEnum);
-
-                    L.D("Using skill slot: " + skillSlotEnum);
 
                     //Determine whether the attacker or defender executes the move
                     if (move.User == Executor.Attacker)
                     {
                         moveData[attacker.PlIdx] = skillData;
                         attacker.WresParam.skillSlot[(int)skillSlotEnum] = (SkillID)skillID;
-                        L.D("Executor (Attacker): " + DataBase.GetWrestlerFullName(attacker.WresParam));
                         return false;
                     }
                     else
                     {
                         moveData[defender.PlIdx] = skillData;
                         defender.WresParam.skillSlot[(int)skillSlotEnum] = (SkillID)skillID;
-                        L.D("Executor (Defender): " + DataBase.GetWrestlerFullName(defender.WresParam));
 
                         //If the defender needs to execute a reversal move, we call the animator for it
                         //Then we return true to ensure that the attacker's animator does not proceed.
@@ -1244,18 +1152,9 @@ namespace QoL_Mods.Private
 
                 if (skill_slot >= SkillSlotEnum.Grapple_X && skill_slot <= SkillSlotEnum.Grapple_XA)
                 {
-                    L.D("Verifying Reversal Replacement");
-                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
-                    L.D("Replacemtn Skill: " + DataBase.GetSkillName(reversalSkill));
-
                     if (reversalSkill != plObj.WresParam.skillSlot[(int)skill_slot])
                     {
-                        L.D("Skills do not match.");
                         plObj.WresParam.skillSlot[(int)skill_slot] = reversalSkill;
-                    }
-                    else
-                    {
-                        L.D("Skills match");
                     }
 
                     reversalSkill = 0;
@@ -1572,24 +1471,6 @@ namespace QoL_Mods.Private
             result = true;
             return result;
         }
-        //public static void GetMoveList(Player player)
-        //{
-        //    if (player is null)
-        //    {
-        //        return;
-        //    }
-
-        //    WrestlerDataManager wdt;
-        //    if (!WrestlerDataManager.GetWDM(player, out wdt))
-        //    {
-        //        return;
-        //    }
-        //    if (!wdt.WillNotBeNull<MoveList>("moveList"))
-        //    {
-        //        return;
-        //    }
-        //    MoveLists.MoveList moveList = wdt.GetTrackedData<MoveLists.MoveList>("moveList");
-        //}
 
         #endregion
     }

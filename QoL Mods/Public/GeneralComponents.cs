@@ -1066,7 +1066,6 @@ namespace QoL_Mods
             //Increase spirit for every taunt executed
             if (regainSP)
             {
-                L.D("Recovery Taunt regens Spirit");
                 player.AddSP(256 * GetDamageLevel(player));
             }
         }
@@ -1303,7 +1302,6 @@ namespace QoL_Mods
                         voiceTimer.Elapsed += OnTimedEvent;
                     }
 
-                    L.D("Preparing to play referee voice");
                     voiceTimer.Start();
                     return true;
                 }
@@ -1320,7 +1318,6 @@ namespace QoL_Mods
         {
             try
             {
-                L.D("Playing referee voice");
                 MatchSEPlayer.inst.PlayRefereeVoice(RefeVoiceEnum.DownCount_2);
                 voiceTimer.Stop();
             }
@@ -1389,13 +1386,11 @@ namespace QoL_Mods
 
             if (!player)
             {
-                L.D("Submission check: target player is null");
                 return;
             }
 
             if (!player.isSubmissionDef)
             {
-                L.D("Submission check: player is not in a submission");
                 return;
             }
 
@@ -1405,7 +1400,6 @@ namespace QoL_Mods
             int tauntCeiling = 80 - (10 * damageLevel);
 
             //Make grunts more likely if an edit is ready to tap.
-            L.D("Attempting Submission Grunt for " + DataBase.GetWrestlerFullName(player.WresParam));
             if (player.isWannaGiveUp)
             {
                 tauntCeiling -= 20;
@@ -1572,7 +1566,6 @@ namespace QoL_Mods
                         return;
                 }
 
-                L.D("Attempting to play " + voices[damageLevel]);
                 var clip = (AudioClip)Resources.Load(voices[damageLevel]);
                 var audioSrcInfo = global::Menu_SoundManager.audioSrcInfo[global::Menu_SoundManager.audio_source_index + 3];
                 var audioSource = audioSrcInfo.sRefAudio;
@@ -1631,7 +1624,6 @@ namespace QoL_Mods
 
                 if (cheer != CheerVoiceEnum.Num)
                 {
-                    L.D("Playing Ukemi Notification for " + wrestler + " in " + ringName + ": " + cheer);
                     Audience.inst.PlayCheerVoice(cheer, (int)player.WresParam.charismaRank);
                 }
                 else
@@ -2079,7 +2071,6 @@ namespace QoL_Mods
                         if (config.Referees.Count > 0)
                         {
                             RefereeInfo referee = config.Referees[UnityEngine.Random.Range(0, config.Referees.Count)];
-                            L.D("Adding " + referee.Data.Prm.name + " with id " + referee.Data.editRefereeID);
                             settings.RefereeID = referee.Data.editRefereeID;
                             break;
                         }
@@ -2194,7 +2185,6 @@ namespace QoL_Mods
                 {
                     if (!plObj.isIntruder && !plObj.isSecond && !ModPack.ModPack.isSecond[i])
                     {
-                        L.D(DataBase.GetWrestlerFullName(plObj.param));
                         players.Add(i);
                     }
                 }
@@ -2228,11 +2218,9 @@ namespace QoL_Mods
                     sd.filteringType == SkillFilteringType.Submission_Neck
                     || sd.filteringType == SkillFilteringType.Submission_Complex)
                 {
-                    L.D("Increasing down time for " + DataBase.GetWrestlerFullName(defender.WresParam));
                     defender.DownTime += GetDownTime(attacker);
                 }
 
-                L.D("Increasing down time for " + DataBase.GetWrestlerFullName(defender.WresParam));
                 defender.DownTime += GetDownTime(attacker);
                 defender.isAddedDownTimeByPerformance = false;
                 if (defender.Zone == ZoneEnum.InRing)
@@ -2324,11 +2312,9 @@ namespace QoL_Mods
                             }
 
                             GeneralComponents.refObj.FormRen.InitSprite(false);
-                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE CHANGED", new object[0]);
                         }
                         catch
                         {
-                            L.D("ATTIRE EXTENSION: REFEREE ATTIRE NOT CHANGED", new object[0]);
                             RefereeID refereeID2 = GlobalWork.inst.MatchSetting.RefereeID;
                             RefereeData editRefereeData2 = SaveData.inst.GetEditRefereeData(refereeID2);
                             GeneralComponents.refObj.FormRen.InitTexture(editRefereeData2.appearanceData.costumeData[0],
@@ -2456,14 +2442,11 @@ namespace QoL_Mods
                 String style = winner.WresParam.fightStyle.ToString();
                 String name = DataBase.GetWrestlerFullName(winner.WresParam);
 
-                L.D("Wrestler is " + name + ".\nStyle is " + style);
-
+                
                 foreach (TOSMoves move in TOSForm.form.tos_wrestlers.Items)
                 {
-                    //L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
                     if (move.Name.Trim().Equals(name))
                     {
-                        L.D("Match found");
                         tosMoves = move.Skills;
                         break;
                     }
@@ -2471,10 +2454,8 @@ namespace QoL_Mods
 
                 if (tosMoves.Count == 0)
                 {
-                    L.D("No wrestler move found");
                     foreach (TOSMoves move in TOSForm.form.tos_styles.Items)
                     {
-                        //L.D("Checking " + move.Name + " with " + move.Skills.Count + " moves.");
                         if (move.Name.Trim().Equals(style))
                         {
                             L.D("Match found");
@@ -2577,20 +2558,11 @@ namespace QoL_Mods
 
                 if (skill_slot == SkillSlotEnum.Grapple_X)
                 {
-                    L.D("Verifying TOS Replacement for " + DataBase.GetWrestlerFullName(plObj.WresParam));
-                    L.D("Current skill " + DataBase.GetSkillName(plObj.WresParam.skillSlot[(int)skill_slot]));
-                    L.D("Replacement Skill: " + DataBase.GetSkillName(tosSkill));
-
                     if (tosSkill != plObj.WresParam.skillSlot[(int)skill_slot])
                     {
-                        L.D("Skills do not match.");
                         plObj.WresParam.skillSlot[(int)skill_slot] = tosSkill;
                     }
-                    else
-                    {
-                        L.D("Skills match");
-                    }
-
+                   
                     tosSkill = 0;
                 }
             }
@@ -2700,7 +2672,6 @@ namespace QoL_Mods
                 int disturbingPlayer = global::PlayerMan.inst.GetDisturbingPlayer();
                 if (disturbingPlayer >= 0)
                 {
-                    L.D("Disturbing player exists, go back to the main method for processing");
                     return false;
                 }
 
@@ -2714,8 +2685,7 @@ namespace QoL_Mods
 
                     if (ignoreChecksRemaining > 0)
                     {
-                        L.D("Rolling ignore check");
-
+                   
                         int roll = (int)UnityEngine.Random.Range(1f, 20f);
                         if (roll >= ignoreDC)
                         {

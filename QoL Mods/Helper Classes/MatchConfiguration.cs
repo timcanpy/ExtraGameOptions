@@ -164,6 +164,29 @@ namespace MatchConfig
             return null;
         }
 
+        public static int GetPlayerCount()
+        {
+            int players = 0;
+            MatchSetting matchSetting = global::GlobalWork.inst.MatchSetting;
+            for (int i = 0; i < 8; i++)
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(i);
+
+                if (!plObj)
+                {
+                    continue;
+                }
+
+                if (matchSetting.matchWrestlerInfo[plObj.PlIdx].isSecond || matchSetting.matchWrestlerInfo[plObj.PlIdx].isIntruder)
+                {
+                    continue;
+                }
+
+                players++;
+            }
+
+            return players;
+        }
         public static RefereeInfo GetRefereeInfo(String name)
         {
             foreach (RefereeData referee in SaveData.GetInst().editRefereeData)
