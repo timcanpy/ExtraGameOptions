@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -58,19 +59,19 @@ namespace Fire_Pro_API_Client
             {
                 case "Fire Pro Tracking API":
                     client.BaseAddress = new Uri(apiUrls[0]);
-                    await ProcessFPTOptionsAsync();
+                    await ProcessFPTOptions();
                     break;
             }
 
-            Console.WriteLine("Action has been completed successfully!");
+            Console.WriteLine("Actions have been completed! This client will now close.");
             Console.ReadKey();
 
         }
 
-        private static async Task ProcessFPTOptionsAsync()
+        private static async Task ProcessFPTOptions()
         {
             Console.Clear();
-            menuOptions = new List<String> { "Upload Data", "Delete Existing Data" };
+            menuOptions = new List<String> { "Upload Data", "Delete Existing Data", "End" };
 
             string option = GetMenuAction();
 
@@ -80,11 +81,62 @@ namespace Fire_Pro_API_Client
                     await SendWarDataAsync();
                     break;
                 case "Delete Existing Data":
-                    await RemoveWarDataAsync();
+                    await ProcessDeleteOptions();
                     break;
             }
         }
 
+        private static async Task ProcessDeleteOptions()
+        {
+            Console.Clear();
+            menuOptions = new List<string> { "Promotion", "Titles", "All Data", "Back" };
+            Console.WriteLine("Which deletion action would you like to perform?");
+
+            string option = GetMenuAction();
+
+            switch (option)
+            {
+                case "Promotion":
+                case "Titles":
+                    var success = await RemoveWarDataAsync(option);
+                    if(success)
+                    {
+                        Console.WriteLine("Item has been deleted.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Item has not been deleted.");
+                    }
+                    Console.ReadKey();
+                    await ProcessFPTOptions();
+                    break;
+                case "All Data":
+                    await ConfirmMassDelete();
+                    break;
+                default:
+                    await ProcessFPTOptions();
+                    break;
+            }
+        }
+
+        private static async Task ConfirmMassDelete()
+        {
+            Console.Clear();
+            menuOptions = new List<string> { "Yes", "No" };
+            Console.WriteLine("Are you sure? The mass deletion of all data cannot be undone!");
+
+            string option = GetMenuAction();
+
+            switch (option)
+            {
+                case "Yes":
+                    await RemoveWarDataAsync("All");
+                    break;
+                default:
+                    await ProcessFPTOptions();
+                    break;
+            }
+        }
         private static string GetMenuAction()
         {
             string result = "";
@@ -122,85 +174,157 @@ namespace Fire_Pro_API_Client
             return true;
         }
 
-        private static async Task<bool> RemoveWarDataAsync()
+        private static async Task<bool> RemoveWarDataAsync(string action = "All")
         {
-            bool success = true;
-
             string promotionFile = "Promotions.json";
             string wrestlerFile = "Employees.json";
             string titleFile = "Titles.json";
-            if (File.Exists(Path.Combine(folderName, promotionFile)))
+
+            if (action.Equals("All"))
             {
-                //We only need one record
-                var promotionData = File.ReadAllLines(Path.Combine(folderName, promotionFile));
-                if (promotionData.Length > 0)
+                if (File.Exists(Path.Combine(folderName, promotionFile)))
                 {
-                    Promotion promotion;
-                    try
+                    //We only need one record
+                    var promotionData = File.ReadAllLines(Path.Combine(folderName, promotionFile));
+                    if (promotionData.Length > 0)
                     {
-                        promotion = JsonConvert.DeserializeObject<Promotion>(promotionData[0]);
-                    }
-                    catch
-                    {
-                        promotion = null;
+                        Promotion promotion;
+                        try
+                        {
+                            promotion = JsonConvert.DeserializeObject<Promotion>(promotionData[0]);
+                        }
+                        catch
+                        {
+                            promotion = null;
+                        }
+
+                        if (promotion != null)
+                        {
+                            await RemoveDataAsync(promotion.OwnerID);
+                        }
+
+                        return true;
                     }
 
-                    if (promotion != null)
-                    {
-                        await RemoveDataAsync(promotion.OwnerID);
-                    }
-
-                    return true;
                 }
-
-            }
-            if (File.Exists(Path.Combine(folderName, wrestlerFile)))
-            {
-                //We only need one record
-                var wrestlerData = File.ReadAllLines(Path.Combine(folderName, wrestlerFile));
-                if (wrestlerData.Length > 0)
+                else if (File.Exists(Path.Combine(folderName, wrestlerFile)))
                 {
-                    Wrestler wrestler;
-                    try
+                    //We only need one record
+                    var wrestlerData = File.ReadAllLines(Path.Combine(folderName, wrestlerFile));
+                    if (wrestlerData.Length > 0)
                     {
-                        wrestler = JsonConvert.DeserializeObject<Wrestler>(wrestlerData[0]);
-                    }
-                    catch
-                    {
-                        wrestler = null;
-                    }
+                        Wrestler wrestler;
+                        try
+                        {
+                            wrestler = JsonConvert.DeserializeObject<Wrestler>(wrestlerData[0]);
+                        }
+                        catch
+                        {
+                            wrestler = null;
+                        }
 
-                    if (wrestler != null)
-                    {
-                        await RemoveDataAsync(wrestler.OwnerID);
-                    }
+                        if (wrestler != null)
+                        {
+                            await RemoveDataAsync(wrestler.OwnerID);
+                        }
 
-                    return true;
-                }
-            }
-            if (File.Exists(Path.Combine(folderName, titleFile)))
-            {
-                var titleData = File.ReadAllLines(Path.Combine(folderName, titleFile));
-                Title title;
-                if(titleData.Length > 0)
-                {
-                    try
-                    {
-                        title = JsonConvert.DeserializeObject<Title>(titleData[0]);
-                    }
-                    catch
-                    {
-                        title = null;
-                    }
-
-                    if(title != null)
-                    {
-                        await RemoveDataAsync(title.OwnerID);
+                        return true;
                     }
                 }
+                else if (File.Exists(Path.Combine(folderName, titleFile)))
+                {
+                    var titleData = File.ReadAllLines(Path.Combine(folderName, titleFile));
+                    Title title;
+                    if (titleData.Length > 0)
+                    {
+                        try
+                        {
+                            title = JsonConvert.DeserializeObject<Title>(titleData[0]);
+                        }
+                        catch
+                        {
+                            title = null;
+                        }
+
+                        if (title != null)
+                        {
+                            await RemoveDataAsync(title.OwnerID);
+                        }
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No data files exist, the process cannot be completed.");
+                }
+            }
+            else
+            {
+                string ownerID = String.Empty;
+                if (File.Exists(Path.Combine(folderName, promotionFile)))
+                {
+                    var promotionData = File.ReadAllLines(Path.Combine(folderName, promotionFile));
+                    if (promotionData.Length > 0)
+                    {
+                        ownerID = JsonConvert.DeserializeObject<Promotion>(promotionData[0]).OwnerID;
+                    }
+                }
+                else if (File.Exists(Path.Combine(folderName, wrestlerFile)))
+                {
+                    var wrestlerData = File.ReadAllLines(Path.Combine(folderName, wrestlerFile));
+                    if (wrestlerData.Length > 0)
+                    {
+                        ownerID = JsonConvert.DeserializeObject<Wrestler>(wrestlerData[0]).OwnerID;
+                    }
+                }
+                else if (File.Exists(Path.Combine(folderName, titleFile)))
+                {
+                    var titleData = File.ReadAllLines(Path.Combine(folderName, titleFile));
+                    if (titleData.Length > 0)
+                    {
+                        ownerID = JsonConvert.DeserializeObject<Title>(titleData[0]).OwnerID;
+                    }
+                }
+
+                if (ownerID.Equals(String.Empty))
+                {
+                    Console.WriteLine("No data files exist, the process cannot be completed.");
+                }
+                else
+                {
+                    if (action.Equals("Titles"))
+                    {
+                        await RemoveTitlesAsync(ownerID);
+                        return true;
+                    }
+                    else if (action.Equals("Promotion"))
+                    {
+                        List<Promotion> promotions = await GetPromotionDataAsync(ownerID);
+                        Console.Clear();
+
+                        menuOptions = new List<string>();
+                        foreach (Promotion promotion in promotions)
+                        {
+                            menuOptions.Add(promotion.Name);
+                        }
+
+                        Console.WriteLine("Which promotion do you want to delete?");
+                        string option = GetMenuAction();
+
+                        Promotion item = promotions.Where(p => p.Name.Equals(option)).Single();
+                        if (item != null)
+                        {
+                            await RemovePromotionAsync(item.ID);
+                            return true;
+                        }
+
+                    }
+                }
             }
 
-            return success;
+            //We should never arrive here if all went well
+            return false;
         }
         private static async Task<bool> SendWarDataAsync()
         {
@@ -338,6 +462,38 @@ namespace Fire_Pro_API_Client
             return await client.DeleteAsync("RemoveRecords?ownerID=" + ownerID);
         }
 
+        private static async Task<List<Promotion>> GetPromotionDataAsync(string ownerID)
+        {
+            List<Promotion> promotions = new List<Promotion>();
+            try
+            {
+                await client.GetAsync("FindPromotion")
+                .ContinueWith((taskwithresponse) =>
+          {
+              var response = taskwithresponse.Result;
+              var jsonString = response.Content.ReadAsStringAsync();
+              jsonString.Wait();
+              var list = JsonConvert.DeserializeObject<List<Promotion>>(jsonString.Result);
+              promotions = list;
+          });
+            }
+            catch
+            {
+
+            }
+
+            return promotions.Where(p => p.OwnerID.Equals(ownerID)).ToList();
+        }
+
+        private static async Task<HttpResponseMessage> RemoveTitlesAsync(string ownerID)
+        {
+            return await client.DeleteAsync("RemoveTitles?ownerID=" + ownerID);
+        }
+
+        private static async Task<HttpResponseMessage> RemovePromotionAsync(string promotionID)
+        {
+            return await client.DeleteAsync("RemovePromotion?promotionID=" + promotionID);
+        }
         private static async Task<HttpResponseMessage> SendPromotionsAsync(List<Promotion> promotions)
         {
             return await client.PostAsJsonAsync("AddPromotions", promotions);

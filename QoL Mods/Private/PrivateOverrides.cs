@@ -796,8 +796,8 @@ namespace QoL_Mods.Private
         #endregion
 
         #region Opponent pins during knock-out
-        public static List<bool> pinAttempted;
-        public static int playerCount;
+        //public static List<bool> pinAttempted;
+        //public static int playerCount;
 
         //[Hook(TargetClass = "Player", TargetMethod = "DecideTargetEnemy", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "Pin Critical Opponent")]
         //public static bool SetTargetForPinfall(Player p)
@@ -861,100 +861,100 @@ namespace QoL_Mods.Private
         //    }
         
 
-        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Pin Critical Opponent")]
-        public static void ResetPinAttempts()
-        {
-            playerCount = MatchConfiguration.GetPlayerCount();
-            pinAttempted = new List<bool> { false, false };
-            L.D("Player Count (PCO) - " + playerCount);
-        }
+        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Pin Critical Opponent")]
+        //public static void ResetPinAttempts()
+        //{
+        //    playerCount = MatchConfiguration.GetPlayerCount();
+        //    pinAttempted = new List<bool> { false, false };
+        //    L.D("Player Count (PCO) - " + playerCount);
+        //}
 
-        [Hook(TargetClass = "PlayerController_AI", TargetMethod = "Update", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before,
-            InjectFlags = HookInjectFlags.PassInvokingInstance,
-            Group = "Pin Critical Opponent")]
-        public static void CheckKnockOut(PlayerController_AI ai)
-        {
-            //Starting with the simplest scenario, a 1v1 matchup.
-            //We will consider tag matches (non-tornado) at a later date.
-            if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
-            {
-                return;
-            }
+        //[Hook(TargetClass = "PlayerController_AI", TargetMethod = "Update", InjectionLocation = int.MaxValue,
+        //    InjectDirection = HookInjectDirection.Before,
+        //    InjectFlags = HookInjectFlags.PassInvokingInstance,
+        //    Group = "Pin Critical Opponent")]
+        //public static void CheckKnockOut(PlayerController_AI ai)
+        //{
+        //    //Starting with the simplest scenario, a 1v1 matchup.
+        //    //We will consider tag matches (non-tornado) at a later date.
+        //    if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
+        //    {
+        //        return;
+        //    }
 
-            if (ai.plIdx > 3)
-            {
-                if (pinAttempted[1])
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (pinAttempted[0])
-                {
-                    return;
-                }
-            }
-            try
-            {
-                if (ai.PlObj.State != PlStateEnum.S_GO_POST && ai.PlObj.State != PlStateEnum.S_GO_POST2 &&
-                            ai.PlObj.State != PlStateEnum.OnCornerPost && ai.aiAct == AIActEnum.DoNothing)
-                {
-                    Player plObj = PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
-                    if (!plObj)
-                    {
-                        return;
-                    }
+        //    if (ai.plIdx > 3)
+        //    {
+        //        if (pinAttempted[1])
+        //        {
+        //            return;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (pinAttempted[0])
+        //        {
+        //            return;
+        //        }
+        //    }
+        //    try
+        //    {
+        //        if (ai.PlObj.State != PlStateEnum.S_GO_POST && ai.PlObj.State != PlStateEnum.S_GO_POST2 &&
+        //                    ai.PlObj.State != PlStateEnum.OnCornerPost && ai.aiAct == AIActEnum.DoNothing)
+        //        {
+        //            Player plObj = PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
+        //            if (!plObj)
+        //            {
+        //                return;
+        //            }
 
-                    if (plObj.State == PlStateEnum.Down_FaceUp || plObj.State == PlStateEnum.Down_FaceDown)
-                    {
-                        if (plObj.isKO)
-                        {
-                            if (ai.plIdx > 3)
-                            {
-                                pinAttempted[1] = true;
-                            }
-                            else
-                            {
-                                pinAttempted[0] = true;
-                            }
-                            //Type typeFromHandle = typeof(Player);
-                            //FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
-                            //float[] array = (float[])field.GetValue(ai.PlObj);
+        //            if (plObj.State == PlStateEnum.Down_FaceUp || plObj.State == PlStateEnum.Down_FaceDown)
+        //            {
+        //                if (plObj.isKO)
+        //                {
+        //                    if (ai.plIdx > 3)
+        //                    {
+        //                        pinAttempted[1] = true;
+        //                    }
+        //                    else
+        //                    {
+        //                        pinAttempted[0] = true;
+        //                    }
+        //                    //Type typeFromHandle = typeof(Player);
+        //                    //FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
+        //                    //float[] array = (float[])field.GetValue(ai.PlObj);
 
-                            //ai.PlObj.DistanceToTarget = Mathf.Sqrt(array[plObj.PlIdx]);
+        //                    //ai.PlObj.DistanceToTarget = Mathf.Sqrt(array[plObj.PlIdx]);
 
-                            L.D("Preparing to pin knocked out opponent: " + DataBase.GetWrestlerFullName(plObj.WresParam));
+        //                    L.D("Preparing to pin knocked out opponent: " + DataBase.GetWrestlerFullName(plObj.WresParam));
 
-                            //Determine if edit should attempt pin fall
-                            //High Showmanship and High Flexibility should give a greater chance for pinfalls
-                            int baseChance = (ai.PlObj.WresParam.aiParam.personalTraits + ai.PlObj.WresParam.aiParam.flexibility) / 2;
-                            int randomValue = UnityEngine.Random.Range(0, 100);
-                            L.D("Random vs baseChance: " + randomValue + " vs " + baseChance);
+        //                    //Determine if edit should attempt pin fall
+        //                    //High Showmanship and High Flexibility should give a greater chance for pinfalls
+        //                    int baseChance = (ai.PlObj.WresParam.aiParam.personalTraits + ai.PlObj.WresParam.aiParam.flexibility) / 2;
+        //                    int randomValue = UnityEngine.Random.Range(0, 100);
+        //                    L.D("Random vs baseChance: " + randomValue + " vs " + baseChance);
 
-                            if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
-                            {
-                                if (ai.IsEffectiveFall())
-                                {
-                                    int value = UnityEngine.Random.Range(6, 8);
-                                    ai.SetAIAct_DownAtk((AIOpt_Down)value, 240, false);
-                                }
-                            }
-                            else
-                            {
-                                ai.AIActFunc_DragDownOpponent();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                L.D("CheckKnockOut Exception (Does not cause crashing): " + ex);
-            }
+        //                    if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
+        //                    {
+        //                        if (ai.IsEffectiveFall())
+        //                        {
+        //                            int value = UnityEngine.Random.Range(6, 8);
+        //                            ai.SetAIAct_DownAtk((AIOpt_Down)value, 240, false);
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        ai.AIActFunc_DragDownOpponent();
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        L.D("CheckKnockOut Exception (Does not cause crashing): " + ex);
+        //    }
 
-        }
+        //}
         #endregion
 
         #region Implement Fake Reversal Moves
