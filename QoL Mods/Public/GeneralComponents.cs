@@ -172,8 +172,19 @@ namespace QoL_Mods
         #endregion
 
         #region Force Preemptive Pinfall Count
-
+        public static System.Timers.Timer refTimer;
         private static int downedPlayer;
+        private static int defenderIdx;
+        private static int baseCheckTime = 2500;
+        private static int baseCheckIncrement = 500;
+
+        [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
+           InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Ref Positions For Pinfall")]
+        public static void SetInitialRefValues()
+        {
+            defenderIdx = -1;
+        }
+
         [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Ref Positions For Pinfall")]
         public static void PrepareForPinfall(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
         {
@@ -202,21 +213,22 @@ namespace QoL_Mods
                     multiplier = .15f;
                     break;
                 case 2:
-                    multiplier = .25f;
+                    multiplier = .20f;
                     break;
                 case 3:
-                    multiplier = .40f;
+                    multiplier = .30f;
                     break;
                 case 4:
-                    multiplier = .50f;
+                    multiplier = .40f;
                     break;
                 default:
-                    multiplier = .25f;
+                    multiplier = .20f;
                     break;
             }
             float checkValue = 65535 * multiplier;
 
-            if (((sd.primarySkillStrength == PrimarySkillStrength.H) && sd.anmLoopTimes == 0 && (defender.SP < checkValue || defender.HP < checkValue)) || defender.isCriticalMoveRecieved && attacker.Zone == ZoneEnum.InRing)
+            //Should not be applied to submissions
+            if ((sd.anmLoopTimes == 0 && (defender.SP < checkValue || defender.HP < checkValue)) || defender.isCriticalMoveRecieved && attacker.Zone == ZoneEnum.InRing)
             {
                 downedPlayer = defender.PlIdx;
             }
@@ -228,18 +240,48 @@ namespace QoL_Mods
             //Force check for all signatures and finishers
             //Ensure standing moves don't trigger the code unless it's a finisher; currently experiencing issues with missed strike attacks
             if (sd.anmType == SkillAnmTypeEnum.HitBranch_Single || sd.anmType == SkillAnmTypeEnum.HitBranch_Pair ||
-                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove)
+                sd.anmType == SkillAnmTypeEnum.Single || sd.anmType == SkillAnmTypeEnum.Pair && skillAttr != SkillSlotAttr.CriticalMove && skillAttr != SkillSlotAttr.SpecialMove)
             {
                 return;
             }
 
-            if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && attacker.CriticalMoveHitCnt < 2 && sd.filteringType != SkillFilteringType.Performance)
+            if ((skillAttr == SkillSlotAttr.CriticalMove || skillAttr == SkillSlotAttr.SpecialMove) && sd.filteringType != SkillFilteringType.Performance)
             {
                 if (defender.Zone == ZoneEnum.InRing)
                 {
-                    CheckForFall(defender.PlIdx);
+                    L.D("Referee will check in " + (baseCheckTime + (baseCheckIncrement * mRef.RefePrm.walkSpeed)) / 1000 + " seconds");
+
+                    if (refTimer == null)
+                    {
+                        refTimer = new System.Timers.Timer();
+                    }
+                    refTimer.Elapsed += DelayPinfallCheck;
+                    refTimer.Interval = baseCheckTime + (baseCheckIncrement * mRef.RefePrm.walkSpeed);
+
+                    defenderIdx = defender.PlIdx;
+                    refTimer.Start();
+
                 }
             }
+        }
+
+        public static void DelayPinfallCheck(System.Object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                L.D("Ref Timer has elapsed");
+                refTimer.Stop();
+                if (RefereeIsFree(RefereeMan.inst.GetRefereeObj()))
+                {
+                    L.D("Checking for fall");
+                    CheckForFall(defenderIdx);
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("DelayPinfallCheck Error: " + ex);
+            }
+
         }
 
         [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Ref Positions For Pinfall")]
@@ -1041,24 +1083,8 @@ namespace QoL_Mods
             tauntData[player.PlIdx] = skillData;
             player.ChangeState(global::PlStateEnum.Performance);
 
-            //Ensure we're handling skill data correctly
-            //if (player.lastSkill == SkillSlotEnum.Invalid || !player.lastSkillHit)
-            //{
-            //    player.lastSkill = SkillSlotEnum.Performance_1;
-            //}
-
-            ////Resolve rare bug in some AI methods
-            //Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
-            //if (!defender)
-            //{
-            //    player.TargetPlIdx = FindAnOpponent(player.PlIdx);
-            //}
-
-            //player.animator.InitAnimation();
-
             //New method of executing recovery taunts
             player.animator.ReqSkillAnm((SkillID)skillID);
-            //ModPack.ModPack.InvokeMethod(player.animator, "ReqSkillAnm", false, new object[]{skillID});
 
             //Ensure recovery taunts are subtracted
             recoveryTauntCount[player.PlIdx] -= 1;
@@ -1359,7 +1385,7 @@ namespace QoL_Mods
                                 && (plObj.WresParam.country == CountryEnum.Japan || plObj.WresParam.country == CountryEnum.NorthKorea || plObj.WresParam.country == CountryEnum.SouthKorea))
                             {
                                 voiceType[i] = WrestlerVoiceTypeEnum.Japanease_F_0;
-                            } 
+                            }
                             else if (plObj.WresParam.sex == SexEnum.Female || plObj.WresParam.sex == SexEnum.MaybeFemale)
                             {
                                 voiceType[i] = WrestlerVoiceTypeEnum.American_F_0;
@@ -1659,7 +1685,7 @@ namespace QoL_Mods
         [Hook(TargetClass = "MatchEvaluation", TargetMethod = "EvaluateSkill", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassParametersVal, Group = "Bleeding Headbutts")]
         public static void CheckHeadbutt(int plIDx, SkillData sd, SkillSlotAttr skillAttr)
         {
-            if(sd == null)
+            if (sd == null)
             {
                 return;
             }
@@ -1679,8 +1705,8 @@ namespace QoL_Mods
                 }
 
             }
-            catch(NullReferenceException)
-            {}
+            catch (NullReferenceException)
+            { }
         }
         #endregion
 
@@ -2223,10 +2249,10 @@ namespace QoL_Mods
 
                 defender.DownTime += GetDownTime(attacker);
                 defender.isAddedDownTimeByPerformance = false;
-                if (defender.Zone == ZoneEnum.InRing)
-                {
-                    CheckForFall(defender.PlIdx);
-                }
+                //if (defender.Zone == ZoneEnum.InRing)
+                //{
+                //    CheckForFall(defender.PlIdx);
+                //}
 
             }
         }
@@ -2442,7 +2468,7 @@ namespace QoL_Mods
                 String style = winner.WresParam.fightStyle.ToString();
                 String name = DataBase.GetWrestlerFullName(winner.WresParam);
 
-                
+
                 foreach (TOSMoves move in TOSForm.form.tos_wrestlers.Items)
                 {
                     if (move.Name.Trim().Equals(name))
@@ -2562,7 +2588,7 @@ namespace QoL_Mods
                     {
                         plObj.WresParam.skillSlot[(int)skill_slot] = tosSkill;
                     }
-                   
+
                     tosSkill = 0;
                 }
             }
@@ -2685,7 +2711,7 @@ namespace QoL_Mods
 
                     if (ignoreChecksRemaining > 0)
                     {
-                   
+
                         int roll = (int)UnityEngine.Random.Range(1f, 20f);
                         if (roll >= ignoreDC)
                         {
