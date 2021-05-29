@@ -14,11 +14,13 @@ namespace Fire_Pro_API_Client
 {
     class Program
     {
-        private static List<string> menuOptions = new List<string> { "Fire Pro Tracking API" };
-        private static List<string> apiUrls = new List<string> { "http://fireprotrackingapi.us-east-1.elasticbeanstalk.com/api/FireProTracking/" };
+        private static List<string> menuOptions = new List<string> { "Fire Pro Tracking API", "Survival Road API" };
+        private static List<string> apiUrls = new List<string> { "http://fireprotrackingapi.us-east-1.elasticbeanstalk.com/api/FireProTracking/", "https://localhost:44340/api/FireProTracking/" };
+
         private static HttpClient client = new HttpClient();
         private static string configPath = Path.Combine(Directory.GetCurrentDirectory(), "config.txt");
         private static string folderName;
+        private static string srDataFolder = "Reports\\SurvivalRoad";
 
         static async Task Main(string[] args)
         {
@@ -61,6 +63,12 @@ namespace Fire_Pro_API_Client
                     client.BaseAddress = new Uri(apiUrls[0]);
                     await ProcessFPTOptions();
                     break;
+
+                case "Survival Road API":
+                    client.BaseAddress = new Uri(apiUrls[0]);
+                    await ProcessSRData();
+                    break;
+
             }
 
             Console.WriteLine("Actions have been completed! This client will now close.");
@@ -86,6 +94,57 @@ namespace Fire_Pro_API_Client
             }
         }
 
+        private static async Task<bool> ProcessSRData()
+        {
+            bool success = true;
+            string srFolder = Path.Combine(folderName, srDataFolder);
+            string completeFolder = Path.Combine(srFolder, "Submitted");
+
+            if (!Directory.Exists(completeFolder))
+            {
+                Directory.CreateDirectory(completeFolder);
+            }
+
+            List<SRData> data = new List<SRData>();
+            foreach(string file in Directory.GetFiles(srFolder))
+            {
+                try
+                {
+                    Console.WriteLine("Processing " + file);
+                    var srData = File.ReadAllLines(Path.Combine(srFolder, file));
+                    if (srData.Length == 1)
+                    {
+                        data.Add(JsonConvert.DeserializeObject<SRData>(srData[0]));
+                    }
+
+                    var fileName = Path.GetFileName(file);
+                    Directory.Move(file, Path.Combine(completeFolder, fileName));
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine("Non-fatal error with srData conversion: " + ex);
+                }
+            }
+
+            try
+            {
+                var response = await SendSRDataAsync(data);
+                Console.WriteLine("Response: " + response);
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+                    success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error contacting AddSRData: " + ex);
+                success = false;
+            }
+
+            return success;
+        }
+
         private static async Task ProcessDeleteOptions()
         {
             Console.Clear();
@@ -99,7 +158,7 @@ namespace Fire_Pro_API_Client
                 case "Promotion":
                 case "Titles":
                     var success = await RemoveWarDataAsync(option);
-                    if(success)
+                    if (success)
                     {
                         Console.WriteLine("Item has been deleted.");
                     }
@@ -497,6 +556,11 @@ namespace Fire_Pro_API_Client
         private static async Task<HttpResponseMessage> SendPromotionsAsync(List<Promotion> promotions)
         {
             return await client.PostAsJsonAsync("AddPromotions", promotions);
+        }
+
+        private static async Task<HttpResponseMessage> SendSRDataAsync(List<SRData> data)
+        {
+            return await client.PostAsJsonAsync("AddSRData", data);
         }
 
         private static async Task<HttpResponseMessage> SendWrestlersAsync(List<Wrestler> wrestlers)
