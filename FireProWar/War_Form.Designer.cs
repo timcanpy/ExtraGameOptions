@@ -155,6 +155,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.fpw_popups = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fpw_logoImage)).BeginInit();
             this.panel2.SuspendLayout();
@@ -174,6 +175,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel1.Controls.Add(this.fpw_popups);
             this.panel1.Controls.Add(this.fpw_removeRing);
             this.panel1.Controls.Add(this.fpw_addRing);
             this.panel1.Controls.Add(this.fpw_refreshRings);
@@ -1768,6 +1770,20 @@
             this.label5.TabIndex = 38;
             this.label5.Text = "Legs";
             // 
+            // fpw_popups
+            // 
+            this.fpw_popups.AutoSize = true;
+            this.fpw_popups.Checked = true;
+            this.fpw_popups.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fpw_popups.Font = new System.Drawing.Font("Franklin Gothic Medium", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.fpw_popups.Location = new System.Drawing.Point(144, 3);
+            this.fpw_popups.Margin = new System.Windows.Forms.Padding(4);
+            this.fpw_popups.Name = "fpw_popups";
+            this.fpw_popups.Size = new System.Drawing.Size(116, 19);
+            this.fpw_popups.TabIndex = 60;
+            this.fpw_popups.Text = "Promotion Popups";
+            this.fpw_popups.UseVisualStyleBackColor = true;
+            // 
             // War_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1933,5 +1949,6 @@
         private System.Windows.Forms.Button removeCurrent;
         private System.Windows.Forms.Button addCurrent;
         private System.Windows.Forms.CheckBox fpw_autoJSON;
+        public System.Windows.Forms.CheckBox fpw_popups;
     }
 }

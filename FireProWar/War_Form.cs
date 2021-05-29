@@ -357,6 +357,10 @@ namespace FireProWar
                                 Boolean.TryParse(elements[1], out value);
                                 fpw_autoJSON.Checked = value;
                                 break;
+                            case "fpw_popups":
+                                Boolean.TryParse(elements[1], out value);
+                                fpw_popups.Checked = value;
+                                break;
                         }
 
                         elements = line.Split('-');
@@ -523,6 +527,7 @@ namespace FireProWar
                 {
                     sw.WriteLine("fpw_Enable: " + fpw_Enable.Checked);
                     sw.WriteLine("fpw_showRecord: " + fpw_showRecord.Checked);
+                    sw.WriteLine("fpw_popups: " + fpw_popups.Checked);
                     sw.WriteLine("fpw_autoJSON: " + fpw_autoJSON.Checked);
 
                     //Save Neck Injuries
@@ -1171,9 +1176,12 @@ namespace FireProWar
                 promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
                 ". Final Record: " + employee.GetRecord());
 
-                MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
-                                ". Final Record: " + employee.GetRecord(), "Resignation Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                if(fpw_popups.Checked)
+                {
+                    MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
+                               ". Final Record: " + employee.GetRecord(), "Resignation Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
+                }
 
                 promotion.RemoveEmployee(employee.Name);
                 return promotion;
@@ -1827,9 +1835,12 @@ namespace FireProWar
                                              " has been promoted (Rank " +
                                              ms_moraleRank.Items[employee.MoraleRank].ToString() + ").");
 
-                        MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
-                                        " has been promoted (Rank " +
-                                        ms_moraleRank.Items[employee.MoraleRank].ToString() + ").", "Promotion Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        if(fpw_popups.Checked)
+                        {
+                            MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
+                                            " has been promoted (Rank " +
+                                            ms_moraleRank.Items[employee.MoraleRank].ToString() + ").", "Promotion Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
                     }
                 }
             }
