@@ -1796,6 +1796,11 @@ namespace QoL_Mods
                     return;
                 }
 
+                if (defender.isStandingStunOK)
+                {
+                    return;
+                }
+
                 //Determine whether action proceeds based on defender's current damage and showmanship
                 if (UnityEngine.Random.Range(1f, 50f) - (GetDamageLevel(defender) * 5) <
                     defender.WresParam.aiParam.personalTraits)
@@ -1870,10 +1875,10 @@ namespace QoL_Mods
                 //{
                 //This should only occur in large/critical damage
                 Player defender = PlayerMan.inst.GetPlObj(player.TargetPlIdx);
-                if (GetDamageLevel(defender) > 1)
+                if (GetDamageLevel(defender) > 1 && !defender.isStandingStunOK)
                 {
                     defender.isStandingStunOK = true;
-                    defender.AddStunTime(180);
+                    defender.AddStunTime(GetDamageLevel(defender) * 50);
                 }
                 //}
             }
@@ -2263,10 +2268,10 @@ namespace QoL_Mods
             {
                 case 0:
                 case 1:
-                    return 300;
+                    return 200;
                 case 2:
                 case 3:
-                    return 200;
+                    return 100;
                 default:
                     return 100;
             }

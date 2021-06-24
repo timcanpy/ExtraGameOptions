@@ -25,6 +25,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     [GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
     [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNote that any change is permanent, use at your own risk.")]
+    [GroupDescription(Group = "IllegalFinish", Name = "Pin After Partner's Finisher", Description = "(PRIVATE) Allows legal man in tag matches to pin after a partner's finisher")]
 
     #endregion
 
@@ -1192,6 +1193,37 @@ namespace QoL_Mods.Private
                 L.D("ReplaceSkillWithReversalException: " + e);
             }
 
+        }
+        #endregion
+
+        #region Pinfall Afer Illegal Man's Finisher
+        [Hook(TargetClass = "Player", TargetMethod = "UpdatePlayer", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "IllegalFinish")]
+        public static void IllegalFinisher(Player p)
+        {
+            if (!GlobalWork.inst.MatchSetting.isCutPlay ||p.hasRight || !MatchMain.inst.isTimeCounting)
+            {
+                return;
+            }
+         
+            try
+            {
+                Player legalMan = PlayerMan.inst.GetPlObj(p.GetAllyHasRight());
+                Player defender = PlayerMan.inst.GetPlObj(p.TargetPlIdx);
+                if (p.Zone == ZoneEnum.InRing)
+                {
+                    if (defender.isCriticalMoveRecieved && p.isCriticalMove)
+                    {
+                        int opt = UnityEngine.Random.Range(6, 8);
+                        legalMan.plCont_AI.SetAIAct_DownAtk((AIOpt_Down)opt, 300);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("IllegalFinish Logging: " + ex.Message);
+            }
+          
         }
         #endregion
 
