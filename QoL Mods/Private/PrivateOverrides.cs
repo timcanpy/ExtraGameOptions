@@ -410,7 +410,7 @@ namespace QoL_Mods.Private
             }
         }
 
-        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 176, InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "Face Lock")]
+        [Hook(TargetClass = "FormAnimator", TargetMethod = "ReqSlotAnm", InjectionLocation = 180, InjectDirection = HookInjectDirection.Before, InjectFlags = (HookInjectFlags)34, Group = "Face Lock")]
         public static void SetLastSkillHit_FaceLock(FormAnimator animator, SkillSlotEnum skill_slot, bool rev, int def_pl_idx, bool atk_side)
         {
             try
@@ -668,8 +668,6 @@ namespace QoL_Mods.Private
                         global::DataBase.GetWrestlerParam(matchWrestlerInfo.wrestlerID);
                     bool isNickEmpty = wrestlerParam.nickName.Trim() == String.Empty;
 
-                    L.D("Checking # " + i + " - " + DataBase.GetWrestlerFullName(wrestlerParam));
-
                     //Add delimeters to the titles
                     if (i != 0)
                     {
@@ -709,7 +707,6 @@ namespace QoL_Mods.Private
                         }
                     }
 
-                    L.D("Wrestler Nickname: " + wrestlerParam.nickName);
                     if (!isNickEmpty && !matchWrestlerInfo.isSecond)
                     {
                         title += wrestlerParam.nickName;
@@ -720,7 +717,6 @@ namespace QoL_Mods.Private
                     {
                         name += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
                         teamMembers.Add(DataBase.GetWrestlerFullName(wrestlerParam));
-                        L.D("Added to participants");
                     }
                     else
                     {
@@ -730,7 +726,6 @@ namespace QoL_Mods.Private
                         }
 
                         seconds += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
-                        L.D("Added to Seconds");
                     }
 
                 }
@@ -742,7 +737,6 @@ namespace QoL_Mods.Private
                     GetTeamName(teamMembers, out dbTeamName);
                     if (dbTeamName == String.Empty)
                     {
-                        L.D("Team name is empty: " + name);
                         gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
                         //If title information exists, avoid over-writing it.
@@ -754,7 +748,6 @@ namespace QoL_Mods.Private
                     }
                     else
                     {
-                        L.D("Team name is not empty: " + dbTeamName);
                         gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = dbTeamName;
 
                         //If title information exists, avoid over-writing it.
@@ -767,7 +760,6 @@ namespace QoL_Mods.Private
                 }
                 else
                 {
-                    L.D("Setting team text");
                     //For single wrestlers, we only need to set the modified name.
                     gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
@@ -782,7 +774,6 @@ namespace QoL_Mods.Private
                 //Add seconds to the team
                 if (seconds != String.Empty)
                 {
-                    L.D("Setting Seconds text");
                     gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text +=
                         " w/ " + seconds;
                 }
@@ -794,168 +785,6 @@ namespace QoL_Mods.Private
 
         }
 
-        #endregion
-
-        #region Opponent pins during knock-out
-        //public static List<bool> pinAttempted;
-        //public static int playerCount;
-
-        //[Hook(TargetClass = "Player", TargetMethod = "DecideTargetEnemy", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "Pin Critical Opponent")]
-        //public static bool SetTargetForPinfall(Player p)
-        //{
-        //    try
-        //    {
-        //        if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
-        //        {
-        //            return false;
-        //        }
-
-        //        if (p.PlIdx > 3)
-        //        {
-        //            if (pinAttempted[1])
-        //            {
-        //                return false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (pinAttempted[0])
-        //            {
-        //                return false;
-        //            }
-        //        }
-
-        //        //Determine if target is knocked out
-        //        if (p.PlIdx == 0)
-        //        {
-        //            p.TargetPlIdx = 4;
-        //        }
-        //        else
-        //        {
-        //            p.TargetPlIdx = 0;
-        //        }
-
-        //        Player plObj = PlayerMan.inst.GetPlObj(p.TargetPlIdx);
-        //        if (!plObj)
-        //        {
-        //            return false;
-        //        }
-
-        //        if (!plObj.isKO)
-        //        {
-        //            return false;
-        //        }
-        //        else
-        //        {
-        //            Type typeFromHandle = typeof(Player);
-        //            FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
-        //            float[] array = (float[])field.GetValue(p);
-
-        //            p.DistanceToTarget = Mathf.Sqrt(array[p.TargetPlIdx]);
-        //            return true;
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        L.D("SetTargetForPinfall Exception: " + ex);
-        //        return false;
-        //    }
-        
-
-        //[Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Pin Critical Opponent")]
-        //public static void ResetPinAttempts()
-        //{
-        //    playerCount = MatchConfiguration.GetPlayerCount();
-        //    pinAttempted = new List<bool> { false, false };
-        //    L.D("Player Count (PCO) - " + playerCount);
-        //}
-
-        //[Hook(TargetClass = "PlayerController_AI", TargetMethod = "Update", InjectionLocation = int.MaxValue,
-        //    InjectDirection = HookInjectDirection.Before,
-        //    InjectFlags = HookInjectFlags.PassInvokingInstance,
-        //    Group = "Pin Critical Opponent")]
-        //public static void CheckKnockOut(PlayerController_AI ai)
-        //{
-        //    //Starting with the simplest scenario, a 1v1 matchup.
-        //    //We will consider tag matches (non-tornado) at a later date.
-        //    if (playerCount != 2 || global::MatchMain.inst.isMatchEnd || GlobalWork.GetInst().MatchSetting.isS1Rule)
-        //    {
-        //        return;
-        //    }
-
-        //    if (ai.plIdx > 3)
-        //    {
-        //        if (pinAttempted[1])
-        //        {
-        //            return;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (pinAttempted[0])
-        //        {
-        //            return;
-        //        }
-        //    }
-        //    try
-        //    {
-        //        if (ai.PlObj.State != PlStateEnum.S_GO_POST && ai.PlObj.State != PlStateEnum.S_GO_POST2 &&
-        //                    ai.PlObj.State != PlStateEnum.OnCornerPost && ai.aiAct == AIActEnum.DoNothing)
-        //        {
-        //            Player plObj = PlayerMan.inst.GetPlObj(ai.PlObj.TargetPlIdx);
-        //            if (!plObj)
-        //            {
-        //                return;
-        //            }
-
-        //            if (plObj.State == PlStateEnum.Down_FaceUp || plObj.State == PlStateEnum.Down_FaceDown)
-        //            {
-        //                if (plObj.isKO)
-        //                {
-        //                    if (ai.plIdx > 3)
-        //                    {
-        //                        pinAttempted[1] = true;
-        //                    }
-        //                    else
-        //                    {
-        //                        pinAttempted[0] = true;
-        //                    }
-        //                    //Type typeFromHandle = typeof(Player);
-        //                    //FieldInfo field = typeFromHandle.GetField("distList", BindingFlags.Instance | BindingFlags.NonPublic);
-        //                    //float[] array = (float[])field.GetValue(ai.PlObj);
-
-        //                    //ai.PlObj.DistanceToTarget = Mathf.Sqrt(array[plObj.PlIdx]);
-
-        //                    L.D("Preparing to pin knocked out opponent: " + DataBase.GetWrestlerFullName(plObj.WresParam));
-
-        //                    //Determine if edit should attempt pin fall
-        //                    //High Showmanship and High Flexibility should give a greater chance for pinfalls
-        //                    int baseChance = (ai.PlObj.WresParam.aiParam.personalTraits + ai.PlObj.WresParam.aiParam.flexibility) / 2;
-        //                    int randomValue = UnityEngine.Random.Range(0, 100);
-        //                    L.D("Random vs baseChance: " + randomValue + " vs " + baseChance);
-
-        //                    if (!Ring.inst.TestCollision_OctagonEdge_InRing(0.666667f, plObj.PlPos))
-        //                    {
-        //                        if (ai.IsEffectiveFall())
-        //                        {
-        //                            int value = UnityEngine.Random.Range(6, 8);
-        //                            ai.SetAIAct_DownAtk((AIOpt_Down)value, 240, false);
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        ai.AIActFunc_DragDownOpponent();
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        L.D("CheckKnockOut Exception (Does not cause crashing): " + ex);
-        //    }
-
-        //}
         #endregion
 
         #region Implement Fake Reversal Moves

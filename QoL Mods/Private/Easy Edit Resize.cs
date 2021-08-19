@@ -83,7 +83,6 @@ namespace QoL_Mods.Private
 
         private void UpdateWrestlerPartsByValue(WresIDGroup wrestler)
         {
-            L.D("Running UpdateWrestlerPartsByValue for " + wrestler.Name);
             for (int i = 0; i < 4; i++)
             {
                 try
@@ -91,7 +90,6 @@ namespace QoL_Mods.Private
                     var costumeData = DataBase.GetCostumeData((WrestlerID)wrestler.ID, i);
                     if (costumeData != null)
                     {
-                        L.D("Costume # " + i);
                         costumeData = UpdateCostume(Operation.Addition, costumeData);
                     }
                 }
@@ -104,7 +102,6 @@ namespace QoL_Mods.Private
 
         private void UpdateWrestlerPartsToValue(WresIDGroup wrestler)
         {
-            L.D("Running UpdateWrestlerPartsToValue for " + wrestler.Name);
             for (int i = 0; i < 4; i++)
             {
                 try
@@ -112,7 +109,6 @@ namespace QoL_Mods.Private
                     var costumeData = DataBase.GetCostumeData((WrestlerID)wrestler.ID, i);
                     if (costumeData != null)
                     {
-                        L.D("Costume # " + i);
                         costumeData = UpdateCostume(Operation.Replacement, costumeData);
                     }
                 }
@@ -125,7 +121,6 @@ namespace QoL_Mods.Private
 
         private void ReduceWrestlerPartsByValue(WresIDGroup wrestler)
         {
-            L.D("ReduceWrestlerPartsByValue for " + wrestler.Name);
             for (int i = 0; i < 4; i++)
             {
                 try
@@ -149,19 +144,15 @@ namespace QoL_Mods.Private
             if (headCB.Checked)
             {
                 float headScale = originalCostume.partsScale[(int)PartsTexEnum.Face];
-                L.D("Original Head Scale: " + headScale);
-
+          
                 float newScale = UpdateScale(operand, headScale, (float)headUD.Value / 100);
-                L.D("New Head Scale: " + newScale);
                 originalCostume.partsScale[(int)PartsTexEnum.Face] = newScale;
             }
             if (chestCB.Checked)
             {
                 float chestScale = originalCostume.partsScale[(int)PartsTexEnum.Chest];
-                L.D("Original chest Scale: " + chestScale);
-
+               
                 float newScale = UpdateScale(operand, chestScale, (float)chestUD.Value / 100);
-                L.D("New chest Scale: " + newScale);
                 originalCostume.partsScale[(int)PartsTexEnum.Chest] = newScale;
             }
             if (uarmCB.Checked)
@@ -212,10 +203,8 @@ namespace QoL_Mods.Private
             if (calfCB.Checked)
             {
                 float calfScale = originalCostume.partsScale[(int)PartsTexEnum.Shin];
-                L.D("Original calf Scale: " + calfScale);
-
+              
                 float newScale = UpdateScale(operand, calfScale, (float)calfUD.Value / 100);
-                L.D("New calf Scale: " + newScale);
                 originalCostume.partsScale[(int)PartsTexEnum.Shin] = newScale;
             }
             if (feetCB.Checked)

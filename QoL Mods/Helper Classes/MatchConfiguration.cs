@@ -197,7 +197,6 @@ namespace MatchConfig
                 }
             }
 
-            L.D(name + " not found in Referee Data.");
             return null;
         }
     }

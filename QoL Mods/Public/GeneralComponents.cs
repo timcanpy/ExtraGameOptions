@@ -249,7 +249,7 @@ namespace QoL_Mods
             {
                 if (defender.Zone == ZoneEnum.InRing)
                 {
-                    L.D("Referee will check in " + (baseCheckTime + (baseCheckIncrement * mRef.RefePrm.walkSpeed)) / 1000 + " seconds");
+                    //L.D("Referee will check in " + (baseCheckTime + (baseCheckIncrement * mRef.RefePrm.walkSpeed)) / 1000 + " seconds");
 
                     if (refTimer == null)
                     {
@@ -269,11 +269,11 @@ namespace QoL_Mods
         {
             try
             {
-                L.D("Ref Timer has elapsed");
+                //L.D("Ref Timer has elapsed");
                 refTimer.Stop();
                 if (RefereeIsFree(RefereeMan.inst.GetRefereeObj()))
                 {
-                    L.D("Checking for fall");
+                    //L.D("Checking for fall");
                     CheckForFall(defenderIdx);
                 }
             }
@@ -374,7 +374,6 @@ namespace QoL_Mods
                     plObj.WresParam.spRecovery = recoveryParams[i, 1];
                     plObj.WresParam.hpRecovery_Bleeding = recoveryParams[i, 2];
                     plObj.WresParam.spRecovery_Bleeding = recoveryParams[i, 3];
-                    L.D("Reset recovery for " + DataBase.GetWrestlerFullName(plObj.WresParam));
                 }
             }
         }
@@ -438,7 +437,6 @@ namespace QoL_Mods
                 plObj.WresParam.spRecovery = 0;
                 plObj.WresParam.hpRecovery_Bleeding = 0;
                 plObj.WresParam.spRecovery_Bleeding = 0;
-                L.D("Updated recovery for " + DataBase.GetWrestlerFullName(plObj.WresParam));
             }
         }
         #endregion
@@ -510,7 +508,6 @@ namespace QoL_Mods
                 //If the check fails, do nothing
                 if (UnityEngine.Random.Range(0f, 10f + (resilience * 5)) < 11)
                 {
-                    L.D("Resilient Critical Check failed");
                     return;
                 }
 
@@ -565,47 +562,7 @@ namespace QoL_Mods
             }
 
             String currentPath = System.IO.Directory.GetCurrentDirectory();
-            //String critBundlePath = Path.Combine(currentPath, rootFolder) + Path.Combine(imageFolder, critBundleName);
-            //L.D("CritBundlePath: " + critBundlePath);
-
-            //Ensure the Assetbundle is loaded
-            //if (!File.Exists(critBundlePath))
-            //{
-            //    return;
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        if (critImageBundle == null)
-            //        {
-            //            critImageBundle = AssetBundle.LoadFromFile(critBundlePath);
-
-            //            if (critImageBundle != null)
-            //            {
-            //                foreach (string asset in critImageBundle.GetAllAssetNames())
-            //                {
-            //                    L.D("Asset: " + asset);
-            //                }
-            //            }
-            //            critObject = critImageBundle.LoadAsset<GameObject>("Critical");
-            //            critImageBundle.Unload(false);
-            //            if (critObject == null)
-            //            {
-            //                L.D("Crit Object Is Null");
-            //            }
-            //            else
-            //            {
-            //                L.D("Crit Object is " + critObject.name);
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        L.D("LoadingAssetException: " + ex);
-            //    }
-            //}
-
+       
             //Get files in the image folder
             String ringName = "";
             MatchSetting settings = GlobalWork.GetInst().MatchSetting;
@@ -694,7 +651,6 @@ namespace QoL_Mods
             //Handle instances where an attacker did not cause a critical
             if (attacker < 0 || attacker > 7)
             {
-                L.D("Attacker value out of range: " + attacker);
                 return;
             }
 
@@ -704,7 +660,6 @@ namespace QoL_Mods
             //Determine whether a custom image should be used
             if (image.Equals(_noImageValue) || !File.Exists(image))
             {
-                L.D("Image file does not exist: " + image);
                 global::MatchSEPlayer.inst.PlayMatchSE(global::MatchSEEnum.Critical, 1f, -1);
                 MatchUI.inst.gameObj_Critical.SetActive(true);
             }
@@ -713,29 +668,6 @@ namespace QoL_Mods
                 ShowCustomCritImage(image);
             }
         }
-
-
-        //[Hook(TargetClass = "Referee", TargetMethod = "CallFight", InjectionLocation = 0,
-        //    InjectDirection = HookInjectDirection.Before,
-        //    InjectFlags = HookInjectFlags.None,
-        //    Group = "ChangeCritImage")]
-        //public static void SetFightImageCopy()
-        //{
-        //    if (critObject != null)
-        //    {
-        //        return;
-        //    }
-        //    try
-        //    {
-        //        //critImage = UnityEngine.Object.Instantiate(MatchUI.inst.gameObj_Fight.transform.FindChild("Image_Fight").gameObject);
-        //        critObject = MatchUI.inst.gameObj_Critical;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        L.D("Error Setting Up Custom Critical Image: " + e);
-        //        critObject = null;
-        //    }
-        //}
 
         [Hook(TargetClass = "MatchUI", TargetMethod = "Show_Critical", InjectionLocation = 0,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance | HookInjectFlags.ModifyReturn,
@@ -750,22 +682,9 @@ namespace QoL_Mods
             try
             {
 
-                //if (critObject == null)
-                //{
-                //    L.D("Crit Object is Null");
-                //    return;
-                //}
-
-                //if (currentObject == null)
-                //{
-                //    currentObject = UnityEngine.Object.Instantiate(critObject, new Vector3(0, 0, 0), Quaternion.identity);
-                //}
-
-                //GameObject criticalImage = GameObject.Find(currentObject.name);
                 GameObject criticalImage = MatchUI.inst.gameObj_Critical;
                 if (criticalImage == null)
                 {
-                    L.D("Can't Find Critical GameObject");
                     return;
                 }
 
@@ -782,14 +701,12 @@ namespace QoL_Mods
                     Image img = criticalImage.GetComponent<Image>();
                     if (img == null)
                     {
-                        L.D("Can't find image component");
                         return;
                     }
                     img.sprite = sprite;
 
                     MatchSEPlayer.inst.PlayMatchSE(MatchSEEnum.Critical, 1f, -1);
                     criticalImage.SetActive(true);
-                    L.D("Replacing Critical Image with " + imageName);
                 }
             }
             catch (Exception e)
@@ -997,32 +914,6 @@ namespace QoL_Mods
                 return false;
             }
         }
-
-        //[Hook(TargetClass = "FormAnimator", TargetMethod = "InitAnimation", InjectionLocation = 135,
-        //    InjectDirection = HookInjectDirection.Before,
-        //    InjectFlags = HookInjectFlags.PassInvokingInstance, Group = "Recovery Taunts")]
-        //public static void ReplaceCurrentSkill(FormAnimator animator)
-        //{
-        //    try
-        //    {
-        //        if (animator.plObj == null || animator.AnmReqType != AnmReqTypeEnum.SkillID || tauntData == null)
-        //        {
-        //            return;
-        //        }
-
-        //        //Ensure that the priority chain is not broken
-        //        if (tauntData[animator.plObj.PlIdx] != null)
-        //        {
-        //            animator.CurrentSkill = tauntData[animator.plObj.PlIdx];
-        //            tauntData[animator.plObj.PlIdx] = null;
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        L.D("ReplaceCurrentSkillError: " + e);
-        //    }
-
-        //}
 
         [Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "Recovery Taunts")]
         public static void RefreshTauntSlots()
@@ -1405,7 +1296,6 @@ namespace QoL_Mods
         {
             if (!refe)
             {
-                L.D("Submission check: referee is null");
                 return;
             }
             global::Player player = global::PlayerMan.inst.GetPlObj(refe.TargetPlIdx);
@@ -1587,8 +1477,6 @@ namespace QoL_Mods
                         };
                         break;
                     default:
-                        //Do not play a submission grunt
-                        L.D("Invalid grunt: " + voiceType);
                         return;
                 }
 
@@ -1652,10 +1540,6 @@ namespace QoL_Mods
                 {
                     Audience.inst.PlayCheerVoice(cheer, (int)player.WresParam.charismaRank);
                 }
-                else
-                {
-                    L.D("No Ukemi Notification for " + wrestler + " in " + ringName + ": " + cheer);
-                }
             }
             catch (Exception e)
             {
@@ -1693,7 +1577,6 @@ namespace QoL_Mods
             {
                 if (sd.filteringType == SkillFilteringType.Headbutt && sd.anmType == SkillAnmTypeEnum.Pair)
                 {
-                    L.D("Checking bleed chance on user for " + sd.skillName[1]);
                     if (sd.bleedingRate > 0)
                     {
                         int rngValue = (int)UnityEngine.Random.Range(0, 100f);
@@ -1924,15 +1807,13 @@ namespace QoL_Mods
                 if (GlobalParam.TitleMatch_BeltData != null)
                     appeal += 2;
 
-                L.D("Audience Appeal: " + appeal);
-
+                
                 //If the maximum average is greater than the final appeal, increase the final value
                 //Not valid for matches with only two edits
                 int maxAppeal = GetMaxCharisma() + GetMaxRank();
 
                 if (maxAppeal > appeal && GetPlayerList().Length > 2)
                 {
-                    L.D("Max Appeal: " + maxAppeal + "\n");
                     double difference = appeal - maxAppeal;
 
                     if (difference > 3)
@@ -2008,7 +1889,6 @@ namespace QoL_Mods
 
             rank = rank / GetPlayerList().Length;
 
-            L.D("Average rank: " + rank);
             return Math.Ceiling(rank);
         }
         public static double GetAverageCharisma()
@@ -2030,7 +1910,6 @@ namespace QoL_Mods
 
             charisma = charisma / GetPlayerList().Length;
 
-            L.D("Average Charisma: " + charisma);
             return Math.Ceiling(charisma);
         }
         public static int GetMaxRank()
@@ -2141,7 +2020,6 @@ namespace QoL_Mods
                         //Check for ModPack, ensure that we aren't over-riding any options.
                         if (CheckForMOTWMatch())
                         {
-                            L.D("This is a MOTWMatch");
                             return;
                         }
 
@@ -2192,7 +2070,6 @@ namespace QoL_Mods
                                     config.Bgms[UnityEngine.Random.Range(0, config.Bgms.Count)]);
                                 Menu_SoundManager.MyMusic_SelectFile_Match = matchBGM;
 
-                                L.D("Loading BGM " + matchBGM + " for " + configRingName);
                                 configRingName = "";
                                 break;
                             }
@@ -2430,7 +2307,6 @@ namespace QoL_Mods
                 //Ensure we aren't running the check twice
                 if (tosSkill != 0)
                 {
-                    L.D("TOS replacement already in progress");
                     return false;
                 }
 
@@ -2447,7 +2323,6 @@ namespace QoL_Mods
                 //If HP and SP are equal, perform normal test of strength
                 if (defender.SP == attacker.SP && defender.HP == attacker.HP)
                 {
-                    L.D("TOSFail: Defender HP & SP = Attacker");
                     return false;
                 }
 
@@ -2455,18 +2330,10 @@ namespace QoL_Mods
                 {
                     if (defender.HP > attacker.HP)
                     {
-                        L.D("TOSFail: Defender HP > Attacker");
                         return false;
                     }
                 }
-                //else if (defender.SP > attacker.SP)
-                //{
-                //    L.D("TOSFail: Defender SP > Attacker");
-                //    L.D("Defender SP: " + defender.SP);
-                //    L.D("Attacker SP: " + attacker.SP);
-                //    return false;
-                //}
-
+               
                 List<Skill> tosMoves = new List<Skill>();
 
                 //Determine whether we should pull from the Wrestler or Style list
@@ -2489,7 +2356,6 @@ namespace QoL_Mods
                     {
                         if (move.Name.Trim().Equals(style))
                         {
-                            L.D("Match found");
                             tosMoves = move.Skills;
                             break;
                         }
@@ -2498,7 +2364,6 @@ namespace QoL_Mods
 
                 if (tosMoves.Count == 0)
                 {
-                    L.D("No style move found");
                     return false;
                 }
 
@@ -2506,14 +2371,9 @@ namespace QoL_Mods
                 int rngValue = (int)UnityEngine.Random.Range(1f, 10f);
                 if (rngValue > 8)
                 {
-                    L.D("Failed TOS replacement attempt: " + rngValue);
                     return false;
                 }
-                else
-                {
-                    L.D("Success TOS replacement attempt: " + rngValue);
-                }
-
+               
                 int skillID = tosMoves[UnityEngine.Random.Range(0, tosMoves.Count)].SkillID;
 
                 //Handle the Clinch action
@@ -2528,12 +2388,9 @@ namespace QoL_Mods
                     }
                 }
 
-                L.D("Replacing TOS with " + DataBase.GetSkillName((SkillID)skillID));
-
                 //Ensure that animListData move exists
                 if (DataBase.GetSkillName((SkillID)skillID).Equals(String.Empty))
                 {
-                    L.D("Invalid Skill ID");
                     return false;
                 }
 
@@ -2578,7 +2435,6 @@ namespace QoL_Mods
 
                 if (!plObj)
                 {
-                    L.D("VerifyTOSMove - Player Not Found");
                     return;
                 }
 
@@ -2688,7 +2544,6 @@ namespace QoL_Mods
             {
                 ignoreDC = 10;
             }
-            L.D("Ignore checks set to " + ignoreChecksRemaining);
         }
 
         [Hook(TargetClass = "Referee", TargetMethod = "Process_SubmissionCheck", InjectionLocation = 22,
@@ -2724,15 +2579,9 @@ namespace QoL_Mods
                             ignoreChecksRemaining -= 1;
                             ignoreFlag = true;
 
-                            L.D("Check passed, " + ignoreChecksRemaining + " checks remaining. DC is now " + ignoreDC +
-                                ".");
                             ShowMessage(CleanUpName(referee.RefePrm.name) + " is watching closely!");
                             ignoreTimer.Start();
                             return true;
-                        }
-                        else
-                        {
-                            L.D("Check failed: " + roll + " vs " + ignoreDC + ".");
                         }
                     }
                 }
@@ -2747,7 +2596,6 @@ namespace QoL_Mods
 
         public static void ResetIgnoreCheck(System.Object source, System.Timers.ElapsedEventArgs e)
         {
-            L.D("Resetting ignore flag");
             ignoreFlag = false;
             ignoreTimer.Stop();
         }
