@@ -1216,7 +1216,7 @@ namespace QoL_Mods
                         {
                             Interval = 700
                         };
-                        voiceTimer.Elapsed += OnTimedEvent;
+                        voiceTimer.Elapsed += OnRefCallEvent;
                     }
 
                     voiceTimer.Start();
@@ -1231,7 +1231,7 @@ namespace QoL_Mods
             return false;
         }
 
-        public static void OnTimedEvent(System.Object source, System.Timers.ElapsedEventArgs e)
+        public static void OnRefCallEvent(System.Object source, System.Timers.ElapsedEventArgs e)
         {
             try
             {

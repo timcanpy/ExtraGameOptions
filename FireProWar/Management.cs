@@ -715,8 +715,7 @@ namespace FireProWar
                     {
                         matchDetails = promotion.MatchDetails.Count + 1 + ") " +
                             DateTime.Now.ToString("MM/dd/yyyy HH:mm") + " - " + titleMatch + "Draw between " +
-                                       GetTeamName(ResultPosition.Draw) + " (" + rating + "%) in " +
-                                       GlobalWork.GetInst().MatchSetting.MatchTime + " minutes.";
+                                       GetTeamName(ResultPosition.Draw) + " (" + rating + "%).";
                     }
                     else
                     {

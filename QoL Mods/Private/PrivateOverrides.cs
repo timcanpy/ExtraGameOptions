@@ -536,7 +536,9 @@ namespace QoL_Mods.Private
         }
 
         #endregion
-
+        public static System.Timers.Timer cheerTimer;
+        public static int cheerCharisma = 0;
+        public static FightStyleEnum cheerStyle;
         #region Cheer on Reversal
 
         [Hook(TargetClass = "MatchMisc", TargetMethod = "CheckReversal_Grapple", InjectionLocation = 118,
@@ -554,11 +556,37 @@ namespace QoL_Mods.Private
                 {
                     return;
                 }
-                PlayCheer(plObj.WresParam.fightStyle, ((int)plObj.WresParam.charismaRank + damageLevel) / 2);
+                if (cheerTimer == null)
+                {
+                    cheerTimer = new System.Timers.Timer
+                    {
+                        Interval = 350
+                    };
+                    cheerTimer.Elapsed += OnCheerEvent;
+                }
+
+                cheerTimer.Start();
+                cheerCharisma = ((int)plObj.WresParam.charismaRank + damageLevel) / 2;
+                cheerStyle = plObj.WresParam.fightStyle;
             }
             catch (Exception e)
             {
                 L.D("Error on Play Reversal Cheer:" + e);
+            }
+
+        }
+
+        public static void OnCheerEvent(System.Object source, System.Timers.ElapsedEventArgs e)
+        {
+            try
+            {
+                L.D("Execute reversal cheer");
+                PlayCheer(cheerStyle, cheerCharisma);
+                cheerTimer.Stop();
+            }
+            catch (Exception exception)
+            {
+                L.D("CheerTimer_Tick Error: " + exception);
             }
 
         }
