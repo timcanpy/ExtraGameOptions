@@ -14,7 +14,7 @@ namespace QoL_Mods.Public
         #region Variables
 
         public static UkemiNotificationForm form = null;
-        private static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        private static List<EF_WresIDGroup> wrestlerList = new List<EF_WresIDGroup>();
         private static System.String saveFileName = "Notifications.dat";
         private static System.String saveFolderName = "./EGOData/";
         #endregion
@@ -153,7 +153,7 @@ namespace QoL_Mods.Public
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
@@ -175,7 +175,7 @@ namespace QoL_Mods.Public
         {
             uk_ringResults.Items.Clear();
 
-            foreach (var ring in MatchConfiguration.LoadRings())
+            foreach (var ring in EF_MatchConfiguration.LoadRings())
             {
                 uk_ringResults.Items.Add(new RingInfo { editRingID = ring.editRingID, name = ring.name });
             }
@@ -195,7 +195,7 @@ namespace QoL_Mods.Public
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
@@ -211,7 +211,7 @@ namespace QoL_Mods.Public
                 }
                 else
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         uk_wrestlerResults.Items.Add(wrestler);
                     }
@@ -232,7 +232,7 @@ namespace QoL_Mods.Public
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (var ring in MatchConfiguration.LoadRings())
+                    foreach (var ring in EF_MatchConfiguration.LoadRings())
                     {
                         if (query.ToLower().Equals(ring.name.ToLower()) || ring.name.ToLower().Contains(query.ToLower()))
                         {
@@ -478,7 +478,7 @@ namespace QoL_Mods.Public
 
             try
             {
-                WresIDGroup wrestler = (WresIDGroup)uk_wrestlerResults.SelectedItem;
+                EF_WresIDGroup wrestler = (EF_WresIDGroup)uk_wrestlerResults.SelectedItem;
 
                 foreach (UkemiNotification item in uk_wrestlers.Items)
                 {

@@ -43,7 +43,7 @@ namespace QoL_Mods
         public static RecoveryTauntForm form = null;
         public static Skill rollSkill = new Skill("Rolling", -100);
         public static HashSet<Skill> wakeUpSkills = new HashSet<Skill>();
-        public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        public static List<EF_WresIDGroup> wrestlerList = new List<EF_WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleWT.dat", "WrestlerWT.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
         private static Modversion modVersion = Modversion.v2;
@@ -828,7 +828,7 @@ namespace QoL_Mods
 
             try
             {
-                String wrestler = ((WresIDGroup)wu_wrestlerResults.SelectedItem).Name;
+                String wrestler = ((EF_WresIDGroup)wu_wrestlerResults.SelectedItem).Name;
                 WakeUpGroup group = new WakeUpGroup(wrestler);
                 wu_wrestlers.Items.Add(group);
                 if (wu_wrestlers.Items.Count > 0)
@@ -875,7 +875,7 @@ namespace QoL_Mods
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) ||
                             wrestler.Name.ToLower().Contains(query.ToLower()))
@@ -908,11 +908,11 @@ namespace QoL_Mods
             try
             {
                 this.wu_wrestlerResults.Items.Clear();
-                wrestlerList = new List<WresIDGroup>();
+                wrestlerList = new List<EF_WresIDGroup>();
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
 

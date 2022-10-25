@@ -38,7 +38,7 @@ namespace QoL_Mods.Private
         {
             rc_refResults.Items.Clear();
 
-            foreach (var item in MatchConfiguration.LoadReferees())
+            foreach (var item in EF_MatchConfiguration.LoadReferees())
             {
                 rc_refResults.Items.Add(item);
             }
@@ -52,7 +52,7 @@ namespace QoL_Mods.Private
         {
             rc_bgmResult.Items.Clear();
 
-            foreach (var item in MatchConfiguration.LoadBGMs())
+            foreach (var item in EF_MatchConfiguration.LoadBGMs())
             {
                 rc_bgmResult.Items.Add(item);
             }
@@ -66,7 +66,7 @@ namespace QoL_Mods.Private
         {
             rc_ringResults.Items.Clear();
 
-            foreach (var item in MatchConfiguration.LoadRings())
+            foreach (var item in EF_MatchConfiguration.LoadRings())
             {
                 rc_ringResults.Items.Add(item.name);
             }
@@ -149,7 +149,7 @@ namespace QoL_Mods.Private
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (var bgm in MatchConfiguration.LoadBGMs())
+                    foreach (var bgm in EF_MatchConfiguration.LoadBGMs())
                     {
                         if (query.ToLower().Equals(bgm.ToLower()) || bgm.ToLower().Contains(query.ToLower()))
                         {
@@ -179,7 +179,7 @@ namespace QoL_Mods.Private
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (var referee in MatchConfiguration.LoadReferees())
+                    foreach (var referee in EF_MatchConfiguration.LoadReferees())
                     {
                         if (query.ToLower().Equals(referee.Data.Prm.name.ToLower()) || referee.Data.Prm.name.ToLower().Contains(query.ToLower()))
                         {
@@ -209,7 +209,7 @@ namespace QoL_Mods.Private
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (var ring in MatchConfiguration.LoadRings())
+                    foreach (var ring in EF_MatchConfiguration.LoadRings())
                     {
                         if (query.ToLower().Equals(ring.name.ToLower()) || ring.name.ToLower().Contains(query.ToLower()))
                         {

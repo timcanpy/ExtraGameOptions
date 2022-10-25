@@ -17,7 +17,7 @@ namespace QoL_Mods.Private
     {
         #region Variables
         private static List<Skill> moves = new List<Skill>();
-        public static List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        public static List<EF_WresIDGroup> wrestlerList = new List<EF_WresIDGroup>();
         private static String saveFolderName = "./EGOData/";
         private static String wrestlerFile = "WrestlerTOS.dat";
         private static String styleFile = "StyleTOS.dat";
@@ -41,11 +41,11 @@ namespace QoL_Mods.Private
             try
             {
                 this.tos_wrestlerResults.Items.Clear();
-                wrestlerList = new List<WresIDGroup>();
+                wrestlerList = new List<EF_WresIDGroup>();
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
 
@@ -75,7 +75,7 @@ namespace QoL_Mods.Private
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) ||
                             wrestler.Name.ToLower().Contains(query.ToLower()))
@@ -346,7 +346,7 @@ namespace QoL_Mods.Private
 
             try
             {
-                String wrestler = ((WresIDGroup)tos_wrestlerResults.SelectedItem).Name;
+                String wrestler = ((EF_WresIDGroup)tos_wrestlerResults.SelectedItem).Name;
                 TOSMoves moves = new TOSMoves(wrestler);
                 tos_wrestlers.Items.Add(moves);
 

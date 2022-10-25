@@ -8,19 +8,19 @@ using QoL_Mods.Helper_Classes;
 
 namespace MatchConfig
 {
-    public static class MatchConfiguration
+    public static class EF_MatchConfiguration
     {
     
-        public static WrestlerID GetWrestlerNo(WresIDGroup wrestler)
+        public static WrestlerID GetWrestlerNo(EF_WresIDGroup wrestler)
         {
             return (WrestlerID)wrestler.ID;
         }
 
-        public static WresIDGroup GetWrestlerData(int id, List<WresIDGroup> wrestlerList)
+        public static EF_WresIDGroup GetWrestlerData(int id, List<EF_WresIDGroup> wrestlerList)
         {
-            WresIDGroup wrestlerData = null;
+            EF_WresIDGroup wrestlerData = null;
 
-            foreach (WresIDGroup wrestler in wrestlerList)
+            foreach (EF_WresIDGroup wrestler in wrestlerList)
             {
                 if (wrestler.ID == id)
                 {
@@ -117,13 +117,13 @@ namespace MatchConfig
             return bgms;
         }
 
-        public static List<WresIDGroup> LoadWrestlers()
+        public static List<EF_WresIDGroup> LoadWrestlers()
         {
-            List<WresIDGroup> wrestlers = new List<WresIDGroup>();
+            List<EF_WresIDGroup> wrestlers = new List<EF_WresIDGroup>();
 
             foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
             {
-                WresIDGroup wresIDGroup = new WresIDGroup
+                EF_WresIDGroup wresIDGroup = new EF_WresIDGroup
                 {
                     Name = DataBase.GetWrestlerFullName(current.wrestlerParam),
                     ID = (Int32)current.editWrestlerID,
@@ -145,9 +145,9 @@ namespace MatchConfig
             return promotions;
         }
 
-        public static List<WresIDGroup> LoadWrestlersFromPromotion(List<WresIDGroup> wrestlerList, String promotionName, List<String> promotionList)
+        public static List<EF_WresIDGroup> LoadWrestlersFromPromotion(List<EF_WresIDGroup> wrestlerList, String promotionName, List<String> promotionList)
         {
-            List<WresIDGroup> wrestlers = new List<WresIDGroup>();
+            List<EF_WresIDGroup> wrestlers = new List<EF_WresIDGroup>();
             return wrestlers;
         }
 

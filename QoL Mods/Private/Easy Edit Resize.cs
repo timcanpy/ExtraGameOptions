@@ -23,7 +23,7 @@ namespace QoL_Mods.Private
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
@@ -42,19 +42,19 @@ namespace QoL_Mods.Private
 
         private void updateBy_Current_Click(object sender, EventArgs e)
         {
-            WresIDGroup wrestler = (WresIDGroup)wrestlerList.SelectedItem;
+            EF_WresIDGroup wrestler = (EF_WresIDGroup)wrestlerList.SelectedItem;
             UpdateWrestlerPartsByValue(wrestler);
         }
 
         private void UpdateTo_Current_Click(object sender, EventArgs e)
         {
-            WresIDGroup wrestler = (WresIDGroup)wrestlerList.SelectedItem;
+            EF_WresIDGroup wrestler = (EF_WresIDGroup)wrestlerList.SelectedItem;
             UpdateWrestlerPartsToValue(wrestler);
         }
 
         private void UpdateBy_All_Click(object sender, EventArgs e)
         {
-            foreach (WresIDGroup wrestler in wrestlerList.Items)
+            foreach (EF_WresIDGroup wrestler in wrestlerList.Items)
             {
                 UpdateWrestlerPartsByValue(wrestler);
             }
@@ -62,26 +62,26 @@ namespace QoL_Mods.Private
 
         private void UpdateTo_All_Click(object sender, EventArgs e)
         {
-            foreach (WresIDGroup wrestler in wrestlerList.Items)
+            foreach (EF_WresIDGroup wrestler in wrestlerList.Items)
             {
                 UpdateWrestlerPartsToValue(wrestler);
             }
         }
         private void ReduceBy_Current_Click(object sender, EventArgs e)
         {
-            WresIDGroup wrestler = (WresIDGroup)wrestlerList.SelectedItem;
+            EF_WresIDGroup wrestler = (EF_WresIDGroup)wrestlerList.SelectedItem;
             ReduceWrestlerPartsByValue(wrestler);
         }
 
         private void ReduceBy_All_Click(object sender, EventArgs e)
         {
-            foreach (WresIDGroup wrestler in wrestlerList.Items)
+            foreach (EF_WresIDGroup wrestler in wrestlerList.Items)
             {
                 ReduceWrestlerPartsByValue(wrestler);
             }
         }
 
-        private void UpdateWrestlerPartsByValue(WresIDGroup wrestler)
+        private void UpdateWrestlerPartsByValue(EF_WresIDGroup wrestler)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -100,7 +100,7 @@ namespace QoL_Mods.Private
             }
         }
 
-        private void UpdateWrestlerPartsToValue(WresIDGroup wrestler)
+        private void UpdateWrestlerPartsToValue(EF_WresIDGroup wrestler)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -119,7 +119,7 @@ namespace QoL_Mods.Private
             }
         }
 
-        private void ReduceWrestlerPartsByValue(WresIDGroup wrestler)
+        private void ReduceWrestlerPartsByValue(EF_WresIDGroup wrestler)
         {
             for (int i = 0; i < 4; i++)
             {

@@ -12,7 +12,7 @@ namespace QoL_Mods
     public partial class SearchForm : Form
     {
         #region Variables
-        private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        private List<EF_WresIDGroup> wrestlerList = new List<EF_WresIDGroup>();
         private static List<String> promotionList = new List<string>();
         public static SearchForm form = null;
         #endregion
@@ -38,7 +38,7 @@ namespace QoL_Mods
             promotionList.Clear();
             this.we_promotionBox.Items.Clear();
 
-            foreach (String promotion in MatchConfiguration.LoadPromotions())
+            foreach (String promotion in EF_MatchConfiguration.LoadPromotions())
             {
                 this.we_promotionBox.Items.Add(promotion);
                 promotionList.Add(promotion);
@@ -61,7 +61,7 @@ namespace QoL_Mods
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
@@ -96,7 +96,7 @@ namespace QoL_Mods
         {
             we_refList.Items.Clear();
 
-            foreach (RefereeInfo referee in MatchConfiguration.LoadReferees())
+            foreach (RefereeInfo referee in EF_MatchConfiguration.LoadReferees())
             {
                 we_refList.Items.Add(referee);
             }
@@ -119,7 +119,7 @@ namespace QoL_Mods
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
@@ -140,7 +140,7 @@ namespace QoL_Mods
                     return;
                 }
 
-                foreach (WresIDGroup current in wrestlerList)
+                foreach (EF_WresIDGroup current in wrestlerList)
                 {
                     if (current.Group == FindGroup(we_promotionBox.SelectedItem.ToString()))
                     {
@@ -168,7 +168,7 @@ namespace QoL_Mods
             {
                 //Menu_SceneManager manager = new Menu_SceneManager();
                 CreateMenu_SceneManager manager = new CreateMenu_SceneManager();
-                WresIDGroup wrestler = (WresIDGroup)we_resultList.SelectedItem;
+                EF_WresIDGroup wrestler = (EF_WresIDGroup)we_resultList.SelectedItem;
                 WrestlerID wID = (WrestlerID)wrestler.ID;
                 L.D("Loading " + wrestler.Name + " at " + wrestler.ID);
                 if (global::CreateMenu_SceneManager.edit_data == null)
@@ -206,7 +206,7 @@ namespace QoL_Mods
                 return;
             }
 
-            var wrestler = (WresIDGroup)we_resultList.SelectedItem;
+            var wrestler = (EF_WresIDGroup)we_resultList.SelectedItem;
             System.Diagnostics.Process.Start("https://en.wikipedia.org/wiki/" + wrestler.Name);
 
         }
@@ -229,7 +229,7 @@ namespace QoL_Mods
         }
         private void we_resultList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            WresIDGroup edit = (WresIDGroup)we_resultList.SelectedItem;
+            EF_WresIDGroup edit = (EF_WresIDGroup)we_resultList.SelectedItem;
             ws_promotionLbl.Text = promotionList[edit.Group] + " (" + (DataBase.GetWrestlerParam((WrestlerID)edit.ID).fightStyle + ")"); ;
         }
         private void SearchEdit()
@@ -241,7 +241,7 @@ namespace QoL_Mods
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
@@ -262,7 +262,7 @@ namespace QoL_Mods
                     return;
                 }
 
-                foreach (WresIDGroup current in wrestlerList)
+                foreach (EF_WresIDGroup current in wrestlerList)
                 {
                     if (current.Group == FindGroup(we_promotionBox.SelectedItem.ToString()))
                     {

@@ -144,7 +144,7 @@ namespace Ace.AttireExtension
             this.refereeList.Items.Clear();
             AttireExtensionForm.refDatList.Clear();
             AttireExtensionForm.refIDList.Clear();
-            foreach (RefereeInfo current in MatchConfiguration.LoadReferees())
+            foreach (RefereeInfo current in EF_MatchConfiguration.LoadReferees())
             {
                 AttireExtensionForm.refDatList.Add(current);
                 AttireExtensionForm.refIDList.Add((int)current.Data.editRefereeID);

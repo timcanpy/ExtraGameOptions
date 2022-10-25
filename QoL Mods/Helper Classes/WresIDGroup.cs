@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MatchConfig
 {
-    public class WresIDGroup
+    public class EF_WresIDGroup
     {
         public string Name;
 

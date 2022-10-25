@@ -249,8 +249,7 @@ namespace QoL_Mods
             {
                 if (defender.Zone == ZoneEnum.InRing)
                 {
-                    //L.D("Referee will check in " + (baseCheckTime + (baseCheckIncrement * mRef.RefePrm.walkSpeed)) / 1000 + " seconds");
-
+                 
                     if (refTimer == null)
                     {
                         refTimer = new System.Timers.Timer();
@@ -269,11 +268,9 @@ namespace QoL_Mods
         {
             try
             {
-                //L.D("Ref Timer has elapsed");
                 refTimer.Stop();
                 if (RefereeIsFree(RefereeMan.inst.GetRefereeObj()))
                 {
-                    //L.D("Checking for fall");
                     CheckForFall(defenderIdx);
                 }
             }
@@ -1561,7 +1558,10 @@ namespace QoL_Mods
             Group = "Referee Calls Downs")]
         public static void CallForDownBreaks()
         {
-            global::MatchSEPlayer.inst.PlayRefereeVoice(global::RefeVoiceEnum.Break);
+            if (RefereeMan.inst.GetRefereeObj().State != RefeStateEnum.DownCount)
+            {
+                global::MatchSEPlayer.inst.PlayRefereeVoice(global::RefeVoiceEnum.Break);
+            }
         }
         #endregion
 

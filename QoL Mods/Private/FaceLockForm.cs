@@ -16,7 +16,7 @@ namespace QoL_Mods
     public partial class FaceLockForm : Form
     {
         public static FaceLockForm flForm = null;
-        private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        private List<EF_WresIDGroup> wrestlerList = new List<EF_WresIDGroup>();
         private static String[] saveFileNames = new String[] { "StyleFL.dat", "WrestlerFL.dat" };
         private static String[] saveFolderNames = new String[] { "./EGOData/" };
 
@@ -672,7 +672,7 @@ namespace QoL_Mods
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
@@ -688,7 +688,7 @@ namespace QoL_Mods
                 }
                 else
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (EF_WresIDGroup wrestler in wrestlerList)
                     {
                         nl_wrestlerResults.Items.Add(wrestler);
                     }
@@ -709,7 +709,7 @@ namespace QoL_Mods
                     return;
                 }
 
-                string wrestler = ((WresIDGroup)nl_wrestlerResults.SelectedItem).Name;
+                string wrestler = ((EF_WresIDGroup)nl_wrestlerResults.SelectedItem).Name;
                 FaceLockMoves move = new FaceLockMoves(new QoL_Mods.Data_Classes.Style(wrestler, FightStyleEnum.American));
                 nl_wresterList.Items.Add(move);
                 wrestlerMoves.Add(move);
@@ -795,7 +795,7 @@ namespace QoL_Mods
                 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    EF_WresIDGroup wresIDGroup = new EF_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;

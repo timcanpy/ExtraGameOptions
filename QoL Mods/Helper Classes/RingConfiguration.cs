@@ -98,7 +98,7 @@ namespace QoL_Mods.Helper_Classes
                         continue;
                     }
 
-                    RefereeInfo referee = MatchConfiguration.GetRefereeInfo(item);
+                    RefereeInfo referee = EF_MatchConfiguration.GetRefereeInfo(item);
                     
                     if (referee == null)
                     {
