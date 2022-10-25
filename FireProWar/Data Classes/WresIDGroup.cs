@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MatchConfig
 {
-    public class WresIDGroup
+    public class FPT_WresIDGroup
     {
         public string Name;
 

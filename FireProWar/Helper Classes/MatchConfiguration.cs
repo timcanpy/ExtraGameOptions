@@ -10,16 +10,16 @@ namespace MatchConfig
     public static class MatchConfiguration
     {
 
-        public static WrestlerID GetWrestlerNo(WresIDGroup wrestler)
+        public static WrestlerID GetWrestlerNo(FPT_WresIDGroup wrestler)
         {
             return (WrestlerID)wrestler.ID;
         }
 
-        public static WresIDGroup GetWrestlerData(int id, List<WresIDGroup> wrestlerList)
+        public static FPT_WresIDGroup GetWrestlerData(int id, List<FPT_WresIDGroup> wrestlerList)
         {
-            WresIDGroup wrestlerData = null;
+            FPT_WresIDGroup wrestlerData = null;
 
-            foreach (WresIDGroup wrestler in wrestlerList)
+            foreach (FPT_WresIDGroup wrestler in wrestlerList)
             {
                 if (wrestler.ID == id)
                 {
@@ -119,13 +119,13 @@ namespace MatchConfig
             return bgms;
         }
 
-        public static List<WresIDGroup> LoadWrestlers()
+        public static List<FPT_WresIDGroup> LoadWrestlers()
         {
-            List<WresIDGroup> wrestlers = new List<WresIDGroup>();
+            List<FPT_WresIDGroup> wrestlers = new List<FPT_WresIDGroup>();
 
             foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
             {
-                WresIDGroup wresIDGroup = new WresIDGroup
+                FPT_WresIDGroup wresIDGroup = new FPT_WresIDGroup
                 {
                     Name = DataBase.GetWrestlerFullName(current.wrestlerParam),
                     ID = (Int32)current.editWrestlerID,
@@ -147,9 +147,9 @@ namespace MatchConfig
             return promotions;
         }
 
-        public static List<WresIDGroup> LoadWrestlersFromPromotion(List<WresIDGroup> wrestlerList, String promotionName, List<String> promotionList)
+        public static List<FPT_WresIDGroup> LoadWrestlersFromPromotion(List<FPT_WresIDGroup> wrestlerList, String promotionName, List<String> promotionList)
         {
-            List<WresIDGroup> wrestlers = new List<WresIDGroup>();
+            List<FPT_WresIDGroup> wrestlers = new List<FPT_WresIDGroup>();
             return wrestlers;
         }
 

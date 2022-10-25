@@ -6,18 +6,16 @@ using MatchConfig;
 using Data_Classes;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 using System.Drawing;
-using System.Text.RegularExpressions;
-using Newtonsoft.Json;
 using FireProWar.Data_Classes;
+using ModPack;
 
 namespace FireProWar
 {
     public partial class War_Form : Form
     {
         #region Variables
-        private List<WresIDGroup> wrestlerList = new List<WresIDGroup>();
+        private List<MatchConfig.FPT_WresIDGroup> wrestlerList = new List<MatchConfig.FPT_WresIDGroup>();
         private static List<String> promotionList = new List<string>();
         private static String[] promotionStyle = new String[] { "Strong-Style", "King's Road", "Mixed Martial Arts", "Hardcore", "American", "Boxing", "Lucha", "Amateur Wrestling", "Sumo", "Indy" };
         private static Dictionary<String, FightStyleEnum[]> groupFightingStyles;
@@ -105,7 +103,7 @@ namespace FireProWar
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    WresIDGroup wresIDGroup = new WresIDGroup();
+                    MatchConfig.FPT_WresIDGroup wresIDGroup = new MatchConfig.FPT_WresIDGroup();
                     wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
                     wresIDGroup.ID = (Int32)current.editWrestlerID;
                     wresIDGroup.Group = current.wrestlerParam.groupID;
@@ -610,7 +608,7 @@ namespace FireProWar
 
                 if (!query.TrimStart().TrimEnd().Equals(""))
                 {
-                    foreach (WresIDGroup wrestler in wrestlerList)
+                    foreach (MatchConfig.FPT_WresIDGroup wrestler in wrestlerList)
                     {
                         if (query.ToLower().Equals(wrestler.Name.ToLower()) || wrestler.Name.ToLower().Contains(query.ToLower()))
                         {
@@ -625,13 +623,13 @@ namespace FireProWar
                     return;
                 }
 
-                if (ms_groupList.SelectedItem.ToString().Contains("未登録"))
+                if (ms_groupList.SelectedItem.ToString().Contains("???"))
                 {
                     this.LoadSubs();
                     return;
                 }
 
-                foreach (WresIDGroup current in wrestlerList)
+                foreach (MatchConfig.FPT_WresIDGroup current in wrestlerList)
                 {
                     if (current.Group == FindGroup(ms_groupList.SelectedItem.ToString()))
                     {
@@ -675,7 +673,7 @@ namespace FireProWar
 
             try
             {
-                WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
+                MatchConfig.FPT_WresIDGroup wrestler = (MatchConfig.FPT_WresIDGroup)ms_searchResults.SelectedItem;
                 FindImage(ImageTypes.Wrestler, wrestler.Name);
 
                 //Set Championship Data
@@ -1062,7 +1060,7 @@ namespace FireProWar
                     return;
                 }
 
-                WresIDGroup wrestler = (WresIDGroup)ms_searchResults.SelectedItem;
+                MatchConfig.FPT_WresIDGroup wrestler = (MatchConfig.FPT_WresIDGroup)ms_searchResults.SelectedItem;
                 if (employeesAdded.Contains(wrestler.Name))
                 {
                     //Find Wrestler's Promotion
@@ -1099,7 +1097,7 @@ namespace FireProWar
                 ms_wrestlerSearch.Text = "";
                 SearchWrestler();
                 Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
-                foreach (WresIDGroup wrestler in ms_searchResults.Items)
+                foreach (MatchConfig.FPT_WresIDGroup wrestler in ms_searchResults.Items)
                 {
                     if (!employeesAdded.Contains(wrestler.Name))
                     {
@@ -1176,7 +1174,7 @@ namespace FireProWar
                 promotion.AddHistory(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
                 ". Final Record: " + employee.GetRecord());
 
-                if(fpw_popups.Checked)
+                if (fpw_popups.Checked)
                 {
                     MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name + " has left the promotion.~" + employee.GetMatchHistory() +
                                ". Final Record: " + employee.GetRecord(), "Resignation Notification", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1193,7 +1191,7 @@ namespace FireProWar
             }
 
         }
-        private Promotion HireWrestler(WresIDGroup wrestler, Promotion promotion)
+        private Promotion HireWrestler(MatchConfig.FPT_WresIDGroup wrestler, Promotion promotion)
         {
             //WRS_PROF profile = DataBase.GetWrestlerProfile((WrestlerID)wrestler.ID);
             WrestlerParam param = DataBase.GetWrestlerParam((WrestlerID)wrestler.ID);
@@ -1396,7 +1394,7 @@ namespace FireProWar
 
             Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
 
-            fpw_promoHistory.Text = FilterHistory(((WresIDGroup)fpw_historyWrestler.SelectedItem).Name, FilterType.Term, promotion.History);
+            fpw_promoHistory.Text = FilterHistory(((MatchConfig.FPT_WresIDGroup)fpw_historyWrestler.SelectedItem).Name, FilterType.Term, promotion.History);
         }
 
         private void fpw_matchWrestler_SelectedIndexChanged(object sender, EventArgs e)
@@ -1408,7 +1406,7 @@ namespace FireProWar
 
             Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
 
-            fpw_detailsView.Text = FilterHistory(((WresIDGroup)fpw_matchWrestler.SelectedItem).Name, FilterType.Term, String.Join("~", promotion.MatchDetails.ToArray()));
+            fpw_detailsView.Text = FilterHistory(((MatchConfig.FPT_WresIDGroup)fpw_matchWrestler.SelectedItem).Name, FilterType.Term, String.Join("~", promotion.MatchDetails.ToArray()));
         }
 
         private void fpw_MatchTerm_LostFocus(object sender, System.EventArgs e)
@@ -1835,7 +1833,7 @@ namespace FireProWar
                                              " has been promoted (Rank " +
                                              ms_moraleRank.Items[employee.MoraleRank].ToString() + ").");
 
-                        if(fpw_popups.Checked)
+                        if (fpw_popups.Checked)
                         {
                             MessageBox.Show(DateTime.Now.ToString("MM/dd/yyyy HH:mm") + "-" + employee.Name +
                                             " has been promoted (Rank " +
@@ -2419,6 +2417,7 @@ namespace FireProWar
                 List<String> jsonPromotions = new List<string>();
                 List<String> jsonEmployees = new List<string>();
                 List<String> jsonTitles = new List<string>();
+                List<String> jsonTeams = new List<string>();
 
                 foreach (Promotion promotion in fpw_promoList.Items)
                 {
@@ -2438,10 +2437,15 @@ namespace FireProWar
                     jsonTitles.Add(JSONBuilder.CreateJSONTitle(item, userID));
                 }
 
+                foreach (Team team in ModPack.ModPack.Teams)
+                {
+                    jsonTeams.Add(JSONBuilder.CreateJSONTeam(team.Members, team.Name, userID));
+                }
 
                 File.WriteAllLines(saveFolderNames[0] + "Promotions.json", jsonPromotions.ToArray());
                 File.WriteAllLines(saveFolderNames[0] + "Employees.json", jsonEmployees.ToArray());
                 File.WriteAllLines(saveFolderNames[0] + "Titles.json", jsonTitles.ToArray());
+                File.WriteAllLines(saveFolderNames[0] + "Teams.json", jsonTeams.ToArray());
 
             }
             catch (Exception e)

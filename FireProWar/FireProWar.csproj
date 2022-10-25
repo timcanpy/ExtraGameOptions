@@ -11,6 +11,7 @@
     <AssemblyName>FireProWar</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,26 +31,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\NewMatchTypes\MoreMatchTypes\bin\Debug\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.Core.3.5.1.34\lib\net35\AWSSDK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.DynamoDBv2, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.DynamoDBv2.3.5.2\lib\net35\AWSSDK.DynamoDBv2.dll</HintPath>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="ModPack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\ModPack.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PWGR Framework">
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\PWGR Framework.dll</HintPath>
@@ -73,18 +67,7 @@
   <ItemGroup>
     <Compile Include="Data Classes\EnumCollection.cs" />
     <Compile Include="Data Classes\JSONBuilder.cs" />
-    <Compile Include="Data Classes\Storage Objects\Employee.cs" />
-    <Compile Include="Data Classes\Storage Objects\History.cs" />
-    <Compile Include="Data Classes\Storage Objects\MoraleRank.cs" />
-    <Compile Include="Data Classes\Storage Objects\Owner.cs" />
     <Compile Include="Data Classes\Employee.cs" />
-    <Compile Include="Data Classes\Storage Objects\Promotion.cs" />
-    <Compile Include="Data Classes\Storage Objects\Region.cs" />
-    <Compile Include="Data Classes\Storage Objects\Result.cs" />
-    <Compile Include="Data Classes\Storage Objects\Ring.cs" />
-    <Compile Include="Data Classes\Storage Objects\Roster.cs" />
-    <Compile Include="Data Classes\Storage Objects\Style.cs" />
-    <Compile Include="Data Classes\Storage Objects\Title.cs" />
     <Compile Include="Helper Classes\GeneralManager.cs" />
     <Compile Include="Helper Classes\MatchEndFunctions.cs" />
     <Compile Include="Data Classes\Promotion.cs" />
@@ -118,6 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.DynamoDBv2.3.5.2\analyzers\dotnet\cs\AWSSDK.DynamoDBv2.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data Classes\Storage Objects\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

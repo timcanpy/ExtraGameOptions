@@ -1,12 +1,9 @@
 ﻿using Data_Classes;
-using DG;
 using ModPack;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace FireProWar.Data_Classes
 {
@@ -184,6 +181,36 @@ namespace FireProWar.Data_Classes
             return stringWriter.ToString();
         }
 
+        public static String CreateJSONTeam(List<String> members, String name, String userID)
+        {
+            StringWriter stringWriter = new StringWriter();
+            JsonTextWriter writer = new JsonTextWriter(stringWriter);
+
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("id");
+            writer.WriteValue(userID + name);
+
+            writer.WritePropertyName("ownerId");
+            writer.WriteValue(userID);
+
+            writer.WritePropertyName("name");
+            writer.WriteValue(name);
+
+            writer.WritePropertyName("members");
+            writer.WriteStartArray();
+            foreach (String member in members)
+            {
+                writer.WriteValue(member);
+            }
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
+
+            return stringWriter.ToString();
+        }
+
+
         private static String CheckName(String name, TitleMatch_Data title)
         {
             if (title.playerNum == TagType.Single || name == String.Empty)
@@ -202,7 +229,7 @@ namespace FireProWar.Data_Classes
                 }
             }
 
-            if(champTeam == null)
+            if (champTeam == null)
             {
                 return name;
             }
