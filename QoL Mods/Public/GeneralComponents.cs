@@ -21,29 +21,31 @@ using MoreMatchTypes;
 namespace QoL_Mods
 {
     #region Group Descriptions
-    [GroupDescription(Group = "Wrestler Search", Name = "Edit Search Tool", Description = "Provides a UI for easily loading edits and referee within Edit Mode.\nNote that any changes to a Referee are automatically saved when exiting Edit Mode.")]
-    [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
     [GroupDescription(Group = "Ignore Downtime", Name = "Attacker Ignores Pinfall/Submission Downtime", Description = "Attacker immediately recovers after a pinfall or grounded submission.")]
-    [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
-    [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
-    [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
-    [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
-    [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
-    [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
-    [GroupDescription(Group = "GruntForSubmission", Name = "Edits Sell Holds", Description = "Makes edits play voice lines when under a submission hold.\nFrequency is determined by Showmanship and the current Damage Threshold.")]
-    [GroupDescription(Group = "UkeNotification", Name = "Ukemi Trigger Notification", Description = "Plays specific crowd cheers (HolyShit, ThisIsWrestling, Stomping) when a wrestler triggers Ukemi.\nCheers may trigger when a match ends.")]
-    [GroupDescription(Group = "Bleeding Headbutts", Name = "Dangerous Headbutts", Description = "Grapple Headbutts can cause self bleeding")]
-    [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
-    [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
-    [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
-    [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
-    [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
     [GroupDescription(Group = "Ring Config", Name = "Automatic Ring Configuration", Description = "Automates match settings for different rings.")]
-    [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents.")]
-    [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
-    [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "Allows players to override the Test of Strength animation with custom actions.")]
+    [GroupDescription(Group = "ChangeCritImage", Name = "Change Critical Image", Description = "Allows players to replace the Critical! graphic with custom images.\n Images should be placed in the Fire Prowrestling World\\EGOData\\Images folder.\n All images must measure 648 x 328 or they will be ignored.")]
+    [GroupDescription(Group = "Corner Daze", Name = "Corner Moves Cause Stun", Description = "Makes corner moves executed during large/critical damage force the opponent to stand up dazed, if the attacker's finisher is a Corner To Center/Apron To Ring/Dive vs Standing Opponent move.")]
+    [GroupDescription(Group = "Resilient Critical", Name = "Critical Resilience", Description = "Gives players a chance to ignore the knock out effects of criticals based on their body part defense. Players receive slight spirit & breathing restoration to remain competitive afterwards.")]
+    [GroupDescription(Group = "Bleeding Headbutts", Name = "Dangerous Headbutts", Description = "Grapple Headbutts can cause self bleeding")]
+    [GroupDescription(Group = "Allow Dives", Name = "Defender Sets up Dives", Description = "Gives the defender a chance (based on Showmanship and damage taken) to allow the completion of dives by the attacker.\n1) For standing dives, the defender will stand up dazed.\n2) For ground dives, the defender will remain down longer. If he is face down, the defender will also roll over to allow potential pinning dives to occur.")]
+    [GroupDescription(Group = "Dynamic Attendance", Name = "Dynamic Attendance Level", Description = "Set the Attendance Level based on participating edits' Rank & Charisma.")]
+    [GroupDescription(Group = "Audience Sounds", Name = "Dynamic Audience Sounds", Description = "Makes the audience use different cheers during a match, instead of the default every time.")]
+    [GroupDescription(Group = "Wrestler Search", Name = "Edit Search Tool", Description = "Provides a UI for easily loading edits and referee within Edit Mode.\nNote that any changes to a Referee are automatically saved when exiting Edit Mode.")]
+    [GroupDescription(Group = "GruntForSubmission", Name = "Edits Sell Holds", Description = "Makes edits play voice lines when under a submission hold.\nFrequency is determined by Showmanship and the current Damage Threshold.")]
     [GroupDescription(Group = "Enable Seconds", Name = "Enable Seconds in All Matches", Description = "Allows players to select Seconds in all matches.\nThis can have unintended effects for modes like S-1, so use your best judgement.")]
+    [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents.")]
+    [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
+    [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
+    [GroupDescription(Group = "NoRingOut", Name = "No Move Ring Outs", Description = "Provides options to control whether moves can throw wrestlers out of the ring.")]
+    [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
+    [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
+    [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
+    [GroupDescription(Group = "2.9Call", Name = "Referee Calls Near Falls", Description = "Makes the referee announce near falls on 2.9 counts\nUses the 'Down Count 2' audio file.")]
+    [GroupDescription(Group = "Ref Costume", Name = "Referee Costume Extension", Description = "Extends the number of referee costumes, using costume files.\nThis was originally a component of Ace's AttireExtension mod.")]
     [GroupDescription(Group = "Submission Ignore", Name = "Referee Ignores Submissions", Description = "Gives the referee a chance, based on his Tolerance, to ignore 'Give Up' attempts from the defender.")]
+    [GroupDescription(Group = "TOS Override", Name = "Test of Strength Replacement", Description = "Allows players to override the Test of Strength animation with custom actions.")]
+    [GroupDescription(Group = "UkeNotification", Name = "Ukemi Trigger Notification", Description = "Plays specific crowd cheers (HolyShit, ThisIsWrestling, Stomping) when a wrestler triggers Ukemi.\nCheers may trigger when a match ends.")]
+    
     #endregion
     #region Field Access
     #region Miscellaneous Fields
@@ -169,6 +171,18 @@ namespace QoL_Mods
                 return TOSForm.form;
             }
         }
+
+        [ControlPanel(Group = "NoRingOut")]
+        public static Form RingOutForm()
+        {
+            if (RingOut.form == null)
+            {
+                return new RingOut();
+            }
+            {
+                return RingOut.form;
+            }
+        }
         #endregion
 
         #region Force Preemptive Pinfall Count
@@ -249,7 +263,7 @@ namespace QoL_Mods
             {
                 if (defender.Zone == ZoneEnum.InRing)
                 {
-                 
+
                     if (refTimer == null)
                     {
                         refTimer = new System.Timers.Timer();
@@ -541,12 +555,8 @@ namespace QoL_Mods
         public static String imageFolder = "Images";
         public static String _noImageValue = "None";
         public static Dictionary<int, String> critImages = new Dictionary<int, String>();
-        public static string critBundleName = "critical.obj";
-        //public static GameObject critObject = null;
-        //public static AssetBundle critImageBundle;
-        //public static UnityEngine.Object currentObject;
-
-
+        public static GameObject customCritObj = null;
+        
         [Hook(TargetClass = "MatchMain", TargetMethod = "InitMatch", InjectionLocation = int.MaxValue,
             InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
         public static void SetCriticalImages()
@@ -559,7 +569,7 @@ namespace QoL_Mods
             }
 
             String currentPath = System.IO.Directory.GetCurrentDirectory();
-       
+
             //Get files in the image folder
             String ringName = "";
             MatchSetting settings = GlobalWork.GetInst().MatchSetting;
@@ -612,12 +622,19 @@ namespace QoL_Mods
                         imageName = splitImageName[0];
                     }
 
-                    //Look for ring images
-                    if (imageName.Equals(editName) || imageName.Equals(ringName))
+                    //Break if we find wrestler-specific images
+                    if (imageName.Equals(editName))
                     {
                         critImages.Add(id, image);
                         imageFound = true;
                         break;
+                    }
+                    //Continue to check even if we find a ring image.
+                    //There may be wrestler-specific images that should override it.
+                    else if (imageName.Equals(ringName))
+                    {
+                        critImages.Add(id, image);
+                        imageFound = true;
                     }
                 }
 
@@ -678,32 +695,35 @@ namespace QoL_Mods
         {
             try
             {
-
-                GameObject criticalImage = MatchUI.inst.gameObj_Critical;
-                if (criticalImage == null)
-                {
-                    return;
-                }
+                customCritObj = (GameObject)GameObject.Instantiate(MatchUI.inst.gameObj_Critical, MatchUI.inst.gameObj_Critical.transform.parent);
+                GameObject.Destroy(customCritObj.GetComponent<Animator>());
+                customCritObj.SetActive(false);
 
                 Sprite sprite = null;
                 String imagePath = imageName;
 
                 byte[] data = File.ReadAllBytes(imageName);
-                Texture2D texture = new Texture2D(2, 2);
+                Texture2D texture = new Texture2D(4, 4);
                 texture.LoadImage(data);
-                sprite = Sprite.Create(texture, new Rect(0f, 0f, 648f, 328f), Vector2.zero, 100f);
+                sprite = Sprite.Create(texture, new Rect(0f, 0f, 640f, 320f), Vector2.zero, 50f);
 
-                if (sprite != null && criticalImage != null)
+                if (sprite != null && customCritObj != null)
                 {
-                    Image img = criticalImage.GetComponent<Image>();
+                    Image img = customCritObj.GetComponent<Image>();
                     if (img == null)
                     {
                         return;
                     }
                     img.sprite = sprite;
 
+                    //Showing Custom Critical Image
                     MatchSEPlayer.inst.PlayMatchSE(MatchSEEnum.Critical, 1f, -1);
-                    criticalImage.SetActive(true);
+                    customCritObj.SetActive(true);
+
+                    System.Timers.Timer criticalTimer = new System.Timers.Timer();
+                    criticalTimer.Interval = 3000;
+                    criticalTimer.Elapsed += critTimer_Elapsed;
+                    criticalTimer.Start();
                 }
             }
             catch (Exception e)
@@ -711,6 +731,14 @@ namespace QoL_Mods
                 L.D("CustomCritError: " + e.Message);
             }
 
+        }
+
+        private static void critTimer_Elapsed(System.Object obj, System.Timers.ElapsedEventArgs e)
+        {
+            System.Timers.Timer cTimer = obj as System.Timers.Timer;
+            cTimer.Stop();
+            cTimer.Dispose();
+            customCritObj.SetActive(false);
         }
 
         //[Hook(TargetClass = "MatchMain", TargetMethod = "EndMatch", InjectionLocation = int.MaxValue, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.None, Group = "ChangeCritImage")]
@@ -1807,7 +1835,7 @@ namespace QoL_Mods
                 if (GlobalParam.TitleMatch_BeltData != null)
                     appeal += 2;
 
-                
+
                 //If the maximum average is greater than the final appeal, increase the final value
                 //Not valid for matches with only two edits
                 int maxAppeal = GetMaxCharisma() + GetMaxRank();
@@ -2333,7 +2361,7 @@ namespace QoL_Mods
                         return false;
                     }
                 }
-               
+
                 List<Skill> tosMoves = new List<Skill>();
 
                 //Determine whether we should pull from the Wrestler or Style list
@@ -2373,7 +2401,7 @@ namespace QoL_Mods
                 {
                     return false;
                 }
-               
+
                 int skillID = tosMoves[UnityEngine.Random.Range(0, tosMoves.Count)].SkillID;
 
                 //Handle the Clinch action
@@ -2579,7 +2607,7 @@ namespace QoL_Mods
                             ignoreChecksRemaining -= 1;
                             ignoreFlag = true;
 
-                            ShowMessage(CleanUpName(referee.RefePrm.name) + " is watching closely!");
+                            //ShowMessage(CleanUpName(referee.RefePrm.name) + " is watching closely!");
                             ignoreTimer.Start();
                             return true;
                         }
@@ -2600,6 +2628,19 @@ namespace QoL_Mods
             ignoreTimer.Stop();
         }
 
+        #endregion
+
+        #region Check Fall To Out of Ring Moves
+        [Hook(TargetClass = "Player", TargetMethod = "CheckFallToOutOfRing", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "NoRingOut")]
+        public static bool NoMovesToOutOfRing(Player plObj)
+        {
+            if (RingOut.form.ringoutcb.Checked)
+            {
+                plObj.TerrainColType = WrestlerAnmData.TerrainColTypeEnum.Normal;
+                return true;
+            }
+            return false;
+        }
         #endregion
 
         #region General Helper Methods

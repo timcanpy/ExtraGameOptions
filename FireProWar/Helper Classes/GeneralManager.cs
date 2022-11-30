@@ -9,22 +9,11 @@ namespace FireProWar
     public class FPTDataManager : MonoBehaviour
     {
         public static FPTDataManager inst = null;
-        private static String[] saveFolderNames = new String[] { "./EGOData/" };
-        private static String[] saveFileNames = new String[] { "FPWData.dat", "FPWConfig.dat" };
+        private static readonly String[] saveFolderNames = new String[] { "./EGOData/" };
+        private static readonly String[] saveFileNames = new String[] { "FPWData.dat", "FPWConfig.dat" };
         public static String currentVersion = "V2";
         public static char listSeparator = ':';
-        private static String promotionDivider = "|--Promotion--|";
-
-        private void Awake()
-        {
-            inst = this;
-            //DO INITIALIZATION AND LOADING STUFF HERE
-        }
-
-        private void OnApplicationQuit()
-        {
-            inst = null;
-        }
+        private static readonly String promotionDivider = "|--Promotion--|";
 
         public void Save()
         {

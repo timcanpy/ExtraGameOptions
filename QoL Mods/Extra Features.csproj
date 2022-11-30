@@ -42,6 +42,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\NewMatchTypes\MoreMatchTypes\bin\Debug\MoreMatchTypes.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Fire Prowrestling World\FireProWrestlingW_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PWGR Framework, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL Files\PWGR Framework.dll</HintPath>
@@ -77,6 +81,12 @@
       <DependentUpon>Easy Edit Resize.cs</DependentUpon>
     </Compile>
     <Compile Include="Private\PrivateOverrides.cs" />
+    <Compile Include="Public\RingOut.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Public\RingOut.Designer.cs">
+      <DependentUpon>RingOut.cs</DependentUpon>
+    </Compile>
     <Compile Include="Public\TOSForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +180,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Private\Easy Edit Resize.resx">
       <DependentUpon>Easy Edit Resize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Public\RingOut.resx">
+      <DependentUpon>RingOut.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Public\TOSForm.resx">
       <DependentUpon>TOSForm.cs</DependentUpon>

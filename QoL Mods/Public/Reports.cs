@@ -7,6 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using ModPack;
+//using Newtonsoft.Json;
+using DG;
 
 namespace QoL_Mods
 {
@@ -23,6 +26,19 @@ namespace QoL_Mods
         {
             form = this;
             InitializeComponent();
+            FormClosing += Reports_FormClosing;
+        }
+
+        private void Reports_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //    try
+            //    {
+            //        SaveTeams();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        L.D("Reports Team Save Error: " + ex); 
+            //    }
         }
 
         private void reports_recovery_Click(object sender, EventArgs e)
@@ -57,6 +73,70 @@ namespace QoL_Mods
                 }
             }
 
+        }
+
+        //Temporary, until FireProWar form build issue is resolved
+        //private void SaveTeams()
+        //{
+        //    List<String> jsonTeams = new List<string>();
+        //    string userID = "76561198100955117";
+
+        //    foreach (Team team in ModPack.ModPack.Teams)
+        //    {
+        //        jsonTeams.Add(CreateJSONTeam(team.Members, team.Name, userID));
+        //    }
+
+        //    File.WriteAllLines("./EGOData/Teams.json", jsonTeams.ToArray());
+        //}
+
+        //private static String CreateJSONTeam(List<String> members, String name, String userID)
+        //{
+        //    StringWriter stringWriter = new StringWriter();
+        //    JsonTextWriter writer = new JsonTextWriter(stringWriter);
+
+        //    writer.WriteStartObject();
+
+        //    writer.WritePropertyName("id");
+        //    writer.WriteValue(userID + name);
+
+        //    writer.WritePropertyName("ownerId");
+        //    writer.WriteValue(userID);
+
+        //    writer.WritePropertyName("name");
+        //    writer.WriteValue(name);
+
+        //    writer.WritePropertyName("members");
+        //    writer.WriteStartArray();
+        //    foreach (String member in members)
+        //    {
+        //        writer.WriteValue(member);
+        //    }
+        //    writer.WriteEndArray();
+
+        //    writer.WriteEndObject();
+
+        //    return stringWriter.ToString();
+        //}
+
+        private void btn_teamSave_Click(object sender, EventArgs e)
+        {
+            //SaveTeams();
+        }
+
+        private void critTestbtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Player plObj = PlayerMan.inst.GetPlObj(0);
+                if (plObj)
+                {
+                    plObj.ProcessCritical(plObj.GetSkillData_Equip(SkillSlotEnum.Grapple_XA));
+                }
+            }
+            catch (Exception ex)
+            {
+                L.D("Error on Crit Test Btn: " + ex.Message);
+            }
         }
     }
 }

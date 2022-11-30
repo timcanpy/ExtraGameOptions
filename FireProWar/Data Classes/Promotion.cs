@@ -21,7 +21,7 @@ namespace Data_Classes
         }
 
         #region Properties
-        private char listSeparator = ':';
+        private readonly char listSeparator = ':';
 
         private String name;
 
@@ -196,15 +196,17 @@ namespace Data_Classes
                     }
 
                     String[] employeeDetails = employeeInfo.Split(':');
-                    Employee employee = new Employee();
-                    employee.Name = employeeDetails[0];
-                    employee.Type = CorrectEmployeeType(employeeDetails[1]);
-                    employee.Region = employeeDetails[2];
-                    employee.MatchCount = int.Parse(employeeDetails[3]);
-                    employee.AverageRating = float.Parse(employeeDetails[4]);
-                    employee.Wins = int.Parse(employeeDetails[5]);
-                    employee.Losses = int.Parse(employeeDetails[6]);
-                    employee.Draws = int.Parse(employeeDetails[7]);
+                    Employee employee = new Employee
+                    {
+                        Name = employeeDetails[0],
+                        Type = CorrectEmployeeType(employeeDetails[1]),
+                        Region = employeeDetails[2],
+                        MatchCount = int.Parse(employeeDetails[3]),
+                        AverageRating = float.Parse(employeeDetails[4]),
+                        Wins = int.Parse(employeeDetails[5]),
+                        Losses = int.Parse(employeeDetails[6]),
+                        Draws = int.Parse(employeeDetails[7])
+                    };
 
                     //Ensure that the rank is in bounds
                     int rank = int.Parse(employeeDetails[8]);

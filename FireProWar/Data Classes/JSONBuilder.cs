@@ -210,7 +210,6 @@ namespace FireProWar.Data_Classes
             return stringWriter.ToString();
         }
 
-
         private static String CheckName(String name, TitleMatch_Data title)
         {
             if (title.playerNum == TagType.Single || name == String.Empty)

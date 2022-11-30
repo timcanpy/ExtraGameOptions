@@ -64,7 +64,7 @@ namespace FireProWar
                         ringName = global::SaveData.GetInst().GetEditRingData(settings.ringID).name.Replace(War_Form.listSeparator, ' ');
                     }
                 }
-                catch (ArgumentOutOfRangeException e)
+                catch (ArgumentOutOfRangeException)
                 {
                     ringName = "none";
                 }

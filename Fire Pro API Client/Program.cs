@@ -392,6 +392,7 @@ namespace Fire_Pro_API_Client
             string promotionFile = "Promotions.json";
             string wrestlerFile = "Employees.json";
             string titleFile = "Titles.json";
+            string teamFile = "Teams.json";
 
             //Creating the necessary objects for API transfer
             if (File.Exists(Path.Combine(folderName, promotionFile)))

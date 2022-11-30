@@ -17,15 +17,15 @@ using MatchConfig;
 namespace QoL_Mods.Private
 {
     #region Group Descriptions
-    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(PRIVATE) Allows players to override the default Face Lock attack with custom actions.\nIncompatible with the ModPack's Extended Move Lists.")]
-    [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(PRIVATE) Lower stamina increases the chance that a defender will reverse moves.")]
-    [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(PRIVATE) Audience may cheer when a defender reverses a move.")]
-    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(PRIVATE) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
-    [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(PRIVATE) Executes random stage taunt for teams in a match.")]
-    [GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
-    [GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
-    [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNote that any change is permanent, use at your own risk.")]
-    [GroupDescription(Group = "IllegalFinish", Name = "Pin After Partner's Finisher", Description = "(PRIVATE) Allows legal man in tag matches to pin after a partner's finisher")]
+    [GroupDescription(Group = "Reversal Cheer", Name = "Cheer on Reversals", Description = "(NEW) Audience may cheer when a defender reverses a move.")]
+    [GroupDescription(Group = "Custom Reversals", Name = "Custom Reversal Moves", Description = "(NEW) Adds functionality to perform Custom Moves as Reversals under certain conditions.")]
+    [GroupDescription(Group = "IllegalFinish", Name = "Pin After Partner's Finisher", Description = "(NEW) Allows legal man in tag matches to pin after a partner's finisher")]
+    [GroupDescription(Group = "Entrance Taunts", Name = "Random Entrance Taunts", Description = "(NEW) Executes random stage taunt for teams in a match.")]
+    [GroupDescription(Group = "Stamina Affects Reversals", Name = "Stamina Affects Reversals", Description = "(NEW) Lower stamina increases the chance that a defender will reverse moves.")]
+    [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(NEW) Allows players to override the default Face Lock attack with custom actions.\nThe ModPack's Extended Move List version will override this.")]
+    //[GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
+    //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
+    //[GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Resizes parts for your edits.\nNote that any change is permanent, use at your own risk.")]
 
     #endregion
 
@@ -37,8 +37,8 @@ namespace QoL_Mods.Private
     [FieldAccess(Class = "PlayerController_AI", Field = "PlObj", Group = "Face Lock")]
     [FieldAccess(Class = "PlayerController_AI", Field = "Process_OpponentStands_AfterHammerThrow", Group = "Face Lock")]
 
-    [FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
-    [FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
+    //[FieldAccess(Class = "PlayerController_AI", Field = "IsEffectiveFall", Group = "Pin Critical Opponent")]
+    //[FieldAccess(Class = "PlayerController_AI", Field = "AIActFunc_DragDownOpponent", Group = "Pin Critical Opponent")]
 
     #endregion
 
@@ -70,17 +70,17 @@ namespace QoL_Mods.Private
             }
         }
 
-        [ControlPanel(Group = "Easy Edit Resize")]
-        public static Form EEForm()
-        {
-            if (EasyResizeForm.eeForm == null)
-            {
-                return new EasyResizeForm();
-            }
-            {
-                return EasyResizeForm.eeForm;
-            }
-        }
+        //[ControlPanel(Group = "Easy Edit Resize")]
+        //public static Form EEForm()
+        //{
+        //    if (EasyResizeForm.eeForm == null)
+        //    {
+        //        return new EasyResizeForm();
+        //    }
+        //    {
+        //        return EasyResizeForm.eeForm;
+        //    }
+        //}
 
         #endregion
 
@@ -665,153 +665,153 @@ namespace QoL_Mods.Private
 
         #region Customize Nameplate Text
 
-        [Hook(TargetClass = "EntranceScene", TargetMethod = "DispName", InjectionLocation = int.MaxValue,
-            InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
-            Group = "Update Plates")]
-        public static void UpdateNamePlate(EntranceScene es)
-        {
-            try
-            {
-                int num = 0;
-                if (es.plIdxList[0] >= 4)
-                {
-                    num = 1;
-                }
+        //[Hook(TargetClass = "EntranceScene", TargetMethod = "DispName", InjectionLocation = int.MaxValue,
+        //    InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.PassInvokingInstance,
+        //    Group = "Update Plates")]
+        //public static void UpdateNamePlate(EntranceScene es)
+        //{
+        //    try
+        //    {
+        //        int num = 0;
+        //        if (es.plIdxList[0] >= 4)
+        //        {
+        //            num = 1;
+        //        }
 
-                //Required to access entrance scene properties
-                Type typeFromHandle = typeof(EntranceScene);
-                FieldInfo field = typeFromHandle.GetField("namePlate", BindingFlags.Instance | BindingFlags.NonPublic);
-                GameObject[] array = (GameObject[])field.GetValue(es);
-                GameObject gameObject = array[num];
+        //        //Required to access entrance scene properties
+        //        Type typeFromHandle = typeof(EntranceScene);
+        //        FieldInfo field = typeFromHandle.GetField("namePlate", BindingFlags.Instance | BindingFlags.NonPublic);
+        //        GameObject[] array = (GameObject[])field.GetValue(es);
+        //        GameObject gameObject = array[num];
 
-                MatchSetting matchSetting = global::GlobalWork.inst.MatchSetting;
-                String name = "";
-                String title = "";
-                String seconds = "";
-                List<String> teamMembers = new List<String>();
-                for (int i = 0; i < es.plNum; i++)
-                {
-                    global::MatchWrestlerInfo matchWrestlerInfo = matchSetting.matchWrestlerInfo[es.plIdxList[i]];
-                    global::WrestlerParam wrestlerParam =
-                        global::DataBase.GetWrestlerParam(matchWrestlerInfo.wrestlerID);
-                    bool isNickEmpty = wrestlerParam.nickName.Trim() == String.Empty;
+        //        MatchSetting matchSetting = global::GlobalWork.inst.MatchSetting;
+        //        String name = "";
+        //        String title = "";
+        //        String seconds = "";
+        //        List<String> teamMembers = new List<String>();
+        //        for (int i = 0; i < es.plNum; i++)
+        //        {
+        //            global::MatchWrestlerInfo matchWrestlerInfo = matchSetting.matchWrestlerInfo[es.plIdxList[i]];
+        //            global::WrestlerParam wrestlerParam =
+        //                global::DataBase.GetWrestlerParam(matchWrestlerInfo.wrestlerID);
+        //            bool isNickEmpty = wrestlerParam.nickName.Trim() == String.Empty;
 
-                    //Add delimeters to the titles
-                    if (i != 0)
-                    {
-                        if (!matchWrestlerInfo.isSecond)
-                        {
-                            if (i == es.plNum - 1)
-                            {
-                                if (!isNickEmpty)
-                                {
-                                    if (title != String.Empty)
-                                    {
-                                        title += " & ";
-                                    }
-                                }
+        //            //Add delimeters to the titles
+        //            if (i != 0)
+        //            {
+        //                if (!matchWrestlerInfo.isSecond)
+        //                {
+        //                    if (i == es.plNum - 1)
+        //                    {
+        //                        if (!isNickEmpty)
+        //                        {
+        //                            if (title != String.Empty)
+        //                            {
+        //                                title += " & ";
+        //                            }
+        //                        }
 
-                                if (name != String.Empty)
-                                {
-                                    name += " & ";
-                                }
-                            }
-                            else
-                            {
-                                if (!isNickEmpty)
-                                {
-                                    if (title != String.Empty)
-                                    {
-                                        title += ", ";
-                                    }
-                                }
+        //                        if (name != String.Empty)
+        //                        {
+        //                            name += " & ";
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        if (!isNickEmpty)
+        //                        {
+        //                            if (title != String.Empty)
+        //                            {
+        //                                title += ", ";
+        //                            }
+        //                        }
 
-                                //Four players per team max, add commas for the first few players then an ampersand before the last
-                                if (name != String.Empty && es.plNum > 2 && i < es.plNum - 2)
-                                {
-                                    name += ", ";
-                                }
-                            }
-                        }
-                    }
+        //                        //Four players per team max, add commas for the first few players then an ampersand before the last
+        //                        if (name != String.Empty && es.plNum > 2 && i < es.plNum - 2)
+        //                        {
+        //                            name += ", ";
+        //                        }
+        //                    }
+        //                }
+        //            }
 
-                    if (!isNickEmpty && !matchWrestlerInfo.isSecond)
-                    {
-                        title += wrestlerParam.nickName;
-                    }
+        //            if (!isNickEmpty && !matchWrestlerInfo.isSecond)
+        //            {
+        //                title += wrestlerParam.nickName;
+        //            }
 
-                    //Only add participants to the name plate
-                    if (!matchWrestlerInfo.isSecond)
-                    {
-                        name += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
-                        teamMembers.Add(DataBase.GetWrestlerFullName(wrestlerParam));
-                    }
-                    else
-                    {
-                        if (seconds != String.Empty)
-                        {
-                            seconds += " & ";
-                        }
+        //            //Only add participants to the name plate
+        //            if (!matchWrestlerInfo.isSecond)
+        //            {
+        //                name += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
+        //                teamMembers.Add(DataBase.GetWrestlerFullName(wrestlerParam));
+        //            }
+        //            else
+        //            {
+        //                if (seconds != String.Empty)
+        //                {
+        //                    seconds += " & ";
+        //                }
 
-                        seconds += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
-                    }
+        //                seconds += CleanUpName(DataBase.GetWrestlerFullName(wrestlerParam));
+        //            }
 
-                }
+        //        }
 
-                //Avoid over-writing team names set-up by other mods
-                String dbTeamName = "";
-                if (teamMembers.Count > 1)
-                {
-                    GetTeamName(teamMembers, out dbTeamName);
-                    if (dbTeamName == String.Empty)
-                    {
-                        gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
+        //        //Avoid over-writing team names set-up by other mods
+        //        String dbTeamName = "";
+        //        if (teamMembers.Count > 1)
+        //        {
+        //            GetTeamName(teamMembers, out dbTeamName);
+        //            if (dbTeamName == String.Empty)
+        //            {
+        //                gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
-                        //If title information exists, avoid over-writing it.
-                        if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
-                            String.Empty)
-                        {
-                            gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = title;
-                        }
-                    }
-                    else
-                    {
-                        gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = dbTeamName;
+        //                //If title information exists, avoid over-writing it.
+        //                if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
+        //                    String.Empty)
+        //                {
+        //                    gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = title;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = dbTeamName;
 
-                        //If title information exists, avoid over-writing it.
-                        if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
-                            String.Empty)
-                        {
-                            gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = name;
-                        }
-                    }
-                }
-                else
-                {
-                    //For single wrestlers, we only need to set the modified name.
-                    gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
+        //                //If title information exists, avoid over-writing it.
+        //                if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
+        //                    String.Empty)
+        //                {
+        //                    gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = name;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //For single wrestlers, we only need to set the modified name.
+        //            gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text = name;
 
-                    //If title information exists, avoid over-writing it.
-                    if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
-                        String.Empty)
-                    {
-                        gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = title;
-                    }
-                }
+        //            //If title information exists, avoid over-writing it.
+        //            if (gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text.Trim() ==
+        //                String.Empty)
+        //            {
+        //                gameObject.transform.FindChild("Text_Title").gameObject.GetComponent<Text>().text = title;
+        //            }
+        //        }
 
-                //Add seconds to the team
-                if (seconds != String.Empty)
-                {
-                    gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text +=
-                        " w/ " + seconds;
-                }
-            }
-            catch (Exception e)
-            {
-                L.D("ModifyNamePlateError: " + e);
-            }
+        //        //Add seconds to the team
+        //        if (seconds != String.Empty)
+        //        {
+        //            gameObject.transform.FindChild("Text_Name").gameObject.GetComponent<Text>().text +=
+        //                " w/ " + seconds;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        L.D("ModifyNamePlateError: " + e);
+        //    }
 
-        }
+        //}
 
         #endregion
 
