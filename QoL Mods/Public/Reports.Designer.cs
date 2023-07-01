@@ -62,7 +62,6 @@
             this.btn_teamSave.Text = "Teams";
             this.btn_teamSave.UseVisualStyleBackColor = true;
             this.btn_teamSave.Visible = false;
-            this.btn_teamSave.Click += new System.EventHandler(this.btn_teamSave_Click);
             // 
             // critTestbtn
             // 

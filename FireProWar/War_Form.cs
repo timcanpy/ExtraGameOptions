@@ -9,6 +9,7 @@ using System.Linq;
 using System.Drawing;
 using FireProWar.Data_Classes;
 using ModPack;
+using Newtonsoft.Json;
 
 namespace FireProWar
 {
@@ -103,10 +104,12 @@ namespace FireProWar
 
                 foreach (EditWrestlerData current in SaveData.inst.editWrestlerData)
                 {
-                    MatchConfig.FPT_WresIDGroup wresIDGroup = new MatchConfig.FPT_WresIDGroup();
-                    wresIDGroup.Name = DataBase.GetWrestlerFullName(current.wrestlerParam);
-                    wresIDGroup.ID = (Int32)current.editWrestlerID;
-                    wresIDGroup.Group = current.wrestlerParam.groupID;
+                    MatchConfig.FPT_WresIDGroup wresIDGroup = new MatchConfig.FPT_WresIDGroup
+                    {
+                        Name = DataBase.GetWrestlerFullName(current.wrestlerParam),
+                        ID = (Int32)current.editWrestlerID,
+                        Group = current.wrestlerParam.groupID
+                    };
 
                     wrestlerList.Add(wresIDGroup);
                     this.ms_searchResults.Items.Add(wresIDGroup);
@@ -168,17 +171,19 @@ namespace FireProWar
         }
         private void LoadGroupFightingStyles()
         {
-            groupFightingStyles = new Dictionary<string, FightStyleEnum[]>();
-            groupFightingStyles.Add("Strong-Style", new FightStyleEnum[] { FightStyleEnum.Orthodox, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Power, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Shooter, FightStyleEnum.Panther, FightStyleEnum.Devilism });
-            groupFightingStyles.Add("King's Road", new FightStyleEnum[] { FightStyleEnum.Orthodox, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Power, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Giant, FightStyleEnum.American });
-            groupFightingStyles.Add("Mixed Martial Arts", new FightStyleEnum[] { FightStyleEnum.Grappler, FightStyleEnum.Fighter, FightStyleEnum.Ground, FightStyleEnum.Shooter, FightStyleEnum.Wrestling });
-            groupFightingStyles.Add("Hardcore", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Giant, FightStyleEnum.Heel, FightStyleEnum.Junior, FightStyleEnum.Mysterious });
-            groupFightingStyles.Add("American", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Heel, FightStyleEnum.Junior, FightStyleEnum.Power, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Giant });
-            groupFightingStyles.Add("Boxing", new FightStyleEnum[] { FightStyleEnum.Fighter });
-            groupFightingStyles.Add("Lucha", new FightStyleEnum[] { FightStyleEnum.Luchador, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Panther, FightStyleEnum.Technician });
-            groupFightingStyles.Add("Amateur Wrestling", new FightStyleEnum[] { FightStyleEnum.Wrestling });
-            groupFightingStyles.Add("Sumo", new FightStyleEnum[] { FightStyleEnum.Fighter, FightStyleEnum.Grappler, FightStyleEnum.Power });
-            groupFightingStyles.Add("Indy", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Giant, FightStyleEnum.Heel, FightStyleEnum.Mysterious, FightStyleEnum.Junior, FightStyleEnum.Luchador, FightStyleEnum.Power, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Orthodox });
+            groupFightingStyles = new Dictionary<string, FightStyleEnum[]>
+            {
+                { "Strong-Style", new FightStyleEnum[] { FightStyleEnum.Orthodox, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Power, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Shooter, FightStyleEnum.Panther, FightStyleEnum.Devilism } },
+                { "King's Road", new FightStyleEnum[] { FightStyleEnum.Orthodox, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Power, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Giant, FightStyleEnum.American } },
+                { "Mixed Martial Arts", new FightStyleEnum[] { FightStyleEnum.Grappler, FightStyleEnum.Fighter, FightStyleEnum.Ground, FightStyleEnum.Shooter, FightStyleEnum.Wrestling } },
+                { "Hardcore", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Giant, FightStyleEnum.Heel, FightStyleEnum.Junior, FightStyleEnum.Mysterious } },
+                { "American", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Heel, FightStyleEnum.Junior, FightStyleEnum.Power, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Giant } },
+                { "Boxing", new FightStyleEnum[] { FightStyleEnum.Fighter } },
+                { "Lucha", new FightStyleEnum[] { FightStyleEnum.Luchador, FightStyleEnum.Junior, FightStyleEnum.Mysterious, FightStyleEnum.Panther, FightStyleEnum.Technician } },
+                { "Amateur Wrestling", new FightStyleEnum[] { FightStyleEnum.Wrestling } },
+                { "Sumo", new FightStyleEnum[] { FightStyleEnum.Fighter, FightStyleEnum.Grappler, FightStyleEnum.Power } },
+                { "Indy", new FightStyleEnum[] { FightStyleEnum.American, FightStyleEnum.Giant, FightStyleEnum.Heel, FightStyleEnum.Mysterious, FightStyleEnum.Junior, FightStyleEnum.Luchador, FightStyleEnum.Power, FightStyleEnum.Technician, FightStyleEnum.Wrestling, FightStyleEnum.Orthodox } }
+            };
         }
         private void LoadFilterOptions()
         {
@@ -238,8 +243,10 @@ namespace FireProWar
                             */
                             if (lines[i].Equals(promotionDivider))
                             {
-                                Promotion promotion = new Promotion();
-                                promotion.Name = lines[i + 1];
+                                Promotion promotion = new Promotion
+                                {
+                                    Name = lines[i + 1]
+                                };
                                 promotion.LoadRings(lines[i + 2]);
                                 promotion.Type = lines[i + 3];
                                 promotion.Region = lines[i + 4];
@@ -285,8 +292,10 @@ namespace FireProWar
                             */
                             if (lines[i].Equals(promotionDivider))
                             {
-                                Promotion promotion = new Promotion();
-                                promotion.Name = lines[i + 1];
+                                Promotion promotion = new Promotion
+                                {
+                                    Name = lines[i + 1]
+                                };
                                 promotion.Rings.Add(lines[i + 2]);
                                 promotion.Type = lines[i + 3];
                                 promotion.Region = lines[i + 4];
@@ -326,7 +335,7 @@ namespace FireProWar
                     if (fpw_promoList.Items.Count > 0)
                     {
                         fpw_promoList.SelectedIndex = 0;
-                        fpw_promoList_SelectedIndexChanged(null, null);
+                        Fpw_promoList_SelectedIndexChanged(null, null);
                     }
                 }
                 #endregion
@@ -452,7 +461,7 @@ namespace FireProWar
                 L.D("Load War Data Error: " + e.ToString());
             }
         }
-        private void btn_LoadData_Click(object sender, EventArgs e)
+        private void Btn_LoadData_Click(object sender, EventArgs e)
         {
             LoadWarData();
         }
@@ -572,6 +581,15 @@ namespace FireProWar
                 L.D("Save Config Data Error:" + e);
             }
 
+            try
+            {
+                SaveTeams();
+            }
+            catch (Exception ex)
+            {
+                L.D("Save Team Data Error:" + ex);
+            }
+
             //Sending data to Web API
             if (fpw_autoJSON.Checked)
             {
@@ -579,9 +597,52 @@ namespace FireProWar
             }
 
         }
-        private void btn_SaveData_Click(object sender, EventArgs e)
+        private void Btn_SaveData_Click(object sender, EventArgs e)
         {
             SaveWarData();
+        }
+
+        private void SaveTeams()
+        {
+            List<String> jsonTeams = new List<string>();
+            //string userID = "76561198100955117";
+            String userID = Steamworks.SteamUser.GetSteamID().ToString();
+
+            foreach (Team team in ModPack.ModPack.Teams)
+            {
+                jsonTeams.Add(CreateJSONTeam(team.Members, team.Name, userID));
+            }
+
+            File.WriteAllLines("./EGOData/Teams.json", jsonTeams.ToArray());
+        }
+
+        private static String CreateJSONTeam(List<String> members, String name, String userID)
+        {
+            StringWriter stringWriter = new StringWriter();
+            JsonTextWriter writer = new JsonTextWriter(stringWriter);
+
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("id");
+            writer.WriteValue(userID + name);
+
+            writer.WritePropertyName("ownerId");
+            writer.WriteValue(userID);
+
+            writer.WritePropertyName("name");
+            writer.WriteValue(name);
+
+            writer.WritePropertyName("members");
+            writer.WriteStartArray();
+            foreach (String member in members)
+            {
+                writer.WriteValue(member);
+            }
+            writer.WriteEndArray();
+
+            writer.WriteEndObject();
+
+            return stringWriter.ToString();
         }
 
         #endregion
@@ -595,7 +656,7 @@ namespace FireProWar
         {
             SearchWrestler();
         }
-        private void ms_groupList_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ms_groupList_SelectedIndexChanged(object sender, EventArgs e)
         {
             SearchWrestler();
         }
@@ -651,12 +712,12 @@ namespace FireProWar
         {
             return promotionList.IndexOf(groupName);
         }
-        private void ms_refreshList_Click(object sender, EventArgs e)
+        private void Ms_refreshList_Click(object sender, EventArgs e)
         {
             LoadSubs();
             LoadOrgs();
         }
-        private void ms_employeeList_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ms_employeeList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ms_employeeList.Items.Count == 0)
             {
@@ -664,7 +725,7 @@ namespace FireProWar
             }
             FindImage(ImageTypes.Wrestler, (String)ms_employeeList.SelectedItem);
         }
-        private void ms_searchResults_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ms_searchResults_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ms_searchResults.Items.Count == 0)
             {
@@ -704,7 +765,7 @@ namespace FireProWar
         #endregion
 
         #region Promotion Management
-        private void fpw_addPromotion_Click(object sender, EventArgs e)
+        private void Fpw_addPromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoName.Text.Trim().Equals(""))
             {
@@ -724,9 +785,11 @@ namespace FireProWar
                 return;
             }
 
-            Promotion promotion = new Promotion();
-            promotion.Name = fpw_promoName.Text.Trim();
-            promotion.Region = fpw_promoRegionList.SelectedItem.ToString();
+            Promotion promotion = new Promotion
+            {
+                Name = fpw_promoName.Text.Trim(),
+                Region = fpw_promoRegionList.SelectedItem.ToString()
+            };
             promotion.Rings.Add(fpw_ringList.SelectedItem.ToString());
             promotion.Type = fpw_promoStyleList.SelectedItem.ToString();
             promotionsAdded.Add(promotion.Name);
@@ -734,7 +797,7 @@ namespace FireProWar
             fpw_promoList.SelectedIndex = fpw_promoList.Items.Count - 1;
 
         }
-        private void fpw_updatePromotion_Click(object sender, EventArgs e)
+        private void Fpw_updatePromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -747,7 +810,7 @@ namespace FireProWar
             promotion.Type = fpw_promoStyleList.SelectedItem.ToString();
             fpw_promoList.SelectedItem = promotion;
         }
-        private void fpw_promoList_SelectedIndexChanged(object sender, EventArgs e)
+        private void Fpw_promoList_SelectedIndexChanged(object sender, EventArgs e)
         {
             rosterCount.Text = "";
 
@@ -807,7 +870,7 @@ namespace FireProWar
             if (ms_rosterList.Items.Count > 0)
             {
                 ms_rosterList.SelectedIndex = ms_rosterList.Items.Count - 1;
-                ms_rosterList_SelectedIndexChanged(sender, e);
+                Ms_rosterList_SelectedIndexChanged(sender, e);
                 rosterCount.Text = ms_rosterList.Items.Count.ToString();
             }
 
@@ -824,7 +887,7 @@ namespace FireProWar
             FindImage(ImageTypes.Logo, promotion.Name);
             FindImage(ImageTypes.Wrestler, ""); //Ensure that we clear out the latest wrestler image
         }
-        private void fpw_deletePromotion_Click(object sender, EventArgs e)
+        private void Fpw_deletePromotion_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -843,14 +906,14 @@ namespace FireProWar
             if (fpw_promoList.Items.Count > 0)
             {
                 fpw_promoList.SelectedIndex = 0;
-                fpw_promoList_SelectedIndexChanged(sender, e);
+                Fpw_promoList_SelectedIndexChanged(sender, e);
             }
             else
             {
                 ClearPromoDetails();
             }
         }
-        private void fpw_promoClearHistory_Click(object sender, EventArgs e)
+        private void Fpw_promoClearHistory_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -865,7 +928,7 @@ namespace FireProWar
 
             promotion.ClearHistory();
             fpw_promoList.SelectedItem = promotion;
-            fpw_promoList_SelectedIndexChanged(sender, e);
+            Fpw_promoList_SelectedIndexChanged(sender, e);
         }
         private void ClearPromoDetails()
         {
@@ -891,9 +954,9 @@ namespace FireProWar
                     break;
                 }
             }
-            fpw_promoList_SelectedIndexChanged(null, null);
+            Fpw_promoList_SelectedIndexChanged(null, null);
         }
-        private void fpw_clearDetails_Click(object sender, EventArgs e)
+        private void Fpw_clearDetails_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -908,13 +971,13 @@ namespace FireProWar
 
             promotion.ClearEvents();
             fpw_promoList.SelectedItem = promotion;
-            fpw_promoList_SelectedIndexChanged(sender, e);
+            Fpw_promoList_SelectedIndexChanged(sender, e);
         }
-        private void fpw_refreshRings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Fpw_refreshRings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             LoadRings();
         }
-        private void fpw_addRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Fpw_addRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -939,7 +1002,7 @@ namespace FireProWar
 
                 promotion.Rings.Add(ring);
                 fpw_promoList.SelectedItem = promotion;
-                fpw_promoList_SelectedIndexChanged(null, null);
+                Fpw_promoList_SelectedIndexChanged(null, null);
             }
             catch (Exception exception)
             {
@@ -947,7 +1010,7 @@ namespace FireProWar
             }
 
         }
-        private void fpw_removeRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Fpw_removeRing_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
@@ -969,14 +1032,14 @@ namespace FireProWar
 
                 promotion.Rings.Remove(ring);
                 fpw_promoList.SelectedItem = promotion;
-                fpw_promoList_SelectedIndexChanged(null, null);
+                Fpw_promoList_SelectedIndexChanged(null, null);
             }
             catch (Exception exception)
             {
                 L.D("RemoveRingError: " + exception);
             }
         }
-        private void fpw_resetPoints_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Fpw_resetPoints_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -996,12 +1059,12 @@ namespace FireProWar
 
             ms_rosterList.SelectedItem = employee;
             fpw_promoList.SelectedItem = promotion;
-            ms_rosterList_SelectedIndexChanged(sender, e);
+            Ms_rosterList_SelectedIndexChanged(sender, e);
         }
         #endregion
 
         #region Wrestler Management
-        private void ms_rosterList_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ms_rosterList_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ms_rosterList.Items.Count == 0 || ms_rosterList.SelectedItem == null)
             {
@@ -1047,7 +1110,7 @@ namespace FireProWar
             }
 
         }
-        private void ms_hireWrestler_Click(object sender, EventArgs e)
+        private void Ms_hireWrestler_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1072,7 +1135,7 @@ namespace FireProWar
                 promotion = HireWrestler(wrestler, promotion);
 
                 fpw_promoList.SelectedItem = promotion;
-                fpw_promoList_SelectedIndexChanged(sender, e);
+                Fpw_promoList_SelectedIndexChanged(sender, e);
             }
             catch (Exception ex)
             {
@@ -1080,7 +1143,7 @@ namespace FireProWar
             }
 
         }
-        private void ms_hireGroup_Click(object sender, EventArgs e)
+        private void Ms_hireGroup_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1104,7 +1167,7 @@ namespace FireProWar
                         promotion = HireWrestler(wrestler, promotion);
                     }
                 }
-                fpw_promoList_SelectedIndexChanged(sender, e);
+                Fpw_promoList_SelectedIndexChanged(sender, e);
             }
             catch (Exception ex)
             {
@@ -1112,7 +1175,7 @@ namespace FireProWar
             }
 
         }
-        private void ms_fireOne_Click(object sender, EventArgs e)
+        private void Ms_fireOne_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1129,7 +1192,7 @@ namespace FireProWar
                 Promotion promotion = (Promotion)fpw_promoList.SelectedItem;
                 Employee employee = promotion.GetEmployeeData(ms_employeeList.SelectedItem.ToString());
                 fpw_promoList.SelectedItem = FireWrestler(employee, promotion);
-                fpw_promoList_SelectedIndexChanged(sender, e);
+                Fpw_promoList_SelectedIndexChanged(sender, e);
             }
             catch (Exception exception)
             {
@@ -1137,7 +1200,7 @@ namespace FireProWar
             }
 
         }
-        private void ms_fireAll_Click(object sender, EventArgs e)
+        private void Ms_fireAll_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1158,7 +1221,7 @@ namespace FireProWar
                     promotion = FireWrestler(employee, promotion);
                 }
 
-                fpw_promoList_SelectedIndexChanged(sender, e);
+                Fpw_promoList_SelectedIndexChanged(sender, e);
             }
             catch (Exception exception)
             {
@@ -1202,11 +1265,13 @@ namespace FireProWar
             }
             int moraleBonus = 0;
 
-            Employee employee = new Employee();
-            employee.Name = SanitizeWrestlerName(DataBase.GetWrestlerFullName((WrestlerID)wrestler.ID));
-            employee.Region = CorrectRegionName(param.country.ToString());
-            employee.Type = CorrectStyleName(param.fightStyle);
-            employee.QuitRollCeiling = 5 - (int)param.wrestlerRank;
+            Employee employee = new Employee
+            {
+                Name = SanitizeWrestlerName(DataBase.GetWrestlerFullName((WrestlerID)wrestler.ID)),
+                Region = CorrectRegionName(param.country.ToString()),
+                Type = CorrectStyleName(param.fightStyle),
+                QuitRollCeiling = 5 - (int)param.wrestlerRank
+            };
 
             //Determine wrestler's starting morale rank.
             //Region
@@ -1239,7 +1304,7 @@ namespace FireProWar
             employeesAdded.Add(employee.Name);
             return promotion;
         }
-        private void ms_moraleRank_SelectedIndexChanged(object sender, EventArgs e)
+        private void Ms_moraleRank_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -1260,7 +1325,7 @@ namespace FireProWar
             ms_rosterList.SelectedItem = employee;
             fpw_promoList.SelectedItem = promotion;
         }
-        private void resetPoints_Click(object sender, EventArgs e)
+        private void ResetPoints_Click(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -1280,13 +1345,13 @@ namespace FireProWar
 
             ms_rosterList.SelectedItem = employee;
             fpw_promoList.SelectedItem = promotion;
-            ms_rosterList_SelectedIndexChanged(sender, e);
+            Ms_rosterList_SelectedIndexChanged(sender, e);
         }
-        private void fw_refreshRings_Click(object sender, EventArgs e)
+        private void Fw_refreshRings_Click(object sender, EventArgs e)
         {
             LoadRings();
         }
-        private void btn_clean_Click(object sender, EventArgs e)
+        private void Btn_clean_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1309,7 +1374,7 @@ namespace FireProWar
                 L.D("Complete");
 
                 //Reset Roster View
-                fpw_promoList_SelectedIndexChanged(null, null);
+                Fpw_promoList_SelectedIndexChanged(null, null);
             }
             catch (Exception exception)
             {
@@ -1321,7 +1386,7 @@ namespace FireProWar
         #endregion
 
         #region Reporting
-        private void rpt_promotions_Click(object sender, EventArgs e)
+        private void Rpt_promotions_Click(object sender, EventArgs e)
         {
             PopulatePromotionReport();
         }
@@ -1333,12 +1398,12 @@ namespace FireProWar
         #endregion
 
         #region  Filter Management
-        private void fpw_historyRefresh_Click(object sender, EventArgs e)
+        private void Fpw_historyRefresh_Click(object sender, EventArgs e)
         {
             LoadSubs();
         }
 
-        private void fpw_wrestlerRefresh_Click(object sender, EventArgs e)
+        private void Fpw_wrestlerRefresh_Click(object sender, EventArgs e)
         {
             LoadSubs();
         }
@@ -1385,7 +1450,7 @@ namespace FireProWar
             fpw_promoHistory.Text = FilterHistory("", type, promotion.History);
         }
 
-        private void fpw_historyWrestler_SelectedIndexChanged(object sender, EventArgs e)
+        private void Fpw_historyWrestler_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (fpw_promoList.SelectedIndex < 0)
             {
@@ -1477,7 +1542,7 @@ namespace FireProWar
 
                 if (ms_rosterList.Items.Count > 0)
                 {
-                    ms_rosterList_SelectedIndexChanged(null, null);
+                    Ms_rosterList_SelectedIndexChanged(null, null);
                 }
             }
             catch (Exception exception)
@@ -1877,7 +1942,7 @@ namespace FireProWar
             //Ensure Employee Data is Updated
             promotion.UpdateEmployeeData(employee);
             fpw_promoList.SelectedItem = promotion;
-            fpw_promoList_SelectedIndexChanged(null, null);
+            Fpw_promoList_SelectedIndexChanged(null, null);
         }
         private int ProcessEmployeeQuit(Employee employee)
         {

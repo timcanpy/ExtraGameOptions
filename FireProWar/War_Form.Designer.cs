@@ -214,7 +214,7 @@
             this.fpw_removeRing.TabIndex = 59;
             this.fpw_removeRing.TabStop = true;
             this.fpw_removeRing.Text = "Remove";
-            this.fpw_removeRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_removeRing_LinkClicked);
+            this.fpw_removeRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Fpw_removeRing_LinkClicked);
             // 
             // fpw_addRing
             // 
@@ -226,7 +226,7 @@
             this.fpw_addRing.TabIndex = 58;
             this.fpw_addRing.TabStop = true;
             this.fpw_addRing.Text = "Add";
-            this.fpw_addRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_addRing_LinkClicked);
+            this.fpw_addRing.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Fpw_addRing_LinkClicked);
             // 
             // fpw_refreshRings
             // 
@@ -237,7 +237,7 @@
             this.fpw_refreshRings.TabIndex = 57;
             this.fpw_refreshRings.TabStop = true;
             this.fpw_refreshRings.Text = "Refresh";
-            this.fpw_refreshRings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_refreshRings_LinkClicked);
+            this.fpw_refreshRings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Fpw_refreshRings_LinkClicked);
             // 
             // label1
             // 
@@ -295,7 +295,7 @@
             this.fpw_addPromotion.Text = "Add Promotion";
             this.fpw_addPromotion.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_addPromotion.UseVisualStyleBackColor = true;
-            this.fpw_addPromotion.Click += new System.EventHandler(this.fpw_addPromotion_Click);
+            this.fpw_addPromotion.Click += new System.EventHandler(this.Fpw_addPromotion_Click);
             // 
             // fpw_deletePromotion
             // 
@@ -307,7 +307,7 @@
             this.fpw_deletePromotion.TabIndex = 40;
             this.fpw_deletePromotion.Text = "Delete Promotion";
             this.fpw_deletePromotion.UseVisualStyleBackColor = true;
-            this.fpw_deletePromotion.Click += new System.EventHandler(this.fpw_deletePromotion_Click);
+            this.fpw_deletePromotion.Click += new System.EventHandler(this.Fpw_deletePromotion_Click);
             // 
             // fpw_updatePromotion
             // 
@@ -319,7 +319,7 @@
             this.fpw_updatePromotion.TabIndex = 39;
             this.fpw_updatePromotion.Text = "Update Promotion";
             this.fpw_updatePromotion.UseVisualStyleBackColor = true;
-            this.fpw_updatePromotion.Click += new System.EventHandler(this.fpw_updatePromotion_Click);
+            this.fpw_updatePromotion.Click += new System.EventHandler(this.Fpw_updatePromotion_Click);
             // 
             // label45
             // 
@@ -421,7 +421,7 @@
             this.fpw_promoList.Size = new System.Drawing.Size(236, 21);
             this.fpw_promoList.Sorted = true;
             this.fpw_promoList.TabIndex = 29;
-            this.fpw_promoList.SelectedIndexChanged += new System.EventHandler(this.fpw_promoList_SelectedIndexChanged);
+            this.fpw_promoList.SelectedIndexChanged += new System.EventHandler(this.Fpw_promoList_SelectedIndexChanged);
             // 
             // label46
             // 
@@ -531,7 +531,7 @@
             this.fpw_historyRefresh.Text = "Refresh";
             this.fpw_historyRefresh.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_historyRefresh.UseVisualStyleBackColor = true;
-            this.fpw_historyRefresh.Click += new System.EventHandler(this.fpw_historyRefresh_Click);
+            this.fpw_historyRefresh.Click += new System.EventHandler(this.Fpw_historyRefresh_Click);
             // 
             // fpw_historyTerm
             // 
@@ -551,7 +551,7 @@
             this.fpw_historyWrestler.Size = new System.Drawing.Size(180, 21);
             this.fpw_historyWrestler.Sorted = true;
             this.fpw_historyWrestler.TabIndex = 54;
-            this.fpw_historyWrestler.SelectedIndexChanged += new System.EventHandler(this.fpw_historyWrestler_SelectedIndexChanged);
+            this.fpw_historyWrestler.SelectedIndexChanged += new System.EventHandler(this.Fpw_historyWrestler_SelectedIndexChanged);
             // 
             // label2
             // 
@@ -627,7 +627,7 @@
             this.fpw_promoClearHistory.Text = "Clear History";
             this.fpw_promoClearHistory.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_promoClearHistory.UseVisualStyleBackColor = true;
-            this.fpw_promoClearHistory.Click += new System.EventHandler(this.fpw_promoClearHistory_Click);
+            this.fpw_promoClearHistory.Click += new System.EventHandler(this.Fpw_promoClearHistory_Click);
             // 
             // fpw_promoHistory
             // 
@@ -704,7 +704,7 @@
             this.fpw_wrestlerRefresh.Text = "Refresh";
             this.fpw_wrestlerRefresh.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_wrestlerRefresh.UseVisualStyleBackColor = true;
-            this.fpw_wrestlerRefresh.Click += new System.EventHandler(this.fpw_wrestlerRefresh_Click);
+            this.fpw_wrestlerRefresh.Click += new System.EventHandler(this.Fpw_wrestlerRefresh_Click);
             // 
             // fpw_matchTerm
             // 
@@ -748,7 +748,7 @@
             this.fpw_clearDetails.Text = "Clear History";
             this.fpw_clearDetails.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.fpw_clearDetails.UseVisualStyleBackColor = true;
-            this.fpw_clearDetails.Click += new System.EventHandler(this.fpw_clearDetails_Click);
+            this.fpw_clearDetails.Click += new System.EventHandler(this.Fpw_clearDetails_Click);
             // 
             // fpw_detailsView
             // 
@@ -836,7 +836,7 @@
             this.btn_clean.TabIndex = 38;
             this.btn_clean.Text = "Clean Rosters";
             this.btn_clean.UseVisualStyleBackColor = true;
-            this.btn_clean.Click += new System.EventHandler(this.btn_clean_Click);
+            this.btn_clean.Click += new System.EventHandler(this.Btn_clean_Click);
             // 
             // btn_LoadData
             // 
@@ -848,7 +848,7 @@
             this.btn_LoadData.TabIndex = 37;
             this.btn_LoadData.Text = "Load Data";
             this.btn_LoadData.UseVisualStyleBackColor = true;
-            this.btn_LoadData.Click += new System.EventHandler(this.btn_LoadData_Click);
+            this.btn_LoadData.Click += new System.EventHandler(this.Btn_LoadData_Click);
             // 
             // btn_SaveData
             // 
@@ -860,7 +860,7 @@
             this.btn_SaveData.TabIndex = 36;
             this.btn_SaveData.Text = "Save Data";
             this.btn_SaveData.UseVisualStyleBackColor = true;
-            this.btn_SaveData.Click += new System.EventHandler(this.btn_SaveData_Click);
+            this.btn_SaveData.Click += new System.EventHandler(this.Btn_SaveData_Click);
             // 
             // label9
             // 
@@ -883,7 +883,7 @@
             this.ms_fireAll.TabIndex = 34;
             this.ms_fireAll.Text = "Fire All";
             this.ms_fireAll.UseVisualStyleBackColor = true;
-            this.ms_fireAll.Click += new System.EventHandler(this.ms_fireAll_Click);
+            this.ms_fireAll.Click += new System.EventHandler(this.Ms_fireAll_Click);
             // 
             // ms_fireOne
             // 
@@ -895,7 +895,7 @@
             this.ms_fireOne.TabIndex = 33;
             this.ms_fireOne.Text = "Fire One";
             this.ms_fireOne.UseVisualStyleBackColor = true;
-            this.ms_fireOne.Click += new System.EventHandler(this.ms_fireOne_Click);
+            this.ms_fireOne.Click += new System.EventHandler(this.Ms_fireOne_Click);
             // 
             // ms_employeeList
             // 
@@ -909,7 +909,7 @@
             this.ms_employeeList.Size = new System.Drawing.Size(248, 381);
             this.ms_employeeList.Sorted = true;
             this.ms_employeeList.TabIndex = 32;
-            this.ms_employeeList.SelectedIndexChanged += new System.EventHandler(this.ms_employeeList_SelectedIndexChanged);
+            this.ms_employeeList.SelectedIndexChanged += new System.EventHandler(this.Ms_employeeList_SelectedIndexChanged);
             // 
             // label8
             // 
@@ -954,7 +954,7 @@
             this.ms_hireGroup.TabIndex = 23;
             this.ms_hireGroup.Text = "Hire Group";
             this.ms_hireGroup.UseVisualStyleBackColor = true;
-            this.ms_hireGroup.Click += new System.EventHandler(this.ms_hireGroup_Click);
+            this.ms_hireGroup.Click += new System.EventHandler(this.Ms_hireGroup_Click);
             // 
             // ms_groupList
             // 
@@ -967,7 +967,7 @@
             this.ms_groupList.Size = new System.Drawing.Size(329, 21);
             this.ms_groupList.Sorted = true;
             this.ms_groupList.TabIndex = 22;
-            this.ms_groupList.SelectedIndexChanged += new System.EventHandler(this.ms_groupList_SelectedIndexChanged);
+            this.ms_groupList.SelectedIndexChanged += new System.EventHandler(this.Ms_groupList_SelectedIndexChanged);
             this.ms_groupList.LostFocus += new System.EventHandler(this.GroupList_LostFocus);
             // 
             // ms_refreshList
@@ -980,7 +980,7 @@
             this.ms_refreshList.TabIndex = 20;
             this.ms_refreshList.Text = "Refresh List";
             this.ms_refreshList.UseVisualStyleBackColor = true;
-            this.ms_refreshList.Click += new System.EventHandler(this.ms_refreshList_Click);
+            this.ms_refreshList.Click += new System.EventHandler(this.Ms_refreshList_Click);
             // 
             // ms_hireWrestler
             // 
@@ -992,7 +992,7 @@
             this.ms_hireWrestler.TabIndex = 19;
             this.ms_hireWrestler.Text = "Hire Wrestler";
             this.ms_hireWrestler.UseVisualStyleBackColor = true;
-            this.ms_hireWrestler.Click += new System.EventHandler(this.ms_hireWrestler_Click);
+            this.ms_hireWrestler.Click += new System.EventHandler(this.Ms_hireWrestler_Click);
             // 
             // ms_searchResults
             // 
@@ -1005,7 +1005,7 @@
             this.ms_searchResults.Size = new System.Drawing.Size(329, 21);
             this.ms_searchResults.Sorted = true;
             this.ms_searchResults.TabIndex = 18;
-            this.ms_searchResults.SelectedIndexChanged += new System.EventHandler(this.ms_searchResults_SelectedIndexChanged);
+            this.ms_searchResults.SelectedIndexChanged += new System.EventHandler(this.Ms_searchResults_SelectedIndexChanged);
             // 
             // ms_wrestlerSearch
             // 
@@ -1085,7 +1085,7 @@
             this.fpw_resetPoints.TabIndex = 60;
             this.fpw_resetPoints.TabStop = true;
             this.fpw_resetPoints.Text = "Reset";
-            this.fpw_resetPoints.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.fpw_resetPoints_LinkClicked);
+            this.fpw_resetPoints.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.Fpw_resetPoints_LinkClicked);
             // 
             // fpw_rosterFiler
             // 
@@ -1186,7 +1186,7 @@
             this.resetPoints.TabIndex = 70;
             this.resetPoints.UseVisualStyleBackColor = false;
             this.resetPoints.Visible = false;
-            this.resetPoints.Click += new System.EventHandler(this.resetPoints_Click);
+            this.resetPoints.Click += new System.EventHandler(this.ResetPoints_Click);
             // 
             // label18
             // 
@@ -1286,7 +1286,7 @@
             this.ms_moraleRank.Name = "ms_moraleRank";
             this.ms_moraleRank.Size = new System.Drawing.Size(86, 23);
             this.ms_moraleRank.TabIndex = 47;
-            this.ms_moraleRank.SelectedIndexChanged += new System.EventHandler(this.ms_moraleRank_SelectedIndexChanged);
+            this.ms_moraleRank.SelectedIndexChanged += new System.EventHandler(this.Ms_moraleRank_SelectedIndexChanged);
             // 
             // ms_employeeCountry
             // 
@@ -1337,7 +1337,7 @@
             this.ms_rosterList.ScrollAlwaysVisible = true;
             this.ms_rosterList.Size = new System.Drawing.Size(246, 381);
             this.ms_rosterList.TabIndex = 36;
-            this.ms_rosterList.SelectedIndexChanged += new System.EventHandler(this.ms_rosterList_SelectedIndexChanged);
+            this.ms_rosterList.SelectedIndexChanged += new System.EventHandler(this.Ms_rosterList_SelectedIndexChanged);
             // 
             // fpw_reports
             // 
@@ -1475,7 +1475,7 @@
             this.rpt_promotions.TabIndex = 0;
             this.rpt_promotions.Text = "Promotions";
             this.rpt_promotions.UseVisualStyleBackColor = true;
-            this.rpt_promotions.Click += new System.EventHandler(this.rpt_promotions_Click);
+            this.rpt_promotions.Click += new System.EventHandler(this.Rpt_promotions_Click);
             // 
             // fpw_injuries
             // 

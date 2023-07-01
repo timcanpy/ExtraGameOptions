@@ -36,7 +36,7 @@ namespace QoL_Mods
     [GroupDescription(Group = "Forced Sell", Name = "Forced Signature Move Sell", Description = "Increases down-time after signature moves, to facilitate sequences involving downed opponents.")]
     [GroupDescription(Group = "Fly Range", Name = "Increase Fly Range", Description = "Increases Fly Range for Juniors/Lucha/Panther styles.\nFor reference, the range was originally 1.1875f. It's been increased to 1.4600f")]
     [GroupDescription(Group = "Low Tag Recovery", Name = "Low Tag Recovery", Description = "Forces tag teams to use low recovery.")]
-    [GroupDescription(Group = "NoRingOut", Name = "No Move Ring Outs", Description = "Provides options to control whether moves can throw wrestlers out of the ring.")]
+    //[GroupDescription(Group = "NoRingOut", Name = "No Move Ring Outs", Description = "Provides options to control whether moves can throw wrestlers out of the ring.")]
     [GroupDescription(Group = "Recovery Taunts", Name = "Recovery Taunt Options", Description = "Allows players to perform recovery taunts when down.\nEach taunt must be categorized as a Performance.\nEach taunt must begin on either form 100 or 101 to be applicable.\nTaunts can end standing or grounded.\nChance of a recovery taunt is based on a player's Showmanship rating.\nPlayers can perform taunts a number of times equal to their (Wrestler Rank + Charisma)/2.")]
     [GroupDescription(Group = "Ref Positions For Pinfall", Name = "Referee Behavior Override", Description = "Forces the referee to move towards the active players after big moves performed late in a match. When the referee decides to start moving depends on his Involvement skill.")]
     [GroupDescription(Group = "Referee Calls Downs", Name = "Referee Calls Downs", Description = "Referee calls for a break when an edit goes down.")]
@@ -172,17 +172,17 @@ namespace QoL_Mods
             }
         }
 
-        [ControlPanel(Group = "NoRingOut")]
-        public static Form RingOutForm()
-        {
-            if (RingOut.form == null)
-            {
-                return new RingOut();
-            }
-            {
-                return RingOut.form;
-            }
-        }
+        //[ControlPanel(Group = "NoRingOut")]
+        //public static Form RingOutForm()
+        //{
+        //    if (RingOut.form == null)
+        //    {
+        //        return new RingOut();
+        //    }
+        //    {
+        //        return RingOut.form;
+        //    }
+        //}
         #endregion
 
         #region Force Preemptive Pinfall Count
@@ -2630,18 +2630,18 @@ namespace QoL_Mods
 
         #endregion
 
-        #region Check Fall To Out of Ring Moves
-        [Hook(TargetClass = "Player", TargetMethod = "CheckFallToOutOfRing", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "NoRingOut")]
-        public static bool NoMovesToOutOfRing(Player plObj)
-        {
-            if (RingOut.form.ringoutcb.Checked)
-            {
-                plObj.TerrainColType = WrestlerAnmData.TerrainColTypeEnum.Normal;
-                return true;
-            }
-            return false;
-        }
-        #endregion
+        //#region Check Fall To Out of Ring Moves
+        //[Hook(TargetClass = "Player", TargetMethod = "CheckFallToOutOfRing", InjectionLocation = 0, InjectDirection = HookInjectDirection.Before, InjectFlags = HookInjectFlags.ModifyReturn | HookInjectFlags.PassInvokingInstance, Group = "NoRingOut")]
+        //public static bool NoMovesToOutOfRing(Player plObj)
+        //{
+        //    if (RingOut.form.ringoutcb.Checked)
+        //    {
+        //        plObj.TerrainColType = WrestlerAnmData.TerrainColTypeEnum.Normal;
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        //#endregion
 
         #region General Helper Methods
         public static String CleanUpName(String name)

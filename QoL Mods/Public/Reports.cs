@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ModPack;
 //using Newtonsoft.Json;
 using DG;
+//using Newtonsoft.Json;
 
 namespace QoL_Mods
 {
@@ -75,7 +76,7 @@ namespace QoL_Mods
 
         }
 
-        //Temporary, until FireProWar form build issue is resolved
+        ////Temporary, until FireProWar form build issue is resolved
         //private void SaveTeams()
         //{
         //    List<String> jsonTeams = new List<string>();
@@ -118,10 +119,10 @@ namespace QoL_Mods
         //    return stringWriter.ToString();
         //}
 
-        private void btn_teamSave_Click(object sender, EventArgs e)
-        {
-            //SaveTeams();
-        }
+        //private void btn_teamSave_Click(object sender, EventArgs e)
+        //{
+        //    //SaveTeams();
+        //}
 
         private void critTestbtn_Click(object sender, EventArgs e)
         {
