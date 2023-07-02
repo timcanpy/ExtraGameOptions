@@ -260,5 +260,23 @@ namespace QoL_Mods.Private
             LoadWrestlers();
         }
 
+        private void btn_CornerMoveUpt_Click(object sender, EventArgs e)
+        {
+            DialogResult dialog = MessageBox.Show("Are you sure?", "Confirm Action", MessageBoxButtons.YesNo);
+            if (dialog == DialogResult.Yes)
+            {
+                foreach (EditWrestlerData edit in SaveData.inst.editWrestlerData)
+                {
+                    //if(edit.wrestlerParam.fightStyle == FightStyleEnum.Panther)
+                    //{
+                    //    string wrestlerName = edit.wrestlerParam.name1 + " " + edit.wrestlerParam.name2;
+                    //    L.D(wrestlerName + " Corner Move - " + DataBase.GetSkillName(edit.wrestlerParam.skillSlot[(int)SkillSlotEnum.Diagonal]));
+                    //    L.D(wrestlerName + "Team Corner Move - " + DataBase.GetSkillName(edit.wrestlerParam.skillSlot[(int)SkillSlotEnum.DiagonalCombo]));
+                    //}
+                    edit.wrestlerParam.skillSlot[(int)SkillSlotEnum.DiagonalCombo] = edit.wrestlerParam.skillSlot[(int)SkillSlotEnum.Diagonal];
+                }
+                MessageBox.Show("Operation has been completed.", "Success", MessageBoxButtons.OK);
+            }
+        }
     }
 }

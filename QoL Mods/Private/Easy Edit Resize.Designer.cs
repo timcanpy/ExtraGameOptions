@@ -66,6 +66,8 @@
             this.waistCB = new System.Windows.Forms.CheckBox();
             this.ReduceBy_All = new System.Windows.Forms.Button();
             this.ReduceBy_Current = new System.Windows.Forms.Button();
+            this.btn_CornerMoveUpt = new System.Windows.Forms.Button();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.headUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.thighUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.waistUD)).BeginInit();
@@ -466,12 +468,34 @@
             this.ReduceBy_Current.UseVisualStyleBackColor = true;
             this.ReduceBy_Current.Click += new System.EventHandler(this.ReduceBy_Current_Click);
             // 
+            // btn_CornerMoveUpt
+            // 
+            this.btn_CornerMoveUpt.Location = new System.Drawing.Point(328, 160);
+            this.btn_CornerMoveUpt.Name = "btn_CornerMoveUpt";
+            this.btn_CornerMoveUpt.Size = new System.Drawing.Size(75, 23);
+            this.btn_CornerMoveUpt.TabIndex = 44;
+            this.btn_CornerMoveUpt.Text = "Update";
+            this.btn_CornerMoveUpt.UseVisualStyleBackColor = true;
+            this.btn_CornerMoveUpt.Click += new System.EventHandler(this.btn_CornerMoveUpt_Click);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.label12.Location = new System.Drawing.Point(254, 135);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(212, 13);
+            this.label12.TabIndex = 45;
+            this.label12.Text = "Update Corner Running Move for ALL Edits";
+            // 
             // EasyResizeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.MenuHighlight;
             this.ClientSize = new System.Drawing.Size(542, 264);
+            this.Controls.Add(this.label12);
+            this.Controls.Add(this.btn_CornerMoveUpt);
             this.Controls.Add(this.ReduceBy_All);
             this.Controls.Add(this.ReduceBy_Current);
             this.Controls.Add(this.waistCB);
@@ -511,7 +535,7 @@
             this.Controls.Add(this.Wrestlers);
             this.Controls.Add(this.wrestlerList);
             this.Name = "EasyResizeForm";
-            this.Text = "Easy Edit Resize";
+            this.Text = "Easy Edit Modification";
             ((System.ComponentModel.ISupportInitialize)(this.headUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.thighUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.waistUD)).EndInit();
@@ -566,5 +590,7 @@
         private System.Windows.Forms.CheckBox waistCB;
         private System.Windows.Forms.Button ReduceBy_All;
         private System.Windows.Forms.Button ReduceBy_Current;
+        private System.Windows.Forms.Button btn_CornerMoveUpt;
+        private System.Windows.Forms.Label label12;
     }
 }
