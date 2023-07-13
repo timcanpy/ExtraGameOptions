@@ -2429,12 +2429,7 @@ namespace QoL_Mods
 
                 //Ensure that both players return to neutral position
                 attacker.ChangeState(global::PlStateEnum.NormalAnm);
-                //defender.ChangeState(global::PlStateEnum.NormalAnm);
-                //attacker.ChangeState(global::PlStateEnum.Grapple);
-                //defender.ChangeState(global::PlStateEnum.Grapple);
-
-                //moveData[winner.PlIdx] = skillData;
-
+            
                 var skillSlot = SkillSlotEnum.Grapple_X;
 
                 winner.lastSkill = skillSlot;

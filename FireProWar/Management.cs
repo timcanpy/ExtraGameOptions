@@ -759,7 +759,7 @@ namespace FireProWar
             }
 
             //Expected crash on Null Reference exceptions.
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
 
             }
@@ -967,6 +967,7 @@ namespace FireProWar
             }
             else if (position == ResultPosition.Draw)
             {
+                String blueTeam = String.Empty;
                 for (int i = 0; i < 4; i++)
                 {
                     Player player = PlayerMan.inst.GetPlObj(i);
@@ -976,11 +977,11 @@ namespace FireProWar
                         {
                             if (i == 0)
                             {
-                                name = DataBase.GetWrestlerFullName(player.WresParam);
+                                blueTeam = DataBase.GetWrestlerFullName(player.WresParam);
                             }
                             else
                             {
-                                name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
+                                blueTeam += ", " + DataBase.GetWrestlerFullName(player.WresParam);
                             }
                         }
                     }
@@ -988,12 +989,10 @@ namespace FireProWar
 
                 if (teamNames[0] != String.Empty)
                 {
-                    name = teamNames[0] + "(" + name + ")";
+                    blueTeam = teamNames[0] + "(" + blueTeam + ")";
                 }
 
-                String blueTeam = name;
-                name += "";
-
+                String redTeam = String.Empty;
                 for (int i = 4; i < 8; i++)
                 {
                     Player player = PlayerMan.inst.GetPlObj(i);
@@ -1003,11 +1002,11 @@ namespace FireProWar
                         {
                             if (i == 4)
                             {
-                                name = DataBase.GetWrestlerFullName(player.WresParam);
+                                redTeam = DataBase.GetWrestlerFullName(player.WresParam);
                             }
                             else
                             {
-                                name += ", " + DataBase.GetWrestlerFullName(player.WresParam);
+                                redTeam += ", " + DataBase.GetWrestlerFullName(player.WresParam);
                             }
                         }
                     }
@@ -1015,10 +1014,8 @@ namespace FireProWar
 
                 if (teamNames[1] != String.Empty)
                 {
-                    name = teamNames[1] + " (" + name + ")";
+                    redTeam = teamNames[1] + " (" + redTeam + ")";
                 }
-
-                string redTeam = name;
 
                 name = blueTeam + " & " + redTeam;
             }

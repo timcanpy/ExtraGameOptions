@@ -25,7 +25,7 @@ namespace QoL_Mods.Private
     [GroupDescription(Group = "Face Lock", Name = "Variable Face Lock Moves", Description = "(NEW) Allows players to override the default Face Lock attack with custom actions.\nThe ModPack's Extended Move List version will override this.")]
     //[GroupDescription(Group = "Update Plates", Name = "Update Name Plates", Description = "(PRIVATE) Changes the text displayed on name plates.")]
     //[GroupDescription(Group = "Pin Critical Opponent", Name = "Pin Critical Opponents", Description = "(PRIVATE) Forces edits to pin criticaled opponents under certain conditions.")]
-    [GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Modify parts of your edits.\nNote that any change is permanent, use at your own risk.")]
+    //[GroupDescription(Group = "Easy Edit Resize", Name = "Easy Edit Resize", Description = "(PRIVATE) Modify parts of your edits.\nNote that any change is permanent, use at your own risk.")]
 
     #endregion
 
@@ -70,17 +70,17 @@ namespace QoL_Mods.Private
             }
         }
 
-        [ControlPanel(Group = "Easy Edit Resize")]
-        public static Form EEForm()
-        {
-            if (EasyResizeForm.eeForm == null)
-            {
-                return new EasyResizeForm();
-            }
-            {
-                return EasyResizeForm.eeForm;
-            }
-        }
+        //[ControlPanel(Group = "Easy Edit Resize")]
+        //public static Form EEForm()
+        //{
+        //    if (EasyResizeForm.eeForm == null)
+        //    {
+        //        return new EasyResizeForm();
+        //    }
+        //    {
+        //        return EasyResizeForm.eeForm;
+        //    }
+        //}
 
         #endregion
 
